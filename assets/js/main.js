@@ -91,27 +91,40 @@ function initDoctors() {
   const tabs = [...document.querySelectorAll('.doctors__tab')];
   const prevBtn = document.querySelector('[data-doc-prev]');
   const nextBtn = document.querySelector('[data-doc-next]');
-  const { esc, img, branchBadge } = window.UI;
+  const { esc, img } = window.UI;
   const docs = window.SITE.doctors;
   const MOBILE_LIMIT = 6; // 모바일: 약력 처음 6개만, 나머지는 '약력 더보기'
-  const TWO_COL = 8;      // 약력(전문의 항목 제외) 8개 이상이면 2열
-  const isCert = (c) => c.startsWith('보건복지부 인증');
   const link = document.querySelector('[data-doc-link]');
+  const BRANCH_NAME = { changwon: '창원점', masan: '마산점' };
+  /* 약력 분류 — 전문의 / 학력(졸업·석사·박사·학사) / 학회 활동(학회·연맹 회원·인정의·펠로우) / 그 외 경력.
+     분류가 애매한 항목은 경력으로 간다 → docs/HANDOVER.md '약력 분류 병원 확인' */
+  const classify = (c) => {
+    if (c.startsWith('보건복지부 인증')) return 'cert';
+    if (/졸업|석사|박사|학사/.test(c)) return 'edu';
+    if (/학회|연맹/.test(c) && /회원|인정의|펠로우|Fellow/.test(c) && !/수상|표창|수료|발표/.test(c)) return 'society';
+    return 'career';
+  };
+  const GROUP_TITLE = { edu: '학력', career: '경력', society: '학회 활동' };
 
   box.innerHTML = docs.map((d, i) => {
     const career = d.career || [];
-    const certs = career.filter(isCert);
-    const rest = career.filter((c) => !isCert(c));
-    let n = 0;
+    const by = { cert: [], edu: [], career: [], society: [] };
+    career.forEach((c) => by[classify(c)].push(c));
+    let n = 0; // 모바일 '약력 더보기': 화면 순서(전문의 → 학력 → 경력 → 학회)대로 6개 뒤는 숨김
     const li = (c) => `<li${n++ >= MOBILE_LIMIT ? ' class="is-extra"' : ''}>${esc(c)}</li>`;
+    // 모바일에서 그룹 항목이 전부 접히면 소제목도 함께 숨긴다
+    const group = (key) => (by[key].length ? `
+            <section class="doc-group${n >= MOBILE_LIMIT ? ' is-extra' : ''}"><h4 class="doc-group__title">${GROUP_TITLE[key]}</h4><ul class="doc-group__list">${by[key].map(li).join('')}</ul></section>` : '');
+    const certs = by.cert.length ? `<ul class="doc-profile__certs">${by.cert.map(li).join('')}</ul>` : '';
+    // 왼쪽 열: 학력·경력 / 오른쪽 열: 학회 활동
+    const cols = `<div class="doc-profile__cols"><div class="doc-profile__col">${group('edu')}${group('career')}</div><div class="doc-profile__col">${group('society')}</div></div>`;
     return `
       <article class="doc-profile" data-doc="${i}" aria-hidden="true" inert>
         <div class="doc-profile__photo img-ph"><img src="${img(d.photo)}" alt="${esc(d.name)} ${esc(d.title)} 사진" loading="lazy"></div>
         <div class="doc-profile__body">
-          <p class="doc-profile__meta">${branchBadge(d.branches.length > 1 ? 'both' : d.branches[0])}<span class="doc-profile__dept">${esc(d.dept)}</span></p>
+          <p class="doc-profile__meta"><span data-doc-branch>${BRANCH_NAME[d.branches[0]]}</span> · <b class="doc-profile__dept">${esc(d.dept)}</b></p>
           <h3 class="doc-profile__name">${esc(d.name)} <small>${esc(d.title)}</small></h3>
-          ${certs.length ? `<ul class="doc-profile__certs">${certs.map(li).join('')}</ul>` : ''}
-          ${rest.length ? `<ul class="doc-profile__career${rest.length >= TWO_COL ? ' is-2col' : ''}" style="--rows: ${Math.ceil(rest.length / 2)}">${rest.map(li).join('')}</ul>` : ''}
+          ${certs}${cols}
           ${career.length > MOBILE_LIMIT ? '<button type="button" class="doc-profile__more" aria-expanded="false">약력 더보기</button>' : ''}
         </div>
       </article>`;
@@ -139,6 +152,8 @@ function initDoctors() {
       el.setAttribute('aria-hidden', String(!on));
       el.inert = !on;
     });
+    // 겸직 원장의 지점 표기는 지금 보고 있는 지점
+    profiles[di].querySelector('[data-doc-branch]').textContent = BRANCH_NAME[branch];
     link.href = `./about/doctors.html#${branch}-${window.SITE.doctorSlug(docs[di])}`;
     thumbs.forEach((t, i) => t.setAttribute('aria-pressed', String(i === pos)));
     // 썸네일 줄이 가로 스크롤일 때(모바일) 선택한 썸네일이 보이게
@@ -190,28 +205,6 @@ function initDoctors() {
   nextBtn.addEventListener('click', () => select(pos + 1));
 
   selectTab(tabs[0]);
-
-  /* 약력 줄바꿈 없애기 — 2열에서 두 줄로 꺾이는 항목이 있으면 그 원장만 1열로 (말줄임 없음)
-     데스크톱(1025px 이상)에서만. 숨겨진 프로필도 자리를 차지하고 있어 바로 잴 수 있다 */
-  // 글자 영역 높이로 판단 (2열 grid 는 행 높이가 고정이라 li 높이로는 알 수 없다)
-  const wraps = (ul) => [...ul.children].some((li) => {
-    const r = document.createRange();
-    r.selectNodeContents(li);
-    return r.getBoundingClientRect().height > parseFloat(getComputedStyle(li).lineHeight) * 1.5;
-  });
-  function fitCareer() {
-    profiles.forEach((el) => {
-      const ul = el.querySelector('.doc-profile__career');
-      if (!ul) return;
-      const want2 = ul.children.length >= TWO_COL;
-      ul.classList.toggle('is-2col', want2);
-      if (want2 && window.matchMedia('(min-width: 1025px)').matches && wraps(ul)) ul.classList.remove('is-2col');
-    });
-  }
-  fitCareer();
-  document.fonts?.ready.then(fitCareer);
-  let fitTimer;
-  window.addEventListener('resize', () => { clearTimeout(fitTimer); fitTimer = setTimeout(fitCareer, 150); });
 }
 
 /* ---------- ⑥ 치료사례 잠금 ---------- */
