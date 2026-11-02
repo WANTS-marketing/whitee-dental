@@ -105,11 +105,23 @@ function initDoctors() {
     return 'career';
   };
   const GROUP_TITLE = { edu: '학력', career: '경력', society: '학회 활동' };
+  /* 학회 활동 항목 나누기 (표시만, 데이터는 그대로)
+     "세계교정의사연맹 Fellow, 미국·유럽·일본 치과교정학회 국제회원" → ', ' 로 (각 부분이 학회·연맹일 때)
+     "대한치과보존학회·대한치주과학회 정회원" → '·' 로 나누고 끝의 공통 꼬리(정회원)를 각 학회에 붙인다 */
+  const splitSociety = (c) => {
+    const commaParts = c.split(', ');
+    if (commaParts.length > 1 && commaParts.every((p) => /학회|연맹/.test(p))) return commaParts.flatMap(splitSociety);
+    const parts = c.split('·');
+    if (parts.length < 2 || !parts.every((p) => /학회/.test(p))) return [c];
+    const tail = parts[parts.length - 1].match(/^(.*학회)(\s.+)$/);
+    if (!tail) return [c];
+    return parts.map((p, i) => (i === parts.length - 1 ? p : p + tail[2]));
+  };
 
   box.innerHTML = docs.map((d, i) => {
     const career = d.career || [];
     const by = { cert: [], edu: [], career: [], society: [] };
-    career.forEach((c) => by[classify(c)].push(c));
+    career.forEach((c) => { const k = classify(c); by[k].push(...(k === 'society' ? splitSociety(c) : [c])); });
     let n = 0; // 모바일 '약력 더보기': 화면 순서(전문의 → 학력 → 경력 → 학회)대로 6개 뒤는 숨김
     const li = (c) => `<li${n++ >= MOBILE_LIMIT ? ' class="is-extra"' : ''}>${esc(c)}</li>`;
     // 모바일에서 그룹 항목이 전부 접히면 소제목도 함께 숨긴다
@@ -205,6 +217,20 @@ function initDoctors() {
   nextBtn.addEventListener('click', () => select(pos + 1));
 
   selectTab(tabs[0]);
+
+  /* 데스크톱에서 약력 항목이 두 줄로 꺾이는 원장만 약력 글자 1px 줄이기 (말줄임 없음).
+     숨겨진 프로필도 자리를 차지하고 있어 바로 잴 수 있다. 글꼴 로드·리사이즈 때 다시 */
+  const wraps = (li) => li.getBoundingClientRect().height > parseFloat(getComputedStyle(li).lineHeight) * 1.5;
+  function fitCareer() {
+    profiles.forEach((el) => {
+      el.classList.remove('is-tight');
+      if (window.matchMedia('(min-width: 1025px)').matches && [...el.querySelectorAll('.doc-group__list li')].some(wraps)) el.classList.add('is-tight');
+    });
+  }
+  fitCareer();
+  document.fonts?.ready.then(fitCareer);
+  let fitTimer;
+  window.addEventListener('resize', () => { clearTimeout(fitTimer); fitTimer = setTimeout(fitCareer, 150); });
 }
 
 /* ---------- ⑥ 치료사례 잠금 ---------- */

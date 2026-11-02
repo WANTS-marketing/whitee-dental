@@ -168,10 +168,14 @@
     <!-- ④ 의료진 -->
     <section class="doctors screen" id="screen-doctors" data-screen="의료진" aria-labelledby="doctors-title">
       <div class="container doctors__inner">
+        <!-- 머리말: 왼쪽 소개 / 오른쪽 지점 탭·이전/다음 — 아래 프로필 패널이 컨테이너 전체 폭을 쓴다 -->
         <div class="doctors__head">
-          <span class="sec-label doctors__label">OUR DOCTORS</span>
-          <h2 class="doctors__title" id="doctors-title">분야별 전문의가<br>직접 진료합니다</h2>
-          <p class="doctors__desc">교정과 · 치주과 · 보철과 · 보존과 · 구강악안면외과<br class="only-desktop"> · 통합치의학과 전문의가 지점별로 함께합니다.</p>
+          <div class="doctors__intro">
+            <span class="sec-label doctors__label">OUR DOCTORS</span>
+            <h2 class="doctors__title" id="doctors-title">분야별 전문의가<br class="only-mobile"> 직접 진료합니다</h2>
+            <p class="doctors__desc">교정과 · 치주과 · 보철과 · 보존과 · 구강악안면외과 · 통합치의학과 전문의가 지점별로 함께합니다.</p>
+          </div>
+          <div class="doctors__controls">
           <div class="doctors__tabs" role="tablist" aria-label="지점 선택">
             <button class="doctors__tab" type="button" role="tab" id="tab-changwon" aria-selected="true" aria-controls="doctors-panel" data-branch="changwon">
               <span>CHANGWON·창원점</span>
@@ -185,6 +189,7 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
             <button type="button" class="doctors__arrow" data-doc-next aria-label="다음 의료진">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+          </div>
           </div>
         </div>
         <!-- 큰 프로필 1명 + 같은 지점 원장 썸네일 (main.js initDoctors, 데이터: site-data.js doctors) -->

@@ -93,11 +93,14 @@
 /* ---------- ④ 의료진 ---------- */
 .doctors { position: relative; overflow: hidden; padding: 60px 0; }
 .doctors { background: #f5f3f0; } /* 배경 사진 대신 은은한 단색 */
-.doctors__inner { position: relative; display: grid; grid-template-columns: 22% minmax(0, 1fr); gap: 40px; align-items: center; }
-.doctors__label { font-size: var(--fs-h3); font-weight: 600; text-transform: none; }
-.doctors__title { font-size: var(--fs-h1); line-height: 1.4; letter-spacing: -0.02em; }
-.doctors__desc { margin-top: 16px; font-size: var(--fs-xs); color: var(--color-text-sub); }
-.doctors__tabs { display: grid; margin-top: 40px; }
+/* 머리말(소개 | 지점 탭·이전/다음) 한 줄 + 아래 프로필 패널이 컨테이너 전체 폭 */
+.doctors__inner { position: relative; display: flex; flex-direction: column; gap: 28px; }
+.doctors__head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px 40px; }
+.doctors__label { font-size: var(--fs-h4); font-weight: 600; text-transform: none; }
+.doctors__title { font-size: var(--fs-h2); line-height: 1.35; letter-spacing: -0.02em; }
+.doctors__desc { margin-top: 8px; font-size: var(--fs-sm); color: var(--color-text-sub); }
+.doctors__controls { display: flex; align-items: center; gap: 16px; flex: none; }
+.doctors__tabs { display: grid; grid-template-columns: 1fr 1fr; width: 380px; }
 .doctors__tab { display: flex; justify-content: space-between; align-items: center; height: 40px; padding: 0 20px; background: #fff; font-size: var(--fs-sm); font-weight: 700; transition: background var(--dur), color var(--dur); }
 .doctors__tab svg { width: 16px; height: 16px; }
 .doctors__tab[data-branch="changwon"] svg { color: var(--color-changwon); }
@@ -105,7 +108,7 @@
 .doctors__tab[aria-selected="true"][data-branch="changwon"] { background: var(--color-changwon); color: #fff; }
 .doctors__tab[aria-selected="true"][data-branch="masan"] { background: var(--color-masan); color: #fff; }
 .doctors__tab[aria-selected="true"] svg { color: #fff; }
-.doctors__nav { display: flex; gap: 8px; margin-top: 24px; }
+.doctors__nav { display: flex; gap: 8px; }
 .doctors__arrow { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: #fff; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06); transition: background var(--dur), color var(--dur); }
 .doctors__arrow:hover { background: var(--color-text); color: #fff; }
 .doctors__arrow svg { width: 20px; height: 20px; }
@@ -113,9 +116,10 @@
 /* 큰 프로필 패널 + 썸네일 줄 (main.js initDoctors)
    프로필은 전원을 그리드 한 칸에 겹쳐 두어 패널 높이 = 가장 긴 약력. 선택된 원장만 opacity 0.3s 로 보인다.
    화면 단위 구성에서는 패널이 섹션 높이를 채운다(아래 '의료진 섹션 높이') */
-.doctors__main { --doc-photo-w: 300px; display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.doctors__main { --doc-photo-w: 300px; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
 .doc-profiles { display: grid; padding: 40px; border: 1px solid #ebe7e2; border-radius: 16px; background: #fff; box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03); }
-.doc-profile { grid-area: 1 / 1; display: grid; grid-template-columns: var(--doc-photo-w) minmax(0, 1fr); gap: 40px; align-items: center; opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s; }
+/* 사진·정보 모두 세로 가운데 → 위·아래 여백이 같다. 패널 높이 = 가장 긴 약력(한 줄 처리로 낮아짐) */
+.doc-profile { grid-area: 1 / 1; display: grid; grid-template-columns: var(--doc-photo-w) minmax(0, 1fr); gap: 48px; align-items: center; opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s; }
 .doc-profile.is-active { opacity: 1; visibility: visible; }
 /* 사진 4:5 (1440px 기준 300×375), cover */
 .doc-profile__photo { aspect-ratio: 4 / 5; border-radius: 12px; }
@@ -127,7 +131,7 @@
 .doc-profile__name small { margin-left: 6px; font-size: 18px; font-weight: 500; letter-spacing: 0; color: #555; }
 .doc-profile__certs { margin-top: 16px; font-size: 17px; font-weight: 700; line-height: 1.7; color: #222; }
 /* 약력: 학력·경력(왼쪽 열) / 학회 활동(오른쪽 열), 소제목 13px 굵게 지점 색, 그룹 사이 20px */
-.doc-profile__cols { display: grid; grid-template-columns: 1fr 1fr; gap: 0 32px; margin-top: 20px; padding-top: 20px; border-top: 1px solid #ebe7e2; }
+.doc-profile__cols { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 0 40px; margin-top: 20px; padding-top: 20px; border-top: 1px solid #ebe7e2; }
 .doc-profile__col { display: flex; flex-direction: column; gap: 20px; min-width: 0; }
 .doc-profile__col:empty { display: none; }
 .doc-group__title { margin-bottom: 4px; font-size: 13px; font-weight: 700; letter-spacing: 0.02em; color: var(--doc-color, var(--color-point)); }
@@ -137,19 +141,22 @@
 .doc-profile__certs li::before, .doc-group__list li::before { content: ""; position: absolute; left: 0; top: calc(0.9em - 2px); width: 4px; height: 4px; border-radius: 50%; background: currentColor; opacity: 0.6; }
 .doc-profile__certs li::before { top: calc(0.85em - 2px); background: var(--doc-color, var(--color-point)); opacity: 1; }
 .doc-profile__more { display: none; }
+/* 한 줄로 안 들어가는 항목이 있는 원장만 약력 1px 작게 (main.js fitCareer) */
+.doc-profile.is-tight .doc-group__list { font-size: 14px; }
 
-/* 썸네일 줄 + '의료진 자세히 보기'(같은 줄 오른쪽 끝, 링크는 선택된 원장 위치) */
-.doctors__foot { display: flex; align-items: center; gap: 16px; }
-.doctors__more { flex: none; height: 48px; }
-.doc-thumbs { position: relative; flex: 1; display: flex; gap: 8px; min-width: 0; overflow-x: auto; scrollbar-width: none; }
+/* 썸네일 줄(전체 폭 균등 분할) + 그 아래 줄 오른쪽 끝 '의료진 자세히 보기'(링크는 선택된 원장 위치) */
+.doctors__foot { display: flex; flex-direction: column; gap: 12px; }
+.doctors__more { flex: none; align-self: flex-end; height: 48px; }
+.doc-thumbs { position: relative; display: flex; gap: 8px; min-width: 0; overflow-x: auto; scrollbar-width: none; }
 .doc-thumbs::-webkit-scrollbar { display: none; }
-.doc-thumbs li { flex: 1 0 0; min-width: 104px; }
+.doc-thumbs li { flex: 1 1 0; min-width: 0; }
 .doc-thumb { display: flex; align-items: center; gap: 8px; width: 100%; padding: 8px 10px; border: 1px solid #ebe7e2; border-radius: 12px; background: #fff; text-align: left; transition: border-color var(--dur), box-shadow var(--dur); }
 .doc-thumb:hover { border-color: #d9d3cc; }
 .doc-thumb__photo { flex: none; width: 40px; height: 40px; border-radius: 50%; }
 .doc-thumb__text { display: flex; flex-direction: column; min-width: 0; line-height: 1.35; }
 .doc-thumb__text b { font-size: 15px; color: #222; transition: color var(--dur); }
-.doc-thumb__text small { font-size: 12px; color: #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* 이름·진료과는 자르지 않는다 (진료과가 길면 두 줄) */
+.doc-thumb__text small { font-size: 12px; color: #666; word-break: keep-all; }
 /* 선택 강조 = 지점 색 (--doc-color, common.css 의료진 지점 색) */
 .doc-thumb[aria-pressed="true"] { border-color: var(--doc-color, var(--color-point)); box-shadow: inset 0 0 0 1px var(--doc-color, var(--color-point)); }
 .doc-thumb[aria-pressed="true"] b { color: var(--doc-color, var(--color-point)); }
@@ -157,9 +164,6 @@
 /* 의료진 섹션 높이 — 화면 단위 구성: 헤더 아래 위·아래 64px 만 남기고 패널이 섹션을 채운다 */
 @media (min-width: 1025px) and (min-height: 700px) {
   .doctors.screen { padding-block: 64px; }
-  .doctors.screen .doctors__inner { flex: 1; align-items: stretch; }
-  .doctors.screen .doctors__head { align-self: center; }
-  .doctors.screen .doc-profiles { flex: 1; align-content: center; }
 }
 /* 1920×1080 처럼 높은 화면: 남는 높이를 써서 사진을 380×475(4:5)로 */
 @media (min-width: 1440px) and (min-height: 1000px) {
@@ -272,8 +276,8 @@
   .quick__list { gap: 10px; }
 
   .philosophy__inner, .doctors__inner, .clinic__inner, .cases__inner, .faq-preview__inner, .story__inner { grid-template-columns: minmax(0, 1fr); gap: 40px; }
-  .doctors__tabs { grid-template-columns: 1fr 1fr; max-width: 520px; }
-  /* 프로필: 사진 위·정보 아래, 약력 1열 */
+  .doctors__head { flex-direction: column; align-items: stretch; }
+  .doctors__tabs { width: auto; max-width: 520px; flex: 1; }
   /* 프로필: 사진 위·정보 아래, 약력 1열 */
   .doc-profile { grid-template-columns: minmax(0, 1fr); gap: 24px; }
   .doc-profile__photo { width: 100%; max-width: 260px; }
@@ -317,15 +321,13 @@
   .philosophy__desc { margin-top: 16px; }
 
   .doctors { padding: 56px 0; }
-  .doctors__tabs { margin-top: 24px; }
+  .doctors__title { font-size: var(--fs-h3); }
   .doctors__tab { padding: 0 14px; font-size: var(--fs-xs); }
   .doctors__nav { display: none; }
   /* 모바일: 약력 처음 6개만 + '약력 더보기', 썸네일 줄은 가로 스크롤 */
   .doc-profiles { padding: 20px; }
   .doc-profile__photo { max-width: 220px; }
   .doc-profile__name { font-size: 30px; }
-  .doctors__foot { flex-direction: column; align-items: stretch; }
-  .doctors__more { align-self: flex-end; }
   .doc-profile:not(.is-expanded) .is-extra { display: none; }
   .doc-profile__more { display: block; align-self: flex-start; margin-top: 8px; font-size: var(--fs-sm); font-weight: 600; color: var(--color-point); }
   .doc-thumbs { margin: 0 calc(var(--gutter) * -1); padding: 0 var(--gutter); scroll-snap-type: x proximity; }
