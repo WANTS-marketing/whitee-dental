@@ -105,11 +105,15 @@
 /* 큰 프로필 패널 + 썸네일 줄 (main.js initDoctors)
    프로필은 전원을 그리드 한 칸에 겹쳐 두어 패널 높이 = 가장 긴 약력. 선택된 원장만 opacity 0.3s 로 보인다 */
 .doctors__main { --doc-photo-w: 260px; display: flex; flex-direction: column; gap: 16px; min-width: 0; }
-.doc-profiles { display: grid; padding: 28px; border-radius: var(--radius-lg); background: #fff; box-shadow: var(--shadow-card); }
-.doc-profile { grid-area: 1 / 1; display: grid; grid-template-columns: var(--doc-photo-w) minmax(0, 1fr); gap: 32px; align-items: start; opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s; }
+.doc-profiles { display: grid; padding: 32px; border-radius: var(--radius-lg); background: #fff; box-shadow: var(--shadow-card); }
+.doc-profile { grid-area: 1 / 1; display: grid; grid-template-columns: var(--doc-photo-w) minmax(0, 1fr); gap: 32px; align-items: stretch; opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s; }
 .doc-profile.is-active { opacity: 1; visibility: visible; }
-.doc-profile__photo { aspect-ratio: 300 / 380; border-radius: var(--radius-md); }
-.doc-profile__body { display: flex; flex-direction: column; min-width: 0; }
+/* 사진: 패널 안쪽 높이에 꽉 (위·아래 여백 = 패널 padding). 너비는 고정, 이미지는 cover.
+   img 를 absolute 로 두어 사진 원본 크기가 패널 높이에 영향을 주지 않게 → 패널 높이 = 가장 긴 약력 */
+.doc-profile__photo { border-radius: var(--radius-md); }
+.doc-profile__photo > img { position: absolute; inset: 0; }
+/* 정보 영역: 패널 안에서 세로 가운데 (가장 긴 약력은 위·아래 꽉 차서 위 기준선 = 사진 윗선) */
+.doc-profile__body { display: flex; flex-direction: column; justify-content: center; min-width: 0; }
 .doc-profile__meta { display: flex; align-items: center; gap: 4px; font-size: var(--fs-sm); }
 .doc-profile__dept { font-weight: 700; color: var(--doc-color, var(--color-point)); }
 .doc-profile__name { margin-top: 6px; font-size: 28px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.3; }
@@ -129,9 +133,8 @@
 .doc-profile__more { display: none; }
 /* 1399px 이하: 가장 긴 약력 항목(약 600px)이 한 줄로 들어가도록 여백·사진 폭을 조금 줄인다 */
 @media (max-width: 1399px) {
-  .doctors__inner { gap: 32px; }
+  .doctors__inner { grid-template-columns: 20% minmax(0, 1fr); gap: 32px; }
   .doctors__main { --doc-photo-w: 244px; }
-  .doc-profiles { padding: 24px; }
   .doc-profile { gap: 24px; }
 }
 /* 화면 단위 구성에서 의료진 섹션이 한 화면(헤더 아래)에 들어가도록 위아래 여백을 줄인다 */
@@ -244,7 +247,7 @@
   .doctors__tabs { grid-template-columns: 1fr 1fr; max-width: 520px; }
   /* 프로필: 사진 위·정보 아래, 약력 1열 */
   .doc-profile { grid-template-columns: minmax(0, 1fr); gap: 24px; }
-  .doc-profile__photo { width: 100%; max-width: 260px; }
+  .doc-profile__photo { width: 100%; max-width: 260px; aspect-ratio: 300 / 380; }
   .doc-profile__career.is-2col { display: block; }
   .clinic__grid { grid-template-columns: 1fr 1fr; grid-template-rows: 260px 200px 200px; grid-template-areas: "imp aes" "ort wis" "gen gen"; }
   .story__btn { margin-top: 24px; height: 52px; padding: 0 36px; font-size: var(--fs-md); }
