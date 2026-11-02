@@ -236,16 +236,62 @@ async function renderCasesList() {
 }
 
 /* ---------- 자주 묻는 질문 ---------- */
+/* FAQ 게시판 — 카테고리(자주 찾는 질문 = featured) + 검색(질문+답변 즉시 필터) + 아코디언
+   카테고리 이름은 assets/data/faq.json 의 category 값과 같아야 한다 */
+const FAQ_CATS = ['자주 찾는 질문', '전체', '임플란트', '치아교정', '일반치료', '사랑니·스케일링', '심미치료', '진료·예약', '비용'];
 async function renderFaqList() {
   const box = document.querySelector('[data-faq-list]');
   if (!box) return;
+  const catsEl = document.querySelector('[data-faq-cats]');
+  const search = document.querySelector('[data-faq-search]');
+  const { esc } = window.UI;
+  const chevron = '<svg class="faq-item__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M5 9l7 7 7-7"/></svg>';
+  let rows = [];
+  let cat = FAQ_CATS[0];
+
+  const item = (f, i) => `
+    <li class="faq-item">
+      <button class="accordion__btn faq-item__btn" type="button" id="faq-q${i}" aria-expanded="false" aria-controls="faq-a${i}">
+        <span class="faq-item__mark" aria-hidden="true">Q</span>
+        <span class="faq-item__cat">${esc(f.category || '')}</span>
+        <span class="faq-item__text">${esc(f.question)}</span>
+        ${chevron}
+      </button>
+      <div class="accordion__panel" id="faq-a${i}" role="region" aria-labelledby="faq-q${i}">
+        <div class="faq-item__answer">
+          <span class="faq-item__mark" aria-hidden="true">A</span>
+          <p class="faq-item__a">${esc(f.answer || '답변 준비 중입니다.')}</p>
+        </div>
+      </div>
+    </li>`;
+
+  function draw() {
+    const q = search.value.trim().toLowerCase();
+    let list = cat === '자주 찾는 질문' ? rows.filter((r) => r.featured) : cat === '전체' ? rows : rows.filter((r) => r.category === cat);
+    if (q) list = list.filter((r) => `${r.question} ${r.answer || ''}`.toLowerCase().includes(q));
+    box.innerHTML = list.length
+      ? list.map(item).join('')
+      : `<li class="faq-list__empty">${q ? '검색 결과가 없습니다.' : '등록된 질문이 없습니다.'}</li>`;
+  }
+
+  catsEl.innerHTML = FAQ_CATS.map((c) => `<li><button type="button" class="faq-cats__btn" aria-pressed="${c === cat}">${esc(c)}</button></li>`).join('');
+  catsEl.addEventListener('click', (e) => {
+    const btn = e.target.closest('.faq-cats__btn');
+    if (!btn) return;
+    cat = btn.textContent;
+    catsEl.querySelectorAll('.faq-cats__btn').forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+    draw();
+  });
+  search.addEventListener('input', draw);
+  document.querySelector('[data-faq-search-form]').addEventListener('submit', (e) => e.preventDefault());
+  window.UI.accordion(box); // 목록을 다시 그려도 위임 방식이라 그대로 동작
+
   try {
-    const rows = await window.API.getFaqs();
-    box.innerHTML = rows.map((f, i) => window.UI.faqItem(f, i, 'faq')).join('');
-    window.UI.accordion(box);
+    rows = await window.API.getFaqs();
+    draw();
   } catch (err) {
     console.error(err);
-    box.innerHTML = '<li class="empty">질문을 불러오지 못했습니다.</li>';
+    box.innerHTML = '<li class="faq-list__empty">질문을 불러오지 못했습니다.</li>';
   }
 }
 

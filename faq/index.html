@@ -46,8 +46,24 @@
     </section>
 
     <section class="sub-content">
-      <div class="container">
-        <ul class="accordion" data-faq-list></ul>
+      <!-- FAQ 게시판: 상단 [FAQ 타이틀 | 검색] / 본문 [카테고리 메뉴 | 질문 목록(아코디언)] — pages.js renderFaqList -->
+      <div class="container faq-board">
+        <div class="faq-board__top">
+          <h2 class="faq-board__title">FAQ</h2>
+          <form class="faq-search" role="search" data-faq-search-form>
+            <label class="sr-only" for="faq-search">FAQ 검색</label>
+            <input class="faq-search__input" id="faq-search" type="search" placeholder="궁금한 내용을 검색해 보세요" autocomplete="off" data-faq-search>
+            <svg class="faq-search__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+          </form>
+        </div>
+        <div class="faq-board__body">
+          <nav class="faq-cats" aria-label="FAQ 분류">
+            <ul class="faq-cats__list" data-faq-cats></ul>
+          </nav>
+          <div class="faq-board__list">
+            <ul class="faq-list" data-faq-list aria-live="polite"></ul>
+          </div>
+        </div>
         <p class="sec-desc" style="text-align:center;margin-top:40px">찾으시는 답변이 없나요? <a class="text-point" href="./contact.html"><strong>상담문의하기 →</strong></a></p>
       </div>
     </section>
