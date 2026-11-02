@@ -114,12 +114,17 @@
 .doc-profile__dept { font-weight: 700; color: var(--color-point); }
 .doc-profile__name { margin-top: 6px; font-size: 28px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.3; }
 .doc-profile__name small { margin-left: 4px; font-size: var(--fs-md); font-weight: 500; color: var(--color-text-sub); }
-.doc-profile__certs, .doc-profile__career { font-size: 14px; line-height: 1.7; }
+/* 약력 줄 높이 통일: 전문의(굵게)·일반 약력 모두 14px / 26px, 항목 사이 여백 없이 줄 높이로만 간격.
+   이름 ↔ 전문의 ↔ 구분선 ↔ 약력 = 16 / 16 / 16 */
+.doc-profile { --doc-line: 26px; }
+.doc-profile__certs, .doc-profile__career { font-size: 14px; line-height: var(--doc-line); }
 .doc-profile__certs { margin-top: 16px; font-weight: 700; }
-.doc-profile__career { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--color-line); color: var(--color-text-sub); }
-.doc-profile__career.is-2col { columns: 2; column-gap: 20px; }
-.doc-profile__certs li, .doc-profile__career li { position: relative; padding-left: 10px; break-inside: avoid; }
-.doc-profile__certs li::before, .doc-profile__career li::before { content: ""; position: absolute; left: 0; top: 0.8em; width: 3px; height: 3px; border-radius: 50%; background: currentColor; }
+.doc-profile__career { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--color-line); color: var(--color-text-sub); }
+/* 2열: 하나의 grid, 행 높이 고정, 왼쪽 열 위→아래 먼저 채움 (--rows = 항목 수 ÷ 2 올림, main.js) → 양쪽 같은 줄의 기준선 일치 */
+.doc-profile__career.is-2col { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: repeat(var(--rows), var(--doc-line)); grid-auto-flow: column; column-gap: 20px; }
+.doc-profile__certs li, .doc-profile__career li { position: relative; margin: 0; padding: 0 0 0 10px; }
+/* 불릿: 첫 줄 글자 세로 중앙 (줄 높이의 절반) */
+.doc-profile__certs li::before, .doc-profile__career li::before { content: ""; position: absolute; left: 0; top: calc(var(--doc-line) / 2 - 1.5px); width: 3px; height: 3px; border-radius: 50%; background: currentColor; }
 .doc-profile__certs li::before { background: var(--color-point); }
 .doc-profile__more { display: none; }
 /* 1399px 이하: 가장 긴 약력 항목(약 600px)이 한 줄로 들어가도록 여백·사진 폭을 조금 줄인다 */
@@ -239,7 +244,7 @@
   /* 프로필: 사진 위·정보 아래, 약력 1열 */
   .doc-profile { grid-template-columns: minmax(0, 1fr); gap: 24px; }
   .doc-profile__photo { width: 100%; max-width: 260px; }
-  .doc-profile__career.is-2col { columns: 1; }
+  .doc-profile__career.is-2col { display: block; }
   .clinic__grid { grid-template-columns: 1fr 1fr; grid-template-rows: 260px 200px 200px; grid-template-areas: "imp aes" "ort wis" "gen gen"; }
   .story__btn { margin-top: 24px; height: 52px; padding: 0 36px; font-size: var(--fs-md); }
 }

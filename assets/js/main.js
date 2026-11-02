@@ -111,7 +111,7 @@ function initDoctors() {
           <p class="doc-profile__meta">${branchBadge(d.branches.length > 1 ? 'both' : d.branches[0])}<span class="doc-profile__dept">${esc(d.dept)}</span></p>
           <h3 class="doc-profile__name">${esc(d.name)} <small>${esc(d.title)}</small></h3>
           ${certs.length ? `<ul class="doc-profile__certs">${certs.map(li).join('')}</ul>` : ''}
-          ${rest.length ? `<ul class="doc-profile__career${rest.length >= TWO_COL ? ' is-2col' : ''}">${rest.map(li).join('')}</ul>` : ''}
+          ${rest.length ? `<ul class="doc-profile__career${rest.length >= TWO_COL ? ' is-2col' : ''}" style="--rows: ${Math.ceil(rest.length / 2)}">${rest.map(li).join('')}</ul>` : ''}
           ${career.length > MOBILE_LIMIT ? '<button type="button" class="doc-profile__more" aria-expanded="false">약력 더보기</button>' : ''}
         </div>
       </article>`;
@@ -192,7 +192,12 @@ function initDoctors() {
 
   /* 약력 줄바꿈 없애기 — 2열에서 두 줄로 꺾이는 항목이 있으면 그 원장만 1열로 (말줄임 없음)
      데스크톱(1025px 이상)에서만. 숨겨진 프로필도 자리를 차지하고 있어 바로 잴 수 있다 */
-  const wraps = (ul) => [...ul.children].some((li) => li.getClientRects().length > 1 || li.offsetHeight > parseFloat(getComputedStyle(li).lineHeight) * 1.5);
+  // 글자 영역 높이로 판단 (2열 grid 는 행 높이가 고정이라 li 높이로는 알 수 없다)
+  const wraps = (ul) => [...ul.children].some((li) => {
+    const r = document.createRange();
+    r.selectNodeContents(li);
+    return r.getBoundingClientRect().height > parseFloat(getComputedStyle(li).lineHeight) * 1.5;
+  });
   function fitCareer() {
     profiles.forEach((el) => {
       const ul = el.querySelector('.doc-profile__career');
