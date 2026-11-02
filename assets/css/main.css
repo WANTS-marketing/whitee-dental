@@ -362,19 +362,21 @@
   .screen-home .hero__content { top: calc(50% - var(--overlap) / 2); }
   .screen-home .hero__controls { bottom: calc(var(--overlap) + 28px); }
   .screen-home .clinic-bar { position: relative; z-index: 5; margin-top: calc(var(--overlap) * -1); padding: 0 0 24px; }
-  .screen-home .clinic-bar__inner { margin: 0 24px; padding: 24px 32px; border-bottom: 0; border-radius: var(--radius-xl); background: #fff; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12); }
+  .screen-home .clinic-bar__inner { margin: 0 24px; border-bottom: 0; border-radius: var(--radius-xl); background: #fff; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12); }
   .screen-home .clinic-bar__card { aspect-ratio: auto; height: clamp(108px, 15vh, 140px); }
-  /* 퀵바 카드 정렬: [빠른 진료 안내 | 아이콘 5개 | FAQ] — 양쪽 열은 같은 너비(--qb-side), 아이콘 묶음은 가운데 남는 폭.
-     양쪽 열 너비가 같아 가운데 아이콘(일반치료) 중심선 = 카드 중심선.
-     왼쪽 내용은 왼쪽 안쪽 여백에, FAQ 내용은 오른쪽 안쪽 여백에 붙고,
-     FAQ 구분선~아이콘 간격 = 왼쪽 블록~첫 아이콘 간격 = column-gap */
+  /* 퀵바 카드 정렬: [빠른 진료 안내 | 아이콘 5개 | FAQ]
+     왼쪽: 카드 끝 ↔ 글자 = 글자 끝 ↔ 첫 아이콘 = --qb-pad(40px), 글자 블록 너비 = 타이틀 길이(max-content)
+     오른쪽: 아이콘 ↔ 구분선 = 구분선 ↔ FAQ 글자 = FAQ 글자 끝 ↔ 카드 끝 = --qb-r
+     두 타이틀(빠른 진료 안내 / 자주 묻는 질문) 폭이 같아서 --qb-r = (40×2 − 구분선 1px) ÷ 3 ≈ 26px 이면
+     왼쪽 묶음 폭 = 오른쪽 묶음 폭 → 가운데 아이콘(일반치료) 중심선 = 카드 중심선. 남는 폭은 아이콘 묶음이 가져간다 */
   .screen-home .clinic-bar__inner {
-    --qb-gap: clamp(20px, 2.4vw, 32px); --qb-side: 168px; /* FAQ 제목(자주 묻는 질문)이 한 줄로 들어가는 최소 폭 */
-    display: grid; grid-template-columns: var(--qb-side) minmax(0, 1fr) var(--qb-side); align-items: center; column-gap: var(--qb-gap);
+    --qb-pad: 40px; --qb-r: calc((var(--qb-pad) * 2 - 1px) / 3);
+    display: grid; grid-template-columns: max-content minmax(0, 1fr) max-content; align-items: center; column-gap: 0;
+    padding: 24px var(--qb-r) 24px var(--qb-pad);
   }
-  .screen-home .clinic-bar__head { width: auto; justify-self: stretch; }
+  .screen-home .clinic-bar__head { width: auto; margin-right: var(--qb-pad); }
   .screen-home .clinic-bar__list { order: 0; }
-  .screen-home .clinic-bar__faq { width: auto; display: grid; justify-content: end; justify-items: start; align-self: stretch; align-content: center; padding-left: 20px; }
+  .screen-home .clinic-bar__faq { width: auto; display: grid; justify-items: start; align-self: stretch; align-content: center; margin-left: var(--qb-r); padding-left: var(--qb-r); }
   .screen-home .clinic-bar__faq-desc br { display: inline; }
   .screen-home .clinic-bar__title { white-space: nowrap; }
   .screen-home .clinic-bar__card { font-size: var(--fs-sm); word-break: keep-all; text-align: center; }
@@ -404,6 +406,9 @@
 /* 표시기(왼쪽 16~38px)와 내용이 겹치지 않도록, 좌우 여백이 좁은 데스크톱(1360px 미만)은 안쪽 여백을 넓힌다 */
 @media (min-width: 1025px) and (max-width: 1359px) and (min-height: 700px) {
   .screen .container, .screen-home .container { padding-left: 52px; padding-right: 52px; }
+  /* 히어로는 컨테이너가 아니라 화면 너비 - 80px 이라 표시기와 겹치지 않음 → 넓힌 여백 제외. 대신 글자 시작선 계산에 52px 반영 */
+  .screen-home .hero__inner { padding-left: 0; padding-right: 0; }
+  .screen-home { --page-pad: 52px; }
   /* 좁아진 지점 카드에서 전화번호가 두 줄로 꺾이지 않게 */
   .branch-card { padding-left: 24px; padding-right: 24px; }
   .branch-card__tel { font-size: clamp(1.5rem, 2.2vw, 2.25rem); }
@@ -418,16 +423,16 @@
 /* ---------- 히어로 넓게 (데스크톱) ----------
    히어로 카드만 본문 컨테이너보다 넓게: 최대 1600px, 좌우 여백 최소 40px.
    텍스트 시작선 = 퀵바 'OUR CLINIC BAR' 시작선
-   = 컨테이너 안쪽 시작(컨테이너 좌우 여백 24px) + 퀵바 카드 안쪽 여백(--qb-inset)
+   = 컨테이너 안쪽 시작(컨테이너 좌우 여백 --page-pad, 기본 24px) + 퀵바 카드 안쪽 여백(--qb-inset)
    100cqw = .hero 너비(= 본문 너비). 퀵메뉴 파인 칸은 슬라이더 오른쪽에 붙어 있어 자동으로 따라간다 */
 @media (min-width: 1025px) {
   .hero { container-type: inline-size; }
   .hero__inner { width: min(1600px, 100% - 80px); max-width: none; padding: 0; }
   /* 최소 48px: 퀵바가 카드 모양이 아닌 낮은 화면에서 글자가 히어로 끝에 붙지 않게 */
-  .hero__content { left: max(48px, calc((min(1600px, 100cqw - 80px) - min(100cqw, var(--container) + var(--gutter) * 2)) / 2 + var(--gutter) + var(--qb-inset, 0px))); }
+  .hero__content { left: max(48px, calc((min(1600px, 100cqw - 80px) - min(100cqw, var(--container) + var(--gutter) * 2)) / 2 + var(--page-pad, var(--gutter)) + var(--qb-inset, 0px))); }
 }
 @media (min-width: 1025px) and (min-height: 700px) {
-  .screen-home { --qb-inset: 56px; } /* 퀵바 카드 margin 24px + padding 32px */
+  .screen-home { --qb-inset: 64px; } /* 퀵바 카드 margin 24px + 왼쪽 padding 40px (--qb-pad) */
 }
 
 /* ---------- 첫 진입 애니메이션 (페이지 로드 시 1회) ----------
