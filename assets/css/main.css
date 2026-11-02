@@ -3,8 +3,12 @@
    ========================================================================== */
 
 /* ---------- ① 히어로 ---------- */
-/* 헤더(흰색 고정) 바로 아래에서 시작. 뒤에 어두운 배경 없이 흰 바탕 위에 슬라이더 카드가 놓인다 */
+/* 헤더(흰색 고정) 바로 아래에서 시작 */
 .hero { position: relative; padding-top: calc(var(--header-h) + 24px); }
+/* 전체 너비 어두운 배경 띠: 헤더 하단선 바로 아래 ~ 슬라이더 카드 높이의 2/3 지점.
+   bottom 의 100% 는 .hero 높이이므로 위 여백(헤더 + 24px)을 빼면 카드 높이가 된다 */
+.hero__bg { position: absolute; z-index: 0; top: var(--header-h); left: 0; right: 0; bottom: calc((100% - var(--header-h) - 24px) / 3); background: var(--color-bg-hero) center / cover no-repeat; }
+.hero__bg::after { content: ""; position: absolute; inset: 0; background: rgba(20, 20, 20, 0.82); }
 .hero__inner { position: relative; }
 .hero__slider { position: relative; height: 640px; border-radius: var(--radius-xl); overflow: hidden; background: #111; color: #fff; }
 .hero__slide { position: absolute; inset: 0; opacity: 0; visibility: hidden; transition: opacity 0.8s var(--ease), visibility 0.8s; }
@@ -60,7 +64,7 @@
 .clinic-bar__faq-desc { margin-bottom: 12px; font-size: var(--fs-xs); color: var(--color-text-sub); }
 
 /* ---------- ③ 진료 철학 + 지점 ---------- */
-.philosophy { padding: 28px 0 var(--space-4xl); }
+.philosophy { padding: 0px 0 28px; }
 .philosophy__inner { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.75fr); gap: 40px; align-items: center; }
 .philosophy__title { font-size: var(--fs-h1); line-height: 1.45; letter-spacing: -0.02em; }
 .philosophy__desc { margin-top: 32px; font-size: var(--fs-sm); color: var(--color-text-sub); }
@@ -205,6 +209,7 @@
 
 @media (max-width: 768px) {
   .hero { padding-top: calc(var(--header-h) + 16px); }
+  .hero__bg { display: none; } /* 모바일은 띠 없이 흰 바탕 */
   .hero__inner { padding: 0 var(--gutter); }
   .hero__slider { height: 480px; border-radius: var(--radius-lg); }
   .hero__content { left: 24px; right: 24px; top: auto; bottom: 88px; transform: none; }
@@ -299,14 +304,13 @@
   /* 홈 묶음: 히어로+퀵바가 첫 화면(100vh)을 채우고 퀵바가 히어로 하단에 겹친다.
      진료 철학·지점 정보는 화면 단위 없이 일반 여백으로 바로 이어진다 */
   .screen-home__first { --overlap: 72px; display: flex; flex-direction: column; min-height: 100vh; }
-  .screen-home .philosophy { padding: 72px 0 var(--space-4xl); }
   .screen-home .hero { flex: 1; display: flex; flex-direction: column; }
   .screen-home .hero__inner { flex: 1; display: flex; flex-direction: column; }
   .screen-home .hero__slider { flex: 1; height: auto; min-height: 440px; }
   .screen-home .hero__content { top: calc(50% - var(--overlap) / 2); }
   .screen-home .hero__controls { bottom: calc(var(--overlap) + 28px); }
   .screen-home .clinic-bar { position: relative; z-index: 5; margin-top: calc(var(--overlap) * -1); padding: 0 0 24px; }
-  .screen-home .clinic-bar__inner { margin: 0 24px; padding: 24px 32px; border-bottom: 0; border-radius: var(--radius-xl); background: #fff; box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12); }
+  .screen-home .clinic-bar__inner { margin: 0 24px; padding: 24px 32px; border-bottom: 0; border-radius: var(--radius-xl); background: #fff; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12); }
   .screen-home .clinic-bar__card { aspect-ratio: auto; height: clamp(108px, 15vh, 140px); }
   .screen-home .clinic-bar__head { width: 170px; }
   .screen-home .clinic-bar__faq { width: 260px; padding-left: 32px; }
