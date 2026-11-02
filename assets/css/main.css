@@ -87,10 +87,13 @@
 .doctors__arrow:hover { background: var(--color-text); color: #fff; }
 .doctors__arrow svg { width: 20px; height: 20px; }
 .doctors__arrow:disabled { opacity: 0.35; pointer-events: none; }
-.doctors__viewport { position: relative; }
-.doctors__track { display: flex; gap: 32px; transition: transform 0.5s var(--ease); }
-.doctor-card { flex: none; width: 300px; padding: 16px 16px 24px; background: #fff; border-radius: var(--radius-lg); box-shadow: var(--shadow-card); opacity: 0.45; transform: scale(0.92); transition: opacity 0.5s, transform 0.5s var(--ease); cursor: pointer; }
-.doctor-card.is-active { opacity: 1; transform: none; cursor: default; }
+/* 캐러셀은 오른쪽 열 안에서만 보인다 (왼쪽 경계 = 열 시작선). 보이는 카드 수 --doc-visible 은 화면 너비별로 바꾼다
+   카드 너비 = (열 너비 − 꽉 찬 카드 사이 간격) ÷ 보이는 카드 수 → 오른쪽 끝에만 다음 카드가 잘려 보인다 */
+.doctors__viewport { --doc-visible: 3.5; --doc-gaps: 3; --doc-gap: 24px; position: relative; overflow: hidden; padding: 20px 0 36px; }
+.doctors__track { display: flex; gap: var(--doc-gap); transition: transform 0.5s var(--ease); }
+.doctor-card { flex: none; width: calc((100% - var(--doc-gap) * var(--doc-gaps)) / var(--doc-visible)); padding: 16px 16px 24px; background: #fff; border-radius: var(--radius-lg); opacity: 0.45; transform-origin: left center; transition: opacity 0.5s, transform 0.5s var(--ease), box-shadow 0.5s; cursor: pointer; }
+/* 활성 = 왼쪽 첫 번째 카드: 불투명, 그림자, 살짝 크게 (왼쪽 기준으로 커져 열 시작선을 넘지 않음) */
+.doctor-card.is-active { opacity: 1; transform: scale(1.04); box-shadow: var(--shadow-card); cursor: default; z-index: 1; }
 .doctor-card__photo { aspect-ratio: 4 / 5; border-radius: var(--radius-md); }
 .doctor-card__tag { display: inline-block; margin-top: 16px; }
 .doctor-card__name { margin-top: 8px; font-size: var(--fs-h3); }
@@ -167,6 +170,13 @@
 /* ==========================================================================
    반응형
    ========================================================================== */
+@media (max-width: 1399px) {
+  .doctors__viewport { --doc-visible: 3.2; }
+}
+@media (max-width: 1280px) {
+  .doctors__viewport { --doc-visible: 2.5; --doc-gaps: 2; }
+}
+
 @media (max-width: 1200px) {
   .hero__content { left: 64px; }
   .clinic-bar__inner { flex-wrap: wrap; }
@@ -224,8 +234,7 @@
   .doctors__tabs { margin-top: 24px; }
   .doctors__tab { padding: 0 14px; font-size: var(--fs-xs); }
   .doctors__nav { display: none; }
-  .doctors__track { gap: 16px; }
-  .doctor-card { width: 64vw; max-width: 280px; }
+  .doctors__viewport { --doc-visible: 1.2; --doc-gaps: 1; --doc-gap: 16px; }
 
   .clinic__grid { grid-template-columns: 1fr; grid-template-rows: none; grid-template-areas: none; grid-auto-rows: 180px; }
   .clinic-card { grid-area: auto !important; }

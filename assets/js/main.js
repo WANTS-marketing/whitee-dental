@@ -70,7 +70,7 @@ function initHero() {
   else play();
 }
 
-/* ---------- ④ 의료진 캐러셀 ---------- */
+/* ---------- ④ 의료진 캐러셀 — 왼쪽 첫 카드가 활성, 한 장씩 이동, 끝에서 처음으로 ---------- */
 function initDoctors() {
   const track = document.querySelector('[data-doctors-track]');
   if (!track || !window.SITE) return;
@@ -83,13 +83,10 @@ function initDoctors() {
   let active = 0;
 
   function render(branchId) {
-    // 대표원장이 가운데 오도록: 대표원장 앞에 마지막 의료진 1명을 붙여 양옆에 카드가 보이게 한다
+    // 지점 대표원장이 첫 번째(활성) 카드가 되도록 맨 앞으로
     const list = window.SITE.getDoctorsByBranch(branchId);
     const head = list.findIndex((d) => d.title === '대표원장');
-    if (head > -1 && list.length > 2) {
-      const [rep] = list.splice(head, 1);
-      list.unshift(list.pop(), rep);
-    }
+    if (head > 0) list.unshift(...list.splice(head, 1));
     track.innerHTML = list.map((d) => `
       <li class="doctor-card">
         <div class="doctor-card__photo img-ph"><img src="${img(d.photo)}" alt="${esc(d.name)} ${esc(d.title)} 사진" loading="lazy"></div>
@@ -99,7 +96,7 @@ function initDoctors() {
       </li>`).join('');
     cards = [...track.children];
     cards.forEach((card, i) => card.addEventListener('click', () => go(i)));
-    go(Math.min(1, cards.length - 1)); // 대표원장(두 번째 카드)이 가운데
+    go(0);
   }
 
   function go(i) {
@@ -108,9 +105,8 @@ function initDoctors() {
       c.classList.toggle('is-active', n === active);
       c.setAttribute('aria-current', n === active ? 'true' : 'false');
     });
-    const card = cards[active];
-    const offset = card.offsetLeft - (viewport.clientWidth - card.offsetWidth) / 2;
-    track.style.transform = `translateX(${-offset}px)`;
+    // 활성 카드를 열 시작선(왼쪽)에 맞춘다
+    track.style.transform = `translateX(${-cards[active].offsetLeft}px)`;
   }
 
   function selectTab(tab) {
