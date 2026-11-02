@@ -75,8 +75,31 @@
     document.querySelectorAll('img').forEach((el) => { if (el.complete && el.naturalWidth === 0) handleMissing(el); });
   });
 
+  /* ---------- 글자 크기 조절 ----------
+     html[data-fs] = md(보통 100%) / lg(크게 112.5%) / xl(아주 크게 125%). 선택값은 localStorage 에 저장해 다른 페이지에서도 유지.
+     스크립트가 읽히자마자 적용해 깜빡임을 줄이고, 버튼(헤더·모바일 메뉴)은 위임으로 처리 */
+  const FS_KEY = 'witee-font-size';
+  const FS_STEPS = ['md', 'lg', 'xl'];
+  function applyFontSize(step) {
+    if (!FS_STEPS.includes(step)) step = 'md';
+    if (step === 'md') delete document.documentElement.dataset.fs;
+    else document.documentElement.dataset.fs = step;
+    document.querySelectorAll('[data-fs-set]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.fsSet === step)));
+    return step;
+  }
+  let savedFs = 'md';
+  try { savedFs = localStorage.getItem(FS_KEY) || 'md'; } catch (e) { /* 저장소 사용 불가 — 보통으로 */ }
+  applyFontSize(savedFs);
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-fs-set]');
+    if (!btn) return;
+    const step = applyFontSize(btn.dataset.fsSet);
+    try { localStorage.setItem(FS_KEY, step); } catch (err) { /* 저장 실패해도 이번 페이지에는 적용됨 */ }
+  });
+
   /* ---------- 컴포넌트 로드 후 ---------- */
   document.addEventListener('components:loaded', () => {
+    applyFontSize(document.documentElement.dataset.fs || 'md'); // 헤더 버튼 선택 표시
     initHeader();
     initMegaMenu();
     initCurrentMenu();

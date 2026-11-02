@@ -215,20 +215,6 @@ function initDoctors() {
   nextBtn.addEventListener('click', () => select(pos + 1));
 
   selectTab(tabs[0]);
-
-  /* 데스크톱에서 약력 항목이 두 줄로 꺾이는 원장만 약력 글자 1px 줄이기 (말줄임 없음).
-     숨겨진 프로필도 자리를 차지하고 있어 바로 잴 수 있다. 글꼴 로드·리사이즈 때 다시 */
-  const wraps = (li) => li.getBoundingClientRect().height > parseFloat(getComputedStyle(li).lineHeight) * 1.5;
-  function fitCareer() {
-    profiles.forEach((el) => {
-      el.classList.remove('is-tight');
-      if (window.matchMedia('(min-width: 1025px)').matches && [...el.querySelectorAll('.doc-group__list li')].some(wraps)) el.classList.add('is-tight');
-    });
-  }
-  fitCareer();
-  document.fonts?.ready.then(fitCareer);
-  let fitTimer;
-  window.addEventListener('resize', () => { clearTimeout(fitTimer); fitTimer = setTimeout(fitCareer, 150); });
 }
 
 /* ---------- ⑥ 치료사례 잠금 ---------- */

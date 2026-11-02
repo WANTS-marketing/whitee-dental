@@ -20,7 +20,7 @@
   /* 텍스트 */
   --color-text: #222222;            /* 메인 텍스트: 거의 검정 */
   --color-text-sub: #666666;        /* 보조 텍스트: 회색 */
-  --color-text-muted: #999999;
+  --color-text-muted: #666666;     /* 어르신 가독성: 연한 회색도 #666 이상 */
   --color-white: #ffffff;
 
   /* 배경·선 */
@@ -34,7 +34,8 @@
   --color-line-dark: rgba(255, 255, 255, 0.12);
   --color-btn-dark: #212121;
 
-  /* 폰트 */
+  /* 폰트 — 모든 글자 크기는 rem (html font-size 단계 조절: 보통 100% / 크게 112.5% / 아주 크게 125%)
+     어르신 가독성: 본문·설명 최소 16px(--fs-sm), 보조 문구 최소 14px(--fs-xs·--fs-xxs) */
   --font-base: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont,
     "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
   --fs-display: 3.25rem;  /* 52px  히어로 타이틀 */
@@ -44,9 +45,9 @@
   --fs-h4: 1.25rem;       /* 20px */
   --fs-lg: 1.125rem;      /* 18px */
   --fs-md: 1rem;          /* 16px */
-  --fs-sm: 0.875rem;      /* 14px */
-  --fs-xs: 0.8125rem;     /* 13px */
-  --fs-xxs: 0.75rem;      /* 12px */
+  --fs-sm: 1rem;          /* 16px  본문·설명 (예전 14px) */
+  --fs-xs: 0.875rem;      /* 14px  보조 (예전 13px) */
+  --fs-xxs: 0.875rem;     /* 14px  고지·작은 라벨 (예전 12px) */
 
   /* 간격 */
   --space-2xs: 4px;

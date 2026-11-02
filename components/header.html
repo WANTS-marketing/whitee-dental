@@ -52,6 +52,11 @@
     </nav>
 
     <div class="util">
+      <div class="fs-ctrl" role="group" aria-label="글자 크기">
+        <button type="button" class="fs-ctrl__btn" data-fs-set="md" aria-label="글자 보통" aria-pressed="true">가</button>
+        <button type="button" class="fs-ctrl__btn" data-fs-set="lg" aria-label="글자 크게" aria-pressed="false">가</button>
+        <button type="button" class="fs-ctrl__btn" data-fs-set="xl" aria-label="글자 아주 크게" aria-pressed="false">가</button>
+      </div>
       <a href="{{ROOT}}/member/login.html">로그인</a>
       <a href="{{ROOT}}/member/join.html">회원가입</a>
     </div>
@@ -82,6 +87,14 @@
       <button class="mnav__close" type="button" aria-label="메뉴 닫기" data-mnav-close>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg>
       </button>
+    </div>
+    <div class="mnav__fs">
+      <span>글자 크기</span>
+      <div class="fs-ctrl" role="group" aria-label="글자 크기">
+        <button type="button" class="fs-ctrl__btn" data-fs-set="md" aria-label="글자 보통" aria-pressed="true">가</button>
+        <button type="button" class="fs-ctrl__btn" data-fs-set="lg" aria-label="글자 크게" aria-pressed="false">가</button>
+        <button type="button" class="fs-ctrl__btn" data-fs-set="xl" aria-label="글자 아주 크게" aria-pressed="false">가</button>
+      </div>
     </div>
     <ul>
       <li class="mnav__item">
