@@ -309,6 +309,8 @@
   .screen-home .hero__slider { flex: 1; height: auto; min-height: 440px; }
   .screen-home .hero__content { top: calc(50% - var(--overlap) / 2); }
   .screen-home .hero__controls { bottom: calc(var(--overlap) + 28px); }
+  /* 배경 띠는 퀵바 윗선(히어로 카드와 겹치기 시작하는 지점)에서 끝난다 = 히어로 아래에서 --overlap 만큼 위 */
+  .screen-home .hero__bg { bottom: var(--overlap); }
   .screen-home .clinic-bar { position: relative; z-index: 5; margin-top: calc(var(--overlap) * -1); padding: 0 0 24px; }
   .screen-home .clinic-bar__inner { margin: 0 24px; padding: 24px 32px; border-bottom: 0; border-radius: var(--radius-xl); background: #fff; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12); }
   .screen-home .clinic-bar__card { aspect-ratio: auto; height: clamp(108px, 15vh, 140px); }
@@ -320,9 +322,11 @@
   .screen-nav {
     position: fixed; z-index: var(--z-quick); left: 16px; top: 50%; transform: translateY(-50%);
     display: flex; flex-direction: column; align-items: center; gap: 14px;
-    color: var(--color-text); transition: color var(--dur), opacity var(--dur);
+    color: var(--color-text-sub); transition: opacity var(--dur);
   }
-  .screen-nav.is-light { color: #fff; }
+  /* 밝은 배경 위는 회색, 어두운 배경 위 조각은 흰색 (main.js initScreenNav 가 조각별로 is-light 를 붙인다) */
+  .screen-nav > *, .screen-nav__list > li { color: inherit; transition: color var(--dur); }
+  .screen-nav .is-light { color: #fff; }
   .screen-nav.is-hidden { opacity: 0; pointer-events: none; }
   .screen-nav__num { font-size: var(--fs-xxs); font-weight: 700; letter-spacing: 0.04em; }
   .screen-nav__name { writing-mode: vertical-rl; font-size: var(--fs-xs); font-weight: 700; letter-spacing: 0.2em; }

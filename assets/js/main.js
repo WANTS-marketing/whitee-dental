@@ -287,11 +287,29 @@ function initScreenNav() {
   screens.forEach((s) => io.observe(s));
   setActive(0);
 
-  // 가운데 선이 어두운 배경([data-screen-dark])에 걸리면 흰 글씨
-  const darkIo = new IntersectionObserver((entries) => {
-    entries.forEach((e) => nav.classList.toggle('is-light', e.isIntersecting));
-  }, { rootMargin: '-50% 0px -50% 0px' });
-  document.querySelectorAll('[data-screen-dark]').forEach((el) => darkIo.observe(el));
+  // 표시기 조각(번호·이름·점)마다 어두운 배경([data-screen-dark]) 위에 있으면 흰색, 아니면 기본(회색).
+  // 배경 경계가 표시기 중간을 지나가도 조각별로 따로 바뀐다
+  const darks = [...document.querySelectorAll('[data-screen-dark]')];
+  const parts = [num, name, ...nav.querySelectorAll('.screen-nav__list > li')];
+  let ticking = false;
+  function updateTone() {
+    ticking = false;
+    const areas = darks.map((d) => d.getBoundingClientRect());
+    parts.forEach((p) => {
+      const r = p.getBoundingClientRect();
+      const x = r.left + r.width / 2, y = r.top + r.height / 2;
+      p.classList.toggle('is-light', areas.some((a) => x >= a.left && x <= a.right && y >= a.top && y <= a.bottom));
+    });
+  }
+  const requestTone = () => { if (!ticking) { ticking = true; requestAnimationFrame(updateTone); } };
+  if (darks.length) {
+    window.addEventListener('scroll', requestTone, { passive: true });
+    window.addEventListener('resize', requestTone);
+    window.addEventListener('load', requestTone);
+    // 이미지·include 로딩으로 레이아웃이 바뀌어도 다시 계산
+    if ('ResizeObserver' in window) { const ro = new ResizeObserver(requestTone); darks.forEach((d) => ro.observe(d)); ro.observe(document.body); }
+    updateTone();
+  }
 }
 
 /* ---------- 스크롤 연출: 진입 애니메이션 ----------
