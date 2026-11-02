@@ -27,23 +27,55 @@
 | Pretendard (jsDelivr CDN) | 웹폰트 | SIL Open Font License 1.1 (상업 사용 가능) | 없음 |
 | Web3Forms | 상담문의 메일 발송 | 무료 플랜 월 250건 | 미정 (병원 이메일로 발급) |
 | GitHub Pages / Actions | 호스팅·배포 | Public 저장소 무료 | WANTS-marketing |
+| Google 지도 임베드 (키 없음) | 오시는길 지도 (임시) | Google 서비스 약관. 방문자 IP 등이 Google로 전송됨 → 개인정보처리방침에 반영 필요. 2차에 네이버·카카오 지도 API로 교체 검토 | 없음 |
+| Pexels 스톡 이미지 | 임시 이미지 | Pexels License (아래 표) | 없음 |
 | 아이콘 (인라인 SVG) | 메뉴·진료 아이콘·SNS | 이 프로젝트에서 직접 그림 | — |
 
 ## 이미지 출처 (작업하며 계속 기록)
 
-현재 전부 플레이스홀더. 목록: `assets/images/README.md`
+### 임시 이미지 — `assets/images/temp/` (2026-11-02 추가)
 
-| 파일 | 출처 | 라이선스 | 비고 |
+실제 병원 사진을 받기 전, 디자인 확인용으로 넣은 스톡 이미지입니다. **실제 사진이 오면 교체 대상입니다.**
+
+- 출처: Pexels (https://www.pexels.com) — 다운로드 주소 `images.pexels.com/photos/{ID}/`
+- 라이선스: [Pexels License](https://www.pexels.com/license/) — 상업적 사용 무료, 출처 표기 의무 없음, 수정 가능.
+  금지: 이미지 자체를 그대로 판매, 사진 속 인물이 병원·제품을 보증하는 것처럼 표현, 상표·로고로 사용
+- ⚠️ 의료진·환자·원내 사진처럼 **실제 병원을 대표하는 것처럼 보일 수 있는 사진은 오픈 전 반드시 실제 사진으로 교체** (의료광고·소비자 오인 방지)
+- 치료사례 BEFORE 자리의 사진은 실제 치료 사진이 아닌 스톡 사진입니다 (흐림 처리). 오픈 전 실제 동의받은 사진으로 교체하거나 비공개
+
+| 파일 (assets/images/temp/) | Pexels 사진 ID | 촬영자 | 라이선스 |
 |---|---|---|---|
-| (아직 없음) | | | |
+| hero-01.jpg | [3779713](https://www.pexels.com/photo/3779713/) | Andrea Piacquadio | Pexels License |
+| hero-02.jpg | [3845625](https://www.pexels.com/photo/3845625/) | Pexels 페이지에서 확인 | Pexels License |
+| hero-03-event-implant.jpg, visual-implant.jpg | [6502306](https://www.pexels.com/photo/6502306/) | cottonbro studio | Pexels License |
+| hero-bg.jpg, og-image.jpg, tour-*-01/05 | [6812453](https://www.pexels.com/photo/6812453/) | Pavel Danilyuk | Pexels License |
+| doctors-bg.jpg, tour-*-04/01 | [8459996](https://www.pexels.com/photo/8459996/) | Pexels 페이지에서 확인 | Pexels License |
+| branch-bar-bg.jpg, tour-*-05/03 | [305568](https://www.pexels.com/photo/305568/) | Pexels 페이지에서 확인 | Pexels License |
+| clinic-implant.jpg, case-implant-before.jpg | [6502340](https://www.pexels.com/photo/6502340/) | cottonbro studio | Pexels License |
+| clinic-aesthetic.jpg, case-prosthetics-before.jpg, visual-aesthetic.jpg | [12474261](https://www.pexels.com/photo/12474261/) | Pexels 페이지에서 확인 | Pexels License |
+| clinic-orthodontics.jpg, case-orthodontics-before.jpg, visual-orthodontics.jpg | [5524021](https://www.pexels.com/photo/5524021/) | Anna Avilova | Pexels License |
+| clinic-wisdom-scaling.jpg, visual-wisdom-scaling.jpg, tour-*-06 | [6812456](https://www.pexels.com/photo/6812456/) | Pavel Danilyuk | Pexels License |
+| clinic-general.jpg | [33359445](https://www.pexels.com/photo/33359445/) | Marta Branco | Pexels License |
+| visual-general.jpg | [5355715](https://www.pexels.com/photo/5355715/) | Tima Miroshnichenko | Pexels License |
+| visual-intro.jpg, news-dummy-04.jpg | [12745979](https://www.pexels.com/photo/12745979/) | Esma Karagoz | Pexels License |
+| news-dummy-01.jpg | [3845767](https://www.pexels.com/photo/3845767/) | Anna Shvets | Pexels License |
+| news-dummy-02.jpg | [5355720](https://www.pexels.com/photo/5355720/) | Tima Miroshnichenko | Pexels License |
+| news-dummy-03.jpg | [6627424](https://www.pexels.com/photo/6627424/) | kaboompics.com | Pexels License |
+| tour-*-02/03, tour-*-04/02 | [30902075](https://www.pexels.com/photo/30902075/) · [4269276](https://www.pexels.com/photo/4269276/) | Duy Tân Đại học · Cedric Fauntleroy | Pexels License |
 
-> 시안에 쓰인 사진 중 Unsplash 등 외부 사진이 있다면 출처를 여기에 기록. 치료사례 사진은 환자 동의 확인 필수.
+### 교체 방법
+같은 파일명으로 `assets/images/` 에 넣으면 자동으로 실제 사진이 먼저 표시됩니다 (`temp/` 는 실제 파일이 없을 때만 사용).
+모두 교체한 뒤 `assets/images/temp/` 폴더를 지우면 됩니다. 의사 사진(`doctor-*.jpg`)은 임시 이미지 없이 그라데이션 자리만 표시됩니다.
+참고: 실제 파일을 먼저 찾고 없으면 temp 로 넘어가는 방식이라, 교체 전까지는 브라우저 콘솔에 404가 보입니다 (동작에는 영향 없음).
 
 ## 병원에 받아야 할 자료 (TODO)
 
 - [ ] 지점별 인스타그램·블로그 주소 4개 (`assets/js/site-data.js` → `social`)
 - [ ] 히어로 3번 임플란트 이벤트 기간
-- [ ] FAQ 01~04 답변
+- [ ] FAQ 01·02 답변 (03·04는 기존 사이트 문구로 작성 — 병원 확인)
+- [ ] 이벤트 가격 배지(임플란트 49만원 · 교정 350만원~ · 어린이 교정 100만원) 유지 여부·기간, 의료광고 심의 검토
+- [ ] 창원점 대중교통 안내, 마산점 주차 안내, 마산점 주소 호수(1001·1002호) 표기 통일
+- [ ] 협력업체 로고 이미지 29개, 기공센터 소개 문구, 부산대학병원 협력·경찰 자문 상세 내용
 - [ ] 정호석 대표원장 진료과 표기 확인 (현재 "통합치의학과")
 - [ ] 의료진 사진·약력
 - [ ] 공식 로고 파일(SVG), 원내 사진, 진료 사진

@@ -81,7 +81,13 @@ function initDoctors() {
   let active = 0;
 
   function render(branchId) {
+    // 대표원장이 가운데 오도록: 대표원장 앞에 마지막 의료진 1명을 붙여 양옆에 카드가 보이게 한다
     const list = window.SITE.getDoctorsByBranch(branchId);
+    const head = list.findIndex((d) => d.title === '대표원장');
+    if (head > -1 && list.length > 2) {
+      const [rep] = list.splice(head, 1);
+      list.unshift(list.pop(), rep);
+    }
     track.innerHTML = list.map((d) => `
       <li class="doctor-card">
         <div class="doctor-card__photo img-ph"><img src="${img(d.photo)}" alt="${esc(d.name)} ${esc(d.title)} 사진" loading="lazy"></div>
@@ -91,11 +97,11 @@ function initDoctors() {
       </li>`).join('');
     cards = [...track.children];
     cards.forEach((card, i) => card.addEventListener('click', () => go(i)));
-    go(Math.min(1, cards.length - 1)); // 첫 화면에서 양옆이 보이도록 두 번째 카드부터
+    go(Math.min(1, cards.length - 1)); // 대표원장(두 번째 카드)이 가운데
   }
 
   function go(i) {
-    active = Math.max(0, Math.min(i, cards.length - 1));
+    active = (i + cards.length) % cards.length; // 처음·끝에서 이어서 돈다
     cards.forEach((c, n) => {
       c.classList.toggle('is-active', n === active);
       c.setAttribute('aria-current', n === active ? 'true' : 'false');
@@ -103,8 +109,6 @@ function initDoctors() {
     const card = cards[active];
     const offset = card.offsetLeft - (viewport.clientWidth - card.offsetWidth) / 2;
     track.style.transform = `translateX(${-offset}px)`;
-    prevBtn.disabled = active === 0;
-    nextBtn.disabled = active === cards.length - 1;
   }
 
   function selectTab(tab) {

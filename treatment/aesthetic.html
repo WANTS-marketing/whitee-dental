@@ -19,6 +19,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
   <link rel="stylesheet" href="../assets/css/variables.css">
   <link rel="stylesheet" href="../assets/css/common.css">
+  <link rel="stylesheet" href="../assets/css/sub.css">
   <script src="../assets/js/config.js" defer></script>
   <script src="../assets/js/site-data.js" defer></script>
   <script src="../assets/js/api.js" defer></script>
@@ -30,8 +31,10 @@
   <div data-include="header"></div>
 
   <main id="main">
-    <section class="sub-visual">
+    <section class="sub-visual sub-visual--image">
+      <div class="sub-visual__bg" style="background-image:url('../assets/images/visual-aesthetic.jpg'), url('../assets/images/temp/visual-aesthetic.jpg')"></div>
       <div class="container">
+        <p class="sub-visual__copy">자연스러운 아름다움을 추구합니다</p>
         <h1 class="sub-visual__title">심미치료</h1>
         <ol class="breadcrumb" aria-label="현재 위치">
           <li><a href="../index.html">홈</a></li>
@@ -48,12 +51,68 @@
       </div>
     </section>
 
-    <section class="sub-content">
+
+    <section class="sec ">
       <div class="container">
-        <div class="preparing">
-          <strong>콘텐츠 준비 중입니다</strong>
-          <p>심미치료 내용은 병원 자료를 받은 뒤 채워질 예정입니다.</p>
+        <div class="sec-head">
+          <span class="sec-label">AESTHETIC</span>
+          <h2 class="sec-title">원래 내 치아처럼 자연스럽게</h2>
+          <p class="sec-desc">화이트e치과 심미치료는 자연스러운 아름다움을 추구합니다.</p>
         </div>
+        <nav class="anchor-nav" aria-label="페이지 내 바로가기"><a href="#gum">잇몸성형</a><a href="#allceramic">올세라믹</a><a href="#laminate">라미네이트</a><a href="#whitening">치아미백</a></nav>
+        <div class="type-grid">
+          <article class="type-card" id="gum">
+            <p class="type-card__no">01</p>
+            <h3 class="type-card__title">잇몸성형</h3>
+            
+            <p class="type-card__text">잇몸 높이가 비대칭이거나 잇몸이 치아를 덮어 짧아 보일 때, 좌우 대칭과 조화를 고려해 잇몸 라인을 다듬습니다. 시술 후 2주간 금연·금주하고, 수술 부위를 혀나 손으로 자극하지 말고 칫솔질 대신 가글로 관리합니다.</p>
+            <div class="type-card__rec"><p class="type-card__rec-title">이런 분께 권해드려요</p><ul class="check-list"><li>미소 지을 때 잇몸이 많이 보이는 경우</li><li>잇몸 높이가 비대칭인 경우</li><li>잇몸이 치아를 덮어 짧아 보이는 경우</li><li>잇몸이 검붉거나 색소 침착이 있는 경우</li></ul></div>
+          </article>
+          <article class="type-card" id="allceramic">
+            <p class="type-card__no">02</p>
+            <h3 class="type-card__title">올세라믹</h3>
+            
+            <p class="type-card__text">치아 색조의 세라믹으로 치아 전체를 감싸 치열을 다시 형성합니다. 온도 변화에 안정적이고 표면이 매끄러워 치태가 잘 붙지 않으며, 금속을 쓰지 않아 금속 알레르기 걱정이 없습니다.</p>
+            <div class="type-card__rec"><p class="type-card__rec-title">이런 분께 권해드려요</p><ul class="check-list"><li>치아가 파절·손상된 경우</li><li>충치 등으로 치아가 변형된 경우</li><li>선천적으로 치아 크기·모양이 고민인 경우</li><li>교정할 시간적 여유가 없는 경우</li></ul></div>
+          </article>
+          <article class="type-card" id="laminate">
+            <p class="type-card__no">03</p>
+            <h3 class="type-card__title">라미네이트</h3>
+            
+            <p class="type-card__text">치아 바깥면을 얇게 다듬거나 거의 삭제하지 않고 얇은 도재를 붙이는 방법입니다. 삭제량이 적고 시술 시간이 짧으며, 자연스럽고 변색이 거의 없습니다.</p>
+            <div class="type-card__rec"><p class="type-card__rec-title">이런 분께 권해드려요</p><ul class="check-list"><li>사고로 치아가 파절된 경우</li><li>치아가 돌출된 경우</li><li>치아 사이에 공간이 있는 경우</li><li>배열이 고르지 않거나 크기가 큰 경우</li></ul></div>
+          </article>
+          <article class="type-card" id="whitening">
+            <p class="type-card__no">04</p>
+            <h3 class="type-card__title">치아미백</h3>
+            
+            <p class="type-card__text">치아를 삭제하거나 손상하지 않고 원래 색으로 회복하거나 더 밝게 합니다. 광조사기와 오스템 뷰티스를 사용합니다. 시술 후 2~3일은 색소가 진한 음식을 삼가고, 일시적으로 시린 증상이 있을 수 있습니다.</p>
+            <div class="type-card__rec"><p class="type-card__rec-title">이런 분께 권해드려요</p><ul class="check-list"><li>누렇거나 변색된 치아</li><li>결혼·취업을 앞둔 분</li><li>더 젊어 보이길 원하는 분</li><li>좋은 인상을 주고 싶은 분</li></ul></div>
+          </article>
+        </div>
+        <div class="block" style="margin-top:56px">
+          <h3 class="block__title" style="font-size:var(--fs-h3)">치아미백 과정</h3>
+          <ol class="steps"><li class="step"><p class="step__no">STEP 01</p><p class="step__title">구강검진·상담</p></li><li class="step"><p class="step__no">STEP 02</p><p class="step__title">착색물질 제거</p></li><li class="step"><p class="step__no">STEP 03</p><p class="step__title">평가·유지관리</p><p class="step__text">1년 1회 정기검진을 권합니다.</p></li></ol>
+        </div>
+        <p class="sec-note">*모든 시술은 부작용을 동반할 수 있으므로 의료진과의 상담이 필요합니다.</p>
+      </div>
+    </section>
+
+    <section class="sec sec--soft">
+      <div class="container">
+        <div class="intro-split">
+          <div class="img-ph intro-split__img"><img src="../assets/images/visual-intro.jpg" alt="화이트e치과 진료실에서 진료 중인 의료진" loading="lazy"></div>
+          <div>
+            <span class="sec-label">MEDICAL TEAM</span>
+            <h2 class="intro-split__title">경험 많고 믿을 수 있는<br>전문의로 구성된 의료진</h2>
+            <p class="intro-split__text">분야별 협진 진료시스템과 1:1 맞춤진료로 처음부터 끝까지 책임지고 진료합니다.</p>
+            <p style="margin-top:24px"><a class="btn btn--dark" href="../about/doctors.html">의료진 소개 보기</a></p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="sec" style="padding-top:0">
+      <div class="container">
         <!-- 빠른상담 (전송: assets/js/api.js submitInquiry) -->
         <section class="quick-consult" aria-labelledby="qc-title">
           <h2 class="quick-consult__title" id="qc-title">빠른상담 신청</h2>

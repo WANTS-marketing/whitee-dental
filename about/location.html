@@ -19,6 +19,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
   <link rel="stylesheet" href="../assets/css/variables.css">
   <link rel="stylesheet" href="../assets/css/common.css">
+  <link rel="stylesheet" href="../assets/css/sub.css">
   <script src="../assets/js/config.js" defer></script>
   <script src="../assets/js/site-data.js" defer></script>
   <script src="../assets/js/api.js" defer></script>
@@ -30,8 +31,10 @@
   <div data-include="header"></div>
 
   <main id="main">
-    <section class="sub-visual">
+    <section class="sub-visual sub-visual--image">
+      <div class="sub-visual__bg" style="background-image:url('../assets/images/branch-bar-bg.jpg'), url('../assets/images/temp/branch-bar-bg.jpg')"></div>
       <div class="container">
+        <p class="sub-visual__copy">창원점 상남동 · 마산점 마산역 도보 3분</p>
         <h1 class="sub-visual__title">오시는길</h1>
         <ol class="breadcrumb" aria-label="현재 위치">
           <li><a href="../index.html">홈</a></li>
@@ -47,9 +50,11 @@
       </div>
     </section>
 
-    <section class="sub-content">
+
+    <section class="sec ">
       <div class="container">
-        <div class="branch-cards" data-location></div>
+        <nav class="anchor-nav" aria-label="페이지 내 바로가기"><a href="#changwon">창원점</a><a href="#masan">마산점</a></nav>
+        <div data-location></div>
       </div>
     </section>
   </main>

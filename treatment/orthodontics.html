@@ -19,6 +19,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
   <link rel="stylesheet" href="../assets/css/variables.css">
   <link rel="stylesheet" href="../assets/css/common.css">
+  <link rel="stylesheet" href="../assets/css/sub.css">
   <script src="../assets/js/config.js" defer></script>
   <script src="../assets/js/site-data.js" defer></script>
   <script src="../assets/js/api.js" defer></script>
@@ -30,8 +31,10 @@
   <div data-include="header"></div>
 
   <main id="main">
-    <section class="sub-visual">
+    <section class="sub-visual sub-visual--image">
+      <div class="sub-visual__bg" style="background-image:url('../assets/images/visual-orthodontics.jpg'), url('../assets/images/temp/visual-orthodontics.jpg')"></div>
       <div class="container">
+        <p class="sub-visual__copy">20년 경력의 교정과 전문의 1:1 맞춤 책임 진료</p>
         <h1 class="sub-visual__title">치아교정</h1>
         <ol class="breadcrumb" aria-label="현재 위치">
           <li><a href="../index.html">홈</a></li>
@@ -48,12 +51,170 @@
       </div>
     </section>
 
-    <section class="sub-content">
+
+    <section class="sec ">
       <div class="container">
-        <div class="preparing">
-          <strong>콘텐츠 준비 중입니다</strong>
-          <p>치아교정 내용은 병원 자료를 받은 뒤 채워질 예정입니다.</p>
+        <div class="intro-split">
+          <div>
+            <span class="sec-label">ORTHODONTICS</span>
+            <h2 class="intro-split__title">치아교정!<br>상담부터 꼭 받아보세요</h2>
+            <p class="intro-split__text">처음부터 끝까지 완벽한 진료를 위해 최선을 다하고 있습니다. 전문의로 구성된 의료진이 풍부한 경험과 숙련도로 치아교정과 함께 필요한 진료를 모두 진행합니다.</p>
+          </div>
+          <div class="img-ph intro-split__img"><img src="../assets/images/clinic-orthodontics.jpg" alt="교정 장치를 한 치아" loading="lazy"></div>
         </div>
+        <!-- TODO: 가격·이벤트 기간은 병원 확인 + 의료광고 심의 기준 검토 후 노출 (기존 사이트 기준 문구) -->
+        <div class="price-cards">
+          <article class="price-card">
+            <p class="price-card__label">오스템 임플란트</p>
+            <h3 class="price-card__name">임플란트 국산정품</h3>
+            <p class="price-card__price">49<small>만원</small></p>
+            <p class="price-card__notes">맞춤지대주 보철 포함 · 뼈이식 비용 별도<br>*개인차에 따라 달라질 수 있습니다</p>
+          </article>
+          <article class="price-card">
+            <p class="price-card__label">클리피씨 · 클리피엠</p>
+            <h3 class="price-card__name">치아교정</h3>
+            <p class="price-card__price">350<small>만원~</small></p>
+            <p class="price-card__notes">월비·유지장치·발치·스크류 비용 포함<br>분납 가능 (10~16개월)</p>
+          </article>
+          <article class="price-card">
+            <p class="price-card__label">치아예방교정 (5~10세)</p>
+            <h3 class="price-card__name">어린이 치아교정</h3>
+            <p class="price-card__price">100<small>만원</small></p>
+            <p class="price-card__notes">교정 진행 시 검사비 차감<br>*정밀검사 비용 10만원 별도</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec sec--dark">
+      <div class="container">
+        <div class="sec-head">
+          
+          <h2 class="sec-title">1:1 맞춤 책임 진료</h2>
+          <p class="sec-desc">전문의로 구성된 믿을 수 있는 의료진</p>
+        </div>
+        <div class="spec-row"><span class="spec-circle">치주과<small>전문의</small></span><span class="spec-circle">치과교정과<small>전문의</small></span><span class="spec-circle">구강악안면외과<small>전문의</small></span><span class="spec-circle">통합치의학과<small>전문의</small></span></div>
+      </div>
+    </section>
+
+    <section class="sec ">
+      <div class="container">
+        <div class="intro-split">
+          <div class="img-ph intro-split__img"><img src="../assets/images/visual-wisdom-scaling.jpg" alt="3D 디지털 진단 장비" loading="lazy"></div>
+          <div>
+            <span class="sec-label">3D DIGITAL</span>
+            <h2 class="intro-split__title">3D 디지털 시스템으로<br>정밀하게 계획합니다</h2>
+            <p class="intro-split__text">3D 모르페우스, 3D CT, 3D 스캐너(TRIOS) 등 디지털 장비를 바탕으로 교정 계획을 세웁니다.</p>
+            <p class="intro-split__text">3D 모르페우스 진단 시스템으로 교정 후 달라질 모습을 미리 확인할 수 있습니다.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec sec--warm">
+      <div class="container">
+        <div class="sec-head">
+          <span class="sec-label">SPECIAL</span>
+          <h2 class="sec-title">화이트e치과 치아교정의 특별함</h2>
+          
+        </div>
+        <div class="point-grid">
+          <article class="point-card"><p class="point-card__no">POINT 01</p><h3 class="point-card__title">합리적이고 경제적인 비용</h3><p class="point-card__text">합리적인 비용으로 수준 높은 치아교정을 받을 수 있습니다.</p></article>
+          <article class="point-card"><p class="point-card__no">POINT 02</p><h3 class="point-card__title">정품 원칙 준수</h3><p class="point-card__text">브라켓부터 부가적인 부속품까지 정품만 사용합니다.</p></article>
+          <article class="point-card"><p class="point-card__no">POINT 03</p><h3 class="point-card__title">통증 최소화</h3><p class="point-card__text">컴퓨터 통증 저감 마취기, 마취 가글, 무통 마취기를 사용합니다.</p></article>
+          <article class="point-card"><p class="point-card__no">POINT 04</p><h3 class="point-card__title">관리 프로그램</h3><p class="point-card__text">꼼꼼한 치료 후 관리 프로그램으로 끝까지 함께합니다.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec ">
+      <div class="container">
+        <div class="sec-head">
+          <span class="sec-label">CASES</span>
+          <h2 class="sec-title">증상별 교정치료</h2>
+          
+        </div>
+        <nav class="anchor-nav" aria-label="페이지 내 바로가기"><a href="#crowding">덧니</a><a href="#protrusion">돌출입</a><a href="#openbite">개방교합</a><a href="#deepbite">과개교합</a><a href="#underbite">반대교합</a><a href="#adult">성인·부분·틈새</a><a href="#kids">어린이</a></nav>
+        <div class="type-grid">
+          <article class="type-card" id="crowding">
+            <p class="type-card__no">01</p>
+            <h3 class="type-card__title">덧니교정</h3>
+            
+            <p class="type-card__text">턱뼈가 작거나 치아 사이 공간이 부족해 치아가 제자리에 배열되지 못해 생깁니다. 송곳니에 흔하며, 플라그와 치석이 쉽게 생겨 관리가 어렵습니다.</p>
+            
+          </article>
+          <article class="type-card" id="protrusion">
+            <p class="type-card__no">02</p>
+            <h3 class="type-card__title">돌출입교정</h3>
+            
+            <p class="type-card__text">위턱뼈가 선천적으로 돌출되었거나 앞니가 튀어나온 경우입니다. 입술 돌출이 심하지 않고 치아 위치가 원인이라면 교정으로 개선할 수 있습니다.</p>
+            
+          </article>
+          <article class="type-card" id="openbite">
+            <p class="type-card__no">03</p>
+            <h3 class="type-card__title">개방교합</h3>
+            
+            <p class="type-card__text">윗니와 아랫니가 맞물리지 않고 틈이 벌어져 음식을 끊기 어렵고 발음이 새는 경우입니다.</p>
+            
+          </article>
+          <article class="type-card" id="deepbite">
+            <p class="type-card__no">04</p>
+            <h3 class="type-card__title">과개교합 (무턱)</h3>
+            
+            <p class="type-card__text">어금니는 맞물리지만 앞니가 과도하게 덮여 아랫니가 갇히고, 무턱처럼 보이는 경우입니다.</p>
+            
+          </article>
+          <article class="type-card" id="underbite">
+            <p class="type-card__no">05</p>
+            <h3 class="type-card__title">반대교합</h3>
+            
+            <p class="type-card__text">아랫니가 윗니를 덮는 경우입니다. 골격 문제가 심하지 않다면 교정으로 개선할 수 있습니다.</p>
+            
+          </article>
+          <article class="type-card" id="adult">
+            <p class="type-card__no">06</p>
+            <h3 class="type-card__title">성인 · 부분 · 틈새 교정</h3>
+            
+            <p class="type-card__text">앞니·어금니 부분교정, 치아 크기가 작거나 과잉치·선천적 결손, 잇몸이 나빠져 치아가 움직인 경우의 틈새교정을 진행합니다.</p>
+            
+          </article>
+          <article class="type-card" id="kids">
+            <p class="type-card__no">07</p>
+            <h3 class="type-card__title">어린이교정</h3>
+            
+            <p class="type-card__text">성장 후 문제가 심해지지 않도록 미리 예방하는 교정입니다. 성장 단계에 따라 교정 기간이 달라집니다.</p>
+            
+          </article>
+        </div>
+        <!-- TODO: 증상별 전후사진(이니셜·교정기간 캡션) — 의료광고 기준 검토 후 추가 -->
+        <p class="sec-note">*모든 시술은 부작용을 동반할 수 있으므로 의료진과의 상담이 필요합니다.</p>
+      </div>
+    </section>
+
+    <section class="sec sec--soft">
+      <div class="container">
+        <div class="sec-head">
+          <span class="sec-label">APPLIANCE</span>
+          <h2 class="sec-title">교정 장치 비교</h2>
+          <p class="sec-desc">치아의 현재 상태, 생활 여건과 선호도에 따라 선택합니다.</p>
+        </div>
+          <p class="table-hint">← 표를 옆으로 밀어서 확인하세요 →</p>
+          <div class="table-wrap">
+            <table class="compare-table">
+              <caption class="sr-only">교정 장치 비교표</caption>
+              <thead><tr><th scope="col">구분</th><th scope="col">클리피엠</th><th scope="col">클리피씨</th><th scope="col">메탈</th><th scope="col">투명</th></tr></thead>
+              <tbody>
+                <tr><th scope="row">유형</th><td>자가결찰</td><td>자가결찰</td><td>비자가결찰</td><td>탈부착식</td></tr>
+                <tr><th scope="row">장점</th><td>클리피씨보다 낮은 이물감, 견고한 브라켓, 교정 기간 단축, 일반 장치 대비 적은 통증</td><td>높은 심미성, 짧은 진료 시간, 낮은 이물감, 착색에 강함, 일반 장치 대비 적은 통증</td><td>높은 내구성, 강한 교정력, 합리적인 가격대</td><td>뛰어난 심미성, 쉽고 편한 관리, 자유로운 내원 일정</td></tr>
+                <tr><th scope="row">브라켓 색상</th><td>메탈</td><td>치아색 + 은색 뚜껑</td><td>메탈</td><td>투명</td></tr>
+                <tr><th scope="row">방문 간격</th><td>4~8주</td><td>4~8주</td><td>4~8주</td><td>4~8주 체크 방문, 택배 수령 가능</td></tr>
+              </tbody>
+            </table>
+          </div>
+      </div>
+    </section>
+    <section class="sec" style="padding-top:0">
+      <div class="container">
         <!-- 빠른상담 (전송: assets/js/api.js submitInquiry) -->
         <section class="quick-consult" aria-labelledby="qc-title">
           <h2 class="quick-consult__title" id="qc-title">빠른상담 신청</h2>

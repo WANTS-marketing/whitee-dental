@@ -19,6 +19,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
   <link rel="stylesheet" href="../assets/css/variables.css">
   <link rel="stylesheet" href="../assets/css/common.css">
+  <link rel="stylesheet" href="../assets/css/sub.css">
   <script src="../assets/js/config.js" defer></script>
   <script src="../assets/js/site-data.js" defer></script>
   <script src="../assets/js/api.js" defer></script>
@@ -30,8 +31,10 @@
   <div data-include="header"></div>
 
   <main id="main">
-    <section class="sub-visual">
+    <section class="sub-visual sub-visual--image">
+      <div class="sub-visual__bg" style="background-image:url('../assets/images/visual-implant.jpg'), url('../assets/images/temp/visual-implant.jpg')"></div>
       <div class="container">
+        <p class="sub-visual__copy">믿을 수 있는 전문의의 협진 진료시스템 1:1 책임진료</p>
         <h1 class="sub-visual__title">임플란트</h1>
         <ol class="breadcrumb" aria-label="현재 위치">
           <li><a href="../index.html">홈</a></li>
@@ -48,12 +51,135 @@
       </div>
     </section>
 
-    <section class="sub-content">
+
+    <section class="sec ">
       <div class="container">
-        <div class="preparing">
-          <strong>콘텐츠 준비 중입니다</strong>
-          <p>임플란트 내용은 병원 자료를 받은 뒤 채워질 예정입니다.</p>
+        <div class="intro-split">
+          <div>
+            <span class="sec-label">IMPLANT</span>
+            <h2 class="intro-split__title">임플란트!<br>상담부터 꼭 받아보세요</h2>
+            <p class="intro-split__text">화이트e치과 창원점·마산점의 풍부한 경험을 가진 의료진이 통증을 줄인 정품 임플란트로 진료합니다.</p>
+          </div>
+          <div class="img-ph intro-split__img"><img src="../assets/images/clinic-implant.jpg" alt="임플란트 보철 모형" loading="lazy"></div>
         </div>
+        <!-- TODO: 가격·이벤트 기간은 병원 확인 + 의료광고 심의 기준 검토 후 노출 (기존 사이트 기준 문구) -->
+        <div class="price-cards">
+          <article class="price-card">
+            <p class="price-card__label">오스템 임플란트</p>
+            <h3 class="price-card__name">임플란트 국산정품</h3>
+            <p class="price-card__price">49<small>만원</small></p>
+            <p class="price-card__notes">맞춤지대주 보철 포함 · 뼈이식 비용 별도<br>*개인차에 따라 달라질 수 있습니다</p>
+          </article>
+          <article class="price-card">
+            <p class="price-card__label">클리피씨 · 클리피엠</p>
+            <h3 class="price-card__name">치아교정</h3>
+            <p class="price-card__price">350<small>만원~</small></p>
+            <p class="price-card__notes">월비·유지장치·발치·스크류 비용 포함<br>분납 가능 (10~16개월)</p>
+          </article>
+          <article class="price-card">
+            <p class="price-card__label">치아예방교정 (5~10세)</p>
+            <h3 class="price-card__name">어린이 치아교정</h3>
+            <p class="price-card__price">100<small>만원</small></p>
+            <p class="price-card__notes">교정 진행 시 검사비 차감<br>*정밀검사 비용 10만원 별도</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec sec--dark">
+      <div class="container">
+        <div class="sec-head">
+          
+          <h2 class="sec-title">분야별 협진 진료시스템</h2>
+          <p class="sec-desc">분야별 협진 진료시스템과 1:1 맞춤진료로 믿을 수 있는 의료진</p>
+        </div>
+        <div class="spec-row"><span class="spec-circle">치주과<small>전문의</small></span><span class="spec-circle">치과교정과<small>전문의</small></span><span class="spec-circle">보철과<small>전문의</small></span><span class="spec-circle">통합치의학과<small>전문의</small></span><span class="spec-circle">구강악안면외과<small>전문의</small></span></div>
+      </div>
+    </section>
+
+    <section class="sec sec--warm">
+      <div class="container">
+        <div class="sec-head">
+          <span class="sec-label">SPECIAL</span>
+          <h2 class="sec-title">화이트e치과 임플란트의 특별함</h2>
+          
+        </div>
+        <div class="point-grid">
+          <article class="point-card"><p class="point-card__no">POINT 01</p><h3 class="point-card__title">빠른 일상 회복</h3><p class="point-card__text">당일 발치 후 즉시 식립으로 치료 기간을 단축해 빠르고 정밀하게 진료합니다.</p></article>
+          <article class="point-card"><p class="point-card__no">POINT 02</p><h3 class="point-card__title">통증을 줄인 치료</h3><p class="point-card__text">컴퓨터 통증 저감 마취기, 마취 가글, 무통 마취기로 통증에 대한 걱정을 줄였습니다.</p></article>
+          <article class="point-card"><p class="point-card__no">POINT 03</p><h3 class="point-card__title">편안한 마취</h3><p class="point-card__text">숙련된 의료진이 안정성 높고 편안한 마취를 시행합니다.</p></article>
+          <article class="point-card"><p class="point-card__no">POINT 04</p><h3 class="point-card__title">합리적인 치료비용</h3><p class="point-card__text">상담을 통해 진단한 뒤 합리적인 비용으로 수준 높은 임플란트 시술을 계획합니다.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec ">
+      <div class="container">
+        <div class="sec-head">
+          <span class="sec-label">ADVANTAGE</span>
+          <h2 class="sec-title">화이트e치과 임플란트의 장점</h2>
+          
+        </div>
+        <ul class="merit-list"><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M7.5 12.5l3 3 6-6"/></svg>분야별 전문의의 맞춤 1:1 진료</li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M7.5 12.5l3 3 6-6"/></svg>풍부한 경험으로 믿을 수 있는 실력</li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M7.5 12.5l3 3 6-6"/></svg>3D 디지털 정밀 진단</li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M7.5 12.5l3 3 6-6"/></svg>정품 재료 사용</li></ul>
+      </div>
+    </section>
+
+    <section class="sec sec--soft">
+      <div class="container">
+        <div class="sec-head">
+          <span class="sec-label">TYPES</span>
+          <h2 class="sec-title">임플란트 종류</h2>
+          <p class="sec-desc">상태와 생활에 맞는 방법을 전문의와 상담하세요.</p>
+        </div>
+        <nav class="anchor-nav" aria-label="페이지 내 바로가기"><a href="#immediate">당일 발치 후 즉시 식립</a><a href="#navigation">네비게이션</a><a href="#difficult">고난도</a><a href="#prf">자가혈(PRF)</a><a href="#revision">재수술</a><a href="#overdenture">틀니 임플란트</a></nav>
+        <div class="type-grid">
+          <article class="type-card" id="immediate">
+            <p class="type-card__no">01</p>
+            <h3 class="type-card__title">당일 발치 후 즉시 식립</h3>
+            <p class="type-card__copy">바쁜 현대인을 위한 맞춤 시술</p>
+            <p class="type-card__text">발치 당일 바로 임플란트를 식립해 수술 횟수와 치료 기간을 줄입니다. 비절개 방식으로 출혈이 적습니다. 잇몸 염증이 심한 경우에는 어려울 수 있습니다.</p>
+            <div class="type-card__rec"><p class="type-card__rec-title">이럴 때 권해드려요</p><ul class="check-list"><li>치과 방문이 어려운 경우</li><li>치료 기간을 줄이고 빠른 시술을 원하는 경우</li><li>빠른 회복을 원하는 경우</li><li>적은 통증을 원하는 경우</li></ul></div>
+          </article>
+          <article class="type-card" id="navigation">
+            <p class="type-card__no">02</p>
+            <h3 class="type-card__title">네비게이션 임플란트</h3>
+            <p class="type-card__copy">첨단 시뮬레이션으로 보다 높은 정확도</p>
+            <p class="type-card__text">3D 컴퓨터 모의 수술로 개인별 맞춤 계획을 세우고 부작용 우려를 줄입니다. 최소 절개로 통증 부담을 줄입니다.</p>
+            <div class="type-card__rec"><p class="type-card__rec-title">이럴 때 권해드려요</p><ul class="check-list"><li>질환이 있거나 고령인 경우</li><li>임플란트가 여러 개 필요한 경우</li><li>오랜 시간 치료가 힘든 경우</li><li>절개가 적고 통증이 적은 치료를 원하는 경우</li></ul></div>
+          </article>
+          <article class="type-card" id="difficult">
+            <p class="type-card__no">03</p>
+            <h3 class="type-card__title">고난도 임플란트</h3>
+            <p class="type-card__copy">풍부한 경험으로 안정적인 결과</p>
+            <p class="type-card__text">정밀검사와 철저한 치료계획으로 1:1 맞춤 시술을 진행합니다. 질병이나 복용 중인 약물이 있다면 꼭 말씀해 주세요.</p>
+            <div class="type-card__rec"><p class="type-card__rec-title">이럴 때 권해드려요</p><ul class="check-list"><li>전신질환이 있거나 약물을 복용 중인 경우</li><li>당뇨가 있는 경우</li><li>고혈압 및 기저질환이 있는 경우</li><li>골다공증이 있는 경우</li></ul></div>
+          </article>
+          <article class="type-card" id="prf">
+            <p class="type-card__no">04</p>
+            <h3 class="type-card__title">자가혈(PRF) 임플란트</h3>
+            <p class="type-card__copy">내 혈액에서 얻은 성장인자로 회복을 돕습니다</p>
+            <p class="type-card__text">PRF(Platelet Rich Fibrin)는 혈액에서 백혈구·혈소판을 추출해 고농도 성장인자를 얻는 기술입니다. 자가 혈액을 사용해 거부반응 우려가 적고, 잇몸뼈 형성을 도와 회복 기간 단축에 도움을 줍니다.</p>
+            <div class="type-card__rec"><p class="type-card__rec-title">이럴 때 권해드려요</p><ul class="check-list"><li>회복이 느린 노년층</li><li>질환이 있는 경우</li><li>출혈이나 붓기가 걱정되는 경우</li><li>부작용 우려를 줄이고 싶은 경우</li></ul></div>
+          </article>
+          <article class="type-card" id="revision">
+            <p class="type-card__no">05</p>
+            <h3 class="type-card__title">임플란트 재수술</h3>
+            <p class="type-card__copy">재수술은 경험 많은 의료진에게</p>
+            <p class="type-card__text">사고·외상, 치주염, 음주·흡연, 관리 미숙, 재료 문제 등으로 임플란트를 다시 해야 하는 경우 정밀 진단 후 재수술을 계획합니다.</p>
+            <div class="type-card__rec"><p class="type-card__rec-title">이럴 때 권해드려요</p><ul class="check-list"><li>임플란트 뿌리에 문제가 생겼을 때</li><li>주변에 염증이 발생한 경우</li><li>보철물에 문제가 발생한 경우</li><li>수술 실패로 탈락한 경우</li></ul></div>
+          </article>
+          <article class="type-card" id="overdenture">
+            <p class="type-card__no">06</p>
+            <h3 class="type-card__title">틀니 임플란트</h3>
+            <p class="type-card__copy">치아의 수명을 연장하기 위한 노력</p>
+            <p class="type-card__text">임플란트를 식립한 뒤 틀니를 연결해 기존 틀니의 불편함을 개선합니다. 유지력이 뛰어나고 여러 개의 임플란트보다 경제적입니다.</p>
+            <div class="type-card__rec"><p class="type-card__rec-title">이럴 때 권해드려요</p><ul class="check-list"><li>틀니가 아프고 불편한 경우</li><li>다수의 치아를 치료해야 하는 경우</li><li>임플란트 비용이 부담될 때</li><li>오랜 틀니 사용으로 새 틀니가 필요할 때</li></ul></div>
+          </article>
+        </div><p class="sec-note">*모든 시술은 부작용을 동반할 수 있으므로 의료진과의 상담이 필요합니다.</p>
+      </div>
+    </section>
+    <section class="sec" style="padding-top:0">
+      <div class="container">
         <!-- 빠른상담 (전송: assets/js/api.js submitInquiry) -->
         <section class="quick-consult" aria-labelledby="qc-title">
           <h2 class="quick-consult__title" id="qc-title">빠른상담 신청</h2>

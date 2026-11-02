@@ -38,7 +38,7 @@ about/ treatment/ community/ faq/ member/   서브페이지
 fee.html, privacy.html     비급여 진료비용, 개인정보처리방침
 admin/                     관리자 화면 (1차: UI만, 검색 제외)
 components/                공통 헤더·푸터·퀵메뉴 (include.js가 삽입)
-assets/css/                variables.css(디자인 토큰) · common.css · main.css · admin.css
+assets/css/                variables.css(디자인 토큰) · common.css · main.css(메인) · sub.css(서브 콘텐츠 블록) · admin.css
 assets/js/
   site-data.js             지점 정보·의료진·SNS 주소  ← 병원 정보 수정은 여기서
   api.js                   데이터 불러오기·상담 전송·로그인 상태 (2차에 Supabase로 교체할 파일)
@@ -47,7 +47,7 @@ assets/js/
   main.js / pages.js / admin.js   페이지별 동작
   config.js                자동 생성 (커밋 안 함)
 assets/data/*.json         공지·소식·사례·FAQ·문의 더미 데이터
-assets/images/             이미지 (목록: assets/images/README.md)
+assets/images/             이미지 (목록: assets/images/README.md) · temp/ = 임시 스톡 이미지(Pexels)
 scripts/build-config.js    환경변수 → config.js
 docs/                      배포·인수인계 문서
 ```
@@ -62,6 +62,10 @@ docs/                      배포·인수인계 문서
 | 색상·글자 크기 | `assets/css/variables.css` |
 | 메뉴 | `components/header.html` (데스크톱·모바일 두 군데) |
 | FAQ·소식 (1차) | `assets/data/*.json` |
+
+## 서브페이지 문구 출처
+
+진료과목·치과소개·오시는길 문구는 기존 사이트(whiteedental.co.kr) 내용을 정리한 `화이트e치과 리뉴얼 콘텐츠 정리.docx` (2026-10-30) 를 기준으로 작성했습니다. 병원 확인 전 문구이므로 오픈 전 검수가 필요합니다.
 
 ## 남은 TODO
 

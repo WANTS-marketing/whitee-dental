@@ -9,6 +9,8 @@
   const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const telHref = (tel) => `tel:${tel.replace(/[^0-9]/g, '')}`;
   const img = (file) => `${root}/assets/images/${file}`;
+  /** 배경 이미지: 실제 파일 위에 temp 를 깔아 둔다 (실제 파일이 없으면 temp 가 보임) */
+  const bg = (file) => `url('${img(file)}'), url('${root}/assets/images/temp/${file}')`;
   const formatDate = (iso, withTime) => {
     const d = new Date(iso);
     const p = (n) => String(n).padStart(2, '0');
@@ -52,21 +54,25 @@
       </li>`;
   }
 
-  window.UI = { esc, telHref, img, formatDate, branchBadge, accordion, faqItem };
+  window.UI = { esc, telHref, img, bg, formatDate, branchBadge, accordion, faqItem };
 
-  /* ---------- 이미지 플레이스홀더 ----------
-     이미지 파일이 없으면 .img-ph 에 파일명을 띄워 어떤 사진이 들어갈 자리인지 보이게 한다. */
-  function markMissing(el) {
-    el.classList.add('is-missing');
-    const box = el.closest('.img-ph');
-    if (box) {
-      box.classList.add('has-missing');
-      if (!box.dataset.ph) box.dataset.ph = (el.getAttribute('src') || '').split('/').pop();
+  /* ---------- 이미지 대체 ----------
+     1) assets/images/파일명 이 없으면 → assets/images/temp/파일명 (임시 스톡 이미지)
+     2) temp 에도 없으면 → 이미지를 숨기고 .img-ph 의 은은한 그라데이션 배경만 보인다
+     실제 사진을 assets/images/ 에 같은 이름으로 넣으면 자동으로 실제 사진이 우선 표시된다. */
+  function handleMissing(el) {
+    const src = el.getAttribute('src') || '';
+    if (!el.dataset.fallback && /\/assets\/images\/[^/]+$/.test(src)) {
+      el.dataset.fallback = '1';
+      el.src = src.replace(/\/assets\/images\//, '/assets/images/temp/');
+      return;
     }
+    el.classList.add('is-missing');
+    el.closest('.img-ph')?.classList.add('has-missing');
   }
-  document.addEventListener('error', (e) => { if (e.target.tagName === 'IMG') markMissing(e.target); }, true);
+  document.addEventListener('error', (e) => { if (e.target.tagName === 'IMG') handleMissing(e.target); }, true);
   window.addEventListener('load', () => {
-    document.querySelectorAll('img').forEach((el) => { if (el.complete && el.naturalWidth === 0) markMissing(el); });
+    document.querySelectorAll('img').forEach((el) => { if (el.complete && el.naturalWidth === 0) handleMissing(el); });
   });
 
   /* ---------- 컴포넌트 로드 후 ---------- */

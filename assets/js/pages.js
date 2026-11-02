@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const run = {
     doctors: renderDoctorsPage,
     location: renderLocationPage,
+    tour: renderTour,
     notice: renderNoticeList,
     news: renderNewsList,
     cases: renderCasesList,
@@ -42,27 +43,133 @@ function renderDoctorsPage() {
 function renderLocationPage() {
   const box = document.querySelector('[data-location]');
   if (!box) return;
-  const { esc, telHref, img } = window.UI;
+  const { esc, telHref } = window.UI;
+  const PIN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s7-6.2 7-11.5A7 7 0 005 9.5C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>';
+  const DOT = '<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="4" fill="currentColor"/></svg>';
+  // TODO: 지도 — 지금은 키 없이 쓰는 Google 지도 임베드(임시). 네이버/카카오 지도 API 키 발급 후 교체
+  const mapSrc = (b) => `https://maps.google.com/maps?q=${encodeURIComponent(b.address.split(',')[0])}&z=17&hl=ko&output=embed`;
+
   box.innerHTML = window.SITE.branches.map((b) => `
-    <article class="branch-card branch-card--${b.id}" id="${b.id}">
-      <h2 class="branch-card__name">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s7-6.2 7-11.5A7 7 0 005 9.5C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
-        화이트e치과 <em>${esc(b.name)}</em></h2>
-      <p class="branch-card__addr">${esc(b.address)}<br>(${esc(b.addressNote)})</p>
-      <a class="branch-card__tel" href="${telHref(b.tel)}">
-        <svg viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" opacity=".45" d="M7 6h4l2.5 6-3 2a14 14 0 006.5 6.5l2-3 6 2.5v4a3 3 0 01-3 3A21 21 0 014 9a3 3 0 013-3z"/><circle cx="23" cy="8" r="5" fill="currentColor"/></svg>
-        ${esc(b.tel)}</a>
-      <p class="branch-card__hours"><strong>진료시간</strong>${b.hours.map((h) => `${esc(h.label)} ${esc(h.time)}`).join(' · ')}</p>
-      <!-- TODO: 지도 — 네이버 지도 API 키 발급 후 임베드, 지금은 이미지 자리 -->
-      <div class="map-ph img-ph"><img src="${img(`map-${b.id}.jpg`)}" alt="${esc(b.name)} 위치 지도" loading="lazy"></div>
-      <div class="branch-card__actions">
-        <a class="btn btn--${b.id}" href="${esc(b.naverMap)}" target="_blank" rel="noopener">네이버 지도로 보기</a>
-        <a class="btn btn--line" href="${telHref(b.tel)}">전화하기</a>
+    <section class="loc loc--${b.id}" id="${b.id}" aria-labelledby="loc-${b.id}">
+      <h2 class="loc__head" id="loc-${b.id}">${PIN}화이트e치과 <em>${esc(b.name)}</em></h2>
+      <div class="loc__body">
+        <div class="loc__map">
+          <iframe src="${mapSrc(b)}" title="${esc(b.name)} 위치 지도" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+        <div class="loc__info">
+          <dl>
+            <dt>주소</dt><dd><strong>${esc(b.address)}</strong><br>${esc(b.landmark || b.addressNote)}</dd>
+            <dt>전화</dt><dd><a class="loc__tel" href="${telHref(b.tel)}">${esc(b.tel)}</a></dd>
+            <dt>이메일</dt><dd><a href="mailto:${esc(b.email)}">${esc(b.email)}</a></dd>
+            <dt>진료시간</dt><dd>${b.hours.map((h) => `${esc(h.label)} <strong>${esc(h.time)}</strong>`).join('<br>')}</dd>
+            <dt>주차</dt><dd>${b.parking ? esc(b.parking) : '주차 가능 · 자세한 안내는 전화로 문의해 주세요'}</dd>
+            <dt>이용안내</dt><dd><ul class="amenities">${b.amenities.map((a) => `<li>${DOT}${esc(a)}</li>`).join('')}</ul></dd>
+          </dl>
+          <div class="loc__actions">
+            <a class="btn btn--${b.id}" href="${esc(b.naverMap)}" target="_blank" rel="noopener">네이버 지도로 길찾기</a>
+            <a class="btn btn--line" href="${telHref(b.tel)}">전화하기</a>
+          </div>
+        </div>
       </div>
-      <!-- TODO: 주차 안내·대중교통 안내 (병원 확인 필요) -->
-    </article>`).join('');
+      ${b.transit.length ? `
+      <div class="transit">
+        <h3 class="transit__title">교통편 안내</h3>
+        <ul class="transit__list">
+          ${b.transit.map((t) => `<li class="transit__item"><strong>${esc(t.type)}</strong><div>${t.lines.map((l) => `<p>${esc(l)}</p>`).join('')}</div></li>`).join('')}
+        </ul>
+      </div>` : '<!-- TODO: 교통편 안내 병원 확인 -->'}
+    </section>`).join('');
   // 해시(#changwon / #masan)로 들어오면 렌더 후 해당 위치로 이동
   if (location.hash) document.querySelector(location.hash)?.scrollIntoView();
+}
+
+/* ---------- 병원 둘러보기: 지점 탭 + 갤러리 + 라이트박스 ---------- */
+function renderTour() {
+  const gallery = document.querySelector('[data-tour-gallery]');
+  if (!gallery) return;
+  const { esc, img } = window.UI;
+  const tabs = [...document.querySelectorAll('.branch-tabs [role="tab"]')];
+  let photos = [];
+
+  function show(branch) {
+    photos = window.SITE.tour[branch] || [];
+    gallery.innerHTML = photos.map((p, i) => `
+      <button type="button" class="gallery__item img-ph" data-index="${i}" aria-label="${esc(p.caption)} 크게 보기">
+        <img src="${img(p.file)}" alt="${esc(p.caption)}" loading="lazy">
+        <span class="gallery__cap">${esc(p.caption)}</span>
+      </button>`).join('');
+  }
+  function select(tab) {
+    tabs.forEach((t) => {
+      t.setAttribute('aria-selected', String(t === tab));
+      t.tabIndex = t === tab ? 0 : -1;
+    });
+    gallery.setAttribute('aria-labelledby', tab.id);
+    show(tab.dataset.branch);
+  }
+  tabs.forEach((tab, i) => {
+    tab.addEventListener('click', () => select(tab));
+    tab.addEventListener('keydown', (e) => {
+      if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+      const next = tabs[(i + (e.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length];
+      next.focus();
+      select(next);
+    });
+  });
+
+  // 라이트박스
+  const box = document.createElement('div');
+  box.className = 'lightbox';
+  box.setAttribute('role', 'dialog');
+  box.setAttribute('aria-modal', 'true');
+  box.setAttribute('aria-label', '사진 크게 보기');
+  box.innerHTML = `
+    <figure class="lightbox__figure"><img class="lightbox__img" alt=""><figcaption class="lightbox__cap"></figcaption></figure>
+    <button type="button" class="lightbox__btn lightbox__close" aria-label="닫기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
+    <button type="button" class="lightbox__btn lightbox__prev" aria-label="이전 사진"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <button type="button" class="lightbox__btn lightbox__next" aria-label="다음 사진"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg></button>`;
+  document.body.appendChild(box);
+  const lbImg = box.querySelector('.lightbox__img');
+  const lbCap = box.querySelector('.lightbox__cap');
+  let index = 0;
+  let opener = null;
+
+  function open(i) {
+    index = (i + photos.length) % photos.length;
+    const p = photos[index];
+    // 갤러리에서 실제로 표시된 주소(temp 대체 포함)를 그대로 사용
+    lbImg.src = gallery.querySelector(`[data-index="${index}"] img`)?.currentSrc || img(p.file);
+    lbImg.alt = p.caption;
+    lbCap.textContent = `${p.caption} (${index + 1} / ${photos.length})`;
+    if (!box.classList.contains('is-open')) {
+      box.classList.add('is-open');
+      document.body.classList.add('is-locked');
+      box.querySelector('.lightbox__close').focus();
+    }
+  }
+  function close() {
+    box.classList.remove('is-open');
+    document.body.classList.remove('is-locked');
+    opener?.focus();
+  }
+  gallery.addEventListener('click', (e) => {
+    const item = e.target.closest('.gallery__item');
+    if (!item) return;
+    opener = item;
+    open(Number(item.dataset.index));
+  });
+  box.querySelector('.lightbox__close').addEventListener('click', close);
+  box.querySelector('.lightbox__prev').addEventListener('click', () => open(index - 1));
+  box.querySelector('.lightbox__next').addEventListener('click', () => open(index + 1));
+  box.addEventListener('click', (e) => { if (e.target === box) close(); });
+  document.addEventListener('keydown', (e) => {
+    if (!box.classList.contains('is-open')) return;
+    if (e.key === 'Escape') close();
+    if (e.key === 'ArrowLeft') open(index - 1);
+    if (e.key === 'ArrowRight') open(index + 1);
+  });
+
+  select(tabs[0]);
 }
 
 /* ---------- 공지사항 ---------- */

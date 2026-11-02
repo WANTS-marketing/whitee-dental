@@ -19,6 +19,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
   <link rel="stylesheet" href="../assets/css/variables.css">
   <link rel="stylesheet" href="../assets/css/common.css">
+  <link rel="stylesheet" href="../assets/css/sub.css">
   <script src="../assets/js/config.js" defer></script>
   <script src="../assets/js/site-data.js" defer></script>
   <script src="../assets/js/api.js" defer></script>
@@ -26,12 +27,14 @@
   <script src="../assets/js/common.js" defer></script>
   <script src="../assets/js/pages.js" defer></script>
 </head>
-<body class="is-sub">
+<body class="is-sub" data-page="tour">
   <div data-include="header"></div>
 
   <main id="main">
-    <section class="sub-visual">
+    <section class="sub-visual sub-visual--image">
+      <div class="sub-visual__bg" style="background-image:url('../assets/images/tour-changwon-01.jpg'), url('../assets/images/temp/tour-changwon-01.jpg')"></div>
       <div class="container">
+        <p class="sub-visual__copy">편안하고 깨끗한 진료 환경</p>
         <h1 class="sub-visual__title">병원 둘러보기</h1>
         <ol class="breadcrumb" aria-label="현재 위치">
           <li><a href="../index.html">홈</a></li>
@@ -47,12 +50,16 @@
       </div>
     </section>
 
-    <section class="sub-content">
+
+    <section class="sec ">
       <div class="container">
-        <div class="preparing">
-          <strong>콘텐츠 준비 중입니다</strong>
-          <p>병원 둘러보기(원내 사진) 내용은 병원 자료를 받은 뒤 채워질 예정입니다.</p>
+        <div class="branch-tabs" role="tablist" aria-label="지점 선택">
+          <button type="button" role="tab" id="tour-tab-changwon" aria-selected="true" aria-controls="tour-gallery" data-branch="changwon">창원점</button>
+          <button type="button" role="tab" id="tour-tab-masan" aria-selected="false" aria-controls="tour-gallery" data-branch="masan" tabindex="-1">마산점</button>
         </div>
+        <!-- TODO: 실제 원내 사진(지점별 약 12장)과 공간별 캡션(접수·대기실, 진료실, 상담실, CT실 등) 병원에 요청 -->
+        <div class="gallery" id="tour-gallery" role="tabpanel" aria-labelledby="tour-tab-changwon" data-tour-gallery></div>
+        <p class="sec-note">현재 사진은 레이아웃 확인용 임시 이미지입니다.</p>
       </div>
     </section>
   </main>

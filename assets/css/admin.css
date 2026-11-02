@@ -29,7 +29,8 @@
 .admin__actions button { padding: 4px 10px; border: 1px solid var(--color-line); border-radius: 6px; font-size: var(--fs-xxs); background: #fff; }
 
 @media (max-width: 768px) {
-  .admin { grid-template-columns: 1fr; }
+  .admin { grid-template-columns: minmax(0, 1fr); }
+  .admin__side nav { min-width: 0; max-width: 100%; }
   .admin__side { flex-direction: row; flex-wrap: wrap; align-items: center; padding: 16px; gap: 12px; }
   .admin__menu { display: flex; overflow-x: auto; }
   .admin__menu button { white-space: nowrap; }

@@ -56,15 +56,11 @@ h1, h2, h3, h4, h5 { line-height: 1.3; font-weight: 700; }
 .btn--kakao { background: #fee500; color: #191919; border-radius: var(--radius-sm); height: 52px; }
 
 /* ---------- 이미지 플레이스홀더 ----------
-   이미지 파일이 아직 없으면 common.js가 .is-missing을 붙이고 파일명을 표시한다. */
-.img-ph { position: relative; overflow: hidden; background: linear-gradient(135deg, #eceae7, #dcd8d3); }
+   실제 사진·임시 사진이 모두 없을 때(common.js) 이미지를 숨기고 은은한 그라데이션만 보인다.
+   어떤 사진이 들어갈 자리인지는 img 의 alt 와 HTML 주석, assets/images/README.md 로 확인 */
+.img-ph { position: relative; overflow: hidden; background: linear-gradient(145deg, #f6f3f0 0%, #ece7e2 55%, #f3eee9 100%); }
 .img-ph > img { width: 100%; height: 100%; object-fit: cover; }
 .img-ph > img.is-missing { visibility: hidden; }
-.img-ph.has-missing::after {
-  content: attr(data-ph);
-  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 8px;
-  font-size: var(--fs-xxs); color: rgba(0, 0, 0, 0.35); text-align: center; word-break: break-all;
-}
 
 /* ==========================================================================
    헤더
@@ -94,10 +90,10 @@ h1, h2, h3, h4, h5 { line-height: 1.3; font-weight: 700; }
 .gnb__sub a:hover, .gnb__sub a.is-current { color: var(--color-point); font-weight: 600; }
 .gnb__link.is-current { color: var(--color-point); }
 
-.util { display: flex; align-items: center; gap: 16px; flex: none; font-size: var(--fs-xs); }
-.util a { display: inline-flex; flex-direction: column; align-items: center; gap: 2px; }
-.util svg { width: 24px; height: 24px; }
-.util__join { opacity: 0.8; }
+.util { display: flex; align-items: center; flex: none; font-size: var(--fs-sm); font-weight: 500; }
+.util a { opacity: 0.85; transition: opacity var(--dur), color var(--dur); }
+.util a:hover { opacity: 1; color: var(--color-point); }
+.util a + a::before { content: ""; display: inline-block; width: 1px; height: 12px; margin: 0 14px; background: currentColor; opacity: 0.4; vertical-align: -1px; }
 
 .hamburger { display: none; width: 40px; height: 40px; margin-left: auto; position: relative; }
 .hamburger span { position: absolute; left: 9px; right: 9px; height: 2px; background: currentColor; border-radius: 2px; transition: transform var(--dur), opacity var(--dur); }
@@ -379,6 +375,7 @@ body.is-locked { overflow: hidden; }
   .board__item { flex-wrap: wrap; gap: 4px 12px; padding: 16px 4px; }
   .board__title { flex-basis: 100%; }
   .card-grid { grid-template-columns: 1fr 1fr; gap: 24px 12px; }
+  .card-grid .post-card__title .badge { display: block; width: fit-content; margin: 0 auto 6px; }
   .accordion__btn { gap: 12px; padding: 18px 4px; font-size: var(--fs-sm); }
   .accordion__a { padding: 0 8px 20px 40px; }
   .form__row--2 { grid-template-columns: 1fr; }

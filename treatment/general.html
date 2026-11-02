@@ -19,6 +19,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
   <link rel="stylesheet" href="../assets/css/variables.css">
   <link rel="stylesheet" href="../assets/css/common.css">
+  <link rel="stylesheet" href="../assets/css/sub.css">
   <script src="../assets/js/config.js" defer></script>
   <script src="../assets/js/site-data.js" defer></script>
   <script src="../assets/js/api.js" defer></script>
@@ -30,8 +31,10 @@
   <div data-include="header"></div>
 
   <main id="main">
-    <section class="sub-visual">
+    <section class="sub-visual sub-visual--image">
+      <div class="sub-visual__bg" style="background-image:url('../assets/images/visual-general.jpg'), url('../assets/images/temp/visual-general.jpg')"></div>
       <div class="container">
+        <p class="sub-visual__copy">과잉진료 없이, 체계적이고 정밀한 진료</p>
         <h1 class="sub-visual__title">일반치료</h1>
         <ol class="breadcrumb" aria-label="현재 위치">
           <li><a href="../index.html">홈</a></li>
@@ -48,12 +51,69 @@
       </div>
     </section>
 
-    <section class="sub-content">
-      <div class="container">
-        <div class="preparing">
-          <strong>콘텐츠 준비 중입니다</strong>
-          <p>일반치료 내용은 병원 자료를 받은 뒤 채워질 예정입니다.</p>
+
+    <section class="sec ">
+      <div class="container"><nav class="anchor-nav" aria-label="페이지 내 바로가기"><a href="#caries">충치치료</a><a href="#endo">신경치료</a><a href="#prosth">보철치료</a><a href="#perio">치주치료</a></nav>
+        <div class="block" id="caries">
+          <h2 class="block__title">충치치료 <small>Caries Treatment</small></h2>
+          <p class="block__desc">충치는 치아가 썩는 질환으로 치과를 찾는 가장 흔한 원인이자 입 냄새의 원인이 됩니다. 한 번 생긴 충치는 저절로 좋아지지 않으므로 빨리 치료받는 것이 좋습니다.</p>
+          <ol class="steps"><li class="step"><p class="step__no">STEP 01</p><p class="step__title">법랑질 충치</p><p class="step__text">간단한 충치치료로 진행을 막습니다.</p></li><li class="step"><p class="step__no">STEP 02</p><p class="step__title">상아질 충치</p><p class="step__text">레진·인레이로 치료합니다.</p></li><li class="step"><p class="step__no">STEP 03</p><p class="step__title">치수까지 진행</p><p class="step__text">신경치료 후 보철치료를 합니다.</p></li><li class="step"><p class="step__no">STEP 04</p><p class="step__title">뼈까지 진행</p><p class="step__text">보철치료 또는 임플란트가 필요합니다.</p></li></ol>
+          <div style="margin-top:32px">
+          <p class="table-hint">← 표를 옆으로 밀어서 확인하세요 →</p>
+          <div class="table-wrap">
+            <table class="compare-table">
+              <caption class="sr-only">충치치료 방법 비교표</caption>
+              <thead><tr><th scope="col">구분</th><th scope="col">레진</th><th scope="col">인레이 (골드)</th><th scope="col">인레이 (세라믹)</th></tr></thead>
+              <tbody>
+                <tr><th scope="row">장점</th><td>치아색과 비슷해 심미적, 1회 내원으로 치료 종료</td><td>강도가 높고 재발률이 낮음, 관리 시 수명이 김</td><td>치아와 유사한 색조, 온도 변화에 안정적</td></tr>
+                <tr><th scope="row">단점</th><td>강도가 약해 파절 가능, 변색·탈락 가능</td><td>비심미적, 열전도율이 높아 시릴 수 있음</td><td>강한 충격에 깨질 수 있음</td></tr>
+              </tbody>
+            </table>
+          </div></div>
         </div>
+        <div class="block" id="endo">
+          <h2 class="block__title">신경치료 <small>Root Canal</small></h2>
+          <p class="block__desc">충치가 신경 가까이 진행되었거나 신경이 손상된 경우, 신경을 제거하고 신경관을 치과용 재료로 채우는 치료입니다. 대개 3~5회 내원합니다.</p>
+          <!-- TODO: 치아 구조 일러스트(법랑질·상아질·치은·치수·치조골·치주인대) -->
+          <ol class="steps"><li class="step"><p class="step__no">STEP 01</p><p class="step__title">염증 확인</p><p class="step__text">신경에 염증이 생긴 치아를 진단합니다.</p></li><li class="step"><p class="step__no">STEP 02</p><p class="step__title">충치·염증 제거</p><p class="step__text">충치를 제거하고 신경의 염증을 제거합니다.</p></li><li class="step"><p class="step__no">STEP 03</p><p class="step__title">길이 측정</p><p class="step__text">뿌리의 정확한 길이를 측정합니다.</p></li><li class="step"><p class="step__no">STEP 04</p><p class="step__title">뿌리 내부 충전</p><p class="step__text">신경관을 치과용 재료로 채웁니다.</p></li><li class="step"><p class="step__no">STEP 05</p><p class="step__title">치아머리 충전</p><p class="step__text">레진 등으로 치아 윗부분을 메웁니다.</p></li><li class="step"><p class="step__no">STEP 06</p><p class="step__title">보철물 장착</p><p class="step__text">파절을 막기 위해 보철물을 씌웁니다.</p></li></ol>
+        </div>
+        <div class="block" id="prosth">
+          <h2 class="block__title">보철치료 <small>Prosthodontics</small></h2>
+          <p class="block__desc">결손된 치아와 구강 조직을 인공 대체물로 보충해 기능과 심미, 건강을 회복하는 치료입니다. 신경치료를 받은 치아는 반드시 보철물을 씌워야 합니다.</p>
+          <div class="info-grid">
+            <article class="info-card"><h3 class="info-card__title">크라운</h3><p class="info-card__text">골드·올세라믹·지르코니아 등 재료로 치아 전체를 씌웁니다.</p></article>
+            <article class="info-card"><h3 class="info-card__title">브릿지</h3><p class="info-card__text">빠진 치아 양옆 치아를 지지대로 연결해 보철물을 고정합니다.</p></article>
+            <article class="info-card"><h3 class="info-card__title">부분틀니</h3><p class="info-card__text">남아 있는 치아에 걸어 빠진 부분을 채우는 틀니입니다.</p></article>
+            <article class="info-card"><h3 class="info-card__title">전체틀니</h3><p class="info-card__text">치아가 모두 없는 경우 잇몸 위에 올리는 틀니입니다.</p></article>
+            <article class="info-card"><h3 class="info-card__title">임플란트 틀니</h3><p class="info-card__text">임플란트에 틀니를 연결해 유지력을 높입니다.</p><ul class="check-list"><li>한 번에 많은 임플란트가 어려운 경우</li><li>기존 틀니를 교체해야 하는 경우</li><li>전악 임플란트 비용이 부담스러운 경우</li></ul></article>
+          </div>
+        </div>
+        <div class="block" id="perio">
+          <h2 class="block__title">치주치료 <small>Periodontics</small></h2>
+          <p class="block__desc">잇몸 염증을 제거하고 관리 가능한 상태로 만드는 치료입니다. 치태(플라그)가 쌓여 치석이 되면서 발생하며, 40세 이후에는 정기 검사와 적절한 치주치료가 특히 중요합니다.</p>
+          <div class="info-grid info-grid--2">
+            <article class="info-card"><h3 class="info-card__title">이런 증상이 있다면</h3><ul class="check-list"><li>잇몸에서 피가 나고 부어 있다</li><li>잇몸이 아프고 치아가 흔들리며 냄새가 난다</li><li>치아가 길어 보인다</li><li>찬 음식에 이가 시리다</li></ul></article>
+            <article class="info-card"><h3 class="info-card__title">진행과 치료</h3><p class="info-card__text"><strong>진행</strong> 정상 잇몸 → 치은염 → 치주염</p><p class="info-card__text"><strong>치료</strong> 스케일링 → 잇몸 염증 제거 치료 → 잇몸수술</p></article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec sec--soft">
+      <div class="container">
+        <div class="intro-split">
+          <div class="img-ph intro-split__img"><img src="../assets/images/visual-intro.jpg" alt="화이트e치과 진료실에서 진료 중인 의료진" loading="lazy"></div>
+          <div>
+            <span class="sec-label">MEDICAL TEAM</span>
+            <h2 class="intro-split__title">경험 많고 믿을 수 있는<br>전문의로 구성된 의료진</h2>
+            <p class="intro-split__text">분야별 협진 진료시스템과 1:1 맞춤진료로 처음부터 끝까지 책임지고 진료합니다.</p>
+            <p style="margin-top:24px"><a class="btn btn--dark" href="../about/doctors.html">의료진 소개 보기</a></p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="sec" style="padding-top:0">
+      <div class="container">
         <!-- 빠른상담 (전송: assets/js/api.js submitInquiry) -->
         <section class="quick-consult" aria-labelledby="qc-title">
           <h2 class="quick-consult__title" id="qc-title">빠른상담 신청</h2>

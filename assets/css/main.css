@@ -5,14 +5,13 @@
 /* ---------- ① 히어로 ---------- */
 .hero { position: relative; padding-top: var(--header-h); }
 .hero__bg { position: absolute; inset: 0 0 64px; background: var(--color-bg-hero) center / cover no-repeat; }
-.hero__bg::after { content: ""; position: absolute; inset: 0; background: rgba(20, 20, 20, 0.72); }
+.hero__bg::after { content: ""; position: absolute; inset: 0; background: rgba(20, 20, 20, 0.82); }
 .hero__inner { position: relative; }
 .hero__slider { position: relative; height: 640px; border-radius: var(--radius-xl); overflow: hidden; background: #111; color: #fff; }
 .hero__slide { position: absolute; inset: 0; opacity: 0; visibility: hidden; transition: opacity 0.8s var(--ease), visibility 0.8s; }
 .hero__slide.is-active { opacity: 1; visibility: visible; }
 .hero__media { position: absolute; inset: 0; background: linear-gradient(120deg, #3a3330, #151515); }
-.hero__media::before { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(90deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.15) 70%); }
-.hero__media.has-missing::after { color: rgba(255, 255, 255, 0.3); z-index: 1; }
+.hero__media::before { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(90deg, rgba(10, 10, 10, 0.85) 0%, rgba(10, 10, 10, 0.65) 50%, rgba(10, 10, 10, 0.5) 100%); }
 .hero__slide.is-active .hero__media img { animation: hero-zoom 7s linear forwards; }
 @keyframes hero-zoom { from { transform: scale(1.06); } to { transform: scale(1); } }
 .hero__content { position: absolute; z-index: 2; top: 50%; left: 120px; right: 240px; transform: translateY(-50%); }
@@ -118,13 +117,13 @@
 .clinic-card--general { grid-area: gen; }
 .clinic-card { position: relative; display: flex; align-items: flex-end; overflow: hidden; border-radius: 4px; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06); }
 .clinic-card__img { position: absolute; inset: 0; }
-.clinic-card__img.has-missing::after { align-items: flex-start; padding-top: 14px; }
 .clinic-card__img img { transition: transform 0.6s var(--ease); }
 .clinic-card:hover .clinic-card__img img { transform: scale(1.05); }
-.clinic-card__img::before { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(0deg, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.35) 45%, rgba(255, 255, 255, 0) 70%); }
+.clinic-card__img::before { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(0deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.7) 40%, rgba(255, 255, 255, 0) 75%); }
 .clinic-card__body { position: relative; z-index: 2; display: flex; flex-direction: column; gap: 4px; padding: 0 76px 22px 28px; }
 .clinic-card__title { font-size: var(--fs-h3); letter-spacing: -0.02em; }
-.clinic-card__sub { font-size: var(--fs-xs); color: var(--color-text-sub); }
+.clinic-card__sub { font-size: var(--fs-xs); color: var(--color-text-sub); word-break: keep-all; text-wrap: balance; }
+.clinic-card__sub > span { display: block; }
 .clinic-card__arrow { position: absolute; z-index: 2; right: 20px; bottom: 22px; display: grid; place-items: center; width: 40px; height: 40px; border: 1.5px solid var(--color-text-sub); border-radius: 50%; color: var(--color-text); transition: background var(--dur), color var(--dur), border-color var(--dur); }
 .clinic-card__arrow svg { width: 14px; height: 14px; }
 .clinic-card:hover .clinic-card__arrow { background: var(--color-point); border-color: var(--color-point); color: #fff; }
