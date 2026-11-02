@@ -85,7 +85,7 @@
 .doctors { position: relative; overflow: hidden; padding: 60px 0; }
 .doctors__bg { position: absolute; inset: 0; background: #e9e9e7 center / cover no-repeat; }
 .doctors__bg::after { content: ""; position: absolute; inset: 0; background: rgba(240, 240, 238, 0.75); }
-.doctors__inner { position: relative; display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 60px; align-items: center; }
+.doctors__inner { position: relative; display: grid; grid-template-columns: 22% minmax(0, 1fr); gap: 40px; align-items: center; }
 .doctors__label { font-size: var(--fs-h3); font-weight: 600; text-transform: none; }
 .doctors__title { font-size: var(--fs-h1); line-height: 1.4; letter-spacing: -0.02em; }
 .doctors__desc { margin-top: 16px; font-size: var(--fs-xs); color: var(--color-text-sub); }
@@ -104,9 +104,9 @@
 .doctors__arrow:disabled { opacity: 0.35; pointer-events: none; }
 /* 큰 프로필 패널 + 썸네일 줄 (main.js initDoctors)
    프로필은 전원을 그리드 한 칸에 겹쳐 두어 패널 높이 = 가장 긴 약력. 선택된 원장만 opacity 0.3s 로 보인다 */
-.doctors__main { --doc-photo-w: 300px; display: flex; flex-direction: column; gap: 20px; min-width: 0; }
+.doctors__main { --doc-photo-w: 260px; display: flex; flex-direction: column; gap: 16px; min-width: 0; }
 .doc-profiles { display: grid; padding: 28px; border-radius: var(--radius-lg); background: #fff; box-shadow: var(--shadow-card); }
-.doc-profile { grid-area: 1 / 1; display: grid; grid-template-columns: var(--doc-photo-w) minmax(0, 1fr); gap: 36px; align-items: start; opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s; }
+.doc-profile { grid-area: 1 / 1; display: grid; grid-template-columns: var(--doc-photo-w) minmax(0, 1fr); gap: 32px; align-items: start; opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s; }
 .doc-profile.is-active { opacity: 1; visibility: visible; }
 .doc-profile__photo { aspect-ratio: 300 / 380; border-radius: var(--radius-md); }
 .doc-profile__body { display: flex; flex-direction: column; min-width: 0; }
@@ -117,12 +117,24 @@
 .doc-profile__certs, .doc-profile__career { font-size: 14px; line-height: 1.7; }
 .doc-profile__certs { margin-top: 16px; font-weight: 700; }
 .doc-profile__career { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--color-line); color: var(--color-text-sub); }
-.doc-profile__career.is-2col { columns: 2; column-gap: 28px; }
+.doc-profile__career.is-2col { columns: 2; column-gap: 20px; }
 .doc-profile__certs li, .doc-profile__career li { position: relative; padding-left: 10px; break-inside: avoid; }
 .doc-profile__certs li::before, .doc-profile__career li::before { content: ""; position: absolute; left: 0; top: 0.8em; width: 3px; height: 3px; border-radius: 50%; background: currentColor; }
 .doc-profile__certs li::before { background: var(--color-point); }
 .doc-profile__more { display: none; }
-.doc-profile__link { align-self: flex-start; margin-top: 20px; height: 44px; }
+/* 1399px 이하: 가장 긴 약력 항목(약 600px)이 한 줄로 들어가도록 여백·사진 폭을 조금 줄인다 */
+@media (max-width: 1399px) {
+  .doctors__inner { gap: 32px; }
+  .doctors__main { --doc-photo-w: 244px; }
+  .doc-profiles { padding: 24px; }
+  .doc-profile { gap: 24px; }
+}
+/* 화면 단위 구성에서 의료진 섹션이 한 화면(헤더 아래)에 들어가도록 위아래 여백을 줄인다 */
+@media (min-width: 1025px) and (min-height: 700px) {
+  .doctors.screen { padding-block: clamp(28px, 4vh, 72px); }
+}
+/* '의료진 자세히 보기' — 썸네일 줄 아래, 패널 오른쪽 끝선에 맞춤. 링크는 선택된 원장 위치 */
+.doctors__more { align-self: flex-end; height: 44px; }
 
 .doc-thumbs { position: relative; display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; }
 .doc-thumbs::-webkit-scrollbar { display: none; }
@@ -273,7 +285,6 @@
   .doc-profile__photo { max-width: 220px; }
   .doc-profile:not(.is-expanded) .is-extra { display: none; }
   .doc-profile__more { display: block; align-self: flex-start; margin-top: 8px; font-size: var(--fs-sm); font-weight: 600; color: var(--color-point); }
-  .doc-profile__link { margin-top: 16px; }
   .doc-thumbs { margin: 0 calc(var(--gutter) * -1); padding: 0 var(--gutter); scroll-snap-type: x proximity; }
   .doc-thumbs li { flex: none; min-width: 0; width: 148px; scroll-snap-align: start; }
 

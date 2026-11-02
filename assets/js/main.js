@@ -96,7 +96,7 @@ function initDoctors() {
   const MOBILE_LIMIT = 6; // 모바일: 약력 처음 6개만, 나머지는 '약력 더보기'
   const TWO_COL = 8;      // 약력(전문의 항목 제외) 8개 이상이면 2열
   const isCert = (c) => c.startsWith('보건복지부 인증');
-  const arrow = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M2 8h12M9 3l5 5-5 5"/></svg>';
+  const link = document.querySelector('[data-doc-link]');
 
   box.innerHTML = docs.map((d, i) => {
     const career = d.career || [];
@@ -113,7 +113,6 @@ function initDoctors() {
           ${certs.length ? `<ul class="doc-profile__certs">${certs.map(li).join('')}</ul>` : ''}
           ${rest.length ? `<ul class="doc-profile__career${rest.length >= TWO_COL ? ' is-2col' : ''}">${rest.map(li).join('')}</ul>` : ''}
           ${career.length > MOBILE_LIMIT ? '<button type="button" class="doc-profile__more" aria-expanded="false">약력 더보기</button>' : ''}
-          <a class="btn btn--dark doc-profile__link" data-doc-link href="./about/doctors.html">의료진 자세히 보기 ${arrow}</a>
         </div>
       </article>`;
   }).join('');
@@ -140,7 +139,7 @@ function initDoctors() {
       el.setAttribute('aria-hidden', String(!on));
       el.inert = !on;
     });
-    profiles[di].querySelector('[data-doc-link]').href = `./about/doctors.html#${branch}-${window.SITE.doctorSlug(docs[di])}`;
+    link.href = `./about/doctors.html#${branch}-${window.SITE.doctorSlug(docs[di])}`;
     thumbs.forEach((t, i) => t.setAttribute('aria-pressed', String(i === pos)));
     // 썸네일 줄이 가로 스크롤일 때(모바일) 선택한 썸네일이 보이게
     const li = thumbs[pos].parentElement;
@@ -190,6 +189,23 @@ function initDoctors() {
   nextBtn.addEventListener('click', () => select(pos + 1));
 
   selectTab(tabs[0]);
+
+  /* 약력 줄바꿈 없애기 — 2열에서 두 줄로 꺾이는 항목이 있으면 그 원장만 1열로 (말줄임 없음)
+     데스크톱(1025px 이상)에서만. 숨겨진 프로필도 자리를 차지하고 있어 바로 잴 수 있다 */
+  const wraps = (ul) => [...ul.children].some((li) => li.getClientRects().length > 1 || li.offsetHeight > parseFloat(getComputedStyle(li).lineHeight) * 1.5);
+  function fitCareer() {
+    profiles.forEach((el) => {
+      const ul = el.querySelector('.doc-profile__career');
+      if (!ul) return;
+      const want2 = ul.children.length >= TWO_COL;
+      ul.classList.toggle('is-2col', want2);
+      if (want2 && window.matchMedia('(min-width: 1025px)').matches && wraps(ul)) ul.classList.remove('is-2col');
+    });
+  }
+  fitCareer();
+  document.fonts?.ready.then(fitCareer);
+  let fitTimer;
+  window.addEventListener('resize', () => { clearTimeout(fitTimer); fitTimer = setTimeout(fitCareer, 150); });
 }
 
 /* ---------- ⑥ 치료사례 잠금 ---------- */
