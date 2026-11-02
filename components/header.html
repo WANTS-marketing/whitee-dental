@@ -11,6 +11,7 @@
       </span>
     </a>
 
+    <!-- 데스크톱 GNB: 대메뉴 하나에 hover/focus 하면 전체 펼침 패널(.mega)이 열리고 모든 하위 메뉴가 각 대메뉴 아래 열로 보인다 (common.js initMegaMenu) -->
     <nav class="gnb" aria-label="주 메뉴">
       <ul class="gnb__list">
         <li class="gnb__item">
@@ -59,6 +60,14 @@
       <span></span><span></span><span></span>
     </button>
   </div>
+
+  <!-- 전체 펼침 패널 배경 + 오른쪽 지점 연락처 (내용은 site-data.js 로 채움) -->
+  <div class="mega" data-mega>
+    <div class="container mega__inner">
+      <div class="mega__contact" data-mega-contact></div>
+    </div>
+  </div>
+  <div class="mega-dim" aria-hidden="true"></div>
 </header>
 
 <!-- 모바일 메뉴 -->
@@ -76,8 +85,8 @@
     </div>
     <ul>
       <li class="mnav__item">
-        <button class="mnav__toggle" type="button" aria-expanded="false">화이트e치과<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3.5 6l4.5 4.5L12.5 6"/></svg></button>
-        <ul class="mnav__sub">
+        <button class="mnav__toggle" type="button" aria-expanded="true">화이트e치과<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3.5 6l4.5 4.5L12.5 6"/></svg></button>
+        <ul class="mnav__sub is-open">
           <li><a href="{{ROOT}}/about/intro.html">치과소개</a></li>
           <li><a href="{{ROOT}}/about/doctors.html">의료진 소개</a></li>
           <li><a href="{{ROOT}}/about/tour.html">병원 둘러보기</a></li>
@@ -85,8 +94,8 @@
         </ul>
       </li>
       <li class="mnav__item">
-        <button class="mnav__toggle" type="button" aria-expanded="false">진료과목<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3.5 6l4.5 4.5L12.5 6"/></svg></button>
-        <ul class="mnav__sub">
+        <button class="mnav__toggle" type="button" aria-expanded="true">진료과목<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3.5 6l4.5 4.5L12.5 6"/></svg></button>
+        <ul class="mnav__sub is-open">
           <li><a href="{{ROOT}}/treatment/implant.html">임플란트</a></li>
           <li><a href="{{ROOT}}/treatment/orthodontics.html">치아교정</a></li>
           <li><a href="{{ROOT}}/treatment/general.html">일반치료</a></li>
@@ -95,16 +104,16 @@
         </ul>
       </li>
       <li class="mnav__item">
-        <button class="mnav__toggle" type="button" aria-expanded="false">커뮤니티<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3.5 6l4.5 4.5L12.5 6"/></svg></button>
-        <ul class="mnav__sub">
+        <button class="mnav__toggle" type="button" aria-expanded="true">커뮤니티<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3.5 6l4.5 4.5L12.5 6"/></svg></button>
+        <ul class="mnav__sub is-open">
           <li><a href="{{ROOT}}/community/notice.html">공지사항</a></li>
           <li><a href="{{ROOT}}/community/news.html">치과소식</a></li>
           <li><a href="{{ROOT}}/community/cases.html">치료사례</a></li>
         </ul>
       </li>
       <li class="mnav__item">
-        <button class="mnav__toggle" type="button" aria-expanded="false">FAQ<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3.5 6l4.5 4.5L12.5 6"/></svg></button>
-        <ul class="mnav__sub">
+        <button class="mnav__toggle" type="button" aria-expanded="true">FAQ<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3.5 6l4.5 4.5L12.5 6"/></svg></button>
+        <ul class="mnav__sub is-open">
           <li><a href="{{ROOT}}/faq/index.html">자주 묻는 질문</a></li>
           <li><a href="{{ROOT}}/faq/contact.html">상담문의하기</a></li>
         </ul>

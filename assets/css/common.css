@@ -65,10 +65,10 @@ h1, h2, h3, h4, h5 { line-height: 1.3; font-weight: 700; }
 /* ==========================================================================
    헤더
    ========================================================================== */
-.header { position: fixed; top: 0; left: 0; right: 0; z-index: var(--z-header); height: var(--header-h); background: #fff; color: var(--color-text); transition: background var(--dur), box-shadow var(--dur), color var(--dur); }
+.header { --mega-h: 280px; position: fixed; top: 0; left: 0; right: 0; z-index: var(--z-header); height: var(--header-h); background: #fff; color: var(--color-text); transition: background var(--dur), box-shadow var(--dur), color var(--dur); }
 .header.is-scrolled { box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06); }
 /* 메인: 어두운 히어로 위에서 투명, 스크롤하면 흰 배경 */
-.is-main .header:not(.is-scrolled):not(:hover) { background: transparent; color: #fff; }
+.is-main .header:not(.is-scrolled):not(:hover):not(.is-mega) { background: transparent; color: #fff; }
 .header__inner { display: flex; align-items: center; height: 100%; }
 
 .logo { display: inline-flex; align-items: center; gap: 6px; flex: none; }
@@ -78,17 +78,55 @@ h1, h2, h3, h4, h5 { line-height: 1.3; font-weight: 700; }
 .logo__name em { font-style: normal; color: var(--color-point); }
 .logo__en { margin-top: 4px; font-size: 7px; letter-spacing: 0.35em; opacity: 0.8; }
 
-.gnb { flex: 1; display: flex; justify-content: center; height: 100%; }
-.gnb__list { display: flex; height: 100%; gap: clamp(32px, 7vw, 110px); }
+/* ---------- GNB: 전체 펼침 메뉴 (1025px 이상) ----------
+   하위 메뉴(.gnb__sub)는 각 대메뉴 바로 아래 열에 놓인다. 열 너비 = 대메뉴 너비 + 메뉴 간격이라 열끼리 빈틈없이 맞닿고,
+   흰 배경·그림자는 헤더 아래 전체 너비 패널(.mega)이 맡는다. 열고 닫기는 .header.is-mega (common.js initMegaMenu) */
+.gnb { --gnb-gap: clamp(32px, 7vw, 110px); flex: 1; display: flex; justify-content: center; height: 100%; }
+.gnb__list { display: flex; height: 100%; gap: var(--gnb-gap); }
 .gnb__item { position: relative; display: flex; align-items: center; }
-.gnb__link { display: inline-flex; align-items: center; gap: 4px; font-size: var(--fs-lg); font-weight: 600; }
+.gnb__link { display: inline-flex; align-items: center; gap: 4px; font-size: var(--fs-lg); font-weight: 600; transition: color var(--dur); }
 .gnb__link svg { width: 14px; height: 14px; color: var(--color-point); transition: transform var(--dur); }
-.gnb__item:hover .gnb__link svg, .gnb__item:focus-within .gnb__link svg { transform: rotate(180deg); }
-.gnb__sub { position: absolute; top: calc(100% - 12px); left: 50%; min-width: 160px; padding: 12px 0; background: #fff; color: var(--color-text); border-radius: var(--radius-md); box-shadow: var(--shadow-card); opacity: 0; visibility: hidden; transform: translate(-50%, 8px); transition: opacity var(--dur), transform var(--dur), visibility var(--dur); }
-.gnb__item:hover .gnb__sub, .gnb__item:focus-within .gnb__sub { opacity: 1; visibility: visible; transform: translate(-50%, 0); }
-.gnb__sub a { display: block; padding: 8px 24px; font-size: var(--fs-sm); color: var(--color-text-sub); white-space: nowrap; text-align: center; }
-.gnb__sub a:hover, .gnb__sub a.is-current { color: var(--color-point); font-weight: 600; }
 .gnb__link.is-current { color: var(--color-point); }
+
+.gnb__sub {
+  position: absolute; z-index: 2; top: 100%; left: calc(var(--gnb-gap) / -2); right: calc(var(--gnb-gap) / -2);
+  height: var(--mega-h); padding: 28px 0; color: var(--color-text); text-align: center;
+  border-top: 2px solid transparent;
+  opacity: 0; visibility: hidden; transform: translateY(-8px);
+  transition: opacity 0.25s var(--ease), transform 0.25s var(--ease), visibility 0.25s, border-color var(--dur), background var(--dur);
+}
+.gnb__item + .gnb__item .gnb__sub { border-left: 1px solid var(--color-line); }
+.gnb__sub a { display: block; padding: 9px 12px; font-size: var(--fs-md); line-height: 1.5; color: var(--color-text-sub); white-space: nowrap; transition: color var(--dur); }
+.gnb__sub a:hover, .gnb__sub a:focus-visible, .gnb__sub a.is-current { color: var(--color-point); }
+.gnb__sub a.is-current { font-weight: 600; }
+
+.mega {
+  position: absolute; z-index: 1; top: 100%; left: 0; right: 0; height: var(--mega-h);
+  background: #fff; color: var(--color-text); border-top: 1px solid var(--color-line); border-bottom: 1px solid var(--color-line); box-shadow: 0 12px 24px rgba(0, 0, 0, 0.06);
+  opacity: 0; visibility: hidden; transform: translateY(-8px);
+  transition: opacity 0.25s var(--ease), transform 0.25s var(--ease), visibility 0.25s;
+}
+.mega__inner { position: relative; height: 100%; }
+.mega__contact { position: absolute; top: 28px; right: var(--gutter); width: 220px; padding: 20px 22px; border-radius: var(--radius-md); background: var(--color-bg-warm); font-size: var(--fs-sm); }
+.mega__contact-title { margin-bottom: 10px; font-size: var(--fs-xs); font-weight: 600; color: var(--color-text-sub); letter-spacing: 0.04em; }
+.mega__tel { display: flex; justify-content: space-between; padding: 4px 0; font-weight: 700; }
+.mega__tel:hover b { color: var(--color-point); }
+.mega__hours { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--color-line); font-size: var(--fs-xs); line-height: 1.7; color: var(--color-text-sub); }
+.mega__hours span { display: block; }
+/* 1240px 미만은 오른쪽 빈 공간이 좁아 마지막 열과 겹치므로 연락처 박스를 숨긴다 */
+@media (max-width: 1239px) { .mega__contact { display: none; } }
+/* 본문 딤 — 마우스가 딤 위로 가면 헤더를 벗어난 것으로 보고 닫히도록 pointer-events 없음 */
+.mega-dim { position: fixed; z-index: 0; top: var(--header-h); left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.35); opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 0.25s, visibility 0.25s; }
+
+.header.is-mega { background: #fff; color: var(--color-text); box-shadow: none; }
+.header.is-mega .gnb__sub, .header.is-mega .mega { opacity: 1; visibility: visible; transform: none; }
+.header.is-mega .mega-dim { opacity: 1; visibility: visible; }
+/* 지금 hover·focus 중인 대메뉴의 열만 포인트 컬러로 강조 */
+.header.is-mega .gnb__item:is(:hover, :focus-within) .gnb__link { color: var(--color-point); }
+.header.is-mega .gnb__item:is(:hover, :focus-within) .gnb__link svg { transform: rotate(180deg); }
+.header.is-mega .gnb__item:is(:hover, :focus-within) .gnb__sub { border-top-color: var(--color-point); background: linear-gradient(180deg, rgba(254, 109, 51, 0.06), rgba(254, 109, 51, 0) 70%); }
+.header.is-mega .gnb__item:is(:hover, :focus-within) .gnb__sub a { color: var(--color-text); }
+.header.is-mega .gnb__item:is(:hover, :focus-within) .gnb__sub a:hover, .header.is-mega .gnb__item .gnb__sub a:focus-visible { color: var(--color-point); }
 
 .util { display: flex; align-items: center; flex: none; font-size: var(--fs-sm); font-weight: 500; }
 .util a { opacity: 0.85; transition: opacity var(--dur), color var(--dur); }
@@ -115,7 +153,6 @@ h1, h2, h3, h4, h5 { line-height: 1.3; font-weight: 700; }
 .mnav__item { border-bottom: 1px solid var(--color-line); }
 .mnav__toggle { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 18px var(--gutter); font-size: var(--fs-md); font-weight: 600; text-align: left; }
 .mnav__toggle svg { width: 16px; height: 16px; transition: transform var(--dur); }
-.mnav__toggle[aria-expanded="true"] { color: var(--color-point); }
 .mnav__toggle[aria-expanded="true"] svg { transform: rotate(180deg); }
 .mnav__sub { display: none; padding: 0 var(--gutter) 12px; background: var(--color-bg-soft); }
 .mnav__sub.is-open { display: block; }
@@ -326,7 +363,7 @@ body.is-locked { overflow: hidden; }
    반응형
    ========================================================================== */
 @media (max-width: 1024px) {
-  .gnb, .util { display: none; }
+  .gnb, .util, .mega, .mega-dim { display: none; }
   .hamburger { display: block; }
   .is-main .header:not(.is-scrolled) { background: transparent; color: #fff; }
 

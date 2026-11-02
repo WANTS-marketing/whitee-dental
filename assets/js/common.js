@@ -78,6 +78,7 @@
   /* ---------- 컴포넌트 로드 후 ---------- */
   document.addEventListener('components:loaded', () => {
     initHeader();
+    initMegaMenu();
     initCurrentMenu();
     initMobileNav();
     initQuick();
@@ -92,6 +93,45 @@
     const onScroll = () => header.classList.toggle('is-scrolled', window.scrollY > 10);
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
+  }
+
+  /** 데스크톱 전체 펼침 메뉴 — 대메뉴 hover/focus 시 열고, 헤더를 벗어나면 0.2초 뒤 닫는다 (대각선 이동 중 닫힘 방지). ESC 로 닫기 */
+  function initMegaMenu() {
+    const header = document.getElementById('header');
+    const gnb = header?.querySelector('.gnb');
+    if (!gnb) return;
+    const CLOSE_DELAY = 200;
+    let timer = null;
+    const open = () => { clearTimeout(timer); header.classList.add('is-mega'); };
+    const close = () => { clearTimeout(timer); header.classList.remove('is-mega'); };
+    const closeLater = () => { clearTimeout(timer); timer = setTimeout(close, CLOSE_DELAY); };
+
+    let escaping = false; // ESC 로 닫으며 포커스를 옮길 때 focusin 으로 다시 열리지 않게
+
+    gnb.addEventListener('mouseover', (e) => { if (e.target.closest('.gnb__item')) open(); });
+    header.addEventListener('mouseenter', () => { if (header.classList.contains('is-mega')) open(); }); // 닫히기 전에 돌아오면 유지
+    header.addEventListener('mouseleave', closeLater);
+    gnb.addEventListener('focusin', () => { if (!escaping) open(); });
+    header.addEventListener('focusout', (e) => { if (!header.contains(e.relatedTarget)) closeLater(); });
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Escape' || !header.classList.contains('is-mega')) return;
+      // 하위 메뉴·연락처에 포커스가 있었다면 그 열의 대메뉴로 돌려 둔다 (숨겨진 링크에 포커스가 남지 않게)
+      const from = document.activeElement?.closest('.gnb__sub, .mega');
+      if (from) {
+        escaping = true;
+        (from.closest('.gnb__item')?.querySelector('.gnb__link') || gnb.querySelector('.gnb__link')).focus();
+        escaping = false;
+      }
+      close();
+    });
+
+    // 오른쪽 지점 연락처
+    const box = header.querySelector('[data-mega-contact]');
+    if (box && window.SITE) {
+      box.innerHTML = `<p class="mega__contact-title">진료 예약·상담</p>` +
+        SITE.branches.map((b) => `<a class="mega__tel" href="${telHref(b.tel)}"><span class="text-${b.id}">${esc(b.name)}</span><b>${esc(b.tel)}</b></a>`).join('') +
+        `<p class="mega__hours">${SITE.branches[0].hours.map((h) => `<span>${esc(h.label)} ${esc(h.time)}</span>`).join('')}</p>`; // 두 지점 진료시간 동일
+    }
   }
 
   /** 현재 페이지 메뉴 강조 */
@@ -122,18 +162,13 @@
     nav.querySelectorAll('[data-mnav-close]').forEach((el) => el.addEventListener('click', () => setOpen(false)));
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && nav.classList.contains('is-open')) setOpen(false); });
 
-    // 아코디언 서브메뉴 (하나 열면 나머지 닫힘), 현재 페이지가 속한 메뉴는 펼쳐 둔다
-    const toggles = nav.querySelectorAll('.mnav__toggle');
-    const setSub = (btn, open) => {
-      btn.setAttribute('aria-expanded', String(open));
-      btn.nextElementSibling.classList.toggle('is-open', open);
-    };
-    toggles.forEach((btn) => {
+    // 서브메뉴는 처음부터 모두 펼침 (header.html). 대메뉴를 누르면 그 메뉴만 접고 펼친다
+    nav.querySelectorAll('.mnav__toggle').forEach((btn) => {
       btn.addEventListener('click', () => {
-        const willOpen = btn.getAttribute('aria-expanded') !== 'true';
-        toggles.forEach((b) => setSub(b, b === btn && willOpen));
+        const open = btn.getAttribute('aria-expanded') !== 'true';
+        btn.setAttribute('aria-expanded', String(open));
+        btn.nextElementSibling.classList.toggle('is-open', open);
       });
-      if (btn.nextElementSibling.querySelector('.is-current')) setSub(btn, true);
     });
   }
 
