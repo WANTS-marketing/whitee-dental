@@ -54,7 +54,46 @@
     <section class="sec ">
       <div class="container">
         <nav class="anchor-nav" aria-label="페이지 내 바로가기"><a href="#changwon">창원점</a><a href="#masan">마산점</a></nav>
-        <div data-location></div>
+        <div data-location>
+        <section class="loc loc--changwon" id="changwon" aria-labelledby="loc-changwon">
+          <h2 class="loc__head" id="loc-changwon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s7-6.2 7-11.5A7 7 0 005 9.5C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>화이트e치과 <em>창원점</em></h2>
+          <div class="loc__body">
+            <div class="loc__map">
+              <!-- ▼▼▼ [창원점] 카카오맵 '지도 퍼가기' 코드를 이 줄 아래에 붙여넣으세요 ▼▼▼
+                   카카오맵 → 창원점 검색 → 공유 → 지도 퍼가기 → '소스 생성하기' → HTML 코드 복사
+                   지도 크기(가로·세로)는 아무 값이나 괜찮습니다 — CSS(sub.css .loc__map)가 칸에 맞춰 늘립니다. -->
+
+              <!-- ▲▲▲ [창원점] 카카오맵 코드 끝 ▲▲▲ -->
+              <div class="loc__map-ph">
+                <p>지도 준비 중입니다</p>
+                <a class="btn btn--changwon" href="https://naver.me/FY3f3LdP" target="_blank" rel="noopener">네이버 지도로 보기</a>
+              </div>
+            </div>
+            <div class="loc__info" data-loc-info="changwon"></div>
+          </div>
+          <div data-loc-transit="changwon"></div>
+        </section>
+        <section class="loc loc--masan" id="masan" aria-labelledby="loc-masan">
+          <h2 class="loc__head" id="loc-masan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s7-6.2 7-11.5A7 7 0 005 9.5C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>화이트e치과 <em>마산점</em></h2>
+          <div class="loc__body">
+            <div class="loc__map">
+              <!-- ▼▼▼ [마산점] 카카오맵 '지도 퍼가기' 코드를 이 줄 아래에 붙여넣으세요 ▼▼▼
+                   카카오맵 → 마산점 검색 → 공유 → 지도 퍼가기 → '소스 생성하기' → HTML 코드 복사
+                   지도 크기(가로·세로)는 아무 값이나 괜찮습니다 — CSS(sub.css .loc__map)가 칸에 맞춰 늘립니다.
+                   ※ 창원점 코드에 이미 roughmapLoader.js 줄이 있으므로, 여기서는 아래 줄을 빼고 붙여넣으세요:
+                     <script charset="UTF-8" class="daum_roughmap_loader_script" src="https://ssl.daumcdn.net/dmaps/map_js_init/roughmapLoader.js"></script> -->
+
+              <!-- ▲▲▲ [마산점] 카카오맵 코드 끝 ▲▲▲ -->
+              <div class="loc__map-ph">
+                <p>지도 준비 중입니다</p>
+                <a class="btn btn--masan" href="https://naver.me/xWTYEspr" target="_blank" rel="noopener">네이버 지도로 보기</a>
+              </div>
+            </div>
+            <div class="loc__info" data-loc-info="masan"></div>
+          </div>
+          <div data-loc-transit="masan"></div>
+        </section>
+        </div>
       </div>
     </section>
   </main>

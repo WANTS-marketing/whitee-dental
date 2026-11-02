@@ -26,59 +26,56 @@ function renderDoctorsPage() {
   box.innerHTML = window.SITE.branches.map((b) => `
     <section class="doctor-group" id="${b.id}" aria-labelledby="doctor-group-${b.id}">
       <h2 class="doctor-group__title" id="doctor-group-${b.id}">화이트e치과 <span class="text-${b.id}">${esc(b.name)}</span> 의료진</h2>
-      <ul class="card-grid">
+      <div class="doctor-profiles">
         ${window.SITE.getDoctorsByBranch(b.id).map((d) => `
-          <li class="doctor-item">
-            <div class="doctor-item__photo img-ph"><img src="${img(d.photo)}" alt="${esc(d.name)} ${esc(d.title)} 사진" loading="lazy"></div>
-            <p class="doctor-item__tag">${branchBadge(d.branches.length > 1 ? 'both' : d.branches[0])}</p>
-            <h3 class="doctor-item__name">${esc(d.name)} <small>${esc(d.title)}</small></h3>
-            <p class="doctor-item__dept">${esc(d.dept)}</p>
-            <!-- TODO: 약력·학회 활동 (병원 자료 받으면 추가) -->
-          </li>`).join('')}
-      </ul>
+          <article class="doctor-profile">
+            <div class="doctor-profile__photo img-ph"><img src="${img(d.photo)}" alt="${esc(d.name)} ${esc(d.title)} 사진" loading="lazy"></div>
+            <div class="doctor-profile__body">
+              <p class="doctor-profile__tag">${branchBadge(d.branches.length > 1 ? 'both' : d.branches[0])}<span class="doctor-profile__dept">${esc(d.dept)}</span></p>
+              <h3 class="doctor-profile__name">${esc(d.name)} <small>${esc(d.title)}</small></h3>
+              ${d.career?.length ? `<ul class="doctor-profile__career">${d.career.map((c) => `<li>${esc(c)}</li>`).join('')}</ul>` : ''}
+            </div>
+          </article>`).join('')}
+      </div>
     </section>`).join('');
 }
 
-/* ---------- 오시는길 ---------- */
+/* ---------- 오시는길 ----------
+   지도: about/location.html 의 .loc__map 안에 카카오맵 '지도 퍼가기' 코드를 직접 붙여넣는다 (API 키 불필요).
+   퍼가기 코드는 페이지를 읽는 동안 실행돼야 하므로 JS로 넣지 않고 HTML에 둔다. 여기서는 지점 정보·교통편만 채운다. */
 function renderLocationPage() {
-  const box = document.querySelector('[data-location]');
-  if (!box) return;
+  if (!document.querySelector('[data-location]')) return;
   const { esc, telHref } = window.UI;
-  const PIN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s7-6.2 7-11.5A7 7 0 005 9.5C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>';
   const DOT = '<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="4" fill="currentColor"/></svg>';
-  // TODO: 지도 — 지금은 키 없이 쓰는 Google 지도 임베드(임시). 네이버/카카오 지도 API 키 발급 후 교체
-  const mapSrc = (b) => `https://maps.google.com/maps?q=${encodeURIComponent(b.address.split(',')[0])}&z=17&hl=ko&output=embed`;
 
-  box.innerHTML = window.SITE.branches.map((b) => `
-    <section class="loc loc--${b.id}" id="${b.id}" aria-labelledby="loc-${b.id}">
-      <h2 class="loc__head" id="loc-${b.id}">${PIN}화이트e치과 <em>${esc(b.name)}</em></h2>
-      <div class="loc__body">
-        <div class="loc__map">
-          <iframe src="${mapSrc(b)}" title="${esc(b.name)} 위치 지도" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-        </div>
-        <div class="loc__info">
-          <dl>
-            <dt>주소</dt><dd><strong>${esc(b.address)}</strong><br>${esc(b.landmark || b.addressNote)}</dd>
-            <dt>전화</dt><dd><a class="loc__tel" href="${telHref(b.tel)}">${esc(b.tel)}</a></dd>
-            <dt>이메일</dt><dd><a href="mailto:${esc(b.email)}">${esc(b.email)}</a></dd>
-            <dt>진료시간</dt><dd>${b.hours.map((h) => `${esc(h.label)} <strong>${esc(h.time)}</strong>`).join('<br>')}</dd>
-            <dt>주차</dt><dd>${b.parking ? esc(b.parking) : '주차 가능 · 자세한 안내는 전화로 문의해 주세요'}</dd>
-            <dt>이용안내</dt><dd><ul class="amenities">${b.amenities.map((a) => `<li>${DOT}${esc(a)}</li>`).join('')}</ul></dd>
-          </dl>
-          <div class="loc__actions">
-            <a class="btn btn--${b.id}" href="${esc(b.naverMap)}" target="_blank" rel="noopener">네이버 지도로 길찾기</a>
-            <a class="btn btn--line" href="${telHref(b.tel)}">전화하기</a>
-          </div>
-        </div>
-      </div>
-      ${b.transit.length ? `
-      <div class="transit">
-        <h3 class="transit__title">교통편 안내</h3>
-        <ul class="transit__list">
-          ${b.transit.map((t) => `<li class="transit__item"><strong>${esc(t.type)}</strong><div>${t.lines.map((l) => `<p>${esc(l)}</p>`).join('')}</div></li>`).join('')}
-        </ul>
-      </div>` : '<!-- TODO: 교통편 안내 병원 확인 -->'}
-    </section>`).join('');
+  window.SITE.branches.forEach((b) => {
+    const info = document.querySelector(`[data-loc-info="${b.id}"]`);
+    const transit = document.querySelector(`[data-loc-transit="${b.id}"]`);
+    if (info) {
+      info.innerHTML = `
+        <dl>
+          <dt>주소</dt><dd><strong>${esc(b.address)} (${esc(b.addressNote)})</strong>${b.landmark ? `<br>${esc(b.landmark)}` : ''}</dd>
+          <dt>전화</dt><dd><a class="loc__tel" href="${telHref(b.tel)}">${esc(b.tel)}</a></dd>
+          <dt>이메일</dt><dd><a href="mailto:${esc(b.email)}">${esc(b.email)}</a></dd>
+          <dt>진료시간</dt><dd><strong>${esc(b.hoursShort)}</strong></dd>
+          <dt>주차</dt><dd>${b.parking ? esc(b.parking) : '주차 가능 · 자세한 안내는 전화로 문의해 주세요'}</dd>
+          <dt>이용안내</dt><dd><ul class="amenities">${b.amenities.map((a) => `<li>${DOT}${esc(a)}</li>`).join('')}</ul></dd>
+        </dl>
+        <div class="loc__actions">
+          <a class="btn btn--${b.id}" href="${esc(b.naverMap)}" target="_blank" rel="noopener">네이버 지도로 보기</a>
+          <a class="btn btn--line" href="${telHref(b.tel)}">전화하기</a>
+        </div>`;
+    }
+    if (transit && b.transit.length) {
+      transit.innerHTML = `
+        <div class="transit">
+          <h3 class="transit__title">교통편 안내</h3>
+          <ul class="transit__list">
+            ${b.transit.map((t) => `<li class="transit__item"><strong>${esc(t.type)}</strong><div>${t.lines.map((l) => `<p>${esc(l)}</p>`).join('')}</div></li>`).join('')}
+          </ul>
+        </div>`;
+    }
+  });
   // 해시(#changwon / #masan)로 들어오면 렌더 후 해당 위치로 이동
   if (location.hash) document.querySelector(location.hash)?.scrollIntoView();
 }

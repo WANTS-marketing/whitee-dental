@@ -292,11 +292,16 @@ body.is-locked { overflow: hidden; }
 /* 의료진 소개 페이지 */
 .doctor-group + .doctor-group { margin-top: var(--space-4xl); }
 .doctor-group__title { margin-bottom: 32px; font-size: var(--fs-h2); }
-.doctor-item__photo { aspect-ratio: 4 / 5; border-radius: var(--radius-lg); }
-.doctor-item__tag { margin-top: 16px; }
-.doctor-item__name { margin-top: 6px; font-size: var(--fs-h4); }
-.doctor-item__name small { font-size: var(--fs-sm); font-weight: 500; color: var(--color-text-sub); }
-.doctor-item__dept { font-size: var(--fs-sm); color: var(--color-text-sub); }
+.doctor-profiles { display: grid; gap: 24px; }
+.doctor-profile { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 40px; padding: 32px; border: 1px solid var(--color-line); border-radius: var(--radius-lg); background: #fff; }
+.doctor-profile__photo { aspect-ratio: 4 / 5; border-radius: var(--radius-md); }
+.doctor-profile__tag { display: flex; align-items: center; gap: 8px; }
+.doctor-profile__dept { font-size: var(--fs-sm); font-weight: 600; color: var(--color-point); }
+.doctor-profile__name { margin-top: 8px; font-size: var(--fs-h3); }
+.doctor-profile__name small { margin-left: 4px; font-size: var(--fs-md); font-weight: 500; color: var(--color-text-sub); }
+.doctor-profile__career { columns: 2; column-gap: 32px; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--color-line); }
+.doctor-profile__career li { position: relative; break-inside: avoid; margin-bottom: 8px; padding-left: 12px; font-size: var(--fs-sm); color: var(--color-text-sub); line-height: 1.6; word-break: keep-all; }
+.doctor-profile__career li::before { content: ""; position: absolute; left: 0; top: 0.7em; width: 4px; height: 4px; border-radius: 50%; background: var(--color-point); }
 
 /* 치료사례 목록 */
 .case-item__img { aspect-ratio: 3 / 4; border-radius: var(--radius-md); }
@@ -334,6 +339,8 @@ body.is-locked { overflow: hidden; }
   .quick-consult .form { grid-template-columns: 1fr 1fr; }
   .quick-consult .btn { grid-column: 1 / -1; }
   .contact-layout { grid-template-columns: 1fr; }
+  .doctor-profile { grid-template-columns: 180px minmax(0, 1fr); gap: 24px; padding: 24px; }
+  .doctor-profile__career { columns: 1; }
 }
 
 @media (max-width: 768px) {
@@ -383,6 +390,14 @@ body.is-locked { overflow: hidden; }
   .branch-card__tel { font-size: 1.625rem; }
   .quick-consult { padding: 24px 16px; }
   .quick-consult .form { grid-template-columns: 1fr; }
+  .doctor-profile { grid-template-columns: 112px minmax(0, 1fr); gap: 16px; padding: 18px 16px; }
+  .doctor-profile__name { font-size: var(--fs-h4); }
+  .doctor-profile__career { grid-column: 1 / -1; margin-top: 4px; padding-top: 14px; }
+  .doctor-profile__body { display: contents; }
+  .doctor-profile__photo { grid-row: 1 / span 2; }
+  .doctor-profile__tag, .doctor-profile__name { grid-column: 2; margin: 0; }
+  .doctor-profile__tag { align-self: end; flex-wrap: wrap; }
+  .doctor-profile__name { align-self: start; margin-top: 6px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
