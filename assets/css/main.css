@@ -62,6 +62,7 @@
 .clinic-bar__faq-label svg { width: 24px; height: 24px; color: var(--color-point); }
 .clinic-bar__faq .clinic-bar__title { margin: 4px 0 4px; }
 .clinic-bar__faq-desc { margin-bottom: 12px; font-size: var(--fs-xs); color: var(--color-text-sub); }
+.clinic-bar__faq-desc br { display: none; } /* 홈 퀵바 카드(좁은 FAQ 열)에서만 줄바꿈 */
 
 /* ---------- ③ 진료 철학 + 지점 ---------- */
 .philosophy { padding: 0px 0 28px; }
@@ -314,8 +315,19 @@
   .screen-home .clinic-bar { position: relative; z-index: 5; margin-top: calc(var(--overlap) * -1); padding: 0 0 24px; }
   .screen-home .clinic-bar__inner { margin: 0 24px; padding: 24px 32px; border-bottom: 0; border-radius: var(--radius-xl); background: #fff; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12); }
   .screen-home .clinic-bar__card { aspect-ratio: auto; height: clamp(108px, 15vh, 140px); }
-  .screen-home .clinic-bar__head { width: 170px; }
-  .screen-home .clinic-bar__faq { width: 260px; padding-left: 32px; }
+  /* 퀵바 카드 정렬: [빠른 진료 안내 | 아이콘 5개 | FAQ] — 양쪽 열은 같은 너비(--qb-side), 아이콘 묶음은 가운데 남는 폭.
+     양쪽 열 너비가 같아 가운데 아이콘(일반치료) 중심선 = 카드 중심선.
+     왼쪽 내용은 왼쪽 안쪽 여백에, FAQ 내용은 오른쪽 안쪽 여백에 붙고,
+     FAQ 구분선~아이콘 간격 = 왼쪽 블록~첫 아이콘 간격 = column-gap */
+  .screen-home .clinic-bar__inner {
+    --qb-gap: clamp(20px, 2.4vw, 32px); --qb-side: 168px; /* FAQ 제목(자주 묻는 질문)이 한 줄로 들어가는 최소 폭 */
+    display: grid; grid-template-columns: var(--qb-side) minmax(0, 1fr) var(--qb-side); align-items: center; column-gap: var(--qb-gap);
+  }
+  .screen-home .clinic-bar__head { width: auto; justify-self: stretch; }
+  .screen-home .clinic-bar__list { order: 0; }
+  .screen-home .clinic-bar__faq { width: auto; display: grid; justify-content: end; justify-items: start; align-self: stretch; align-content: center; padding-left: 20px; }
+  .screen-home .clinic-bar__faq-desc br { display: inline; }
+  .screen-home .clinic-bar__title { white-space: nowrap; }
   .screen-home .clinic-bar__card { font-size: var(--fs-sm); word-break: keep-all; text-align: center; }
   .screen-home .clinic-bar__card svg { width: 52px; height: 52px; }
 
