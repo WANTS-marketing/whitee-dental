@@ -91,6 +91,12 @@
    카드 너비 = (열 너비 − 꽉 찬 카드 사이 간격) ÷ 보이는 카드 수 → 오른쪽 끝에만 다음 카드가 잘려 보인다 */
 .doctors__viewport { --doc-visible: 3.5; --doc-gaps: 3; --doc-gap: 24px; position: relative; overflow: hidden; padding: 20px 0 36px; }
 .doctors__track { display: flex; gap: var(--doc-gap); transition: transform 0.5s var(--ease); }
+/* 드래그·스와이프: 세로 스크롤은 브라우저에 맡기고 가로 끌기만 캐러셀이 처리 */
+.doctors__viewport { touch-action: pan-y; cursor: grab; user-select: none; -webkit-user-select: none; }
+.doctors__viewport.is-dragging { cursor: grabbing; }
+.doctors__viewport.is-dragging .doctors__track { transition: none; }
+/* 복제 카드 ↔ 진짜 카드 순간 이동할 때는 애니메이션 없이 */
+.doctors__track.is-jumping, .doctors__track.is-jumping .doctor-card { transition: none; }
 .doctor-card { flex: none; width: calc((100% - var(--doc-gap) * var(--doc-gaps)) / var(--doc-visible)); padding: 16px 16px 24px; background: #fff; border-radius: var(--radius-lg); opacity: 0.45; transform-origin: left center; transition: opacity 0.5s, transform 0.5s var(--ease), box-shadow 0.5s; cursor: pointer; }
 /* 활성 = 왼쪽 첫 번째 카드: 불투명, 그림자, 살짝 크게 (왼쪽 기준으로 커져 열 시작선을 넘지 않음) */
 .doctor-card.is-active { opacity: 1; transform: scale(1.04); box-shadow: var(--shadow-card); cursor: default; z-index: 1; }

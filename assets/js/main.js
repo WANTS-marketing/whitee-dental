@@ -70,7 +70,9 @@ function initHero() {
   else play();
 }
 
-/* ---------- ④ 의료진 캐러셀 — 왼쪽 첫 카드가 활성, 한 장씩 이동, 끝에서 처음으로 ---------- */
+/* ---------- ④ 의료진 캐러셀 — 왼쪽 첫 카드가 활성, 무한 반복, 버튼·마우스 드래그·터치 스와이프 ----------
+   의료진 목록을 3벌(앞 복제 · 진짜 · 뒤 복제) 이어 붙이고, 이동이 끝나면 같은 의료진의 '진짜' 카드 위치로
+   애니메이션 없이 순간 이동한다 → 끝에서도 카드가 끊기지 않고 1번 카드로 자연스럽게 이어진다 */
 function initDoctors() {
   const track = document.querySelector('[data-doctors-track]');
   if (!track || !window.SITE) return;
@@ -79,35 +81,59 @@ function initDoctors() {
   const prevBtn = document.querySelector('[data-doc-prev]');
   const nextBtn = document.querySelector('[data-doc-next]');
   const { esc, img, branchBadge } = window.UI;
+  const COPIES = 3;
   let cards = [];
-  let active = 0;
+  let count = 0;   // 의료진 수 (복제 제외)
+  let active = 0;  // cards 기준 인덱스 — 평소에는 가운데 벌(count ~ 2*count-1) 안에 있다
+
+  const cardHtml = (d, clone) => `
+      <li class="doctor-card"${clone ? ' aria-hidden="true"' : ''}>
+        <div class="doctor-card__photo img-ph"><img src="${img(d.photo)}" alt="${clone ? '' : `${esc(d.name)} ${esc(d.title)} 사진`}" loading="lazy" draggable="false"></div>
+        <span class="doctor-card__tag">${branchBadge(d.branches.length > 1 ? 'both' : d.branches[0])}</span>
+        <h3 class="doctor-card__name">${esc(d.name)}<small>${esc(d.title)}</small></h3>
+        <p class="doctor-card__dept">${esc(d.dept)}</p>
+      </li>`;
 
   function render(branchId) {
     // 지점 대표원장이 첫 번째(활성) 카드가 되도록 맨 앞으로
     const list = window.SITE.getDoctorsByBranch(branchId);
     const head = list.findIndex((d) => d.title === '대표원장');
     if (head > 0) list.unshift(...list.splice(head, 1));
-    track.innerHTML = list.map((d) => `
-      <li class="doctor-card">
-        <div class="doctor-card__photo img-ph"><img src="${img(d.photo)}" alt="${esc(d.name)} ${esc(d.title)} 사진" loading="lazy"></div>
-        <span class="doctor-card__tag">${branchBadge(d.branches.length > 1 ? 'both' : d.branches[0])}</span>
-        <h3 class="doctor-card__name">${esc(d.name)}<small>${esc(d.title)}</small></h3>
-        <p class="doctor-card__dept">${esc(d.dept)}</p>
-      </li>`).join('');
+    count = list.length;
+    track.innerHTML = Array.from({ length: COPIES }, (_, copy) => list.map((d) => cardHtml(d, copy !== 1)).join('')).join('');
     cards = [...track.children];
-    cards.forEach((card, i) => card.addEventListener('click', () => go(i)));
-    go(0);
+    cards.forEach((card, i) => card.addEventListener('click', () => { if (!dragMoved) go(i); }));
+    jump(count); // 가운데 벌의 첫 카드 = 대표원장
   }
 
-  function go(i) {
-    active = (i + cards.length) % cards.length; // 처음·끝에서 이어서 돈다
-    cards.forEach((c, n) => {
-      c.classList.toggle('is-active', n === active);
-      c.setAttribute('aria-current', n === active ? 'true' : 'false');
-    });
-    // 활성 카드를 열 시작선(왼쪽)에 맞춘다
-    track.style.transform = `translateX(${-cards[active].offsetLeft}px)`;
+  const offsetOf = (i) => -cards[i].offsetLeft;
+  function setActive(i) {
+    active = i;
+    cards.forEach((c, n) => c.classList.toggle('is-active', n === i));
   }
+  // 애니메이션 없이 바로 이동 (복제 → 진짜 카드로 바꿔치기, 탭 전환)
+  function jump(i) {
+    track.classList.add('is-jumping');
+    setActive(i);
+    track.style.transform = `translateX(${offsetOf(i)}px)`;
+    void track.offsetWidth; // 위 상태를 먼저 그리게 해서 트랜지션 없이 적용
+    track.classList.remove('is-jumping');
+  }
+  // 가운데 벌 밖에 있으면 같은 의료진의 가운데 벌 카드로 순간 이동
+  function normalize() {
+    if (active < count || active >= count * 2) jump(count + (((active - count) % count) + count) % count);
+  }
+  // i 번째 카드를 활성(왼쪽 첫 카드)으로 — 애니메이션 이동
+  function go(i) {
+    setActive(Math.max(0, Math.min(cards.length - 1, i)));
+    track.style.transform = `translateX(${offsetOf(active)}px)`;
+  }
+  // 현재 위치에서 n 장 이동 (먼저 가운데 벌로 맞춰 두므로 어느 쪽으로든 끊기지 않는다)
+  function step(n) {
+    normalize();
+    go(active + n);
+  }
+  track.addEventListener('transitionend', (e) => { if (e.target === track) normalize(); });
 
   function selectTab(tab) {
     tabs.forEach((t) => {
@@ -129,18 +155,43 @@ function initDoctors() {
       selectTab(next);
     });
   });
-  prevBtn.addEventListener('click', () => go(active - 1));
-  nextBtn.addEventListener('click', () => go(active + 1));
+  prevBtn.addEventListener('click', () => step(-1));
+  nextBtn.addEventListener('click', () => step(1));
 
-  let startX = null;
-  viewport.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; }, { passive: true });
-  viewport.addEventListener('touchend', (e) => {
-    if (startX === null) return;
-    const dx = e.changedTouches[0].clientX - startX;
-    if (Math.abs(dx) > 40) go(active + (dx < 0 ? 1 : -1));
-    startX = null;
+  /* 마우스 드래그·터치 스와이프 (Pointer Events) — 끌면 카드가 손을 따라오고, 놓으면 끈 거리만큼 장 단위로 이동 */
+  let dragStartX = null;
+  let dragBase = 0;
+  let dragMoved = false; // 끌었으면 놓을 때의 click 으로 카드가 선택되지 않게
+  viewport.addEventListener('pointerdown', (e) => {
+    if (e.button !== 0) return;
+    normalize();
+    dragStartX = e.clientX;
+    dragBase = offsetOf(active);
+    dragMoved = false;
   });
-  window.addEventListener('resize', () => go(active));
+  viewport.addEventListener('pointermove', (e) => {
+    if (dragStartX === null) return;
+    const dx = e.clientX - dragStartX;
+    if (!dragMoved && Math.abs(dx) < 6) return;
+    if (!dragMoved) { dragMoved = true; viewport.setPointerCapture(e.pointerId); viewport.classList.add('is-dragging'); }
+    track.style.transform = `translateX(${dragBase + dx}px)`;
+  });
+  const endDrag = (e) => {
+    if (dragStartX === null) return;
+    const dx = e.clientX - dragStartX;
+    dragStartX = null;
+    viewport.classList.remove('is-dragging');
+    if (!dragMoved) return;
+    const cardStep = cards[1].offsetLeft - cards[0].offsetLeft;
+    // 40px 이상 끌면 최소 한 장, 많이 끌면 끈 장수만큼 (한 번에 최대 count-1 장)
+    const moved = Math.abs(dx) < 40 ? 0 : Math.max(1, Math.round(Math.abs(dx) / cardStep));
+    step(-Math.sign(dx) * Math.min(moved, count - 1));
+    setTimeout(() => { dragMoved = false; }, 0);
+  };
+  viewport.addEventListener('pointerup', endDrag);
+  viewport.addEventListener('pointercancel', endDrag);
+
+  window.addEventListener('resize', () => jump(active));
 
   selectTab(tabs[0]);
 }
