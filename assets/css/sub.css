@@ -175,6 +175,9 @@
 /* 카카오맵 퍼가기: 퍼가기에서 정한 가로 크기를 무시하고 칸 너비에 맞춤 */
 .loc__map .root_daum_roughmap { width: 100% !important; border-radius: var(--radius-lg); overflow: hidden; }
 .loc__map .root_daum_roughmap .wrap_map { height: 420px !important; }
+/* 카카오가 자동으로 붙이는 주소·전화 블록 숨김 — 카카오 장소정보의 호수·표기가 사이트 통일 주소와 달라서.
+   주소·전화는 옆 .loc__info 에 통일된 표기로 있음. 카카오 로고·로드뷰·길찾기 바(.wrap_controllers)는 유지 */
+.loc__map .root_daum_roughmap .cont { display: none !important; }
 .loc__info dl { display: grid; grid-template-columns: 88px 1fr; border-top: 2px solid var(--color-text); }
 .loc__info dt, .loc__info dd { padding: 14px 0; border-bottom: 1px solid var(--color-line); font-size: var(--fs-sm); word-break: keep-all; }
 .loc__info dt { font-weight: 700; }
