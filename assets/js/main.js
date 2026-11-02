@@ -94,7 +94,6 @@ function initDoctors() {
   const { esc, img } = window.UI;
   const docs = window.SITE.doctors;
   const MOBILE_LIMIT = 6; // 모바일: 약력 처음 6개만, 나머지는 '약력 더보기'
-  const link = document.querySelector('[data-doc-link]');
   const BRANCH_NAME = { changwon: '창원점', masan: '마산점' };
   /* 약력 분류 — 전문의 / 학력(졸업·석사·박사·학사) / 학회 활동(학회·연맹 회원·인정의·펠로우) / 그 외 경력.
      분류가 애매한 항목은 경력으로 간다 → docs/HANDOVER.md '약력 분류 병원 확인' */
@@ -166,7 +165,6 @@ function initDoctors() {
     });
     // 겸직 원장의 지점 표기는 지금 보고 있는 지점
     profiles[di].querySelector('[data-doc-branch]').textContent = BRANCH_NAME[branch];
-    link.href = `./about/doctors.html#${branch}-${window.SITE.doctorSlug(docs[di])}`;
     thumbs.forEach((t, i) => t.setAttribute('aria-pressed', String(i === pos)));
     // 썸네일 줄이 가로 스크롤일 때(모바일) 선택한 썸네일이 보이게
     const li = thumbs[pos].parentElement;
