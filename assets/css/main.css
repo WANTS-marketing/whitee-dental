@@ -3,12 +3,8 @@
    ========================================================================== */
 
 /* ---------- ① 히어로 ---------- */
-/* 헤더(흰색 고정) 바로 아래에서 시작 */
+/* 헤더(흰색 고정) 바로 아래에서 시작. 뒤 배경은 페이지 흰색 그대로 */
 .hero { position: relative; padding-top: calc(var(--header-h) + 24px); }
-/* 전체 너비 어두운 배경 띠: 헤더 하단선 바로 아래 ~ 슬라이더 카드 높이의 2/3 지점.
-   bottom 의 100% 는 .hero 높이이므로 위 여백(헤더 + 24px)을 빼면 카드 높이가 된다 */
-.hero__bg { position: absolute; z-index: 0; top: var(--header-h); left: 0; right: 0; bottom: calc((100% - var(--header-h) - 24px) / 3); background: var(--color-bg-hero) center / cover no-repeat; }
-.hero__bg::after { content: ""; position: absolute; inset: 0; background: rgba(20, 20, 20, 0.82); }
 .hero__inner { position: relative; }
 .hero__slider { position: relative; height: 640px; border-radius: var(--radius-xl); overflow: hidden; background: #111; color: #fff; }
 .hero__slide { position: absolute; inset: 0; opacity: 0; visibility: hidden; transition: opacity 0.8s var(--ease), visibility 0.8s; }
@@ -41,7 +37,23 @@
 .hero__count strong { font-weight: 700; }
 
 /* 히어로 우측 퀵메뉴 — 슬라이더 오른쪽 위를 파낸 모양 */
-.quick--hero { position: absolute; z-index: 4; top: 0; right: 0; padding: 0 0 20px 20px; background: #fff; border-bottom-left-radius: var(--radius-xl); }
+/* 히어로 우측 퀵메뉴 — 슬라이더 오른쪽 위를 파낸 칸 (CSS만으로)
+   칸 자체: 페이지 배경색(흰색) + 왼쪽 아래 모서리 둥글게.
+   오목 모서리 2개는 반지름 R 짜리 정사각형에 radial-gradient 로 4분원만 투명하게 뚫어 만든다:
+   ::before = 칸 왼쪽 위 (히어로 윗선이 둥글게 꺾여 내려감)
+   ::after  = 칸 아래 오른쪽 (그 아래 히어로 오른쪽 위 모서리가 둥글게)
+   → 히어로 외곽선이 끊김 없이 하나의 둥근 선으로 이어진다 */
+.quick--hero {
+  --notch-r: var(--radius-xl); --notch-bg: #fff;
+  position: absolute; z-index: 4; top: 0; right: 0; padding: 0 0 20px 20px;
+  background: var(--notch-bg); border-bottom-left-radius: var(--notch-r);
+}
+.quick--hero::before, .quick--hero::after {
+  content: ""; position: absolute; width: var(--notch-r); height: var(--notch-r); pointer-events: none;
+  background: radial-gradient(circle at 0 100%, transparent calc(var(--notch-r) - 0.5px), var(--notch-bg) var(--notch-r));
+}
+.quick--hero::before { top: 0; right: 100%; }
+.quick--hero::after { top: 100%; right: 0; }
 
 /* ---------- ② 빠른 진료 안내 ---------- */
 .clinic-bar { padding: 64px 0 0; }
@@ -210,7 +222,6 @@
 
 @media (max-width: 768px) {
   .hero { padding-top: calc(var(--header-h) + 16px); }
-  .hero__bg { display: none; } /* 모바일은 띠 없이 흰 바탕 */
   .hero__inner { padding: 0 var(--gutter); }
   .hero__slider { height: 480px; border-radius: var(--radius-lg); }
   .hero__content { left: 24px; right: 24px; top: auto; bottom: 88px; transform: none; }
@@ -222,6 +233,7 @@
   .hero__ctrl--play { margin-left: auto; }
   /* 히어로 퀵메뉴 → 우측 하단 플로팅 (위치는 common.css 모바일 규칙) */
   .quick--hero { position: fixed; top: auto; right: 16px; bottom: calc(var(--bottom-bar-h) + 16px); padding: 0; background: none; border-radius: 0; }
+  .quick--hero::before, .quick--hero::after { display: none; }
 
   .clinic-bar { padding-top: 40px; }
   .clinic-bar__inner { gap: 20px; }
@@ -310,8 +322,6 @@
   .screen-home .hero__slider { flex: 1; height: auto; min-height: 440px; }
   .screen-home .hero__content { top: calc(50% - var(--overlap) / 2); }
   .screen-home .hero__controls { bottom: calc(var(--overlap) + 28px); }
-  /* 배경 띠는 퀵바 윗선(히어로 카드와 겹치기 시작하는 지점)에서 끝난다 = 히어로 아래에서 --overlap 만큼 위 */
-  .screen-home .hero__bg { bottom: var(--overlap); }
   .screen-home .clinic-bar { position: relative; z-index: 5; margin-top: calc(var(--overlap) * -1); padding: 0 0 24px; }
   .screen-home .clinic-bar__inner { margin: 0 24px; padding: 24px 32px; border-bottom: 0; border-radius: var(--radius-xl); background: #fff; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12); }
   .screen-home .clinic-bar__card { aspect-ratio: auto; height: clamp(108px, 15vh, 140px); }
