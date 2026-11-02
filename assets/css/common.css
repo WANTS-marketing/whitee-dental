@@ -284,8 +284,8 @@ body.is-locked { overflow: hidden; }
 .branch-card__tel svg { width: 30px; height: 30px; flex: none; }
 .branch-card--changwon .branch-card__tel svg { color: var(--color-changwon); }
 .branch-card--masan .branch-card__tel svg { color: var(--color-masan); }
-.branch-card__hours { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--color-line); font-size: var(--fs-sm); color: var(--color-text-sub); }
-.branch-card__hours strong { margin-right: 14px; color: var(--color-text); font-weight: 600; }
+.branch-card__hours { display: flex; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--color-line); font-size: var(--fs-sm); color: var(--color-text-sub); }
+.branch-card__hours strong { flex: none; margin-right: 14px; color: var(--color-text); font-weight: 600; }
 .branch-card__actions { display: flex; gap: 8px; margin-top: 16px; }
 .map-ph { aspect-ratio: 16 / 9; margin-top: 16px; border-radius: var(--radius-md); }
 

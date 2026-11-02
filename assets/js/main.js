@@ -1,5 +1,5 @@
 /* ==========================================================================
-   메인 페이지 — 히어로 슬라이더 / 의료진 캐러셀 / 치료사례 잠금 / FAQ / 치과소식
+   메인 페이지 — 히어로 슬라이더 / 의료진 캐러셀 / 치료사례 잠금 / FAQ / 치과소식 / 스크롤 연출
    ========================================================================== */
 document.addEventListener('DOMContentLoaded', () => {
   initHero();
@@ -7,6 +7,8 @@ document.addEventListener('DOMContentLoaded', () => {
   initCases();
   renderFaqPreview();
   renderLatestNews();
+  initScreenNav();
+  initReveal();
 });
 
 /* ---------- ① 히어로 슬라이더 ---------- */
@@ -188,4 +190,79 @@ async function renderLatestNews() {
     console.error(err);
     list.innerHTML = '<li class="empty">소식을 불러오지 못했습니다.</li>';
   }
+}
+
+/* ---------- 스크롤 연출: 왼쪽 섹션 표시기 ----------
+   [data-screen] 화면마다 점 하나. 보이는 조건(데스크톱·높이 700px 이상)은 main.css 가 정한다. */
+function initScreenNav() {
+  const screens = [...document.querySelectorAll('[data-screen]')];
+  if (!screens.length || !('IntersectionObserver' in window)) return;
+  const { esc } = window.UI;
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const pad = (n) => String(n).padStart(2, '0');
+
+  const nav = document.createElement('nav');
+  nav.className = 'screen-nav';
+  nav.setAttribute('aria-label', '메인 섹션 바로가기');
+  nav.innerHTML = `
+    <span class="screen-nav__num" aria-hidden="true" data-screen-num>01</span>
+    <span class="screen-nav__name" aria-hidden="true" data-screen-name></span>
+    <ol class="screen-nav__list">
+      ${screens.map((s) => `<li><button type="button" class="screen-nav__btn"><span class="screen-nav__tip">${esc(s.dataset.screen)}</span></button></li>`).join('')}
+    </ol>`;
+  document.body.append(nav);
+  const num = nav.querySelector('[data-screen-num]');
+  const name = nav.querySelector('[data-screen-name]');
+  const btns = [...nav.querySelectorAll('.screen-nav__btn')];
+
+  function setActive(i) {
+    btns.forEach((b, n) => b.setAttribute('aria-current', String(n === i)));
+    num.textContent = pad(i + 1);
+    name.textContent = screens[i].dataset.screen;
+  }
+
+  btns.forEach((btn, i) => btn.addEventListener('click', () => {
+    screens[i].scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+  }));
+
+  // 화면 세로 가운데 선에 걸친 섹션 = 현재 섹션. 마지막 섹션을 지나 푸터로 가면 표시기를 숨긴다
+  const last = screens[screens.length - 1];
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (e.isIntersecting) {
+        setActive(screens.indexOf(e.target));
+        nav.classList.remove('is-hidden');
+      } else if (e.target === last && e.boundingClientRect.top < 0) {
+        nav.classList.add('is-hidden');
+      }
+    });
+  }, { rootMargin: '-50% 0px -50% 0px' });
+  screens.forEach((s) => io.observe(s));
+  setActive(0);
+
+  // 가운데 선이 어두운 배경([data-screen-dark])에 걸리면 흰 글씨
+  const darkIo = new IntersectionObserver((entries) => {
+    entries.forEach((e) => nav.classList.toggle('is-light', e.isIntersecting));
+  }, { rootMargin: '-50% 0px -50% 0px' });
+  document.querySelectorAll('[data-screen-dark]').forEach((el) => darkIo.observe(el));
+}
+
+/* ---------- 스크롤 연출: 진입 애니메이션 ----------
+   의료진 섹션부터 적용. 섹션 타이틀은 fade-up, 카드 묶음은 자식이 0.08s 간격으로 순차 등장 (간격은 main.css). 움직임 줄이기 설정이면 끔 */
+function initReveal() {
+  if (!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const singles = '.doctors__head, .doctors__viewport, .clinic__head, .cases__head, .faq-preview__head, .faq-preview__box, .story__head';
+  const groups = '.clinic__grid, .cases__list, .story__list';
+  const targets = [
+    ...[...document.querySelectorAll(singles)].map((el) => { el.classList.add('reveal'); return el; }),
+    ...[...document.querySelectorAll(groups)].map((el) => { el.classList.add('reveal-group'); return el; }),
+  ];
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (!e.isIntersecting) return;
+      e.target.classList.add('is-in');
+      io.unobserve(e.target); // 한 번만 등장
+    });
+  }, { rootMargin: '0px 0px -10% 0px', threshold: 0.1 });
+  targets.forEach((el) => io.observe(el));
 }

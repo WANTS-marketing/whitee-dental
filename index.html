@@ -34,8 +34,12 @@
   <main id="main">
     <h1 class="sr-only">화이트e치과 — 창원점 · 마산점</h1>
 
-    <!-- ① 히어로 슬라이더 -->
-    <section class="hero" aria-label="주요 안내">
+    <!-- 홈 묶음: 히어로 + 빠른 진료 안내 + 진료 철학·지점 (data-screen = 왼쪽 섹션 표시기 라벨)
+         데스크톱에서는 히어로+퀵바가 첫 화면을 채우고, 지점 정보는 일반 여백으로 바로 이어진다 -->
+    <div class="screen-home" id="screen-home" data-screen="홈">
+    <div class="screen-home__first">
+    <!-- ① 히어로 슬라이더 (data-screen-dark: 표시기를 흰색으로) -->
+    <section class="hero" aria-label="주요 안내" data-screen-dark>
       <div class="hero__bg" style="background-image:url('./assets/images/hero-bg.jpg'), url('./assets/images/temp/hero-bg.jpg')"></div>
       <div class="container hero__inner">
         <div class="hero__slider" id="hero-slider" aria-roledescription="carousel" aria-label="메인 슬라이드">
@@ -93,7 +97,8 @@
 
     <!-- ② 빠른 진료 안내 퀵바 -->
     <section class="clinic-bar" aria-labelledby="clinic-bar-title">
-      <div class="container clinic-bar__inner">
+      <div class="container">
+      <div class="clinic-bar__inner">
         <div class="clinic-bar__head">
           <span class="sec-label">OUR CLINIC BAR</span>
           <h2 class="clinic-bar__title" id="clinic-bar-title">빠른 진료 안내</h2>
@@ -126,7 +131,9 @@
             <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg></a>
         </div>
       </div>
+      </div>
     </section>
+    </div>
 
     <!-- ③ 진료 철학 + 지점 정보 -->
     <section class="philosophy" aria-labelledby="philosophy-title">
@@ -144,7 +151,7 @@
             <a class="branch-card__tel" href="tel:0557162884" aria-label="창원점 전화 055-716-2884">
               <svg viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" opacity=".45" d="M7 6h4l2.5 6-3 2a14 14 0 006.5 6.5l2-3 6 2.5v4a3 3 0 01-3 3A21 21 0 014 9a3 3 0 013-3z"/><circle cx="23" cy="8" r="5" fill="currentColor"/></svg>
               055-716-2884</a>
-            <p class="branch-card__hours"><strong>진료시간</strong>평일 10:00–21:00 · 토 10:00–16:00 · 일요일 휴진</p>
+            <p class="branch-card__hours"><strong>진료시간</strong><span>평일 10:00–21:00 · 토 10:00–16:00<br>일요일 휴진</span></p>
           </article>
           <article class="branch-card branch-card--masan">
             <h3 class="branch-card__name">
@@ -154,14 +161,15 @@
             <a class="branch-card__tel" href="tel:0552552000" aria-label="마산점 전화 055-255-2000">
               <svg viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" opacity=".45" d="M7 6h4l2.5 6-3 2a14 14 0 006.5 6.5l2-3 6 2.5v4a3 3 0 01-3 3A21 21 0 014 9a3 3 0 013-3z"/><circle cx="23" cy="8" r="5" fill="currentColor"/></svg>
               055-255-2000</a>
-            <p class="branch-card__hours"><strong>진료시간</strong>평일 10:00–21:00 · 토 10:00–16:00 · 일요일 휴진</p>
+            <p class="branch-card__hours"><strong>진료시간</strong><span>평일 10:00–21:00 · 토 10:00–16:00<br>일요일 휴진</span></p>
           </article>
         </div>
       </div>
     </section>
+    </div>
 
     <!-- ④ 의료진 -->
-    <section class="doctors" aria-labelledby="doctors-title">
+    <section class="doctors screen" id="screen-doctors" data-screen="의료진" aria-labelledby="doctors-title">
       <div class="doctors__bg" style="background-image:url('./assets/images/doctors-bg.jpg'), url('./assets/images/temp/doctors-bg.jpg')"></div>
       <div class="container doctors__inner">
         <div class="doctors__head">
@@ -190,7 +198,7 @@
     </section>
 
     <!-- ⑤ 진료안내 -->
-    <section class="clinic" aria-labelledby="clinic-title">
+    <section class="clinic screen" id="screen-clinic" data-screen="진료안내" aria-labelledby="clinic-title">
       <div class="container clinic__inner">
         <div class="clinic__head">
           <span class="sec-label">CLINIC</span>
@@ -243,7 +251,7 @@
     </section>
 
     <!-- ⑥ 치료사례 -->
-    <section class="cases" aria-labelledby="cases-title">
+    <section class="cases screen" id="screen-cases" data-screen="치료사례" aria-labelledby="cases-title">
       <div class="container cases__inner">
         <div class="cases__head">
           <span class="sec-label">CASE STORY</span>
@@ -280,7 +288,7 @@
     </section>
 
     <!-- ⑦ FAQ 미리보기 -->
-    <section class="faq-preview" aria-labelledby="faq-preview-title">
+    <section class="faq-preview screen" id="screen-faq" data-screen="FAQ" aria-labelledby="faq-preview-title">
       <div class="container faq-preview__inner">
         <div class="faq-preview__head">
           <span class="sec-label">FAQ</span>
@@ -293,7 +301,7 @@
     </section>
 
     <!-- ⑧ 치과소식 -->
-    <section class="story" aria-labelledby="story-title">
+    <section class="story screen" id="screen-story" data-screen="치과소식" aria-labelledby="story-title">
       <div class="container story__inner">
         <div class="story__head">
           <span class="sec-label">STORY</span>

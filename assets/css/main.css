@@ -250,3 +250,85 @@
   .hero__title { font-size: 1.75rem; }
   .hero__slider { height: 460px; }
 }
+
+/* ==========================================================================
+   스크롤 연출 (참고: 경희대병원 메인) — 풀페이지 강제 이동 없이 일반 스크롤 유지
+   ========================================================================== */
+
+/* ---------- 진입 애니메이션 (모든 화면) — 클래스는 main.js 가 붙인다 ---------- */
+.reveal, .reveal-group > * { opacity: 0; transform: translateY(28px); transition: opacity 0.8s var(--ease), transform 0.8s var(--ease); }
+.reveal.is-in, .reveal-group.is-in > * { opacity: 1; transform: none; }
+/* 카드 순차 등장: 0.08s 간격 */
+.reveal-group > :nth-child(2) { transition-delay: 0.08s; }
+.reveal-group > :nth-child(3) { transition-delay: 0.16s; }
+.reveal-group > :nth-child(4) { transition-delay: 0.24s; }
+.reveal-group > :nth-child(5) { transition-delay: 0.32s; }
+.reveal-group > :nth-child(n+6) { transition-delay: 0.4s; }
+@media (prefers-reduced-motion: reduce) {
+  .reveal, .reveal-group > * { opacity: 1; transform: none; transition: none; }
+}
+
+/* ---------- 왼쪽 섹션 표시기 — 화면 단위 구성일 때만 보임 ---------- */
+.screen-nav { display: none; }
+
+/* ---------- 화면 단위 구성: 데스크톱(1025px 이상) + 화면 높이 700px 이상 ----------
+   1024px 이하는 기존 태블릿 레이아웃(1열)이라 제외. 내용이 길면 min-height 라 자연스럽게 늘어난다. */
+@media (min-width: 1025px) and (min-height: 700px) {
+  html { scroll-snap-type: y proximity; }
+
+  .screen {
+    display: flex; flex-direction: column; justify-content: center;
+    min-height: calc(100vh - var(--header-h));
+    padding: clamp(72px, 10vh, 120px) 0;
+    scroll-snap-align: start;
+  }
+
+  /* 홈 묶음: 히어로+퀵바가 첫 화면(100vh)을 채우고 퀵바가 히어로 하단에 겹친다.
+     진료 철학·지점 정보는 화면 단위 없이 일반 여백으로 바로 이어진다 */
+  .screen-home__first { --overlap: 72px; display: flex; flex-direction: column; min-height: 100vh; }
+  .screen-home .philosophy { padding: 72px 0 var(--space-4xl); }
+  .screen-home .hero { flex: 1; display: flex; flex-direction: column; }
+  .screen-home .hero__inner { flex: 1; display: flex; flex-direction: column; }
+  .screen-home .hero__slider { flex: 1; height: auto; min-height: 440px; }
+  .screen-home .hero__content { top: calc(50% - var(--overlap) / 2); }
+  .screen-home .hero__controls { bottom: calc(var(--overlap) + 28px); }
+  .screen-home .clinic-bar { position: relative; z-index: 5; margin-top: calc(var(--overlap) * -1); padding: 0 0 24px; }
+  .screen-home .clinic-bar__inner { margin: 0 24px; padding: 24px 32px; border-bottom: 0; border-radius: var(--radius-xl); background: #fff; box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12); }
+  .screen-home .clinic-bar__card { aspect-ratio: auto; height: clamp(108px, 15vh, 140px); }
+  .screen-home .clinic-bar__head { width: 170px; }
+  .screen-home .clinic-bar__faq { width: 260px; padding-left: 32px; }
+  .screen-home .clinic-bar__card { font-size: var(--fs-sm); word-break: keep-all; text-align: center; }
+  .screen-home .clinic-bar__card svg { width: 52px; height: 52px; }
+
+  .screen-nav {
+    position: fixed; z-index: var(--z-quick); left: 16px; top: 50%; transform: translateY(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 14px;
+    color: var(--color-text); transition: color var(--dur), opacity var(--dur);
+  }
+  .screen-nav.is-light { color: #fff; }
+  .screen-nav.is-hidden { opacity: 0; pointer-events: none; }
+  .screen-nav__num { font-size: var(--fs-xxs); font-weight: 700; letter-spacing: 0.04em; }
+  .screen-nav__name { writing-mode: vertical-rl; font-size: var(--fs-xs); font-weight: 700; letter-spacing: 0.2em; }
+  .screen-nav__list { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+  .screen-nav__btn { position: relative; display: grid; place-items: center; width: 22px; height: 22px; color: inherit; }
+  .screen-nav__btn::before { content: ""; width: 6px; height: 6px; border-radius: 3px; background: currentColor; opacity: 0.35; transition: height var(--dur), opacity var(--dur), background var(--dur); }
+  .screen-nav__btn:hover::before { opacity: 0.8; }
+  .screen-nav__btn[aria-current="true"]::before { height: 20px; opacity: 1; background: var(--color-point); }
+  /* 점에 마우스를 올리면 라벨 말풍선 */
+  .screen-nav__tip { position: absolute; left: 100%; margin-left: 8px; padding: 3px 10px; border-radius: 4px; background: var(--color-text); color: #fff; font-size: var(--fs-xxs); white-space: nowrap; opacity: 0; transform: translateX(-4px); pointer-events: none; transition: opacity var(--dur), transform var(--dur); }
+  .screen-nav__btn:hover .screen-nav__tip, .screen-nav__btn:focus-visible .screen-nav__tip { opacity: 1; transform: none; }
+}
+
+/* 표시기(왼쪽 16~38px)와 내용이 겹치지 않도록, 좌우 여백이 좁은 데스크톱(1360px 미만)은 안쪽 여백을 넓힌다 */
+@media (min-width: 1025px) and (max-width: 1359px) and (min-height: 700px) {
+  .screen .container, .screen-home .container { padding-left: 52px; padding-right: 52px; }
+  /* 좁아진 지점 카드에서 전화번호가 두 줄로 꺾이지 않게 */
+  .branch-card { padding-left: 24px; padding-right: 24px; }
+  .branch-card__tel { font-size: clamp(1.5rem, 2.2vw, 2.25rem); }
+}
+/* 높이가 낮은 데스크톱: 히어로 오른쪽 퀵메뉴를 줄여 슬라이드 조작 버튼과 겹치지 않게 */
+@media (min-width: 1025px) and (min-height: 700px) and (max-height: 880px) {
+  .screen-home .quick__btn { height: 72px; gap: 8px; font-size: var(--fs-sm); }
+  .screen-home .quick__btn svg { width: 24px; height: 24px; }
+  .screen-home .quick__list { gap: 10px; }
+}
