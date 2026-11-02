@@ -160,6 +160,10 @@ window.SITE = {
   ],
 };
 
+/** 의료진 앵커 id 용 slug — 사진 파일명에서 (doctor-lee-eunju.jpg → lee-eunju)
+    의료진 소개 페이지의 각 원장 위치 = about/doctors.html#{지점id}-{slug} */
+window.SITE.doctorSlug = (d) => d.photo.replace(/^doctor-/, '').replace(/\.\w+$/, '');
+
 /** 지점별 의료진 — 대표원장 → 원장 순서(배열 순서 유지), 겸직 의사는 양쪽에 모두 포함 */
 window.SITE.getDoctorsByBranch = function (branchId) {
   return window.SITE.doctors.filter((d) => d.branches.includes(branchId));

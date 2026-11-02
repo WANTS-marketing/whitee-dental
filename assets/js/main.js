@@ -70,7 +70,7 @@ function initHero() {
   if (reduce) { document.body.classList.remove('is-intro'); stop(); return; }
   if (!document.body.classList.contains('is-intro')) { play(); return; }
   // 첫 진입 애니메이션(main.css '첫 진입 애니메이션')이 끝난 뒤 자동재생 시작. 그동안 버튼은 재생 상태로 표시
-  const INTRO_MS = window.matchMedia('(max-width: 768px)').matches ? 500 : 2800;
+  const INTRO_MS = window.matchMedia('(max-width: 768px)').matches ? 500 : 2600;
   playBtn.setAttribute('aria-pressed', 'true');
   pauseBtn.setAttribute('aria-pressed', 'false');
   setTimeout(() => {
@@ -79,70 +79,92 @@ function initHero() {
   }, INTRO_MS);
 }
 
-/* ---------- ④ 의료진 캐러셀 — 왼쪽 첫 카드가 활성, 무한 반복, 버튼·마우스 드래그·터치 스와이프 ----------
-   의료진 목록을 3벌(앞 복제 · 진짜 · 뒤 복제) 이어 붙이고, 이동이 끝나면 같은 의료진의 '진짜' 카드 위치로
-   애니메이션 없이 순간 이동한다 → 끝에서도 카드가 끊기지 않고 1번 카드로 자연스럽게 이어진다 */
+/* ---------- ④ 의료진 — 큰 프로필 1명 + 같은 지점 원장 썸네일 ----------
+   프로필은 의료진 전원을 한 칸(.doc-profiles 그리드 1칸)에 겹쳐 두고 선택된 원장만 보인다
+   → 패널 높이 = 가장 긴 약력 기준으로 고정, 원장을 바꿔도 섹션 높이가 그대로. 교체는 opacity 0.3s (main.css)
+   탭 전환 시 지점 대표원장 먼저, 이전/다음은 썸네일 순서대로 순환, 자동 넘김 없음 */
 function initDoctors() {
-  const track = document.querySelector('[data-doctors-track]');
-  if (!track || !window.SITE) return;
-  const viewport = track.parentElement;
+  const box = document.querySelector('[data-doc-profiles]');
+  const thumbsEl = document.querySelector('[data-doc-thumbs]');
+  if (!box || !thumbsEl || !window.SITE) return;
+  const panel = document.getElementById('doctors-panel');
   const tabs = [...document.querySelectorAll('.doctors__tab')];
   const prevBtn = document.querySelector('[data-doc-prev]');
   const nextBtn = document.querySelector('[data-doc-next]');
   const { esc, img, branchBadge } = window.UI;
-  const COPIES = 3;
-  let cards = [];
-  let count = 0;   // 의료진 수 (복제 제외)
-  let active = 0;  // cards 기준 인덱스 — 평소에는 가운데 벌(count ~ 2*count-1) 안에 있다
+  const docs = window.SITE.doctors;
+  const MOBILE_LIMIT = 6; // 모바일: 약력 처음 6개만, 나머지는 '약력 더보기'
+  const TWO_COL = 8;      // 약력(전문의 항목 제외) 8개 이상이면 2열
+  const isCert = (c) => c.startsWith('보건복지부 인증');
+  const arrow = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M2 8h12M9 3l5 5-5 5"/></svg>';
 
-  const cardHtml = (d, clone) => `
-      <li class="doctor-card"${clone ? ' aria-hidden="true"' : ''}>
-        <div class="doctor-card__photo img-ph"><img src="${img(d.photo)}" alt="${clone ? '' : `${esc(d.name)} ${esc(d.title)} 사진`}" loading="lazy" draggable="false"></div>
-        <span class="doctor-card__tag">${branchBadge(d.branches.length > 1 ? 'both' : d.branches[0])}</span>
-        <h3 class="doctor-card__name">${esc(d.name)}<small>${esc(d.title)}</small></h3>
-        <p class="doctor-card__dept">${esc(d.dept)}</p>
-      </li>`;
+  box.innerHTML = docs.map((d, i) => {
+    const career = d.career || [];
+    const certs = career.filter(isCert);
+    const rest = career.filter((c) => !isCert(c));
+    let n = 0;
+    const li = (c) => `<li${n++ >= MOBILE_LIMIT ? ' class="is-extra"' : ''}>${esc(c)}</li>`;
+    return `
+      <article class="doc-profile" data-doc="${i}" aria-hidden="true" inert>
+        <div class="doc-profile__photo img-ph"><img src="${img(d.photo)}" alt="${esc(d.name)} ${esc(d.title)} 사진" loading="lazy"></div>
+        <div class="doc-profile__body">
+          <p class="doc-profile__meta">${branchBadge(d.branches.length > 1 ? 'both' : d.branches[0])}<span class="doc-profile__dept">${esc(d.dept)}</span></p>
+          <h3 class="doc-profile__name">${esc(d.name)} <small>${esc(d.title)}</small></h3>
+          ${certs.length ? `<ul class="doc-profile__certs">${certs.map(li).join('')}</ul>` : ''}
+          ${rest.length ? `<ul class="doc-profile__career${rest.length >= TWO_COL ? ' is-2col' : ''}">${rest.map(li).join('')}</ul>` : ''}
+          ${career.length > MOBILE_LIMIT ? '<button type="button" class="doc-profile__more" aria-expanded="false">약력 더보기</button>' : ''}
+          <a class="btn btn--dark doc-profile__link" data-doc-link href="./about/doctors.html">의료진 자세히 보기 ${arrow}</a>
+        </div>
+      </article>`;
+  }).join('');
+  const profiles = [...box.children];
+  box.addEventListener('click', (e) => {
+    const more = e.target.closest('.doc-profile__more');
+    if (!more) return;
+    const open = more.closest('.doc-profile').classList.toggle('is-expanded');
+    more.setAttribute('aria-expanded', String(open));
+    more.textContent = open ? '약력 접기' : '약력 더보기';
+  });
+
+  let branch = 'changwon';
+  let list = []; // 현재 지점 의료진의 docs 인덱스 (대표원장 먼저)
+  let pos = 0;
+  let thumbs = [];
+
+  function select(p) {
+    pos = (p + list.length) % list.length;
+    const di = list[pos];
+    profiles.forEach((el, i) => {
+      const on = i === di;
+      el.classList.toggle('is-active', on);
+      el.setAttribute('aria-hidden', String(!on));
+      el.inert = !on;
+    });
+    profiles[di].querySelector('[data-doc-link]').href = `./about/doctors.html#${branch}-${window.SITE.doctorSlug(docs[di])}`;
+    thumbs.forEach((t, i) => t.setAttribute('aria-pressed', String(i === pos)));
+    // 썸네일 줄이 가로 스크롤일 때(모바일) 선택한 썸네일이 보이게
+    const li = thumbs[pos].parentElement;
+    if (li.offsetLeft < thumbsEl.scrollLeft || li.offsetLeft + li.offsetWidth > thumbsEl.scrollLeft + thumbsEl.clientWidth) {
+      thumbsEl.scrollTo({ left: li.offsetLeft - 16, behavior: 'smooth' });
+    }
+  }
 
   function render(branchId) {
-    // 지점 대표원장이 첫 번째(활성) 카드가 되도록 맨 앞으로
-    const list = window.SITE.getDoctorsByBranch(branchId);
-    const head = list.findIndex((d) => d.title === '대표원장');
-    if (head > 0) list.unshift(...list.splice(head, 1));
-    count = list.length;
-    track.innerHTML = Array.from({ length: COPIES }, (_, copy) => list.map((d) => cardHtml(d, copy !== 1)).join('')).join('');
-    cards = [...track.children];
-    cards.forEach((card, i) => card.addEventListener('click', () => { if (!dragMoved) go(i); }));
-    jump(count); // 가운데 벌의 첫 카드 = 대표원장
+    branch = branchId;
+    const ds = window.SITE.getDoctorsByBranch(branchId);
+    const head = ds.findIndex((d) => d.title === '대표원장');
+    if (head > 0) ds.unshift(...ds.splice(head, 1));
+    list = ds.map((d) => docs.indexOf(d));
+    thumbsEl.innerHTML = ds.map((d, p) => `
+      <li><button type="button" class="doc-thumb" data-pos="${p}" aria-pressed="false">
+        <span class="doc-thumb__photo img-ph"><img src="${img(d.photo)}" alt="" loading="lazy"></span>
+        <span class="doc-thumb__text"><b>${esc(d.name)}</b><small>${esc(d.dept)}</small></span>
+      </button></li>`).join('');
+    thumbs = [...thumbsEl.querySelectorAll('.doc-thumb')];
+    thumbs.forEach((t) => t.addEventListener('click', () => select(Number(t.dataset.pos))));
+    thumbsEl.scrollLeft = 0;
+    select(0); // 지점 대표원장
   }
-
-  const offsetOf = (i) => -cards[i].offsetLeft;
-  function setActive(i) {
-    active = i;
-    cards.forEach((c, n) => c.classList.toggle('is-active', n === i));
-  }
-  // 애니메이션 없이 바로 이동 (복제 → 진짜 카드로 바꿔치기, 탭 전환)
-  function jump(i) {
-    track.classList.add('is-jumping');
-    setActive(i);
-    track.style.transform = `translateX(${offsetOf(i)}px)`;
-    void track.offsetWidth; // 위 상태를 먼저 그리게 해서 트랜지션 없이 적용
-    track.classList.remove('is-jumping');
-  }
-  // 가운데 벌 밖에 있으면 같은 의료진의 가운데 벌 카드로 순간 이동
-  function normalize() {
-    if (active < count || active >= count * 2) jump(count + (((active - count) % count) + count) % count);
-  }
-  // i 번째 카드를 활성(왼쪽 첫 카드)으로 — 애니메이션 이동
-  function go(i) {
-    setActive(Math.max(0, Math.min(cards.length - 1, i)));
-    track.style.transform = `translateX(${offsetOf(active)}px)`;
-  }
-  // 현재 위치에서 n 장 이동 (먼저 가운데 벌로 맞춰 두므로 어느 쪽으로든 끊기지 않는다)
-  function step(n) {
-    normalize();
-    go(active + n);
-  }
-  track.addEventListener('transitionend', (e) => { if (e.target === track) normalize(); });
 
   function selectTab(tab) {
     tabs.forEach((t) => {
@@ -150,7 +172,7 @@ function initDoctors() {
       t.setAttribute('aria-selected', String(on));
       t.tabIndex = on ? 0 : -1;
     });
-    viewport.setAttribute('aria-labelledby', tab.id);
+    panel.setAttribute('aria-labelledby', tab.id);
     render(tab.dataset.branch);
   }
 
@@ -164,43 +186,8 @@ function initDoctors() {
       selectTab(next);
     });
   });
-  prevBtn.addEventListener('click', () => step(-1));
-  nextBtn.addEventListener('click', () => step(1));
-
-  /* 마우스 드래그·터치 스와이프 (Pointer Events) — 끌면 카드가 손을 따라오고, 놓으면 끈 거리만큼 장 단위로 이동 */
-  let dragStartX = null;
-  let dragBase = 0;
-  let dragMoved = false; // 끌었으면 놓을 때의 click 으로 카드가 선택되지 않게
-  viewport.addEventListener('pointerdown', (e) => {
-    if (e.button !== 0) return;
-    normalize();
-    dragStartX = e.clientX;
-    dragBase = offsetOf(active);
-    dragMoved = false;
-  });
-  viewport.addEventListener('pointermove', (e) => {
-    if (dragStartX === null) return;
-    const dx = e.clientX - dragStartX;
-    if (!dragMoved && Math.abs(dx) < 6) return;
-    if (!dragMoved) { dragMoved = true; viewport.setPointerCapture(e.pointerId); viewport.classList.add('is-dragging'); }
-    track.style.transform = `translateX(${dragBase + dx}px)`;
-  });
-  const endDrag = (e) => {
-    if (dragStartX === null) return;
-    const dx = e.clientX - dragStartX;
-    dragStartX = null;
-    viewport.classList.remove('is-dragging');
-    if (!dragMoved) return;
-    const cardStep = cards[1].offsetLeft - cards[0].offsetLeft;
-    // 40px 이상 끌면 최소 한 장, 많이 끌면 끈 장수만큼 (한 번에 최대 count-1 장)
-    const moved = Math.abs(dx) < 40 ? 0 : Math.max(1, Math.round(Math.abs(dx) / cardStep));
-    step(-Math.sign(dx) * Math.min(moved, count - 1));
-    setTimeout(() => { dragMoved = false; }, 0);
-  };
-  viewport.addEventListener('pointerup', endDrag);
-  viewport.addEventListener('pointercancel', endDrag);
-
-  window.addEventListener('resize', () => jump(active));
+  prevBtn.addEventListener('click', () => select(pos - 1));
+  nextBtn.addEventListener('click', () => select(pos + 1));
 
   selectTab(tabs[0]);
 }
@@ -325,8 +312,8 @@ function initScreenNav() {
    의료진 섹션부터 적용. 섹션 타이틀은 fade-up, 카드 묶음은 자식이 0.08s 간격으로 순차 등장 (간격은 main.css). 움직임 줄이기 설정이면 끔 */
 function initReveal() {
   if (!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  const singles = '.doctors__head, .doctors__viewport, .clinic__head, .cases__head, .faq-preview__head, .faq-preview__box, .story__head';
-  const groups = '.clinic__grid, .cases__list, .story__list';
+  const singles = '.philosophy__text, .doctors__head, .doctors__main, .clinic__head, .cases__head, .faq-preview__head, .faq-preview__box, .story__head';
+  const groups = '.branch-cards, .clinic__grid, .cases__list, .story__list';
   const targets = [
     ...[...document.querySelectorAll(singles)].map((el) => { el.classList.add('reveal'); return el; }),
     ...[...document.querySelectorAll(groups)].map((el) => { el.classList.add('reveal-group'); return el; }),

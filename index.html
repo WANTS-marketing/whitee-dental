@@ -122,8 +122,6 @@
             <span>심미치료</span></a></li>
         </ul>
         <div class="clinic-bar__faq">
-          <span class="clinic-bar__faq-label">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 3h12a2 2 0 012 2v16H7a2 2 0 01-2-2z"/><path d="M5 19a2 2 0 012-2h12"/></svg>FAQ</span>
           <h2 class="clinic-bar__title">자주 묻는 질문</h2>
           <p class="clinic-bar__faq-desc">진료 전 궁금한 점,<br> 먼저 확인해 보세요</p>
           <a class="btn btn--dark btn--sm" href="./faq/index.html">질문 전체보기
@@ -190,8 +188,10 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
           </div>
         </div>
-        <div class="doctors__viewport" id="doctors-panel" role="tabpanel" aria-labelledby="tab-changwon">
-          <ul class="doctors__track" data-doctors-track></ul>
+        <!-- 큰 프로필 1명 + 같은 지점 원장 썸네일 (main.js initDoctors, 데이터: site-data.js doctors) -->
+        <div class="doctors__main" id="doctors-panel" role="tabpanel" aria-labelledby="tab-changwon">
+          <div class="doc-profiles" data-doc-profiles aria-live="polite"></div>
+          <ul class="doc-thumbs" data-doc-thumbs aria-label="의료진 목록"></ul>
         </div>
       </div>
     </section>

@@ -64,14 +64,13 @@
 .clinic-bar__title { font-size: 1.625rem; margin-bottom: 12px; letter-spacing: -0.02em; }
 .clinic-bar__list { flex: 1; display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
 .clinic-bar__card { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; aspect-ratio: 1; border: 1px solid var(--color-line); border-radius: var(--radius-md); background: #fff; font-size: var(--fs-md); font-weight: 600; transition: border-color var(--dur), box-shadow var(--dur), transform var(--dur); }
-.clinic-bar__card:hover { border-color: var(--color-point); box-shadow: var(--shadow-card); transform: translateY(-4px); }
+/* hover 시 테두리 1px → 2px: border 대신 안쪽 그림자 1px 를 더해 내용이 밀리지 않게 */
+.clinic-bar__card:hover { border-color: var(--color-point); box-shadow: inset 0 0 0 1px var(--color-point), var(--shadow-card); transform: translateY(-4px); }
 .clinic-bar__card svg { width: 64px; height: 64px; }
 .ic-line { stroke: var(--color-icon); }
 .ic-accent { stroke: var(--color-icon-accent); }
 .ic-fill { fill: var(--color-icon-accent); stroke: none; }
 .clinic-bar__faq { width: 280px; padding-left: 40px; border-left: 1px solid var(--color-line); }
-.clinic-bar__faq-label { display: inline-flex; align-items: center; gap: 4px; font-size: var(--fs-h4); font-weight: 600; color: var(--color-text-sub); }
-.clinic-bar__faq-label svg { width: 24px; height: 24px; color: var(--color-point); }
 .clinic-bar__faq .clinic-bar__title { margin: 4px 0 4px; }
 .clinic-bar__faq-desc { margin-bottom: 12px; font-size: var(--fs-xs); color: var(--color-text-sub); }
 .clinic-bar__faq-desc br { display: none; } /* 홈 퀵바 카드(좁은 FAQ 열)에서만 줄바꿈 */
@@ -103,24 +102,39 @@
 .doctors__arrow:hover { background: var(--color-text); color: #fff; }
 .doctors__arrow svg { width: 20px; height: 20px; }
 .doctors__arrow:disabled { opacity: 0.35; pointer-events: none; }
-/* 캐러셀은 오른쪽 열 안에서만 보인다 (왼쪽 경계 = 열 시작선). 보이는 카드 수 --doc-visible 은 화면 너비별로 바꾼다
-   카드 너비 = (열 너비 − 꽉 찬 카드 사이 간격) ÷ 보이는 카드 수 → 오른쪽 끝에만 다음 카드가 잘려 보인다 */
-.doctors__viewport { --doc-visible: 3.5; --doc-gaps: 3; --doc-gap: 24px; position: relative; overflow: hidden; padding: 20px 0 36px; }
-.doctors__track { display: flex; gap: var(--doc-gap); transition: transform 0.5s var(--ease); }
-/* 드래그·스와이프: 세로 스크롤은 브라우저에 맡기고 가로 끌기만 캐러셀이 처리 */
-.doctors__viewport { touch-action: pan-y; cursor: grab; user-select: none; -webkit-user-select: none; }
-.doctors__viewport.is-dragging { cursor: grabbing; }
-.doctors__viewport.is-dragging .doctors__track { transition: none; }
-/* 복제 카드 ↔ 진짜 카드 순간 이동할 때는 애니메이션 없이 */
-.doctors__track.is-jumping, .doctors__track.is-jumping .doctor-card { transition: none; }
-.doctor-card { flex: none; width: calc((100% - var(--doc-gap) * var(--doc-gaps)) / var(--doc-visible)); padding: 16px 16px 24px; background: #fff; border-radius: var(--radius-lg); opacity: 0.45; transform-origin: left center; transition: opacity 0.5s, transform 0.5s var(--ease), box-shadow 0.5s; cursor: pointer; }
-/* 활성 = 왼쪽 첫 번째 카드: 불투명, 그림자, 살짝 크게 (왼쪽 기준으로 커져 열 시작선을 넘지 않음) */
-.doctor-card.is-active { opacity: 1; transform: scale(1.04); box-shadow: var(--shadow-card); cursor: default; z-index: 1; }
-.doctor-card__photo { aspect-ratio: 4 / 5; border-radius: var(--radius-md); }
-.doctor-card__tag { display: inline-block; margin-top: 16px; }
-.doctor-card__name { margin-top: 8px; font-size: var(--fs-h3); }
-.doctor-card__name small { margin-left: 6px; font-size: var(--fs-md); font-weight: 500; color: var(--color-text-sub); }
-.doctor-card__dept { margin-top: 2px; font-size: var(--fs-sm); color: var(--color-text-sub); }
+/* 큰 프로필 패널 + 썸네일 줄 (main.js initDoctors)
+   프로필은 전원을 그리드 한 칸에 겹쳐 두어 패널 높이 = 가장 긴 약력. 선택된 원장만 opacity 0.3s 로 보인다 */
+.doctors__main { --doc-photo-w: 300px; display: flex; flex-direction: column; gap: 20px; min-width: 0; }
+.doc-profiles { display: grid; padding: 28px; border-radius: var(--radius-lg); background: #fff; box-shadow: var(--shadow-card); }
+.doc-profile { grid-area: 1 / 1; display: grid; grid-template-columns: var(--doc-photo-w) minmax(0, 1fr); gap: 36px; align-items: start; opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s; }
+.doc-profile.is-active { opacity: 1; visibility: visible; }
+.doc-profile__photo { aspect-ratio: 300 / 380; border-radius: var(--radius-md); }
+.doc-profile__body { display: flex; flex-direction: column; min-width: 0; }
+.doc-profile__meta { display: flex; align-items: center; gap: 4px; font-size: var(--fs-sm); }
+.doc-profile__dept { font-weight: 700; color: var(--color-point); }
+.doc-profile__name { margin-top: 6px; font-size: 28px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.3; }
+.doc-profile__name small { margin-left: 4px; font-size: var(--fs-md); font-weight: 500; color: var(--color-text-sub); }
+.doc-profile__certs, .doc-profile__career { font-size: 14px; line-height: 1.7; }
+.doc-profile__certs { margin-top: 16px; font-weight: 700; }
+.doc-profile__career { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--color-line); color: var(--color-text-sub); }
+.doc-profile__career.is-2col { columns: 2; column-gap: 28px; }
+.doc-profile__certs li, .doc-profile__career li { position: relative; padding-left: 10px; break-inside: avoid; }
+.doc-profile__certs li::before, .doc-profile__career li::before { content: ""; position: absolute; left: 0; top: 0.8em; width: 3px; height: 3px; border-radius: 50%; background: currentColor; }
+.doc-profile__certs li::before { background: var(--color-point); }
+.doc-profile__more { display: none; }
+.doc-profile__link { align-self: flex-start; margin-top: 20px; height: 44px; }
+
+.doc-thumbs { position: relative; display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; }
+.doc-thumbs::-webkit-scrollbar { display: none; }
+.doc-thumbs li { flex: 1 0 0; min-width: 132px; }
+.doc-thumb { display: flex; align-items: center; gap: 10px; width: 100%; padding: 10px 12px; border: 1px solid transparent; border-radius: var(--radius-md); background: rgba(255, 255, 255, 0.8); text-align: left; transition: border-color var(--dur), background var(--dur), box-shadow var(--dur); }
+.doc-thumb:hover { background: #fff; }
+.doc-thumb__photo { flex: none; width: 48px; height: 48px; border-radius: 50%; }
+.doc-thumb__text { display: flex; flex-direction: column; min-width: 0; line-height: 1.35; }
+.doc-thumb__text b { font-size: var(--fs-md); transition: color var(--dur); }
+.doc-thumb__text small { font-size: var(--fs-xxs); color: var(--color-text-sub); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.doc-thumb[aria-pressed="true"] { border-color: var(--color-point); background: #fff; box-shadow: inset 0 0 0 1px var(--color-point); }
+.doc-thumb[aria-pressed="true"] b { color: var(--color-point); }
 
 /* ---------- ⑤ 진료안내 ---------- */
 .clinic { padding: var(--space-4xl) 0; background: var(--color-bg-soft); }
@@ -192,12 +206,6 @@
 /* ==========================================================================
    반응형
    ========================================================================== */
-@media (max-width: 1399px) {
-  .doctors__viewport { --doc-visible: 3.2; }
-}
-@media (max-width: 1280px) {
-  .doctors__viewport { --doc-visible: 2.5; --doc-gaps: 2; }
-}
 
 @media (max-width: 1200px) {
   .hero__content { left: 64px; }
@@ -216,6 +224,10 @@
 
   .philosophy__inner, .doctors__inner, .clinic__inner, .cases__inner, .faq-preview__inner, .story__inner { grid-template-columns: minmax(0, 1fr); gap: 40px; }
   .doctors__tabs { grid-template-columns: 1fr 1fr; max-width: 520px; }
+  /* 프로필: 사진 위·정보 아래, 약력 1열 */
+  .doc-profile { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .doc-profile__photo { width: 100%; max-width: 260px; }
+  .doc-profile__career.is-2col { columns: 1; }
   .clinic__grid { grid-template-columns: 1fr 1fr; grid-template-rows: 260px 200px 200px; grid-template-areas: "imp aes" "ort wis" "gen gen"; }
   .story__btn { margin-top: 24px; height: 52px; padding: 0 36px; font-size: var(--fs-md); }
 }
@@ -256,7 +268,14 @@
   .doctors__tabs { margin-top: 24px; }
   .doctors__tab { padding: 0 14px; font-size: var(--fs-xs); }
   .doctors__nav { display: none; }
-  .doctors__viewport { --doc-visible: 1.2; --doc-gaps: 1; --doc-gap: 16px; }
+  /* 모바일: 약력 처음 6개만 + '약력 더보기', 썸네일 줄은 가로 스크롤 */
+  .doc-profiles { padding: 20px; }
+  .doc-profile__photo { max-width: 220px; }
+  .doc-profile:not(.is-expanded) .is-extra { display: none; }
+  .doc-profile__more { display: block; align-self: flex-start; margin-top: 8px; font-size: var(--fs-sm); font-weight: 600; color: var(--color-point); }
+  .doc-profile__link { margin-top: 16px; }
+  .doc-thumbs { margin: 0 calc(var(--gutter) * -1); padding: 0 var(--gutter); scroll-snap-type: x proximity; }
+  .doc-thumbs li { flex: none; min-width: 0; width: 148px; scroll-snap-align: start; }
 
   .clinic__grid { grid-template-columns: 1fr; grid-template-rows: none; grid-template-areas: none; grid-auto-rows: 180px; }
   .clinic-card { grid-area: auto !important; }
@@ -393,20 +412,20 @@
 
 /* ---------- 첫 진입 애니메이션 (페이지 로드 시 1회) ----------
    body.is-intro 동안만 동작하고, main.js initHero 가 애니메이션이 끝나면(INTRO_MS) 클래스를 빼고 자동재생을 시작한다.
-   순서: 히어로 펼침(0~1.2s) → 텍스트 fade-up(1.5s~) → 퀵메뉴·오목 모서리 fade-in(1.8s~) → 퀵바 올라오기(2.1s~) */
+   순서: 히어로 펼침(0~1s) → 텍스트 fade-up(1.3s~) → 퀵메뉴·오목 모서리 fade-in(1.6s~) → 퀵바 올라오기(1.9s~) */
 @media (prefers-reduced-motion: no-preference) and (min-width: 769px) {
-  .is-intro .hero__slider { animation: intro-open 1.2s cubic-bezier(0.65, 0, 0.35, 1) both; }
+  .is-intro .hero__slider { animation: intro-open 1s cubic-bezier(0.65, 0, 0.35, 1) both; }
   /* 펼치는 동안 다른 슬라이드가 비치지 않게 현재 슬라이드만 그린다 */
   .is-intro .hero__slide:not(.is-active) { display: none; }
-  .is-intro .hero__slide.is-active .hero__media { animation: intro-zoom 1.2s cubic-bezier(0.65, 0, 0.35, 1) both; }
-  .is-intro .hero__slide.is-active .hero__content > * { animation-delay: 1.5s; }
-  .is-intro .hero__slide.is-active .hero__content > :nth-child(2) { animation-delay: 1.6s; }
-  .is-intro .hero__slide.is-active .hero__content > :nth-child(3) { animation-delay: 1.7s; }
-  .is-intro .hero__slide.is-active .hero__content > :nth-child(n+4) { animation-delay: 1.8s; }
-  .is-intro .hero__controls { animation: intro-fade 0.5s ease 1.5s both; }
+  .is-intro .hero__slide.is-active .hero__media { animation: intro-zoom 1s cubic-bezier(0.65, 0, 0.35, 1) both; }
+  .is-intro .hero__slide.is-active .hero__content > * { animation-delay: 1.3s; }
+  .is-intro .hero__slide.is-active .hero__content > :nth-child(2) { animation-delay: 1.4s; }
+  .is-intro .hero__slide.is-active .hero__content > :nth-child(3) { animation-delay: 1.5s; }
+  .is-intro .hero__slide.is-active .hero__content > :nth-child(n+4) { animation-delay: 1.6s; }
+  .is-intro .hero__controls { animation: intro-fade 0.5s ease 1.3s both; }
   /* 파인 칸 장식은 펼침이 끝난 뒤 나타나야 모서리가 어긋나 보이지 않는다 */
-  .is-intro .quick--hero { animation: intro-fade 0.5s ease 1.8s both; }
-  .is-intro .clinic-bar { animation: intro-rise 0.7s var(--ease) 2.1s both; }
+  .is-intro .quick--hero { animation: intro-fade 0.5s ease 1.6s both; }
+  .is-intro .clinic-bar { animation: intro-rise 0.7s var(--ease) 1.9s both; }
 }
 /* 모바일: 펼침 대신 짧은 fade-in */
 @media (prefers-reduced-motion: no-preference) and (max-width: 768px) {

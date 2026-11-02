@@ -28,7 +28,7 @@ function renderDoctorsPage() {
       <h2 class="doctor-group__title" id="doctor-group-${b.id}">화이트e치과 <span class="text-${b.id}">${esc(b.name)}</span> 의료진</h2>
       <div class="doctor-profiles">
         ${window.SITE.getDoctorsByBranch(b.id).map((d) => `
-          <article class="doctor-profile">
+          <article class="doctor-profile" id="${b.id}-${window.SITE.doctorSlug(d)}">
             <div class="doctor-profile__photo img-ph"><img src="${img(d.photo)}" alt="${esc(d.name)} ${esc(d.title)} 사진" loading="lazy"></div>
             <div class="doctor-profile__body">
               <p class="doctor-profile__tag">${branchBadge(d.branches.length > 1 ? 'both' : d.branches[0])}<span class="doctor-profile__dept">${esc(d.dept)}</span></p>
@@ -38,6 +38,8 @@ function renderDoctorsPage() {
           </article>`).join('')}
       </div>
     </section>`).join('');
+  // 메인 '의료진 자세히 보기'(#changwon-lee-eunju 등)로 들어오면 내용을 그린 뒤 해당 원장으로 이동
+  if (location.hash) requestAnimationFrame(() => document.getElementById(decodeURIComponent(location.hash.slice(1)))?.scrollIntoView({ behavior: 'instant', block: 'start' }));
 }
 
 /* ---------- 오시는길 ----------
