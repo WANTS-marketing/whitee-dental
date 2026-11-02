@@ -381,22 +381,27 @@ body.is-locked { overflow: hidden; }
 
 /* 왼쪽 카테고리: 세로 텍스트 목록, 선택 = 검정 굵게 */
 .faq-cats__list { display: flex; flex-direction: column; gap: 4px; }
-.faq-cats__btn { padding: 6px 0; font-size: var(--fs-md); color: #999; text-align: left; transition: color var(--dur); }
-.faq-cats__btn:hover { color: var(--color-text); }
-.faq-cats__btn[aria-pressed="true"] { color: #111; font-weight: 700; }
+.faq-cats__btn { padding: 6px 0; font-size: var(--fs-md); color: #999; text-align: left; transition: color 0.2s, background-color 0.2s, border-color 0.2s; }
+.faq-cats__btn:hover { color: #333; }
+.faq-cats__btn[aria-pressed="true"] { color: var(--color-point); font-weight: 700; } /* 선택 = 포인트 컬러 굵게 */
 
 /* 질문 행: Q | 카테고리(고정 너비) | 질문 | 화살표 — 행 높이 약 70px, 얇은 회색 구분선 */
 .faq-list { border-top: 1px solid #e5e5e5; }
 .faq-item { border-bottom: 1px solid #e5e5e5; }
 .faq-list .faq-item__btn { display: grid; grid-template-columns: var(--faq-mark) var(--faq-cat) minmax(0, 1fr) 24px; align-items: center; gap: 0; min-height: 70px; padding: 14px 8px 14px 16px; border-bottom: 1px solid transparent; font-size: var(--fs-md); font-weight: 400; color: var(--color-text); transition: border-color var(--dur); }
 .faq-list .faq-item__btn[aria-expanded="true"] { color: var(--color-text); border-bottom-color: #111; } /* 펼친 행: 질문 아래 진한 선 */
-.faq-item__mark { font-size: 1.125rem; font-weight: 800; font-family: Georgia, "Times New Roman", serif; color: #111; }
+/* Q·A: 사이트 기본 글꼴(Pretendard) 700, Q 검정 · A 포인트 컬러 */
+.faq-item__mark { font-size: 18px; font-weight: 700; line-height: 1; color: #111; }
+.faq-item__answer .faq-item__mark { color: var(--color-point); }
 .faq-item__cat { padding-right: 16px; font-weight: 700; color: #222; word-break: keep-all; }
 .faq-item__text { color: #333; word-break: keep-all; }
 .faq-item__arrow { width: 22px; height: 22px; color: #555; transition: transform var(--dur); }
 .faq-item__btn[aria-expanded="true"] .faq-item__arrow { transform: rotate(180deg); }
 /* 답변: 연한 베이지, A 는 Q 와 같은 세로선, 글은 질문 시작선에 맞춤 */
-.faq-item__answer { display: grid; grid-template-columns: var(--faq-mark) var(--faq-cat) minmax(0, 1fr) 24px; padding: 28px 8px 32px 16px; background: #faf8f5; }
+/* A 는 답변 글 바로 왼쪽(카테고리 열 끝, 글 시작선에서 40px 왼쪽), 첫 줄과 기준선(baseline) 맞춤.
+   답변 글은 질문 글 시작선 그대로라 두 번째 줄부터도 A 아래로 들어가지 않는다 */
+.faq-item__answer { display: grid; grid-template-columns: var(--faq-mark) var(--faq-cat) minmax(0, 1fr) 24px; align-items: baseline; padding: 28px 8px 32px 16px; background: #faf8f5; }
+.faq-item__answer .faq-item__mark { grid-column: 2; justify-self: end; width: 40px; }
 .faq-item__a { grid-column: 3; font-size: 15px; line-height: 1.8; color: #444; white-space: pre-line; word-break: keep-all; }
 .faq-list__empty { padding: 60px 0; text-align: center; color: var(--color-text-sub); border-bottom: 1px solid #e5e5e5; }
 
@@ -410,7 +415,8 @@ body.is-locked { overflow: hidden; }
   .faq-cats::-webkit-scrollbar { display: none; }
   .faq-cats__list { flex-direction: row; gap: 8px; width: max-content; }
   .faq-cats__btn { padding: 8px 16px; border: 1px solid #ddd; border-radius: var(--radius-pill); background: #fff; font-size: var(--fs-sm); color: #666; white-space: nowrap; }
-  .faq-cats__btn[aria-pressed="true"] { border-color: #111; background: #111; color: #fff; }
+  .faq-cats__btn:hover { color: #333; }
+  .faq-cats__btn[aria-pressed="true"] { border-color: var(--color-point); background: var(--color-point); color: #fff; }
   .gnb, .util, .mega, .mega-dim { display: none; }
   .hamburger { display: block; }
 
@@ -439,6 +445,7 @@ body.is-locked { overflow: hidden; }
   .faq-item__text { grid-area: text; }
   .faq-item__arrow { grid-area: arrow; width: 18px; height: 18px; }
   .faq-item__answer { grid-template-columns: var(--faq-mark) minmax(0, 1fr); padding: 20px 4px 24px; }
+  .faq-item__answer .faq-item__mark { grid-column: 1; width: auto; padding-right: 10px; } /* 모바일: 답변 글 바로 왼쪽에 붙임 */
   .faq-item__a { grid-column: 2; font-size: var(--fs-sm); }
   .only-mobile { display: revert !important; }
   .only-desktop { display: none !important; }
