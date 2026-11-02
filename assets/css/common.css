@@ -370,7 +370,10 @@ body.is-locked { overflow: hidden; }
    ========================================================================== */
 .faq-board { --faq-mark: 56px; --faq-cat: 150px; }
 .sub-content.faq-page { padding-top: calc(var(--header-h) + 80px); } /* 서브 타이틀 영역 없음 → 헤더 아래 80px */
-.faq-board__actions { display: flex; align-items: flex-end; gap: 12px; }
+/* 하단 상담 안내: 목록과 56px, 문구와 버튼 16px */
+.faq-board__cta { grid-column: 2; display: flex; flex-direction: column; align-items: center; gap: 16px; margin-top: 56px; text-align: center; }
+.faq-cats { grid-row: span 2; } /* 카테고리 메뉴가 길어도 목록 ↔ 안내 간격은 그대로 */
+.faq-board__cta-text { font-size: 16px; color: #444; word-break: keep-all; }
 .faq-board__contact { height: 48px; padding: 0 24px; background: var(--color-point); color: #fff; font-size: var(--fs-sm); font-weight: 600; transition: filter var(--dur); }
 .faq-board__contact:hover { filter: brightness(0.94); }
 .faq-board__top { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; margin-bottom: 40px; }
@@ -381,7 +384,7 @@ body.is-locked { overflow: hidden; }
 .faq-search__input:focus { outline: none; border-bottom-color: var(--color-text); }
 .faq-search__input::-webkit-search-cancel-button { display: none; }
 .faq-search__icon { position: absolute; right: 2px; top: 50%; width: 22px; height: 22px; transform: translateY(-50%); pointer-events: none; }
-.faq-board__body { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 40px; align-items: start; }
+.faq-board__body { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 0 40px; align-items: start; }
 
 /* 왼쪽 카테고리: 세로 텍스트 목록, 선택 = 검정 굵게 */
 .faq-cats__list { display: flex; flex-direction: column; gap: 4px; }
@@ -415,7 +418,8 @@ body.is-locked { overflow: hidden; }
 @media (max-width: 1024px) {
   /* FAQ: 카테고리 메뉴를 목록 위 가로 스크롤 칩으로 */
   .faq-board__body { grid-template-columns: minmax(0, 1fr); gap: 24px; }
-  .faq-cats { margin: 0 calc(var(--gutter) * -1); padding: 0 var(--gutter); overflow-x: auto; scrollbar-width: none; }
+  .faq-board__cta { grid-column: auto; margin-top: 32px; }
+  .faq-cats { grid-row: auto; margin: 0 calc(var(--gutter) * -1); padding: 0 var(--gutter); overflow-x: auto; scrollbar-width: none; }
   .faq-cats::-webkit-scrollbar { display: none; }
   .faq-cats__list { flex-direction: row; gap: 8px; width: max-content; }
   .faq-cats__btn { padding: 8px 16px; border: 1px solid #ddd; border-radius: var(--radius-pill); background: #fff; font-size: var(--fs-sm); color: #666; white-space: nowrap; }
@@ -443,7 +447,7 @@ body.is-locked { overflow: hidden; }
   .faq-board__top { flex-direction: column; align-items: stretch; gap: 12px; margin-bottom: 24px; }
   .faq-board__title { font-size: 1.625rem; }
   .sub-content.faq-page { padding-top: calc(var(--header-h) + 40px); }
-  .faq-board__actions { flex-direction: column; align-items: stretch; gap: 12px; }
+  .faq-board__cta { align-items: stretch; }
   .faq-search { width: 100%; }
   .faq-board__contact { width: 100%; }
   .faq-list .faq-item__btn { grid-template-columns: var(--faq-mark) minmax(0, 1fr) 20px; grid-template-areas: "mark cat arrow" "mark text arrow"; row-gap: 2px; min-height: 0; padding: 16px 4px; font-size: var(--fs-sm); }

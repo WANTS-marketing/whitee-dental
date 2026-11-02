@@ -36,14 +36,11 @@
       <div class="container faq-board">
         <div class="faq-board__top">
           <h1 class="faq-board__title">FAQ</h1>
-          <div class="faq-board__actions">
           <form class="faq-search" role="search" data-faq-search-form>
             <label class="sr-only" for="faq-search">FAQ 검색</label>
             <input class="faq-search__input" id="faq-search" type="search" placeholder="궁금한 내용을 검색해 보세요" autocomplete="off" data-faq-search>
             <svg class="faq-search__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
           </form>
-          <a class="btn faq-board__contact" href="./contact.html">상담문의하기 <span aria-hidden="true">→</span></a>
-          </div>
         </div>
         <div class="faq-board__body">
           <nav class="faq-cats" aria-label="FAQ 분류">
@@ -52,8 +49,12 @@
           <div class="faq-board__list">
             <ul class="faq-list" data-faq-list aria-live="polite"></ul>
           </div>
+          <!-- 하단 상담 안내 — 질문 목록 바로 아래 칸 (목록 끝에서 56px) -->
+          <div class="faq-board__cta">
+            <p class="faq-board__cta-text">찾으시는 답변이 없으신가요? 상담문의를 남겨주시면 빠르게 답변드리겠습니다.</p>
+            <a class="btn faq-board__contact" href="./contact.html">상담문의하기 <span aria-hidden="true">→</span></a>
+          </div>
         </div>
-        <p class="sec-desc" style="text-align:center;margin-top:40px">찾으시는 답변이 없나요? <a class="text-point" href="./contact.html"><strong>상담문의하기 →</strong></a></p>
       </div>
     </section>
   </main>
