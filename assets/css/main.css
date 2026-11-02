@@ -111,7 +111,7 @@
 .doc-profile__photo { aspect-ratio: 300 / 380; border-radius: var(--radius-md); }
 .doc-profile__body { display: flex; flex-direction: column; min-width: 0; }
 .doc-profile__meta { display: flex; align-items: center; gap: 4px; font-size: var(--fs-sm); }
-.doc-profile__dept { font-weight: 700; color: var(--color-point); }
+.doc-profile__dept { font-weight: 700; color: var(--doc-color, var(--color-point)); }
 .doc-profile__name { margin-top: 6px; font-size: 28px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.3; }
 .doc-profile__name small { margin-left: 4px; font-size: var(--fs-md); font-weight: 500; color: var(--color-text-sub); }
 /* 약력 줄 높이 통일: 전문의(굵게)·일반 약력 모두 14px / 26px, 항목 사이 여백 없이 줄 높이로만 간격.
@@ -150,8 +150,9 @@
 .doc-thumb__text { display: flex; flex-direction: column; min-width: 0; line-height: 1.35; }
 .doc-thumb__text b { font-size: var(--fs-md); transition: color var(--dur); }
 .doc-thumb__text small { font-size: var(--fs-xxs); color: var(--color-text-sub); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.doc-thumb[aria-pressed="true"] { border-color: var(--color-point); background: #fff; box-shadow: inset 0 0 0 1px var(--color-point); }
-.doc-thumb[aria-pressed="true"] b { color: var(--color-point); }
+/* 선택 강조 = 지점 색 (--doc-color, common.css 의료진 지점 색) */
+.doc-thumb[aria-pressed="true"] { border-color: var(--doc-color, var(--color-point)); background: #fff; box-shadow: inset 0 0 0 1px var(--doc-color, var(--color-point)); }
+.doc-thumb[aria-pressed="true"] b { color: var(--doc-color, var(--color-point)); }
 
 /* ---------- ⑤ 진료안내 ---------- */
 .clinic { padding: var(--space-4xl) 0; background: var(--color-bg-soft); }

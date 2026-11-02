@@ -150,6 +150,7 @@ function initDoctors() {
 
   function render(branchId) {
     branch = branchId;
+    panel.dataset.branch = branchId; // 진료과·태그·선택 강조 색 = 지점 색 (common.css)
     const ds = window.SITE.getDoctorsByBranch(branchId);
     const head = ds.findIndex((d) => d.title === '대표원장');
     if (head > 0) ds.unshift(...ds.splice(head, 1));

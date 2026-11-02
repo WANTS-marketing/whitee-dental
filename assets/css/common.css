@@ -327,13 +327,19 @@ body.is-locked { overflow: hidden; }
 .map-ph { aspect-ratio: 16 / 9; margin-top: 16px; border-radius: var(--radius-md); }
 
 /* 의료진 소개 페이지 */
+/* 의료진 지점 색 — [data-branch] 범위(메인 의료진 패널·의료진 소개 지점 그룹) 안에서 진료과·지점 태그·선택 강조를 지점 색으로.
+   겸직 원장(창원·마산 태그)은 지금 보고 있는 지점(탭·그룹)의 색을 따른다 */
+.doctors__main[data-branch="changwon"], .doctor-group[data-branch="changwon"] { --doc-color: var(--color-changwon); --doc-color-bg: var(--color-changwon-bg); }
+.doctors__main[data-branch="masan"], .doctor-group[data-branch="masan"] { --doc-color: var(--color-masan); --doc-color-bg: var(--color-masan-bg); }
+.doctors__main[data-branch] .badge--both, .doctor-group[data-branch] .badge--both { background: var(--doc-color-bg); color: var(--doc-color); }
+
 .doctor-group + .doctor-group { margin-top: var(--space-4xl); }
 .doctor-group__title { margin-bottom: 32px; font-size: var(--fs-h2); }
 .doctor-profiles { display: grid; gap: 24px; }
 .doctor-profile { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 40px; padding: 32px; border: 1px solid var(--color-line); border-radius: var(--radius-lg); background: #fff; }
 .doctor-profile__photo { aspect-ratio: 4 / 5; border-radius: var(--radius-md); }
 .doctor-profile__tag { display: flex; align-items: center; gap: 8px; }
-.doctor-profile__dept { font-size: var(--fs-sm); font-weight: 600; color: var(--color-point); }
+.doctor-profile__dept { font-size: var(--fs-sm); font-weight: 600; color: var(--doc-color, var(--color-point)); }
 .doctor-profile__name { margin-top: 8px; font-size: var(--fs-h3); }
 .doctor-profile__name small { margin-left: 4px; font-size: var(--fs-md); font-weight: 500; color: var(--color-text-sub); }
 .doctor-profile__career { columns: 2; column-gap: 32px; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--color-line); }

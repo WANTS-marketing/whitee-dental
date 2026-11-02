@@ -24,7 +24,7 @@ function renderDoctorsPage() {
   if (!box) return;
   const { esc, img, branchBadge } = window.UI;
   box.innerHTML = window.SITE.branches.map((b) => `
-    <section class="doctor-group" id="${b.id}" aria-labelledby="doctor-group-${b.id}">
+    <section class="doctor-group" id="${b.id}" data-branch="${b.id}" aria-labelledby="doctor-group-${b.id}">
       <h2 class="doctor-group__title" id="doctor-group-${b.id}">화이트e치과 <span class="text-${b.id}">${esc(b.name)}</span> 의료진</h2>
       <div class="doctor-profiles">
         ${window.SITE.getDoctorsByBranch(b.id).map((d) => `
