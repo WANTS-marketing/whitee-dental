@@ -6,7 +6,8 @@
 /* 헤더(흰색 고정) 바로 아래에서 시작. 뒤 배경은 페이지 흰색 그대로 */
 .hero { position: relative; padding-top: calc(var(--header-h) + 24px); }
 .hero__inner { position: relative; }
-.hero__slider { position: relative; height: 640px; border-radius: var(--radius-xl); overflow: hidden; background: #111; color: #fff; }
+/* translateZ·backface-visibility: 펼침(clip-path)·확대 애니메이션 중 서브픽셀 흔들림 방지 */
+.hero__slider { position: relative; height: 640px; border-radius: var(--radius-xl); overflow: hidden; background: #111; color: #fff; transform: translateZ(0); backface-visibility: hidden; }
 .hero__slide { position: absolute; inset: 0; opacity: 0; visibility: hidden; transition: opacity 0.8s var(--ease), visibility 0.8s; }
 .hero__slide.is-active { opacity: 1; visibility: visible; }
 .hero__media { position: absolute; inset: 0; background: linear-gradient(120deg, #3a3330, #151515); }
@@ -36,24 +37,32 @@
 .hero__count { font-size: var(--fs-lg); letter-spacing: 0.08em; min-width: 52px; text-align: center; }
 .hero__count strong { font-weight: 700; }
 
-/* 히어로 우측 퀵메뉴 — 슬라이더 오른쪽 위를 파낸 모양 */
 /* 히어로 우측 퀵메뉴 — 슬라이더 오른쪽 위를 파낸 칸 (CSS만으로)
    칸 자체: 페이지 배경색(흰색) + 왼쪽 아래 모서리 둥글게.
    오목 모서리 2개는 반지름 R 짜리 정사각형에 radial-gradient 로 4분원만 투명하게 뚫어 만든다:
    ::before = 칸 왼쪽 위 (히어로 윗선이 둥글게 꺾여 내려감)
    ::after  = 칸 아래 오른쪽 (그 아래 히어로 오른쪽 위 모서리가 둥글게)
-   → 히어로 외곽선이 끊김 없이 하나의 둥근 선으로 이어진다 */
+   → 히어로 외곽선이 끊김 없이 하나의 둥근 선으로 이어진다
+   칸은 슬라이더 밖(.hero__inner 기준)에 있고, 슬라이더 오른쪽 끝·윗선보다 --notch-bleed(2px) 바깥까지 덮는다.
+   (슬라이더 안에 두면 overflow 에 잘려 끝선 1px 이 펼침 애니메이션 중 비친다) */
 .quick--hero {
-  --notch-r: var(--radius-xl); --notch-bg: #fff;
-  position: absolute; z-index: 4; top: 0; right: 0; padding: 0 0 20px 20px;
+  --notch-r: var(--radius-xl); --notch-bg: #fff; --notch-bleed: 2px;
+  position: absolute; z-index: 4; top: calc(var(--notch-bleed) * -1); right: calc(var(--notch-bleed) * -1);
+  padding: var(--notch-bleed) var(--notch-bleed) 20px 20px;
   background: var(--notch-bg); border-bottom-left-radius: var(--notch-r);
 }
 .quick--hero::before, .quick--hero::after {
-  content: ""; position: absolute; width: var(--notch-r); height: var(--notch-r); pointer-events: none;
+  content: ""; position: absolute; pointer-events: none;
   background: radial-gradient(circle at 0 100%, transparent calc(var(--notch-r) - 0.5px), var(--notch-bg) var(--notch-r));
 }
-.quick--hero::before { top: 0; right: 100%; }
-.quick--hero::after { top: 100%; right: 0; }
+/* 칸 왼쪽 위: 윗선보다 2px 위까지 */
+.quick--hero::before { top: 0; right: 100%; width: var(--notch-r); height: calc(var(--notch-r) + var(--notch-bleed)); }
+/* 칸 아래 오른쪽: 오른쪽 끝보다 2px 바깥까지 */
+.quick--hero::after { top: 100%; right: 0; width: calc(var(--notch-r) + var(--notch-bleed)); height: var(--notch-r); }
+@media (min-width: 769px) {
+  /* 첫 버튼 오른쪽 위는 히어로 모서리와 같은 반지름 (예전엔 슬라이더 둥근 모서리에 잘려 생기던 모양) */
+  .quick--hero .quick__list > li:first-child .quick__btn { border-top-right-radius: var(--notch-r); }
+}
 
 /* ---------- ② 빠른 진료 안내 ---------- */
 .clinic-bar { padding: 64px 0 0; }
@@ -237,6 +246,8 @@
 }
 
 @media (max-width: 1024px) {
+  /* 태블릿: .hero__inner 에 좌우 여백(gutter)이 있어 칸 위치를 슬라이더 끝에 맞춘다 */
+  .quick--hero { right: calc(var(--gutter) - var(--notch-bleed)); }
   .hero__slider { height: 560px; }
   .hero__content { left: 48px; right: 200px; }
   .quick__btn { width: 120px; height: 72px; font-size: var(--fs-sm); gap: 8px; }

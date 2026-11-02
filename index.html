@@ -87,10 +87,10 @@
             <button type="button" class="hero__ctrl hero__ctrl--pause" data-hero-pause aria-label="자동재생 일시정지">
               <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg></button>
           </div>
-
-          <!-- 우측 퀵메뉴 (components/quick.html) -->
-          <div class="quick quick--hero" data-include="quick" data-keep></div>
         </div>
+        <!-- 우측 퀵메뉴 = 히어로 오른쪽 위 파인 칸 (components/quick.html)
+             슬라이더 밖(형제)에 두어 슬라이더 끝선보다 2px 바깥까지 덮는다 → 애니메이션 중 끝선 1px 비침 방지 -->
+        <div class="quick quick--hero" data-include="quick" data-keep></div>
       </div>
     </section>
 
