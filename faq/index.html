@@ -30,31 +30,20 @@
   <div data-include="header"></div>
 
   <main id="main">
-    <section class="sub-visual">
-      <div class="container">
-        <h1 class="sub-visual__title">자주 묻는 질문</h1>
-        <ol class="breadcrumb" aria-label="현재 위치">
-          <li><a href="../index.html">홈</a></li>
-          <li>FAQ</li>
-          <li aria-current="page">자주 묻는 질문</li>
-        </ol>
-        <nav class="sub-tabs" aria-label="FAQ 하위 메뉴">
-          <a href="index.html" class="is-current" aria-current="page">자주 묻는 질문</a>
-          <a href="contact.html">상담문의하기</a>
-        </nav>
-      </div>
-    </section>
-
-    <section class="sub-content">
+    <!-- FAQ 페이지는 서브 타이틀 영역 없이 헤더 바로 아래에서 'FAQ' 로 시작 -->
+    <section class="sub-content faq-page">
       <!-- FAQ 게시판: 상단 [FAQ 타이틀 | 검색] / 본문 [카테고리 메뉴 | 질문 목록(아코디언)] — pages.js renderFaqList -->
       <div class="container faq-board">
         <div class="faq-board__top">
-          <h2 class="faq-board__title">FAQ</h2>
+          <h1 class="faq-board__title">FAQ</h1>
+          <div class="faq-board__actions">
           <form class="faq-search" role="search" data-faq-search-form>
             <label class="sr-only" for="faq-search">FAQ 검색</label>
             <input class="faq-search__input" id="faq-search" type="search" placeholder="궁금한 내용을 검색해 보세요" autocomplete="off" data-faq-search>
             <svg class="faq-search__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
           </form>
+          <a class="btn faq-board__contact" href="./contact.html">상담문의하기 <span aria-hidden="true">→</span></a>
+          </div>
         </div>
         <div class="faq-board__body">
           <nav class="faq-cats" aria-label="FAQ 분류">

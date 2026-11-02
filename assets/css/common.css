@@ -369,6 +369,10 @@ body.is-locked { overflow: hidden; }
    FAQ 게시판 (faq/index.html) — [FAQ | 검색] / [카테고리 메뉴 | 질문 목록]
    ========================================================================== */
 .faq-board { --faq-mark: 56px; --faq-cat: 150px; }
+.sub-content.faq-page { padding-top: calc(var(--header-h) + 80px); } /* 서브 타이틀 영역 없음 → 헤더 아래 80px */
+.faq-board__actions { display: flex; align-items: flex-end; gap: 12px; }
+.faq-board__contact { height: 48px; padding: 0 24px; background: var(--color-point); color: #fff; font-size: var(--fs-sm); font-weight: 600; transition: filter var(--dur); }
+.faq-board__contact:hover { filter: brightness(0.94); }
 .faq-board__top { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; margin-bottom: 40px; }
 .faq-board__title { font-size: 2rem; font-weight: 700; letter-spacing: -0.01em; }
 .faq-search { position: relative; width: 300px; }
@@ -438,7 +442,10 @@ body.is-locked { overflow: hidden; }
   .faq-board { --faq-mark: 32px; }
   .faq-board__top { flex-direction: column; align-items: stretch; gap: 12px; margin-bottom: 24px; }
   .faq-board__title { font-size: 1.625rem; }
+  .sub-content.faq-page { padding-top: calc(var(--header-h) + 40px); }
+  .faq-board__actions { flex-direction: column; align-items: stretch; gap: 12px; }
   .faq-search { width: 100%; }
+  .faq-board__contact { width: 100%; }
   .faq-list .faq-item__btn { grid-template-columns: var(--faq-mark) minmax(0, 1fr) 20px; grid-template-areas: "mark cat arrow" "mark text arrow"; row-gap: 2px; min-height: 0; padding: 16px 4px; font-size: var(--fs-sm); }
   .faq-item__btn .faq-item__mark { grid-area: mark; align-self: start; }
   .faq-item__cat { grid-area: cat; padding: 0; font-size: var(--fs-xxs); color: #777; }
