@@ -52,7 +52,7 @@ function initHero() {
   slider.querySelector('[data-hero-prev]').addEventListener('click', () => { go(index - 1); restart(); });
   slider.querySelector('[data-hero-next]').addEventListener('click', () => { go(index + 1); restart(); });
   playBtn.addEventListener('click', play);
-  pauseBtn.addEventListener('click', stop);
+  pauseBtn.addEventListener('click', stop); // 첫 진입 중에 누르면 애니메이션이 끝나도 자동재생하지 않는다 (아래 aria-pressed 확인)
 
   // 모바일 스와이프
   let startX = null;
@@ -65,9 +65,18 @@ function initHero() {
   });
 
   go(0);
-  // 움직임 줄이기 설정 사용자는 자동재생하지 않음
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) stop();
-  else play();
+  // 움직임 줄이기 설정 사용자는 첫 진입 애니메이션·자동재생 없이 바로 표시
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce) { document.body.classList.remove('is-intro'); stop(); return; }
+  if (!document.body.classList.contains('is-intro')) { play(); return; }
+  // 첫 진입 애니메이션(main.css '첫 진입 애니메이션')이 끝난 뒤 자동재생 시작. 그동안 버튼은 재생 상태로 표시
+  const INTRO_MS = window.matchMedia('(max-width: 768px)').matches ? 500 : 2800;
+  playBtn.setAttribute('aria-pressed', 'true');
+  pauseBtn.setAttribute('aria-pressed', 'false');
+  setTimeout(() => {
+    document.body.classList.remove('is-intro');
+    if (playBtn.getAttribute('aria-pressed') === 'true' && !timer) play();
+  }, INTRO_MS);
 }
 
 /* ---------- ④ 의료진 캐러셀 — 왼쪽 첫 카드가 활성, 무한 반복, 버튼·마우스 드래그·터치 스와이프 ----------
