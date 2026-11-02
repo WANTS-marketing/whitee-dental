@@ -1,0 +1,7 @@
+[
+  { "id": "faq-1", "category": "임플란트", "question": "임플란트 수술 후 식사는 언제부터 가능한가요?", "answer": "", "featured": true, "order": 1, "_todo": "답변 병원 확인 필요" },
+  { "id": "faq-2", "category": "치아교정", "question": "치아교정은 성인이 되어도 시작할 수 있나요?", "answer": "", "featured": true, "order": 2, "_todo": "답변 병원 확인 필요" },
+  { "id": "faq-3", "category": "심미치료", "question": "올세라믹과 라미네이트는 어떤 차이가 있나요?", "answer": "", "featured": true, "order": 3, "_todo": "답변 병원 확인 필요" },
+  { "id": "faq-4", "category": "사랑니", "question": "사랑니는 반드시 발치해야 하나요?", "answer": "", "featured": true, "order": 4, "_todo": "답변 병원 확인 필요" },
+  { "id": "faq-5", "category": "진료안내", "question": "화이트e치과 창원점과 마산점의 진료시간은 같나요?", "answer": "두 지점 모두 평일 10:00–21:00, 토요일 10:00–16:00 진료하며 일요일은 휴진입니다.", "featured": true, "order": 5 }
+]

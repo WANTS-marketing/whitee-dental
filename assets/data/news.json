@@ -1,0 +1,6 @@
+[
+  { "id": "n3", "title": "[더미] 치과소식 게시물 제목이 들어갑니다", "branch": "both", "date": "2026-10-20T10:00:00+09:00", "thumbnail": "news-dummy-03.jpg", "_dummy": true },
+  { "id": "n2", "title": "[더미] 창원 화이트e치과\n약국에서 구매할 수 있는 진통제 성분", "branch": "changwon", "date": "2026-10-26T12:30:00+09:00", "thumbnail": "news-dummy-02.jpg", "_dummy": true },
+  { "id": "n1", "title": "[더미] 마산/창원 화이트e치과 11월\n임플란트 치아교정 진료안내", "branch": "both", "date": "2026-10-30T08:25:00+09:00", "thumbnail": "news-dummy-01.jpg", "_dummy": true },
+  { "id": "n0", "title": "[더미] 지난 소식 예시", "branch": "masan", "date": "2026-09-15T09:00:00+09:00", "thumbnail": "news-dummy-04.jpg", "_dummy": true }
+]

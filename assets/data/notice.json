@@ -1,0 +1,5 @@
+[
+  { "id": "nt3", "title": "[더미] 공지사항 예시 — 고정 공지", "branch": "both", "date": "2026-10-01T09:00:00+09:00", "pinned": true, "_dummy": true },
+  { "id": "nt2", "title": "[더미] 창원점 공지사항 예시", "branch": "changwon", "date": "2026-10-20T09:00:00+09:00", "pinned": false, "_dummy": true },
+  { "id": "nt1", "title": "[더미] 마산점 공지사항 예시", "branch": "masan", "date": "2026-10-10T09:00:00+09:00", "pinned": false, "_dummy": true }
+]

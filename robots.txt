@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /member/
+
+# TODO: 최종 도메인(whiteedental.co.kr) 연결 시 주소 교체
+Sitemap: https://wants-marketing.github.io/whitee-dental/sitemap.xml

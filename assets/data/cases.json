@@ -1,0 +1,5 @@
+[
+  { "id": "c3", "category": "implant", "categoryName": "임플란트", "title": "[더미] 임플란트 치료사례", "branch": "masan", "date": "2026-10-15T09:00:00+09:00", "beforeImage": "case-implant-before.jpg", "afterImage": "case-implant-after.jpg", "_dummy": true },
+  { "id": "c2", "category": "prosthetics", "categoryName": "보철치료", "title": "[더미] 보철치료 사례", "branch": "changwon", "date": "2026-10-10T09:00:00+09:00", "beforeImage": "case-prosthetics-before.jpg", "afterImage": "case-prosthetics-after.jpg", "_dummy": true },
+  { "id": "c1", "category": "orthodontics", "categoryName": "치아교정", "title": "[더미] 치아교정 사례", "branch": "changwon", "date": "2026-10-01T09:00:00+09:00", "beforeImage": "case-orthodontics-before.jpg", "afterImage": "case-orthodontics-after.jpg", "_dummy": true }
+]

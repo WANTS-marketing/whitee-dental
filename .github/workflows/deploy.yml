@@ -1,0 +1,51 @@
+# main 브랜치에 push 하면 GitHub Pages 로 배포
+# 필요한 설정: Settings → Secrets and variables → Actions
+#   Secrets: WEB3FORMS_ACCESS_KEY (2차: SUPABASE_URL, SUPABASE_ANON_KEY)
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: 환경변수로 config.js 생성
+        run: node scripts/build-config.js
+        env:
+          WEB3FORMS_ACCESS_KEY: ${{ secrets.WEB3FORMS_ACCESS_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+
+      - name: 배포 대상만 복사
+        run: |
+          mkdir -p _site
+          cp -r index.html 404.html fee.html privacy.html favicon.svg robots.txt sitemap.xml .nojekyll \
+                about treatment community faq member admin components assets _site/
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deployment
+        uses: actions/deploy-pages@v4

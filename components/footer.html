@@ -1,0 +1,74 @@
+<!-- 공통 푸터 — 지점 바로가기 바 + 푸터 + 모바일 하단 고정 바 -->
+<section class="branch-bar" aria-label="지점 바로가기">
+  <!-- 배경: assets/images/branch-bar-bg.jpg (원내 사진) -->
+  <div class="branch-bar__photo" style="background-image:url('{{ROOT}}/assets/images/branch-bar-bg.jpg')" role="img" aria-label="화이트e치과 원내 데스크 전경"></div>
+  <div class="branch-bar__links">
+    <a class="branch-bar__link branch-bar__link--changwon" href="{{ROOT}}/about/location.html#changwon">
+      <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M27 16H5M13 8l-8 8 8 8"/></svg>
+      <span>화이트e치과 <span class="text-changwon">창원점</span></span>
+    </a>
+    <a class="branch-bar__link branch-bar__link--masan" href="{{ROOT}}/about/location.html#masan">
+      <span>화이트e치과 <span class="text-masan">마산점</span></span>
+      <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 16h22M19 8l8 8-8 8"/></svg>
+    </a>
+  </div>
+</section>
+
+<footer class="footer">
+  <nav class="footer__nav" aria-label="푸터 메뉴">
+    <div class="container">
+      <ul>
+        <li><a href="{{ROOT}}/about/intro.html">화이트e치과<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M6 1v10M1 6h10"/></svg></a></li>
+        <li><a href="{{ROOT}}/treatment/implant.html">진료과목<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M6 1v10M1 6h10"/></svg></a></li>
+        <li><a href="{{ROOT}}/community/notice.html">커뮤니티<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M6 1v10M1 6h10"/></svg></a></li>
+        <li><a href="{{ROOT}}/faq/index.html">FAQ<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M6 1v10M1 6h10"/></svg></a></li>
+        <li><a href="{{ROOT}}/fee.html">비급여 진료비용<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M7 1h4v4M11 1L5.5 6.5M9 7.5V11H1V3h3.5"/></svg></a></li>
+        <li><a href="{{ROOT}}/privacy.html"><strong>개인정보처리방침</strong><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M7 1h4v4M11 1L5.5 6.5M9 7.5V11H1V3h3.5"/></svg></a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container">
+    <!-- 지점 정보는 assets/js/site-data.js 의 BRANCHES 로 렌더링 -->
+    <div class="footer__branches" data-footer-branches></div>
+
+    <div class="footer__bottom">
+      <a class="logo" href="{{ROOT}}/index.html" aria-label="화이트e치과 홈">
+        <svg class="logo__mark" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4c-4 0-6 3-6 7 0 5 2 8 3 12 .6 3 1.5 5 3 5 2 0 2-5 3-7.5.6-1.5 1.4-2 2-2s1.4.5 2 2c1 2.5 1 7.5 3 7.5 1.5 0 2.4-2 3-5 1-4 3-7 3-12 0-4-2-7-6-7-2.5 0-3.5 1.5-5 1.5S11.5 4 9 4z"/><path d="M12 13.5c1.2-1.4 2.8-2 4.4-1.6 1.7.4 2.6 1.9 2.4 3.4H12.2c.3 1.6 1.6 2.6 3.3 2.6 1.1 0 2-.4 2.7-1.1"/></svg>
+        <span class="logo__text"><span class="logo__name">화이트<em>e</em>치과</span></span>
+      </a>
+      <p class="footer__copy">© 화이트e치과의원 창원점 / 마산점. All rights reserved.</p>
+      <ul class="footer__sns">
+        <li><a class="is-changwon" data-sns="changwonInstagram" href="#" target="_blank" rel="noopener" aria-label="창원점 인스타그램"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a></li>
+        <li><a class="is-changwon" data-sns="changwonBlog" href="#" target="_blank" rel="noopener" aria-label="창원점 블로그"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 4h16v12H9l-5 4z"/><path d="M9 8v5M9 10.5c0-1 .7-1.5 1.5-1.5s1.5.6 1.5 1.75S11.3 12.5 10.5 12.5 9 12 9 11"/></svg></a></li>
+        <li><a class="is-masan" data-sns="masanInstagram" href="#" target="_blank" rel="noopener" aria-label="마산점 인스타그램"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a></li>
+        <li><a class="is-masan" data-sns="masanBlog" href="#" target="_blank" rel="noopener" aria-label="마산점 블로그"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 4h16v12H9l-5 4z"/><path d="M9 8v5M9 10.5c0-1 .7-1.5 1.5-1.5s1.5.6 1.5 1.75S11.3 12.5 10.5 12.5 9 12 9 11"/></svg></a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<!-- 모바일 하단 고정 바 (768px 이하에서만 표시) -->
+<nav class="bottom-bar" aria-label="빠른 연결">
+  <button type="button" data-call-open>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 4h3l2 5-2.5 1.5a11 11 0 005 5L14 13l5 2v3a2 2 0 01-2 2A15 15 0 013 6a2 2 0 012-2"/></svg>
+    전화하기
+  </button>
+  <a href="{{ROOT}}/faq/contact.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 9.5h8M8 12.5h5"/></svg>
+    상담문의
+  </a>
+  <a href="{{ROOT}}/about/location.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 21s7-6.2 7-11.5A7 7 0 005 9.5C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+    오시는길
+  </a>
+</nav>
+
+<!-- 전화하기: 지점 선택 시트 -->
+<div class="call-sheet" id="call-sheet" role="dialog" aria-modal="true" aria-labelledby="call-sheet-title">
+  <div class="call-sheet__panel">
+    <h2 class="call-sheet__title" id="call-sheet-title">전화할 지점을 선택하세요</h2>
+    <div class="call-sheet__list" data-call-list></div>
+    <button class="call-sheet__close" type="button" data-call-close>닫기</button>
+  </div>
+</div>

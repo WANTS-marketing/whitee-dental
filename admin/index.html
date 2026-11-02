@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ko" data-root="..">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>관리자 | 화이트e치과</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+  <link rel="stylesheet" href="../assets/css/variables.css">
+  <link rel="stylesheet" href="../assets/css/common.css">
+  <link rel="stylesheet" href="../assets/css/admin.css">
+  <script src="../assets/js/config.js" defer></script>
+  <script src="../assets/js/site-data.js" defer></script>
+  <script src="../assets/js/api.js" defer></script>
+  <script src="../assets/js/common.js" defer></script>
+  <script src="../assets/js/admin.js" defer></script>
+</head>
+<body class="admin">
+  <!-- 1차: UI만. 2차에 Supabase Auth + profiles.role = 'admin' 확인 후에만 표시 (HANDOVER.md 참고) -->
+  <aside class="admin__side">
+    <a class="admin__logo" href="../index.html">화이트<em>e</em>치과 <small>ADMIN</small></a>
+    <nav aria-label="관리자 메뉴">
+      <ul class="admin__menu">
+        <li><button type="button" class="is-active" data-tab="inquiries">상담문의</button></li>
+        <li><button type="button" data-tab="notice">공지사항</button></li>
+        <li><button type="button" data-tab="news">치과소식</button></li>
+        <li><button type="button" data-tab="cases">치료사례</button></li>
+        <li><button type="button" data-tab="faq">FAQ</button></li>
+      </ul>
+    </nav>
+    <a class="admin__back" href="../index.html">← 홈페이지로</a>
+  </aside>
+
+  <main class="admin__main" id="main">
+    <p class="admin__banner">관리자 화면 미리보기입니다. 저장·삭제 기능은 2차(Supabase 연동)에 연결됩니다. 표시되는 데이터는 더미입니다.</p>
+    <header class="admin__head">
+      <h1 class="admin__title" data-admin-title>상담문의</h1>
+      <button class="btn btn--dark" type="button" data-admin-new>+ 새로 등록</button>
+    </header>
+    <div class="admin__filters">
+      <select class="form__select" data-admin-branch aria-label="지점 필터">
+        <option value="">전체 지점</option>
+        <option value="changwon">창원점</option>
+        <option value="masan">마산점</option>
+      </select>
+      <input class="form__input" type="search" placeholder="검색" aria-label="검색" data-admin-search>
+    </div>
+    <div class="admin__table-wrap">
+      <table class="admin__table">
+        <thead data-admin-thead></thead>
+        <tbody data-admin-tbody></tbody>
+      </table>
+    </div>
+  </main>
+</body>
+</html>

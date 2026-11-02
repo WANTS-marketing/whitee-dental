@@ -1,0 +1,19 @@
+# 환경변수
+.env
+.env.*
+!.env.example
+
+# 빌드 시 생성되는 설정 파일 (scripts/build-config.js)
+assets/js/config.js
+
+# 의존성·빌드
+node_modules/
+dist/
+
+# OS·에디터
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.swp

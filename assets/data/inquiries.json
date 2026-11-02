@@ -1,0 +1,4 @@
+[
+  { "id": "q2", "branch": "masan", "treatment": "치아교정", "name": "[더미] 김**", "phone": "010-****-1234", "message": "[더미] 상담 내용 예시", "source": "상담문의", "status": "new", "date": "2026-10-31T14:10:00+09:00", "_dummy": true },
+  { "id": "q1", "branch": "changwon", "treatment": "임플란트", "name": "[더미] 이**", "phone": "010-****-5678", "message": "", "source": "빠른상담", "status": "done", "date": "2026-10-30T11:00:00+09:00", "_dummy": true }
+]

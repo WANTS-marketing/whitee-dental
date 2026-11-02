@@ -1,0 +1,40 @@
+/* 관리자 화면 (1차: UI만) */
+.admin { display: grid; grid-template-columns: 220px minmax(0, 1fr); min-height: 100vh; padding: 0; background: #f5f6f8; }
+.admin__side { display: flex; flex-direction: column; gap: 24px; padding: 28px 16px; background: var(--color-footer); color: #fff; }
+.admin__logo { padding: 0 8px; font-size: 20px; font-weight: 800; }
+.admin__logo em { font-style: normal; color: var(--color-point); }
+.admin__logo small { margin-left: 4px; font-size: 11px; font-weight: 500; opacity: 0.6; }
+.admin__menu { display: grid; gap: 4px; }
+.admin__menu button { width: 100%; padding: 10px 12px; border-radius: var(--radius-sm); text-align: left; color: rgba(255, 255, 255, 0.7); }
+.admin__menu button:hover { background: rgba(255, 255, 255, 0.06); color: #fff; }
+.admin__menu button.is-active { background: rgba(255, 255, 255, 0.12); color: #fff; font-weight: 600; }
+.admin__back { margin-top: auto; padding: 0 8px; font-size: var(--fs-xs); opacity: 0.6; }
+.admin__main { padding: 32px 40px; }
+.admin__banner { margin-bottom: 24px; padding: 12px 16px; border-radius: var(--radius-sm); background: #fff4e5; color: #8a5a00; font-size: var(--fs-sm); }
+.admin__head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.admin__title { font-size: var(--fs-h3); }
+.admin__filters { display: flex; gap: 8px; margin-bottom: 16px; }
+.admin__filters .form__select { width: 160px; height: 42px; }
+.admin__filters .form__input { width: 260px; height: 42px; }
+.admin__table-wrap { overflow-x: auto; background: #fff; border-radius: var(--radius-md); box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); }
+.admin__table { width: 100%; border-collapse: collapse; font-size: var(--fs-sm); }
+.admin__table th, .admin__table td { padding: 14px 16px; border-bottom: 1px solid var(--color-line); text-align: left; white-space: nowrap; }
+.admin__table th { background: #fafafa; font-weight: 600; color: var(--color-text-sub); }
+.admin__table td.is-wrap { white-space: normal; min-width: 200px; }
+.admin__table tr:hover td { background: #fcfcfc; }
+.admin__status { display: inline-block; padding: 2px 10px; border-radius: var(--radius-pill); font-size: var(--fs-xxs); font-weight: 600; }
+.admin__status--new { background: #e8f0fe; color: #1a73e8; }
+.admin__status--done { background: #e6f4ea; color: #188038; }
+.admin__actions { display: flex; gap: 6px; }
+.admin__actions button { padding: 4px 10px; border: 1px solid var(--color-line); border-radius: 6px; font-size: var(--fs-xxs); background: #fff; }
+
+@media (max-width: 768px) {
+  .admin { grid-template-columns: 1fr; }
+  .admin__side { flex-direction: row; flex-wrap: wrap; align-items: center; padding: 16px; gap: 12px; }
+  .admin__menu { display: flex; overflow-x: auto; }
+  .admin__menu button { white-space: nowrap; }
+  .admin__back { margin: 0 0 0 auto; }
+  .admin__main { padding: 20px 16px; }
+  .admin__filters { flex-wrap: wrap; }
+  .admin__filters .form__input { flex: 1; width: auto; }
+}

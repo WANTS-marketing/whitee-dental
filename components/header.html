@@ -1,0 +1,117 @@
+<!-- 공통 헤더 — include.js가 {{ROOT}}를 페이지 기준 상대경로로 바꿔 넣는다 -->
+<a class="skip-link" href="#main">본문 바로가기</a>
+<header class="header" id="header">
+  <div class="container header__inner">
+    <a class="logo" href="{{ROOT}}/index.html" aria-label="화이트e치과 홈">
+      <!-- TODO: 공식 로고 파일(assets/images/logo.svg) 받으면 교체 -->
+      <svg class="logo__mark" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4c-4 0-6 3-6 7 0 5 2 8 3 12 .6 3 1.5 5 3 5 2 0 2-5 3-7.5.6-1.5 1.4-2 2-2s1.4.5 2 2c1 2.5 1 7.5 3 7.5 1.5 0 2.4-2 3-5 1-4 3-7 3-12 0-4-2-7-6-7-2.5 0-3.5 1.5-5 1.5S11.5 4 9 4z"/><path d="M12 13.5c1.2-1.4 2.8-2 4.4-1.6 1.7.4 2.6 1.9 2.4 3.4H12.2c.3 1.6 1.6 2.6 3.3 2.6 1.1 0 2-.4 2.7-1.1"/></svg>
+      <span class="logo__text">
+        <span class="logo__name">화이트<em>e</em>치과</span>
+        <span class="logo__en">WHITE e DENTAL CLINIC</span>
+      </span>
+    </a>
+
+    <nav class="gnb" aria-label="주 메뉴">
+      <ul class="gnb__list">
+        <li class="gnb__item">
+          <a class="gnb__link" href="{{ROOT}}/about/intro.html">화이트e치과<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3.5 6l4.5 4.5L12.5 6"/></svg></a>
+          <ul class="gnb__sub">
+            <li><a href="{{ROOT}}/about/intro.html">치과소개</a></li>
+            <li><a href="{{ROOT}}/about/doctors.html">의료진 소개</a></li>
+            <li><a href="{{ROOT}}/about/tour.html">병원 둘러보기</a></li>
+            <li><a href="{{ROOT}}/about/location.html">오시는길</a></li>
+          </ul>
+        </li>
+        <li class="gnb__item">
+          <a class="gnb__link" href="{{ROOT}}/treatment/implant.html">진료과목<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3.5 6l4.5 4.5L12.5 6"/></svg></a>
+          <ul class="gnb__sub">
+            <li><a href="{{ROOT}}/treatment/implant.html">임플란트</a></li>
+            <li><a href="{{ROOT}}/treatment/orthodontics.html">치아교정</a></li>
+            <li><a href="{{ROOT}}/treatment/general.html">일반치료</a></li>
+            <li><a href="{{ROOT}}/treatment/wisdom-scaling.html">사랑니·스케일링</a></li>
+            <li><a href="{{ROOT}}/treatment/aesthetic.html">심미치료</a></li>
+          </ul>
+        </li>
+        <li class="gnb__item">
+          <a class="gnb__link" href="{{ROOT}}/community/notice.html">커뮤니티<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3.5 6l4.5 4.5L12.5 6"/></svg></a>
+          <ul class="gnb__sub">
+            <li><a href="{{ROOT}}/community/notice.html">공지사항</a></li>
+            <li><a href="{{ROOT}}/community/news.html">치과소식</a></li>
+            <li><a href="{{ROOT}}/community/cases.html">치료사례</a></li>
+          </ul>
+        </li>
+        <li class="gnb__item">
+          <a class="gnb__link" href="{{ROOT}}/faq/index.html">FAQ<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3.5 6l4.5 4.5L12.5 6"/></svg></a>
+          <ul class="gnb__sub">
+            <li><a href="{{ROOT}}/faq/index.html">자주 묻는 질문</a></li>
+            <li><a href="{{ROOT}}/faq/contact.html">상담문의하기</a></li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="util">
+      <a href="{{ROOT}}/member/login.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="7.5" r="4"/><path d="M4 21c0-4.4 3.6-7.5 8-7.5s8 3.1 8 7.5"/></svg>
+        로그인
+      </a>
+      <a class="util__join" href="{{ROOT}}/member/join.html">회원가입</a>
+    </div>
+
+    <button class="hamburger" type="button" aria-label="메뉴 열기" aria-controls="mnav" aria-expanded="false" data-mnav-open>
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<!-- 모바일 메뉴 -->
+<div class="mnav" id="mnav" aria-hidden="true">
+  <div class="mnav__dim" data-mnav-close></div>
+  <nav class="mnav__panel" aria-label="모바일 메뉴">
+    <div class="mnav__head">
+      <div class="mnav__util">
+        <a class="btn btn--dark btn--sm" href="{{ROOT}}/member/login.html">로그인</a>
+        <a class="btn btn--line btn--sm" href="{{ROOT}}/member/join.html">회원가입</a>
+      </div>
+      <button class="mnav__close" type="button" aria-label="메뉴 닫기" data-mnav-close>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg>
+      </button>
+    </div>
+    <ul>
+      <li class="mnav__item">
+        <button class="mnav__toggle" type="button" aria-expanded="false">화이트e치과<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3.5 6l4.5 4.5L12.5 6"/></svg></button>
+        <ul class="mnav__sub">
+          <li><a href="{{ROOT}}/about/intro.html">치과소개</a></li>
+          <li><a href="{{ROOT}}/about/doctors.html">의료진 소개</a></li>
+          <li><a href="{{ROOT}}/about/tour.html">병원 둘러보기</a></li>
+          <li><a href="{{ROOT}}/about/location.html">오시는길</a></li>
+        </ul>
+      </li>
+      <li class="mnav__item">
+        <button class="mnav__toggle" type="button" aria-expanded="false">진료과목<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3.5 6l4.5 4.5L12.5 6"/></svg></button>
+        <ul class="mnav__sub">
+          <li><a href="{{ROOT}}/treatment/implant.html">임플란트</a></li>
+          <li><a href="{{ROOT}}/treatment/orthodontics.html">치아교정</a></li>
+          <li><a href="{{ROOT}}/treatment/general.html">일반치료</a></li>
+          <li><a href="{{ROOT}}/treatment/wisdom-scaling.html">사랑니·스케일링</a></li>
+          <li><a href="{{ROOT}}/treatment/aesthetic.html">심미치료</a></li>
+        </ul>
+      </li>
+      <li class="mnav__item">
+        <button class="mnav__toggle" type="button" aria-expanded="false">커뮤니티<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3.5 6l4.5 4.5L12.5 6"/></svg></button>
+        <ul class="mnav__sub">
+          <li><a href="{{ROOT}}/community/notice.html">공지사항</a></li>
+          <li><a href="{{ROOT}}/community/news.html">치과소식</a></li>
+          <li><a href="{{ROOT}}/community/cases.html">치료사례</a></li>
+        </ul>
+      </li>
+      <li class="mnav__item">
+        <button class="mnav__toggle" type="button" aria-expanded="false">FAQ<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3.5 6l4.5 4.5L12.5 6"/></svg></button>
+        <ul class="mnav__sub">
+          <li><a href="{{ROOT}}/faq/index.html">자주 묻는 질문</a></li>
+          <li><a href="{{ROOT}}/faq/contact.html">상담문의하기</a></li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+</div>
