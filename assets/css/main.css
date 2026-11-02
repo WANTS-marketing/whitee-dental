@@ -3,9 +3,8 @@
    ========================================================================== */
 
 /* ---------- ① 히어로 ---------- */
-.hero { position: relative; padding-top: var(--header-h); }
-.hero__bg { position: absolute; inset: 0 0 64px; background: var(--color-bg-hero) center / cover no-repeat; }
-.hero__bg::after { content: ""; position: absolute; inset: 0; background: rgba(20, 20, 20, 0.82); }
+/* 헤더(흰색 고정) 바로 아래에서 시작. 뒤에 어두운 배경 없이 흰 바탕 위에 슬라이더 카드가 놓인다 */
+.hero { position: relative; padding-top: calc(var(--header-h) + 24px); }
 .hero__inner { position: relative; }
 .hero__slider { position: relative; height: 640px; border-radius: var(--radius-xl); overflow: hidden; background: #111; color: #fff; }
 .hero__slide { position: absolute; inset: 0; opacity: 0; visibility: hidden; transition: opacity 0.8s var(--ease), visibility 0.8s; }
@@ -38,7 +37,7 @@
 .hero__count strong { font-weight: 700; }
 
 /* 히어로 우측 퀵메뉴 — 슬라이더 오른쪽 위를 파낸 모양 */
-.quick--hero { position: absolute; z-index: 4; top: 0; right: 0; padding: 0 0 20px 20px; background: #1d1d1d; border-bottom-left-radius: var(--radius-xl); }
+.quick--hero { position: absolute; z-index: 4; top: 0; right: 0; padding: 0 0 20px 20px; background: #fff; border-bottom-left-radius: var(--radius-xl); }
 
 /* ---------- ② 빠른 진료 안내 ---------- */
 .clinic-bar { padding: 64px 0 0; }
@@ -205,8 +204,7 @@
 }
 
 @media (max-width: 768px) {
-  .hero { padding-top: var(--header-h); }
-  .hero__bg { bottom: 40px; }
+  .hero { padding-top: calc(var(--header-h) + 16px); }
   .hero__inner { padding: 0 var(--gutter); }
   .hero__slider { height: 480px; border-radius: var(--radius-lg); }
   .hero__content { left: 24px; right: 24px; top: auto; bottom: 88px; transform: none; }

@@ -65,10 +65,9 @@ h1, h2, h3, h4, h5 { line-height: 1.3; font-weight: 700; }
 /* ==========================================================================
    헤더
    ========================================================================== */
-.header { --mega-h: 280px; position: fixed; top: 0; left: 0; right: 0; z-index: var(--z-header); height: var(--header-h); background: #fff; color: var(--color-text); transition: background var(--dur), box-shadow var(--dur), color var(--dur); }
-.header.is-scrolled { box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06); }
-/* 메인: 어두운 히어로 위에서 투명, 스크롤하면 흰 배경 */
-.is-main .header:not(.is-scrolled):not(:hover):not(.is-mega) { background: transparent; color: #fff; }
+/* 메인·서브 공통: 항상 흰 배경 + 어두운 글자로 고정. 하단은 얇은 구분선, 스크롤하면 그림자만 조금 진해진다 */
+.header { --mega-h: 280px; position: fixed; top: 0; left: 0; right: 0; z-index: var(--z-header); height: var(--header-h); background: #fff; color: var(--color-text); box-shadow: 0 1px 0 #eee; transition: box-shadow var(--dur); }
+.header.is-scrolled { box-shadow: 0 1px 0 #eee, 0 4px 16px rgba(0, 0, 0, 0.08); }
 .header__inner { display: flex; align-items: center; height: 100%; }
 
 .logo { display: inline-flex; align-items: center; gap: 6px; flex: none; }
@@ -102,7 +101,7 @@ h1, h2, h3, h4, h5 { line-height: 1.3; font-weight: 700; }
 
 .mega {
   position: absolute; z-index: 1; top: 100%; left: 0; right: 0; height: var(--mega-h);
-  background: #fff; color: var(--color-text); border-top: 1px solid var(--color-line); border-bottom: 1px solid var(--color-line); box-shadow: 0 12px 24px rgba(0, 0, 0, 0.06);
+  background: #fff; color: var(--color-text); border-bottom: 1px solid var(--color-line); box-shadow: 0 12px 24px rgba(0, 0, 0, 0.06);
   opacity: 0; visibility: hidden; transform: translateY(-8px);
   transition: opacity 0.25s var(--ease), transform 0.25s var(--ease), visibility 0.25s;
 }
@@ -118,7 +117,8 @@ h1, h2, h3, h4, h5 { line-height: 1.3; font-weight: 700; }
 /* 본문 딤 — 마우스가 딤 위로 가면 헤더를 벗어난 것으로 보고 닫히도록 pointer-events 없음 */
 .mega-dim { position: fixed; z-index: 0; top: var(--header-h); left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.35); opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 0.25s, visibility 0.25s; }
 
-.header.is-mega { background: #fff; color: var(--color-text); box-shadow: none; }
+/* 펼침 중에는 헤더 아래 구분선·그림자를 없애 패널과 하나로 이어 보이게 한다 */
+.header.is-mega { box-shadow: none; }
 .header.is-mega .gnb__sub, .header.is-mega .mega { opacity: 1; visibility: visible; transform: none; }
 .header.is-mega .mega-dim { opacity: 1; visibility: visible; }
 /* 지금 hover·focus 중인 대메뉴의 열만 포인트 컬러로 강조 */
@@ -129,9 +129,9 @@ h1, h2, h3, h4, h5 { line-height: 1.3; font-weight: 700; }
 .header.is-mega .gnb__item:is(:hover, :focus-within) .gnb__sub a:hover, .header.is-mega .gnb__item .gnb__sub a:focus-visible { color: var(--color-point); }
 
 .util { display: flex; align-items: center; flex: none; font-size: var(--fs-sm); font-weight: 500; }
-.util a { opacity: 0.85; transition: opacity var(--dur), color var(--dur); }
-.util a:hover { opacity: 1; color: var(--color-point); }
-.util a + a::before { content: ""; display: inline-block; width: 1px; height: 12px; margin: 0 14px; background: currentColor; opacity: 0.4; vertical-align: -1px; }
+.util a { color: var(--color-text-sub); transition: color var(--dur); }
+.util a:hover { color: var(--color-point); }
+.util a + a::before { content: ""; display: inline-block; width: 1px; height: 12px; margin: 0 14px; background: #ccc; vertical-align: -1px; }
 
 .hamburger { display: none; width: 40px; height: 40px; margin-left: auto; position: relative; }
 .hamburger span { position: absolute; left: 9px; right: 9px; height: 2px; background: currentColor; border-radius: 2px; transition: transform var(--dur), opacity var(--dur); }
@@ -365,7 +365,6 @@ body.is-locked { overflow: hidden; }
 @media (max-width: 1024px) {
   .gnb, .util, .mega, .mega-dim { display: none; }
   .hamburger { display: block; }
-  .is-main .header:not(.is-scrolled) { background: transparent; color: #fff; }
 
   .footer__nav ul { grid-template-columns: repeat(3, 1fr); }
   .footer__nav li { border-bottom: 1px solid var(--color-line-dark); }
