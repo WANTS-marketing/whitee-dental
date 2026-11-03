@@ -124,15 +124,6 @@ html[data-fs="xl"] .gnb { --gnb-gap: clamp(20px, 3.6vw, 72px); }
   opacity: 0; visibility: hidden; transform: translateY(-8px);
   transition: opacity 0.25s var(--ease), transform 0.25s var(--ease), visibility 0.25s;
 }
-.mega__inner { position: relative; height: 100%; }
-.mega__contact { position: absolute; top: 28px; right: var(--gutter); width: 220px; padding: 20px 22px; border-radius: var(--radius-md); background: var(--color-bg-warm); font-size: var(--fs-sm); }
-.mega__contact-title { margin-bottom: 10px; font-size: var(--fs-xs); font-weight: 600; color: var(--color-text-sub); letter-spacing: 0.04em; }
-.mega__tel { display: flex; justify-content: space-between; padding: 4px 0; font-size: var(--fs-lg); font-weight: 700; }
-.mega__tel:hover b { color: var(--color-point); }
-.mega__hours { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--color-line); font-size: var(--fs-md); line-height: 1.7; color: var(--color-text-sub); }
-.mega__hours span { display: block; }
-/* 1240px 미만은 오른쪽 빈 공간이 좁아 마지막 열과 겹치므로 연락처 박스를 숨긴다 */
-@media (max-width: 1239px) { .mega__contact { display: none; } }
 /* 본문 딤 — 마우스가 딤 위로 가면 헤더를 벗어난 것으로 보고 닫히도록 pointer-events 없음 */
 .mega-dim { position: fixed; z-index: 0; top: var(--header-h); left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.35); opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 0.25s, visibility 0.25s; }
 

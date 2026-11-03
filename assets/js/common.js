@@ -147,14 +147,6 @@
       }
       close();
     });
-
-    // 오른쪽 지점 연락처
-    const box = header.querySelector('[data-mega-contact]');
-    if (box && window.SITE) {
-      box.innerHTML = `<p class="mega__contact-title">진료 예약·상담</p>` +
-        SITE.branches.map((b) => `<a class="mega__tel" href="${telHref(b.tel)}"><span class="text-${b.id}">${esc(b.name)}</span><b>${esc(b.tel)}</b></a>`).join('') +
-        `<p class="mega__hours">${SITE.branches[0].hours.map((h) => `<span>${esc(h.label)} ${esc(h.time)}</span>`).join('')}</p>`; // 두 지점 진료시간 동일
-    }
   }
 
   /** 현재 페이지 메뉴 강조 */
