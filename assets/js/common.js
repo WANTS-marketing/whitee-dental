@@ -54,7 +54,30 @@
       </li>`;
   }
 
-  window.UI = { esc, telHref, img, bg, formatDate, branchBadge, accordion, faqItem };
+  /* ---------- 글자 굴림 버튼 (.roll-text) ----------
+     버튼 글자를 한 글자씩 칸(overflow: hidden)으로 나누고, 각 칸에 원래 글자 + 아래 복사본(aria-hidden)을 쌓는다.
+     hover·focus-visible 때 두 줄을 translateY(-100%)로 올리고, 글자마다 --i × 30ms 시차 (common.css .roll-text).
+     안의 아이콘(svg)도 같은 방식으로 마지막 순서에 굴러간다. 아이콘만 있는 버튼도 그대로 동작.
+     화면낭독기: 버튼 aria-label = 글자(없을 때만 넣음) → 쪼갠 글자·복사본은 읽히지 않는다.
+     글자를 바꿀 때(언어 전환 등)는 UI.rollText(el, '새 글자') 로 다시 만든다 → 복사본도 함께 바뀜 */
+  function rollText(el, text) {
+    const icons = [...el.querySelectorAll(':scope > svg, :scope > .roll-text__icon .roll-text__a > svg')];
+    const label = (text ?? (el.dataset.rollLabel || [...el.childNodes].filter((n) => n.nodeType === 3).map((n) => n.textContent).join(''))).trim();
+    el.dataset.rollLabel = label;
+    if (label && (!el.hasAttribute('aria-label') || el.dataset.rollAria)) { el.setAttribute('aria-label', label); el.dataset.rollAria = '1'; }
+    const cell = (i, a, b, extra = '') => `<span class="roll-text__ch${extra}" style="--i:${i}"><span class="roll-text__a">${a}</span><span class="roll-text__b" aria-hidden="true">${b}</span></span>`;
+    const chars = [...label];
+    const html = (chars.length ? `<span class="roll-text__label">${chars.map((c, i) => { const t = c === ' ' ? '&nbsp;' : esc(c); return cell(i, t, t); }).join('')}</span>` : '') +
+      icons.map((svg, k) => cell(chars.length + k, svg.outerHTML, svg.outerHTML, ' roll-text__icon')).join('');
+    el.innerHTML = html;
+    el.querySelectorAll('svg').forEach((s) => s.setAttribute('aria-hidden', 'true'));
+  }
+  function initRollText(scope = document) {
+    scope.querySelectorAll('.roll-text:not([data-roll-label])').forEach((el) => rollText(el));
+  }
+  initRollText();
+
+  window.UI = { esc, telHref, img, bg, formatDate, branchBadge, accordion, faqItem, rollText };
 
   /* ---------- 이미지 대체 ----------
      1) assets/images/파일명 이 없으면 → assets/images/temp/파일명 (임시 스톡 이미지)
@@ -108,6 +131,7 @@
     fillSocialLinks();
     renderFooterBranches();
     initCallSheet();
+    initRollText(); // 헤더·푸터 등 컴포넌트 안의 .roll-text
   });
 
   function initHeader() {
