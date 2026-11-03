@@ -123,7 +123,7 @@ function initDoctors() {
     const certs = (d.career || []).filter((c) => c.startsWith('보건복지부 인증'));
     if (!certs.length) return (d.career || [])[0] || '';
     const fields = certs.map((c) => c.replace(/^보건복지부 인증\s*/, '').replace(/\s*전문의$/, ''));
-    return `보건복지부 인증 ${fields.join(' · ')} 전문의`;
+    return `보건복지부 인증 ${fields.join(' · ')} 전문의`; // '·' 가 줄 맨 앞에 오지 않게 앞 단어에 붙임
   };
   /* 진료과 배지 아이콘 (흰 선, 64×64) — 교정=교정장치, 보철=크라운, 치주=잇몸 치아, 보존=충치 치아, 구강악안면외과=치과 기구, 통합=치아 */
   const TOOTH = 'M22 14c-6 0-9 4-9 10 0 7 3 11 4 17 .5 4 1.5 10 4.5 10 3.5 0 3.5-7 5-11 .8-1.6 1.6-2.4 3.5-2.4s2.7.8 3.5 2.4c1.5 4 1.5 11 5 11 3 0 4-6 4.5-10 1-6 4-10 4-17 0-6-3-10-9-10-4 0-5 2.5-8 2.5s-4-2.5-8-2.5z';
@@ -187,7 +187,7 @@ function initDoctors() {
         </span>
       </button></li>`).join('');
     cardsEl.scrollLeft = 0;
-    updateArrows();
+    refit();
   }
   // ‹ › = 카드 한 장씩 (카드 너비 + 간격). 끝에 닿으면 비활성
   const step = () => {
@@ -202,7 +202,24 @@ function initDoctors() {
   prevBtn.addEventListener('click', () => cardsEl.scrollBy({ left: -step(), behavior: 'smooth' }));
   nextBtn.addEventListener('click', () => cardsEl.scrollBy({ left: step(), behavior: 'smooth' }));
   cardsEl.addEventListener('scroll', () => requestAnimationFrame(updateArrows), { passive: true });
-  window.addEventListener('resize', updateArrows);
+  /* 낮은 화면: 섹션이 한 화면(100vh - 헤더)을 넘으면 넘친 만큼 사진 높이를 줄인다 (최소 1:1, 기본 4:5)
+     화면 단위 구성(1025px 이상·높이 700px 이상)에서만. 창 크기·글자 크기·지점 탭이 바뀔 때마다 다시 계산 */
+  const section = panel.closest('.doctors');
+  const screenMode = window.matchMedia('(min-width: 1025px) and (min-height: 700px)');
+  function fitHeight() {
+    panel.style.removeProperty('--doc-photo-h');
+    const photo = cardsEl.querySelector('.doc-card__photo');
+    if (!screenMode.matches || !photo || !section) return;
+    const headerH = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-h')) || 0;
+    const over = section.offsetHeight - (window.innerHeight - headerH);
+    if (over <= 0) return;
+    panel.style.setProperty('--doc-photo-h', `${Math.max(photo.offsetWidth, photo.offsetHeight - over - 1)}px`);
+  }
+  let fitRaf = 0;
+  const refit = () => { cancelAnimationFrame(fitRaf); fitRaf = requestAnimationFrame(() => { fitHeight(); updateArrows(); }); };
+  window.addEventListener('resize', refit);
+  new MutationObserver(refit).observe(document.documentElement, { attributes: true, attributeFilter: ['data-fs'] }); // 글자 크기 단계
+  document.fonts?.ready.then(refit);
 
   /* ---------- 약력 팝업 (dialog: 포커스 가두기·ESC 닫기는 브라우저 기본 동작) ---------- */
   function show(p) {

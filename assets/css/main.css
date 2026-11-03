@@ -163,10 +163,18 @@
 .doctors__arrow:hover { background: var(--color-text); color: #fff; }
 .doctors__arrow svg { width: 20px; height: 20px; }
 .doctors__arrow:disabled { opacity: 0.35; pointer-events: none; }
+/* 의료진 섹션만 컨테이너 최대 폭 해제 — 좌우 여백 60px (1440px 이하 40px). 머리말(제목·탭·‹ ›)과 카드 줄이 같은 끝선
+   위·아래 섹션(진료 철학·지점, 진료안내)은 기존 컨테이너 폭 그대로 */
+@media (min-width: 1025px) {
+  .doctors .doctors__inner.container { max-width: none; padding-left: 60px; padding-right: 60px; }
+}
+@media (min-width: 1025px) and (max-width: 1440px) {
+  .doctors .doctors__inner.container { padding-left: 40px; padding-right: 40px; }
+}
 /* 사진 카드 줄 (main.js initDoctors) — 가로 스크롤 + 스냅, 머리말 ‹ › 는 한 장씩
-   한 화면 장수 --doc-per: 데스크톱 4 / 1024px 이하 3 / 768px 이하 2 / 560px 이하 1.2(가로 스와이프)
+   한 화면 장수 --doc-per: 데스크톱 5 / 1280px 이하 4 / 1024px 이하 3 / 768px 이하 2 / 560px 이하 1.2(가로 스와이프)
    카드 그림자·hover 떠오름이 잘리지 않게 줄 위아래·좌우에 여유(padding)를 두고 같은 만큼 margin 으로 되돌린다 */
-.doctors__main { --doc-per: 4; --doc-gap: 24px; --doc-bleed: 6px; min-width: 0; }
+.doctors__main { --doc-per: 5; --doc-gap: 24px; --doc-bleed: 6px; min-width: 0; }
 .doc-cards {
   display: flex; gap: var(--doc-gap);
   margin: -10px calc(var(--doc-bleed) * -1) -20px; padding: 10px var(--doc-bleed) 20px;
@@ -174,27 +182,32 @@
 }
 .doc-cards::-webkit-scrollbar { display: none; }
 .doc-cards__item { display: flex; flex: 0 0 calc((100% - var(--doc-gap) * (var(--doc-per) - 1)) / var(--doc-per)); min-width: 0; scroll-snap-align: start; }
-/* 카드 = 버튼 하나(카드 어디를 눌러도 약력 팝업) — 흰 배경, 아주 옅은 그림자, 모서리 10px, hover 시 -4px */
+/* 카드 = 버튼 하나(카드 어디를 눌러도 약력 팝업) — 흰 배경, 아주 옅은 그림자, 모서리 10px, hover 시 -4px
+   카드 자체가 크기 기준(container) → 안쪽 글자·여백·배지가 카드 폭(cqw)에 비례 (카드 폭 약 250px → 340px 에서 최소 → 최대) */
 .doc-card {
+  container-type: inline-size;
   display: flex; flex-direction: column; width: 100%; overflow: hidden; border-radius: 10px; background: #fff; text-align: left;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 6px 18px rgba(0, 0, 0, 0.04);
   transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
 }
 .doc-card:is(:hover, :focus-visible) { transform: translateY(-4px); box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05), 0 12px 28px rgba(0, 0, 0, 0.08); }
-/* 사진 4:5 카드 폭 꽉 채움(cover). 사진이 없으면 .img-ph 베이지 그라데이션 */
-.doc-card__photo { position: relative; display: block; aspect-ratio: 4 / 5; }
-/* 진료과 배지: 사진 오른쪽 아래 48px 정사각형, 지점 색 + 흰 아이콘 */
-.doc-card__badge { position: absolute; right: 0; bottom: 0; display: grid; place-items: center; width: 48px; height: 48px; background: var(--doc-color, var(--color-point)); color: #fff; }
-.doc-card__badge svg { width: 30px; height: 30px; }
-.doc-card__body { display: flex; flex: 1; flex-direction: column; padding: 20px 22px 22px; }
-.doc-card__dept { font-size: 0.9375rem; font-weight: 600; color: var(--doc-color, var(--color-point)); }
+/* 사진 4:5 카드 폭 꽉 채움(cover). 사진이 없으면 .img-ph 베이지 그라데이션
+   섹션이 한 화면(100vh - 헤더)을 넘는 낮은 화면에서는 main.js 가 --doc-photo-h 로 높이를 줄인다(최소 1:1) */
+.doc-card__photo { position: relative; display: block; aspect-ratio: 4 / 5; height: var(--doc-photo-h, auto); }
+/* 진료과 배지: 사진 오른쪽 아래 정사각형 48~56px, 지점 색 + 흰 아이콘 */
+.doc-card__badge { position: absolute; right: 0; bottom: 0; display: grid; place-items: center; width: clamp(48px, 9.1cqw + 25px, 56px); aspect-ratio: 1; background: var(--doc-color, var(--color-point)); color: #fff; }
+.doc-card__badge svg { width: 62%; height: 62%; }
+/* 안쪽 여백 20~28px, 진료과·소개 15~17px, 이름 24~30px */
+.doc-card__body { --doc-pad: clamp(20px, 9.1cqw - 3px, 28px); display: flex; flex: 1; flex-direction: column; padding: calc(var(--doc-pad) - 2px) var(--doc-pad) var(--doc-pad); }
+.doc-card__dept { font-size: clamp(0.9375rem, 0.58rem + 2.27cqw, 1.0625rem); font-weight: 600; color: var(--doc-color, var(--color-point)); }
 .doc-card__name { margin-top: 2px; line-height: 1.35; }
-.doc-card__name b { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.02em; color: #111; }
-.doc-card__name small { margin-left: 4px; font-size: 0.9375rem; color: #666; }
-/* 짧은 소개(전문의 항목) 최대 2줄 — 카드끼리 높이가 같도록 2줄 높이 확보 */
-.doc-card__intro { display: -webkit-box; min-height: calc(1.6em * 2); margin-top: 10px; overflow: hidden; font-size: 1rem; line-height: 1.6; color: #444; word-break: keep-all; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.doc-card__name b { font-size: clamp(1.5rem, 0.42rem + 6.8cqw, 1.875rem); font-weight: 800; letter-spacing: -0.02em; color: #111; }
+.doc-card__name small { margin-left: 4px; font-size: clamp(0.9375rem, 0.58rem + 2.27cqw, 1.0625rem); color: #666; }
+/* 짧은 소개(전문의 항목): 높이 고정 → 원장마다 카드 높이가 같다. 보통 2줄, 글자 크게·아주 크게 3줄 */
+.doc-card__intro { --intro-lines: 2; display: -webkit-box; height: calc(1.6em * var(--intro-lines)); margin-top: 10px; overflow: hidden; font-size: clamp(0.9375rem, 0.58rem + 2.27cqw, 1.0625rem); line-height: 1.6; color: #444; word-break: keep-all; -webkit-box-orient: vertical; -webkit-line-clamp: var(--intro-lines); }
+html:is([data-fs="lg"], [data-fs="xl"]) .doc-card__intro { --intro-lines: 3; }
 /* '약력 보기 ——' : hover·초점 때 선이 늘어난다 */
-.doc-card__more { display: inline-flex; align-items: center; gap: 10px; margin-top: auto; padding-top: 16px; font-size: 0.9375rem; font-weight: 700; color: var(--doc-color, var(--color-point)); }
+.doc-card__more { display: inline-flex; align-items: center; gap: 10px; margin-top: auto; padding-top: 16px; font-size: clamp(0.9375rem, 0.58rem + 2.27cqw, 1.0625rem); font-weight: 700; color: var(--doc-color, var(--color-point)); }
 .doc-card__line { width: 40px; height: 1px; background: currentColor; transition: width 0.3s var(--ease); }
 .doc-card:is(:hover, :focus-visible) .doc-card__line { width: 72px; }
 
@@ -233,6 +246,10 @@ html.is-modal-open { overflow: hidden; }
 .doc-profile__certs li::before, .doc-group__list li::before { content: ""; position: absolute; left: 0; top: calc(0.9em - 2px); width: 4px; height: 4px; border-radius: 50%; background: currentColor; opacity: 0.6; }
 .doc-profile__certs li::before { top: calc(0.85em - 2px); background: var(--doc-color, var(--color-point)); opacity: 1; }
 
+/* 1280px 이하: 카드 4장 */
+@media (max-width: 1280px) {
+  .doctors__main { --doc-per: 4; }
+}
 /* 의료진 섹션 높이 — 화면 단위 구성: 위·아래 여백 64px, 높이 940px 이하 화면은 40px (1440×900 에서 카드 줄이 한 화면에 들어가게) */
 @media (min-width: 1025px) and (min-height: 700px) {
   .doctors.screen { padding-block: 64px; }
