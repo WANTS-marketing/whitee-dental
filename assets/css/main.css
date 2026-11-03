@@ -93,20 +93,29 @@
 @media (max-width: 1024px) {
   .philosophy .branch-card__addr-sub { display: block; font-size: inherit; }
 }
-/* 데스크톱: 지점 카드 영역을 오른쪽으로 넓혀 카드를 가로로 길게 → 섹션 높이 줄이기
-   왼쪽 시작선 = 기존 컨테이너 안쪽 시작선(그대로), 오른쪽 여백 = 기존 여백과 80px 중 작은 값(초광폭은 전체 1760px 까지)
-   100cqw = .philosophy 너비. --page-pad 는 1025~1359px 에서 52px(표시기 여백), 그 밖은 --gutter */
+/* 데스크톱: [문구 묶음 | 카드 2장]을 한 줄로 보고 화면 가운데 정렬 (왼쪽·오른쪽 바깥 여백 같게, 줄 최대 1680px)
+   바깥 여백 최소 --ph-m: 80px, 1025~1359px 은 표시기 여백(--page-pad 52px, 없으면 --gutter)
+   문구 칸: 1600px 이상은 30rem(제목·본문 2줄), 그보다 좁으면 340px(제목 3줄 허용)
+   간격: 문구↔첫 카드 48px = 카드끼리 24px 의 2배. 문구·카드는 세로 가운데 정렬(align-items: center) */
 @media (min-width: 1025px) {
   .philosophy { container-type: inline-size; }
   .philosophy__inner {
-    --ph-l: calc((100cqw - min(100cqw, var(--container) + var(--gutter) * 2)) / 2 + var(--page-pad, var(--gutter)));
+    --ph-m: 80px;
+    --ph-text: 340px;
     max-width: none;
-    padding-left: var(--ph-l);
-    padding-right: min(var(--ph-l), max(80px, (100cqw - 1760px) / 2));
-    grid-template-columns: minmax(0, 340px) minmax(0, 1fr);
+    padding-left: max(var(--ph-m), (100cqw - 1680px) / 2);
+    padding-right: max(var(--ph-m), (100cqw - 1680px) / 2);
+    grid-template-columns: var(--ph-text) minmax(0, 1fr);
+    column-gap: 48px;
   }
   /* 카드 안쪽 위아래 여백 20% 축소 (32/24 → 26/19) */
   .philosophy .branch-card { container: branch / inline-size; padding-top: 26px; padding-bottom: 19px; }
+}
+@media (min-width: 1025px) and (max-width: 1359px) {
+  .philosophy__inner { --ph-m: var(--page-pad, var(--gutter)); }
+}
+@media (min-width: 1600px) {
+  .philosophy__inner { --ph-text: 30rem; }
 }
 /* 카드가 충분히 넓을 때만: [전화번호 | 세로선 | 진료시간 3줄] 좌우 배치. 좁으면(또는 글자 크게) 위아래 그대로
    필요 안쪽 폭(여백 제외) ≈ 전화 297 + 구분 41 + 진료시간 130 = 468px → 29.5rem. rem 기준이라 글자 크기 단계에 따라 자동 전환 */
