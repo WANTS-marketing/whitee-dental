@@ -192,10 +192,9 @@
           </div>
           </div>
         </div>
-        <!-- 큰 프로필 1명 + 같은 지점 원장 썸네일 (main.js initDoctors, 데이터: site-data.js doctors) -->
+        <!-- 사진 카드 줄 (가로 스크롤 + ‹ › 한 장씩) — main.js initDoctors, 데이터: site-data.js doctors -->
         <div class="doctors__main" id="doctors-panel" data-branch="changwon" role="tabpanel" aria-labelledby="tab-changwon">
-          <div class="doc-profiles" data-doc-profiles aria-live="polite"></div>
-          <ul class="doc-thumbs" data-doc-thumbs aria-label="의료진 목록"></ul>
+          <ul class="doc-cards" data-doc-cards aria-label="의료진 목록"></ul>
         </div>
       </div>
     </section>
@@ -316,6 +315,25 @@
       </div>
     </section>
   </main>
+
+  <!-- 의료진 약력 팝업 (main.js initDoctors) — 카드·'약력 보기' 클릭 시 열림 -->
+  <dialog class="doc-modal" data-doc-modal aria-labelledby="doc-modal-title">
+    <div class="doc-modal__panel">
+      <h2 class="sr-only" id="doc-modal-title">의료진 약력</h2>
+      <div class="doc-modal__bar">
+        <div class="doc-modal__nav">
+          <button type="button" class="doctors__arrow" data-modal-prev aria-label="이전 원장">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+          <span class="doc-modal__count" data-modal-count aria-live="polite"></span>
+          <button type="button" class="doctors__arrow" data-modal-next aria-label="다음 원장">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+        </div>
+        <button type="button" class="doc-modal__close" data-modal-close aria-label="닫기">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
+      </div>
+      <div class="doc-profiles" data-doc-profiles></div>
+    </div>
+  </dialog>
 
   <!-- ⑨ 지점 바로가기 바 + ⑩ 푸터 + 모바일 하단 바 -->
   <div data-include="footer"></div>

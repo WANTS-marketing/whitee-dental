@@ -358,8 +358,8 @@ body.is-locked { overflow: hidden; }
 /* 의료진 소개 페이지 */
 /* 의료진 지점 색 — [data-branch] 범위(메인 의료진 패널·의료진 소개 지점 그룹) 안에서 진료과·지점 태그·선택 강조를 지점 색으로.
    겸직 원장(창원·마산 태그)은 지금 보고 있는 지점(탭·그룹)의 색을 따른다 */
-.doctors__main[data-branch="changwon"], .doctor-group[data-branch="changwon"] { --doc-color: var(--color-changwon); --doc-color-bg: var(--color-changwon-bg); }
-.doctors__main[data-branch="masan"], .doctor-group[data-branch="masan"] { --doc-color: var(--color-masan); --doc-color-bg: var(--color-masan-bg); }
+.doctors__main[data-branch="changwon"], .doc-modal[data-branch="changwon"], .doctor-group[data-branch="changwon"] { --doc-color: var(--color-changwon); --doc-color-bg: var(--color-changwon-bg); }
+.doctors__main[data-branch="masan"], .doc-modal[data-branch="masan"], .doctor-group[data-branch="masan"] { --doc-color: var(--color-masan); --doc-color-bg: var(--color-masan-bg); }
 .doctors__main[data-branch] .badge--both, .doctor-group[data-branch] .badge--both { background: var(--doc-color-bg); color: var(--doc-color); }
 
 .doctor-group + .doctor-group { margin-top: var(--space-4xl); }

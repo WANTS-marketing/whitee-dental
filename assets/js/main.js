@@ -79,21 +79,22 @@ function initHero() {
   }, INTRO_MS);
 }
 
-/* ---------- ④ 의료진 — 큰 프로필 1명 + 같은 지점 원장 썸네일 ----------
-   프로필은 의료진 전원을 한 칸(.doc-profiles 그리드 1칸)에 겹쳐 두고 선택된 원장만 보인다
-   → 패널 높이 = 가장 긴 약력 기준으로 고정, 원장을 바꿔도 섹션 높이가 그대로. 교체는 opacity 0.3s (main.css)
-   탭 전환 시 지점 대표원장 먼저, 이전/다음은 썸네일 순서대로 순환, 자동 넘김 없음 */
+/* ---------- ④ 의료진 — 사진 카드 줄 + 약력 팝업 ----------
+   카드: 지점 의료진(대표원장 먼저)을 가로 스크롤 줄로, 머리말 ‹ › 는 한 장씩 이동 (한 화면 장수는 main.css --doc-per)
+   팝업(dialog): 카드 클릭 시 큰 프로필(사진 + 학력·경력·학회 활동). 팝업 안 ‹ › 는 같은 지점 원장 순환
+   프로필은 전원을 한 칸에 겹쳐 두고 선택된 원장만 보인다 → 원장을 바꿔도 팝업 크기가 그대로 */
 function initDoctors() {
   const box = document.querySelector('[data-doc-profiles]');
-  const thumbsEl = document.querySelector('[data-doc-thumbs]');
-  if (!box || !thumbsEl || !window.SITE) return;
+  const cardsEl = document.querySelector('[data-doc-cards]');
+  const modal = document.querySelector('[data-doc-modal]');
+  if (!box || !cardsEl || !modal || !window.SITE) return;
   const panel = document.getElementById('doctors-panel');
   const tabs = [...document.querySelectorAll('.doctors__tab')];
   const prevBtn = document.querySelector('[data-doc-prev]');
   const nextBtn = document.querySelector('[data-doc-next]');
+  const countEl = modal.querySelector('[data-modal-count]');
   const { esc, img } = window.UI;
   const docs = window.SITE.doctors;
-  const MOBILE_LIMIT = 6; // 모바일: 약력 처음 6개만, 나머지는 '약력 더보기'
   const BRANCH_NAME = { changwon: '창원점', masan: '마산점' };
   /* 약력 분류 — 전문의 / 학력(졸업·석사·박사·학사) / 학회 활동(학회·연맹 회원·인정의·펠로우) / 그 외 경력.
      분류가 애매한 항목은 경력으로 간다 → docs/HANDOVER.md '약력 분류 병원 확인' */
@@ -116,16 +117,36 @@ function initDoctors() {
     if (!tail) return [c];
     return parts.map((p, i) => (i === parts.length - 1 ? p : p + tail[2]));
   };
+  /* 카드 짧은 소개: '보건복지부 인증 ○○ 전문의' 항목을 한 문장으로 (2개면 "… 치과교정과 · 통합치의학과 전문의")
+     전문의 항목이 없으면 약력 첫 줄 */
+  const intro = (d) => {
+    const certs = (d.career || []).filter((c) => c.startsWith('보건복지부 인증'));
+    if (!certs.length) return (d.career || [])[0] || '';
+    const fields = certs.map((c) => c.replace(/^보건복지부 인증\s*/, '').replace(/\s*전문의$/, ''));
+    return `보건복지부 인증 ${fields.join(' · ')} 전문의`;
+  };
+  /* 진료과 배지 아이콘 (흰 선, 64×64) — 교정=교정장치, 보철=크라운, 치주=잇몸 치아, 보존=충치 치아, 구강악안면외과=치과 기구, 통합=치아 */
+  const TOOTH = 'M22 14c-6 0-9 4-9 10 0 7 3 11 4 17 .5 4 1.5 10 4.5 10 3.5 0 3.5-7 5-11 .8-1.6 1.6-2.4 3.5-2.4s2.7.8 3.5 2.4c1.5 4 1.5 11 5 11 3 0 4-6 4.5-10 1-6 4-10 4-17 0-6-3-10-9-10-4 0-5 2.5-8 2.5s-4-2.5-8-2.5z';
+  const ICON = {
+    ortho: '<path d="M6 40c4-5 9-7 13-7h26c4 0 9 2 13 7"/><rect x="9" y="19" width="13" height="13" rx="3"/><rect x="25.5" y="19" width="13" height="13" rx="3"/><rect x="42" y="19" width="13" height="13" rx="3"/><path d="M5 25.5h54"/>',
+    prosth: '<path d="M18 22c0-6 5-10 14-10s14 4 14 10c0 4-1 7-3 9H21c-2-2-3-5-3-9z"/><path d="M21 15l5 4 6-6 6 6 5-4"/><path d="M22 31c0 7 2 12 3 18 .4 3 1.4 5 3 5 2 0 2-6 4-9 2 3 2 9 4 9 1.6 0 2.6-2 3-5 1-6 3-11 3-18"/>',
+    perio: `<path d="${TOOTH}"/><path d="M6 34c5-3 9 3 14 0s9-3 12 0 7 3 12 0 9-3 14 0"/>`,
+    endo: `<path d="${TOOTH}"/><circle cx="38" cy="23" r="3.5"/><path d="M23 22c1-2 2-3 4-3"/>`,
+    surgery: '<circle cx="20" cy="13" r="6"/><path d="M20 19v38M42 8c0-3 6-3 6 1 0 3-3 4-3 7v41"/><path d="M15 40h10M40 40h10"/>',
+    general: `<path d="${TOOTH}"/>`,
+  };
+  const iconKey = (dept) => (/교정/.test(dept) ? 'ortho' : /보철/.test(dept) ? 'prosth' : /치주/.test(dept) ? 'perio'
+    : /보존/.test(dept) ? 'endo' : /구강악안면/.test(dept) ? 'surgery' : 'general');
+  const badge = (dept) => `<span class="doc-card__badge" aria-hidden="true"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">${ICON[iconKey(dept)]}</svg></span>`;
 
+  // 팝업 안 큰 프로필 (원장마다 1개, 선택한 1개만 보임)
   box.innerHTML = docs.map((d, i) => {
     const career = d.career || [];
     const by = { cert: [], edu: [], career: [], society: [] };
     career.forEach((c) => { const k = classify(c); by[k].push(...(k === 'society' ? splitSociety(c) : [c])); });
-    let n = 0; // 모바일 '약력 더보기': 화면 순서(전문의 → 학력 → 경력 → 학회)대로 6개 뒤는 숨김
-    const li = (c) => `<li${n++ >= MOBILE_LIMIT ? ' class="is-extra"' : ''}>${esc(c)}</li>`;
-    // 모바일에서 그룹 항목이 전부 접히면 소제목도 함께 숨긴다
+    const li = (c) => `<li>${esc(c)}</li>`;
     const group = (key) => (by[key].length ? `
-            <section class="doc-group${n >= MOBILE_LIMIT ? ' is-extra' : ''}"><h4 class="doc-group__title">${GROUP_TITLE[key]}</h4><ul class="doc-group__list">${by[key].map(li).join('')}</ul></section>` : '');
+            <section class="doc-group"><h4 class="doc-group__title">${GROUP_TITLE[key]}</h4><ul class="doc-group__list">${by[key].map(li).join('')}</ul></section>` : '');
     const certs = by.cert.length ? `<ul class="doc-profile__certs">${by.cert.map(li).join('')}</ul>` : '';
     // 왼쪽 열: 학력·경력 / 오른쪽 열: 학회 활동
     const cols = `<div class="doc-profile__cols"><div class="doc-profile__col">${group('edu')}${group('career')}</div><div class="doc-profile__col">${group('society')}</div></div>`;
@@ -136,25 +157,55 @@ function initDoctors() {
           <p class="doc-profile__meta"><span data-doc-branch>${BRANCH_NAME[d.branches[0]]}</span> · <b class="doc-profile__dept">${esc(d.dept)}</b></p>
           <h3 class="doc-profile__name">${esc(d.name)} <small>${esc(d.title)}</small></h3>
           ${certs}${cols}
-          ${career.length > MOBILE_LIMIT ? '<button type="button" class="doc-profile__more" aria-expanded="false">약력 더보기</button>' : ''}
         </div>
       </article>`;
   }).join('');
   const profiles = [...box.children];
-  box.addEventListener('click', (e) => {
-    const more = e.target.closest('.doc-profile__more');
-    if (!more) return;
-    const open = more.closest('.doc-profile').classList.toggle('is-expanded');
-    more.setAttribute('aria-expanded', String(open));
-    more.textContent = open ? '약력 접기' : '약력 더보기';
-  });
 
   let branch = 'changwon';
   let list = []; // 현재 지점 의료진의 docs 인덱스 (대표원장 먼저)
-  let pos = 0;
-  let thumbs = [];
+  let pos = 0;   // 팝업에서 보고 있는 원장 (list 안 순번)
+  let opener = null; // 팝업을 연 카드 (닫히면 포커스 복귀)
 
-  function select(p) {
+  /* ---------- 카드 줄 ---------- */
+  function render(branchId) {
+    branch = branchId;
+    panel.dataset.branch = branchId; // 진료과·배지·링크 색 = 지점 색 (common.css --doc-color)
+    modal.dataset.branch = branchId;
+    const ds = window.SITE.getDoctorsByBranch(branchId);
+    const head = ds.findIndex((d) => d.title === '대표원장');
+    if (head > 0) ds.unshift(...ds.splice(head, 1));
+    list = ds.map((d) => docs.indexOf(d));
+    cardsEl.innerHTML = ds.map((d, p) => `
+      <li class="doc-cards__item"><button type="button" class="doc-card" data-pos="${p}" aria-haspopup="dialog">
+        <span class="doc-card__photo img-ph"><img src="${img(d.photo)}" alt="" loading="lazy">${badge(d.dept)}</span>
+        <span class="doc-card__body">
+          <span class="doc-card__dept">${esc(d.dept)}</span>
+          <span class="doc-card__name"><b>${esc(d.name)}</b> <small>${esc(d.title)}</small></span>
+          <span class="doc-card__intro">${esc(intro(d))}</span>
+          <span class="doc-card__more">약력 보기<span class="doc-card__line" aria-hidden="true"></span></span>
+        </span>
+      </button></li>`).join('');
+    cardsEl.scrollLeft = 0;
+    updateArrows();
+  }
+  // ‹ › = 카드 한 장씩 (카드 너비 + 간격). 끝에 닿으면 비활성
+  const step = () => {
+    const items = cardsEl.children;
+    return items.length > 1 ? items[1].offsetLeft - items[0].offsetLeft : cardsEl.clientWidth;
+  };
+  function updateArrows() {
+    const max = cardsEl.scrollWidth - cardsEl.clientWidth;
+    prevBtn.disabled = cardsEl.scrollLeft <= 2;
+    nextBtn.disabled = cardsEl.scrollLeft >= max - 2;
+  }
+  prevBtn.addEventListener('click', () => cardsEl.scrollBy({ left: -step(), behavior: 'smooth' }));
+  nextBtn.addEventListener('click', () => cardsEl.scrollBy({ left: step(), behavior: 'smooth' }));
+  cardsEl.addEventListener('scroll', () => requestAnimationFrame(updateArrows), { passive: true });
+  window.addEventListener('resize', updateArrows);
+
+  /* ---------- 약력 팝업 (dialog: 포커스 가두기·ESC 닫기는 브라우저 기본 동작) ---------- */
+  function show(p) {
     pos = (p + list.length) % list.length;
     const di = list[pos];
     profiles.forEach((el, i) => {
@@ -165,32 +216,38 @@ function initDoctors() {
     });
     // 겸직 원장의 지점 표기는 지금 보고 있는 지점
     profiles[di].querySelector('[data-doc-branch]').textContent = BRANCH_NAME[branch];
-    thumbs.forEach((t, i) => t.setAttribute('aria-pressed', String(i === pos)));
-    // 썸네일 줄이 가로 스크롤일 때(모바일) 선택한 썸네일이 보이게
-    const li = thumbs[pos].parentElement;
-    if (li.offsetLeft < thumbsEl.scrollLeft || li.offsetLeft + li.offsetWidth > thumbsEl.scrollLeft + thumbsEl.clientWidth) {
-      thumbsEl.scrollTo({ left: li.offsetLeft - 16, behavior: 'smooth' });
-    }
+    countEl.textContent = `${pos + 1} / ${list.length}`;
+    box.scrollTop = 0;
   }
-
-  function render(branchId) {
-    branch = branchId;
-    panel.dataset.branch = branchId; // 진료과·태그·선택 강조 색 = 지점 색 (common.css)
-    const ds = window.SITE.getDoctorsByBranch(branchId);
-    const head = ds.findIndex((d) => d.title === '대표원장');
-    if (head > 0) ds.unshift(...ds.splice(head, 1));
-    list = ds.map((d) => docs.indexOf(d));
-    thumbsEl.innerHTML = ds.map((d, p) => `
-      <li><button type="button" class="doc-thumb" data-pos="${p}" aria-pressed="false">
-        <span class="doc-thumb__photo img-ph"><img src="${img(d.photo)}" alt="" loading="lazy"></span>
-        <span class="doc-thumb__text"><b>${esc(d.name)}</b><small>${esc(d.dept)}</small></span>
-      </button></li>`).join('');
-    thumbs = [...thumbsEl.querySelectorAll('.doc-thumb')];
-    thumbs.forEach((t) => t.addEventListener('click', () => select(Number(t.dataset.pos))));
-    thumbsEl.scrollLeft = 0;
-    select(0); // 지점 대표원장
+  function openModal(p, from) {
+    opener = from;
+    show(p);
+    modal.showModal();
+    document.documentElement.classList.add('is-modal-open'); // 뒤 화면 스크롤 잠금
+    modal.querySelector('[data-modal-close]').focus();
   }
+  cardsEl.addEventListener('click', (e) => {
+    const card = e.target.closest('.doc-card');
+    if (card) openModal(Number(card.dataset.pos), card);
+  });
+  modal.querySelector('[data-modal-close]').addEventListener('click', () => modal.close());
+  modal.querySelector('[data-modal-prev]').addEventListener('click', () => show(pos - 1));
+  modal.querySelector('[data-modal-next]').addEventListener('click', () => show(pos + 1));
+  modal.addEventListener('click', (e) => { if (e.target === modal) modal.close(); }); // 배경(딤) 클릭
+  modal.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') show(pos - 1);
+    if (e.key === 'ArrowRight') show(pos + 1);
+  });
+  modal.addEventListener('close', () => {
+    document.documentElement.classList.remove('is-modal-open');
+    // 팝업 안에서 다른 원장으로 넘겼다면 그 원장 카드로 포커스
+    const card = cardsEl.querySelector(`.doc-card[data-pos="${pos}"]`) || opener;
+    if (!card) return;
+    card.focus({ preventScroll: true });
+    card.parentElement.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' });
+  });
 
+  /* ---------- 지점 탭 ---------- */
   function selectTab(tab) {
     tabs.forEach((t) => {
       const on = t === tab;
@@ -213,8 +270,6 @@ function initDoctors() {
       selectTab(next);
     });
   });
-  prevBtn.addEventListener('click', () => select(pos - 1));
-  nextBtn.addEventListener('click', () => select(pos + 1));
 
   selectTab(tabs[0]);
 }
