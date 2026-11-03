@@ -105,11 +105,11 @@ html[data-fs="xl"] .gnb { --gnb-gap: clamp(20px, 3.6vw, 72px); }
 .header__inner { display: flex; align-items: center; height: 100%; }
 
 .logo { display: inline-flex; align-items: center; gap: 6px; flex: none; }
-.logo__mark { width: 30px; height: 30px; color: var(--color-point); }
-.logo__text { display: flex; flex-direction: column; line-height: 1; }
-.logo__name { font-size: 1.375rem; font-weight: 800; letter-spacing: -0.04em; }
-.logo__name em { font-style: normal; color: var(--color-point); }
-.logo__en { margin-top: 4px; font-size: 0.4375rem; letter-spacing: 0.35em; opacity: 0.8; }
+/* 공식 로고 PNG(198×32, 1배) — 헤더는 원본 색, 푸터(어두운 배경)는 흰색으로 */
+.logo__img { display: block; width: 198px; height: auto; }
+.logo__img--white { filter: brightness(0) invert(1); opacity: 0.9; }
+/* 좁은 데스크톱(1025~1279px): 글자 크게 보기에서 메뉴와 붙지 않게 로고를 조금 줄인다 */
+@media (min-width: 1025px) and (max-width: 1279px) { .header .logo__img { width: 168px; } }
 
 /* ---------- GNB: 전체 펼침 메뉴 (1025px 이상) ----------
    하위 메뉴(.gnb__sub)는 각 대메뉴 바로 아래 열에 놓인다. 열 너비 = 대메뉴 너비 + 메뉴 간격이라 열끼리 빈틈없이 맞닿고,
@@ -235,7 +235,6 @@ body.is-locked { overflow: hidden; }
 .footer__branch dt { color: rgba(255, 255, 255, 0.7); }
 .footer__branch a:hover { color: #fff; text-decoration: underline; }
 .footer__bottom { display: flex; align-items: center; gap: 24px; padding: 24px 0 40px; border-top: 1px solid var(--color-line-dark); }
-.footer__bottom .logo { color: #fff; }
 .footer__copy { flex: 1; color: rgba(255, 255, 255, 0.5); letter-spacing: 0.02em; }
 .footer__sns { display: flex; gap: 8px; }
 .footer__sns a { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: rgba(255, 255, 255, 0.08); transition: background var(--dur); }
@@ -490,8 +489,7 @@ body.is-locked { overflow: hidden; }
   .only-mobile { display: revert !important; }
   .only-desktop { display: none !important; }
 
-  .logo__name { font-size: 1.125rem; }
-  .logo__mark { width: 24px; height: 24px; }
+  .logo__img { width: 150px; }
 
   /* 퀵메뉴 → 우측 하단 플로팅 버튼 */
   .quick, .quick--float { position: fixed; top: auto; right: 16px; bottom: calc(var(--bottom-bar-h) + 16px); left: auto; transform: none; z-index: var(--z-quick); padding: 0; background: none; }

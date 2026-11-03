@@ -37,6 +37,6 @@
 | `tour-changwon-01~06.jpg`, `tour-masan-01~06.jpg` | 병원 둘러보기 갤러리 (개수·캡션은 `assets/js/site-data.js` 의 `tour`) | 1400×1050 (4:3) |
 | `icons/quick-implant.png`, `quick-orthodontics.png`, `quick-general.png`, `quick-wisdom-scaling.png`, `quick-aesthetic.png` | 홈 퀵바(빠른 진료 안내) 아이콘 — 투명 PNG. 바꿀 때 index.html 의 width·height·`--h`(원본 높이)도 함께 수정 | 원본 크기 그대로(현재 1배) · 2배 크기 또는 SVG 권장 |
 | `og-image.jpg` | SNS 공유 썸네일 | 1200×630 |
-| `logo.svg` | 공식 로고 (현재는 텍스트 로고로 대체) | SVG |
+| `logo.png` | 공식 로고 — 헤더(원본 색)·푸터(CSS로 흰색). 현재 198×32 1배 | 2배(396×64) PNG 또는 SVG 받으면 같은 비율로 교체 |
 
 > 치료사례 사진은 환자 동의서가 있는 사진만 사용합니다. 2차에서는 Supabase Storage 비공개 버킷으로 옮깁니다.
