@@ -92,37 +92,49 @@
 @media (max-width: 1024px) {
   .philosophy .branch-card__addr-sub { display: block; font-size: inherit; }
 }
-/* 데스크톱: [문구 묶음 | 카드 2장]을 한 줄로 보고 화면 가운데 정렬 (왼쪽·오른쪽 바깥 여백 같게, 줄 최대 1680px)
-   바깥 여백 최소 --ph-m: 80px, 1025~1359px 은 표시기 여백(--page-pad 52px, 없으면 --gutter)
-   문구 칸: 1600px 이상은 30rem(제목·본문 2줄), 그보다 좁으면 340px(제목 3줄 허용)
-   간격: 문구↔첫 카드 48px = 카드끼리 24px 의 2배. 문구·카드는 세로 가운데 정렬(align-items: center) */
+/* 데스크톱: [문구 묶음 | 카드 2장] 한 줄 — 전체를 기존의 80%로 축소(transform 없이 값 자체를 0.8배, 글자는 rem)
+   좌우 끝선 = 위 퀵바 카드 끝선: 컨테이너 안쪽 시작선 + 퀵바 카드 바깥 여백(--ph-qb, 화면 단위 구성에서 24px)
+     --page-pad 는 1025~1359px 에서 52px(표시기 여백), 그 밖은 --gutter → 1920·1440·1366 모두 줄 폭 1232px
+   문구 칸 384px(기존 480의 80%, 글자 크게 보기에서도 카드 폭 확보를 위해 px), 1025~1359px 은 272px(340의 80%)
+   간격 80%: 문구↔첫 카드 38px, 카드끼리 19px. 본문·주소·진료시간 글자는 최소 1rem(가독성 기준) */
 @media (min-width: 1025px) {
-  .philosophy { container-type: inline-size; }
-  .philosophy__inner {
-    --ph-m: 80px;
-    --ph-text: 340px;
+  .philosophy { container-type: inline-size; padding-bottom: 22px; }
+  .philosophy .philosophy__inner.container { /* 파일 뒤쪽 .screen-home .container(1025~1359px 52px 여백)보다 우선 */
+    --ph-side: calc((100cqw - min(100cqw, var(--container) + var(--gutter) * 2)) / 2 + var(--page-pad, var(--gutter)) + var(--ph-qb, 0px));
     max-width: none;
-    padding-left: max(var(--ph-m), (100cqw - 1680px) / 2);
-    padding-right: max(var(--ph-m), (100cqw - 1680px) / 2);
-    grid-template-columns: var(--ph-text) minmax(0, 1fr);
-    column-gap: 48px;
+    padding-left: var(--ph-side);
+    padding-right: var(--ph-side);
+    grid-template-columns: var(--ph-text, 384px) minmax(0, 1fr);
+    column-gap: 38px;
   }
-  /* 카드 안쪽 위아래 여백 20% 축소 (32/24 → 26/19) */
-  .philosophy .branch-card { container: branch / inline-size; padding-top: 26px; padding-bottom: 19px; }
+  .philosophy__title { font-size: 2rem; }       /* 2.5rem × 0.8 */
+  .philosophy__desc { margin-top: 26px; }        /* 32 × 0.8, 글자 1rem 유지(최소) */
+  .philosophy .branch-cards { gap: 19px; }
+  /* 카드: 안쪽 여백 26/36/19 → 21/29/15 */
+  .philosophy .branch-card { container: branch / inline-size; padding: 21px 29px 15px; }
+  .philosophy .branch-card__name { font-size: 1rem; gap: 5px; }           /* 1.25rem × 0.8 */
+  .philosophy .branch-card__name svg { width: 18px; height: 18px; }      /* 22 × 0.8 */
+  .philosophy .branch-card__addr { margin-top: 10px; }                    /* 글자 1rem 유지(최소) */
+  .philosophy .branch-card__tel { gap: 8px; margin-top: 10px; font-size: 1.8rem; } /* 2.25rem × 0.8 */
+  .philosophy .branch-card__tel svg { width: 24px; height: 24px; }       /* 30 × 0.8 */
+  .philosophy .branch-card__hours { margin-top: 16px; padding-top: 13px; font-size: 1rem; } /* 1.125rem × 0.8 → 최소 1rem */
+  .philosophy .branch-card__hours strong { margin-right: 11px; }
+}
+@media (min-width: 1025px) and (min-height: 700px) {
+  .screen-home .philosophy__inner { --ph-qb: 24px; } /* 퀵바 카드(.clinic-bar__inner)의 좌우 margin 24px 과 같게 */
 }
 @media (min-width: 1025px) and (max-width: 1359px) {
-  .philosophy__inner { --ph-m: var(--page-pad, var(--gutter)); }
+  .philosophy__inner { --ph-text: 272px; }
+  .philosophy .branch-card { padding-left: 19px; padding-right: 19px; }
+  .philosophy .branch-card__tel { font-size: clamp(1.2rem, 1.76vw, 1.8rem); }
 }
-@media (min-width: 1600px) {
-  .philosophy__inner { --ph-text: 30rem; }
-}
-/* 카드가 충분히 넓을 때만: [전화번호 | 세로선 | 진료시간 3줄] 좌우 배치. 좁으면(또는 글자 크게) 위아래 그대로
-   필요 안쪽 폭(여백 제외) ≈ 전화 297 + 구분 41 + 진료시간 130 = 468px → 29.5rem. rem 기준이라 글자 크기 단계에 따라 자동 전환 */
-@container branch (min-width: 29.5rem) {
-  .philosophy .branch-card__addr { margin-top: 10px; }
-  .philosophy .branch-card__contact { display: flex; align-items: center; margin-top: 14px; }
+/* 카드가 충분히 넓을 때만: [전화번호 | 세로선 | 진료시간 3줄] 좌우 배치. 좁으면(또는 글자 크게) 위아래
+   필요 안쪽 폭(여백 제외) ≈ 전화 238 + 구분 33 + 진료시간 116 = 387px → 24.5rem. rem 기준이라 글자 크기 단계에 따라 자동 전환 */
+@container branch (min-width: 24.5rem) {
+  .philosophy .branch-card__addr { margin-top: 8px; }
+  .philosophy .branch-card__contact { display: flex; align-items: center; margin-top: 11px; }
   .philosophy .branch-card__tel { flex: none; margin-top: 0; white-space: nowrap; }
-  .philosophy .branch-card__hours { margin: 0 0 0 20px; padding: 2px 0 2px 20px; border-top: 0; border-left: 1px solid var(--color-line); line-height: 1.5; }
+  .philosophy .branch-card__hours { margin: 0 0 0 16px; padding: 2px 0 2px 16px; border-top: 0; border-left: 1px solid var(--color-line); line-height: 1.5; }
   .philosophy .branch-card__hours strong,
   .philosophy .branch-card__sep { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   .philosophy .branch-card__time { display: block; }
