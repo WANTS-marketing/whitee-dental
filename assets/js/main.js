@@ -7,7 +7,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initCases();
   renderFaqPreview();
   renderLatestNews();
-  initScreenNav();
   initReveal();
 });
 
@@ -195,15 +194,15 @@ function initDoctors() {
     return items.length > 1 ? items[1].offsetLeft - items[0].offsetLeft : cardsEl.clientWidth;
   };
   /* 이전·다음: 카드가 한 화면에 다 들어가면(창원 5명) 숨기고, 넘칠 때(마산 6명)만 첫·마지막 보이는 카드 사진 위에 표시
-     끝에 닿은 쪽 버튼은 사라진다. 세로 위치 = 사진 가운데 (--doc-arrow-top) */
+     끝에 닿은 쪽 버튼은 사라진다. 세로 위치 = 카드 가운데 (--doc-arrow-top) */
   const nav = prevBtn.closest('.doctors__nav');
   function updateArrows() {
     const max = cardsEl.scrollWidth - cardsEl.clientWidth;
     nav.hidden = max <= 2;
     prevBtn.disabled = cardsEl.scrollLeft <= 2;
     nextBtn.disabled = cardsEl.scrollLeft >= max - 2;
-    const photo = cardsEl.querySelector('.doc-card__photo');
-    if (photo) panel.style.setProperty('--doc-arrow-top', `${photo.getBoundingClientRect().top - panel.getBoundingClientRect().top + photo.offsetHeight / 2}px`);
+    const card = cardsEl.querySelector('.doc-card');
+    if (card) panel.style.setProperty('--doc-arrow-top', `${card.getBoundingClientRect().top - panel.getBoundingClientRect().top + card.offsetHeight / 2}px`);
   }
   prevBtn.addEventListener('click', () => cardsEl.scrollBy({ left: -step(), behavior: 'smooth' }));
   nextBtn.addEventListener('click', () => cardsEl.scrollBy({ left: step(), behavior: 'smooth' }));
@@ -350,79 +349,6 @@ async function renderLatestNews() {
   } catch (err) {
     console.error(err);
     list.innerHTML = '<li class="empty">소식을 불러오지 못했습니다.</li>';
-  }
-}
-
-/* ---------- 스크롤 연출: 왼쪽 섹션 표시기 ----------
-   [data-screen] 화면마다 점 하나. 보이는 조건(데스크톱·높이 700px 이상)은 main.css 가 정한다. */
-function initScreenNav() {
-  const screens = [...document.querySelectorAll('[data-screen]')];
-  if (!screens.length || !('IntersectionObserver' in window)) return;
-  const { esc } = window.UI;
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const pad = (n) => String(n).padStart(2, '0');
-
-  const nav = document.createElement('nav');
-  nav.className = 'screen-nav';
-  nav.setAttribute('aria-label', '메인 섹션 바로가기');
-  nav.innerHTML = `
-    <span class="screen-nav__num" aria-hidden="true" data-screen-num>01</span>
-    <span class="screen-nav__name" aria-hidden="true" data-screen-name></span>
-    <ol class="screen-nav__list">
-      ${screens.map((s) => `<li><button type="button" class="screen-nav__btn"><span class="screen-nav__tip">${esc(s.dataset.screen)}</span></button></li>`).join('')}
-    </ol>`;
-  document.body.append(nav);
-  const num = nav.querySelector('[data-screen-num]');
-  const name = nav.querySelector('[data-screen-name]');
-  const btns = [...nav.querySelectorAll('.screen-nav__btn')];
-
-  function setActive(i) {
-    btns.forEach((b, n) => b.setAttribute('aria-current', String(n === i)));
-    num.textContent = pad(i + 1);
-    name.textContent = screens[i].dataset.screen;
-  }
-
-  btns.forEach((btn, i) => btn.addEventListener('click', () => {
-    screens[i].scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
-  }));
-
-  // 화면 세로 가운데 선에 걸친 섹션 = 현재 섹션. 마지막 섹션을 지나 푸터로 가면 표시기를 숨긴다
-  const last = screens[screens.length - 1];
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach((e) => {
-      if (e.isIntersecting) {
-        setActive(screens.indexOf(e.target));
-        nav.classList.remove('is-hidden');
-      } else if (e.target === last && e.boundingClientRect.top < 0) {
-        nav.classList.add('is-hidden');
-      }
-    });
-  }, { rootMargin: '-50% 0px -50% 0px' });
-  screens.forEach((s) => io.observe(s));
-  setActive(0);
-
-  // 표시기 조각(번호·이름·점)마다 어두운 배경([data-screen-dark]) 위에 있으면 흰색, 아니면 기본(회색).
-  // 배경 경계가 표시기 중간을 지나가도 조각별로 따로 바뀐다
-  const darks = [...document.querySelectorAll('[data-screen-dark]')];
-  const parts = [num, name, ...nav.querySelectorAll('.screen-nav__list > li')];
-  let ticking = false;
-  function updateTone() {
-    ticking = false;
-    const areas = darks.map((d) => d.getBoundingClientRect());
-    parts.forEach((p) => {
-      const r = p.getBoundingClientRect();
-      const x = r.left + r.width / 2, y = r.top + r.height / 2;
-      p.classList.toggle('is-light', areas.some((a) => x >= a.left && x <= a.right && y >= a.top && y <= a.bottom));
-    });
-  }
-  const requestTone = () => { if (!ticking) { ticking = true; requestAnimationFrame(updateTone); } };
-  if (darks.length) {
-    window.addEventListener('scroll', requestTone, { passive: true });
-    window.addEventListener('resize', requestTone);
-    window.addEventListener('load', requestTone);
-    // 이미지·include 로딩으로 레이아웃이 바뀌어도 다시 계산
-    if ('ResizeObserver' in window) { const ro = new ResizeObserver(requestTone); darks.forEach((d) => ro.observe(d)); ro.observe(document.body); }
-    updateTone();
   }
 }
 

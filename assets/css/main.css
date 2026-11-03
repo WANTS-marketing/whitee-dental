@@ -2,6 +2,10 @@
    메인 페이지 — 섹션 순서는 시안과 동일 (① ~ ⑧)
    ========================================================================== */
 
+/* 메인 페이지만 페이지 스크롤바 숨김 (main.css 는 index.html 전용) — 휠·터치·키보드 스크롤은 그대로 */
+html { scrollbar-width: none; }
+html::-webkit-scrollbar { display: none; }
+
 /* ---------- ① 히어로 ---------- */
 /* 헤더(흰색 고정) 바로 아래에서 시작. 뒤 배경은 페이지 흰색 그대로 */
 .hero { position: relative; padding-top: calc(var(--header-h) + 24px); }
@@ -81,6 +85,9 @@
 .clinic-bar__faq { width: 280px; padding-left: 40px; border-left: 1px solid var(--color-line); }
 .clinic-bar__faq .clinic-bar__title { margin: 4px 0 4px; }
 .clinic-bar__faq-desc { margin-bottom: 12px; font-size: var(--fs-xs); color: var(--color-text-sub); }
+/* 퀵바 전체보기 버튼 hover·키보드 초점 색: 왼쪽(진료 전체보기) = 창원점 핑크, 오른쪽(질문 전체보기) = 마산점 오렌지 */
+.clinic-bar__head .btn:is(:hover, :focus-visible) { background: var(--color-changwon); }
+.clinic-bar__faq .btn:is(:hover, :focus-visible) { background: var(--color-masan); }
 .clinic-bar__faq-desc br { display: none; } /* 홈 퀵바 카드(좁은 FAQ 열)에서만 줄바꿈 */
 
 /* ---------- ③ 진료 철학 + 지점 ---------- */
@@ -94,7 +101,7 @@
 }
 /* 데스크톱: [문구 묶음 | 카드 2장] 한 줄 — 전체를 기존의 80%로 축소(transform 없이 값 자체를 0.8배, 글자는 rem)
    좌우 끝선 = 위 퀵바 카드 끝선: 컨테이너 안쪽 시작선 + 퀵바 카드 바깥 여백(--ph-qb, 화면 단위 구성에서 24px)
-     --page-pad 는 1025~1359px 에서 52px(표시기 여백), 그 밖은 --gutter → 1920·1440·1366 모두 줄 폭 1232px
+     --page-pad 는 1025~1359px 에서 52px, 그 밖은 --gutter → 1920·1440·1366 모두 줄 폭 1232px
    문구 칸 384px(기존 480의 80%, 글자 크게 보기에서도 카드 폭 확보를 위해 px), 1025~1359px 은 272px(340의 80%)
    간격 80%: 문구↔첫 카드 38px, 카드끼리 19px. 본문·주소·진료시간 글자는 최소 1rem(가독성 기준) */
 @media (min-width: 1025px) {
@@ -174,11 +181,12 @@
    한 화면 장수 --doc-per: 데스크톱 5 / 1280px 이하 4 / 1024px 이하 3 / 768px 이하 2 / 560px 이하 1.2(가로 스와이프)
    카드 그림자·hover 떠오름이 잘리지 않게 줄 위아래·좌우에 여유(padding)를 두고 같은 만큼 margin 으로 되돌린다 */
 .doctors__main { --doc-per: 5; --doc-gap: 24px; --doc-bleed: 6px; position: relative; min-width: 0; }
-/* 이전·다음: 카드 줄이 넘칠 때만(main.js updateArrows) 첫·마지막 보이는 카드의 사진 가운데 위에 겹쳐 표시, 끝에 닿은 쪽은 사라짐 */
+/* 이전·다음: 카드 줄이 넘칠 때만(main.js updateArrows) 첫·마지막 보이는 카드의 세로 가운데 위에 겹쳐 표시, 끝에 닿은 쪽은 사라짐 */
 .doctors__nav[hidden] { display: none; }
 .doctors__nav .doctors__arrow { position: absolute; z-index: 2; top: var(--doc-arrow-top, 35%); width: 48px; height: 48px; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.16); transform: translateY(-50%); transition: background var(--dur), color var(--dur), opacity var(--dur), visibility var(--dur); }
-.doctors__nav .doctors__arrow--prev { left: 16px; }
-.doctors__nav .doctors__arrow--next { right: 16px; }
+/* 가로 위치: 버튼 가운데가 카드 바깥 끝선(첫 카드 왼쪽 변 / 마지막 카드 오른쪽 변)에 오게 */
+.doctors__nav .doctors__arrow--prev { left: -24px; }
+.doctors__nav .doctors__arrow--next { right: -24px; }
 .doctors__nav .doctors__arrow:disabled { opacity: 0; visibility: hidden; }
 .doc-cards {
   display: flex; gap: var(--doc-gap);
@@ -238,7 +246,8 @@ html.is-modal-open { overflow: hidden; }
 .doc-modal__close:hover { background: #f3f1ee; }
 .doc-modal__close svg { width: 24px; height: 24px; }
 /* 큰 프로필: 전원을 그리드 한 칸에 겹쳐 두고 선택된 원장만 보인다 → 원장을 바꿔도 팝업 크기 그대로, 길면 팝업 안에서 스크롤 */
-.doc-profiles { --doc-photo-w: 300px; display: grid; min-height: 0; padding: 36px 40px 40px; overflow-y: auto; overscroll-behavior: contain; }
+.doc-profiles { --doc-photo-w: 300px; display: grid; min-height: 0; padding: 36px 40px 40px; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; }
+.doc-profiles::-webkit-scrollbar { display: none; } /* 스크롤바만 숨김 — 휠·터치·키보드 스크롤은 그대로 */
 .doc-profile { grid-area: 1 / 1; display: grid; grid-template-columns: var(--doc-photo-w) minmax(0, 1fr); gap: 48px; align-items: start; opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s; }
 .doc-profile.is-active { opacity: 1; visibility: visible; }
 .doc-profile__photo { aspect-ratio: 4 / 5; border-radius: 12px; }
@@ -417,6 +426,9 @@ html.is-modal-open { overflow: hidden; }
   .doctors__controls { gap: 12px; }
   .doctors__tabs { flex: 1; grid-template-columns: 1fr 1fr; }
   .doctors__tab { min-width: 0; padding: 0 12px; }
+  /* 모바일: 화면 밖으로 잘리지 않게 카드 안쪽 8px */
+  .doctors__nav .doctors__arrow--prev { left: 8px; }
+  .doctors__nav .doctors__arrow--next { right: 8px; }
   /* 카드 2장, 줄은 화면 끝까지(좌우 여백 = gutter) */
   .doctors__main { --doc-per: 2; --doc-gap: 16px; --doc-bleed: var(--gutter); }
   .doc-card__body { padding: 16px 16px 18px; }
@@ -476,9 +488,6 @@ html.is-modal-open { overflow: hidden; }
   .reveal, .reveal-group > * { opacity: 1; transform: none; transition: none; }
 }
 
-/* ---------- 왼쪽 섹션 표시기 — 화면 단위 구성일 때만 보임 ---------- */
-.screen-nav { display: none; }
-
 /* ---------- 화면 단위 구성: 데스크톱(1025px 이상) + 화면 높이 700px 이상 ----------
    1024px 이하는 기존 태블릿 레이아웃(1열)이라 제외. 내용이 길면 min-height 라 자연스럽게 늘어난다. */
 @media (min-width: 1025px) and (min-height: 700px) {
@@ -519,32 +528,12 @@ html.is-modal-open { overflow: hidden; }
   .screen-home .clinic-bar__title { white-space: nowrap; }
   .screen-home .clinic-bar__card { font-size: var(--fs-sm); word-break: keep-all; text-align: center; }
   .screen-home .clinic-bar__card img { --ic-k: 0.75; }
-
-  .screen-nav {
-    position: fixed; z-index: var(--z-quick); left: 16px; top: 50%; transform: translateY(-50%);
-    display: flex; flex-direction: column; align-items: center; gap: 14px;
-    color: var(--color-text-sub); transition: opacity var(--dur);
-  }
-  /* 밝은 배경 위는 회색, 어두운 배경 위 조각은 흰색 (main.js initScreenNav 가 조각별로 is-light 를 붙인다) */
-  .screen-nav > *, .screen-nav__list > li { color: inherit; transition: color var(--dur); }
-  .screen-nav .is-light { color: #fff; }
-  .screen-nav.is-hidden { opacity: 0; pointer-events: none; }
-  .screen-nav__num { font-size: var(--fs-xxs); font-weight: 700; letter-spacing: 0.04em; }
-  .screen-nav__name { writing-mode: vertical-rl; font-size: var(--fs-xs); font-weight: 700; letter-spacing: 0.2em; }
-  .screen-nav__list { display: flex; flex-direction: column; align-items: center; gap: 2px; }
-  .screen-nav__btn { position: relative; display: grid; place-items: center; width: 22px; height: 22px; color: inherit; }
-  .screen-nav__btn::before { content: ""; width: 6px; height: 6px; border-radius: 3px; background: currentColor; opacity: 0.35; transition: height var(--dur), opacity var(--dur), background var(--dur); }
-  .screen-nav__btn:hover::before { opacity: 0.8; }
-  .screen-nav__btn[aria-current="true"]::before { height: 20px; opacity: 1; background: var(--color-point); }
-  /* 점에 마우스를 올리면 라벨 말풍선 */
-  .screen-nav__tip { position: absolute; left: 100%; margin-left: 8px; padding: 3px 10px; border-radius: 4px; background: var(--color-text); color: #fff; font-size: var(--fs-xxs); white-space: nowrap; opacity: 0; transform: translateX(-4px); pointer-events: none; transition: opacity var(--dur), transform var(--dur); }
-  .screen-nav__btn:hover .screen-nav__tip, .screen-nav__btn:focus-visible .screen-nav__tip { opacity: 1; transform: none; }
 }
 
-/* 표시기(왼쪽 16~38px)와 내용이 겹치지 않도록, 좌우 여백이 좁은 데스크톱(1360px 미만)은 안쪽 여백을 넓힌다 */
+/* 좁은 데스크톱(1360px 미만) 좌우 안쪽 여백 52px (예전 왼쪽 섹션 표시기 자리 — 표시기는 삭제했지만 레이아웃이 바뀌지 않게 여백은 유지) */
 @media (min-width: 1025px) and (max-width: 1359px) and (min-height: 700px) {
   .screen .container, .screen-home .container { padding-left: 52px; padding-right: 52px; }
-  /* 히어로는 컨테이너가 아니라 화면 너비 - 80px 이라 표시기와 겹치지 않음 → 넓힌 여백 제외. 대신 글자 시작선 계산에 52px 반영 */
+  /* 히어로는 컨테이너가 아니라 화면 너비 - 80px → 넓힌 여백 제외. 대신 글자 시작선 계산에 52px 반영 */
   .screen-home .hero__inner { padding-left: 0; padding-right: 0; }
   .screen-home { --page-pad: 52px; }
   /* 좁아진 지점 카드에서 전화번호가 두 줄로 꺾이지 않게 */
