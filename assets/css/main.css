@@ -74,11 +74,10 @@
 .clinic-bar__list { flex: 1; display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
 .clinic-bar__card { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; aspect-ratio: 1; border: 1px solid var(--color-line); border-radius: var(--radius-md); background: #fff; font-size: var(--fs-md); font-weight: 600; transition: border-color var(--dur), box-shadow var(--dur), transform var(--dur); }
 /* hover 시 테두리 1px → 2px: border 대신 안쪽 그림자 1px 를 더해 내용이 밀리지 않게 */
-.clinic-bar__card:hover { border-color: var(--color-point); box-shadow: inset 0 0 0 1px var(--color-point), var(--shadow-card); transform: translateY(-4px); }
-.clinic-bar__card svg { width: 64px; height: 64px; }
-.ic-line { stroke: var(--color-icon); }
-.ic-accent { stroke: var(--color-icon-accent); }
-.ic-fill { fill: var(--color-icon-accent); stroke: none; }
+.clinic-bar__card:hover { border-color: var(--color-point); box-shadow: inset 0 0 0 1px var(--color-point), 0 5px 15px rgba(0, 0, 0, 0.08); transform: translateY(-2px); } /* 떠오름·그림자 = 공통 카드(--shadow-card 0 10px 30px, -4px)의 50% */
+/* 아이콘(PNG): 디자이너가 준 원본 크기 비율을 그대로 유지 — 높이 = 원본 높이(--h, HTML style) × 배율(--ic-k)
+   가장 큰 아이콘(임플란트 73px) 높이의 칸 안에 세로 가운데로 놓아(위아래 padding) 아래 글자 줄을 맞춘다 */
+.clinic-bar__card img { --ic-k: 0.85; flex: none; box-sizing: content-box; width: auto; height: calc(var(--h) * var(--ic-k) * 1px); padding-block: calc((73 - var(--h)) / 2 * var(--ic-k) * 1px); }
 .clinic-bar__faq { width: 280px; padding-left: 40px; border-left: 1px solid var(--color-line); }
 .clinic-bar__faq .clinic-bar__title { margin: 4px 0 4px; }
 .clinic-bar__faq-desc { margin-bottom: 12px; font-size: var(--fs-xs); color: var(--color-text-sub); }
@@ -349,7 +348,7 @@
   .clinic-bar__list::-webkit-scrollbar { display: none; }
   .clinic-bar__list li { flex: none; width: 112px; scroll-snap-align: start; }
   .clinic-bar__card { font-size: var(--fs-xs); gap: 8px; }
-  .clinic-bar__card svg { width: 44px; height: 44px; }
+  .clinic-bar__card img { --ic-k: 0.6; }
   .clinic-bar__faq { order: 4; flex-basis: 100%; padding: 20px; border: 0; border-radius: var(--radius-md); background: var(--color-bg-warm); }
   .clinic-bar__title { font-size: var(--fs-h3); }
 
@@ -457,7 +456,7 @@
   .screen-home .clinic-bar__faq-desc br { display: inline; }
   .screen-home .clinic-bar__title { white-space: nowrap; }
   .screen-home .clinic-bar__card { font-size: var(--fs-sm); word-break: keep-all; text-align: center; }
-  .screen-home .clinic-bar__card svg { width: 52px; height: 52px; }
+  .screen-home .clinic-bar__card img { --ic-k: 0.75; }
 
   .screen-nav {
     position: fixed; z-index: var(--z-quick); left: 16px; top: 50%; transform: translateY(-50%);

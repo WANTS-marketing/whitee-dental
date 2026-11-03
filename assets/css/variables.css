@@ -13,10 +13,6 @@
   /* 브랜드 포인트(라벨·강조 텍스트) — 시안에서 오렌지 사용 */
   --color-point: var(--color-masan);
 
-  /* 아이콘 (빠른 진료 안내 라인 아이콘: 네이비 + 오렌지 포인트) */
-  --color-icon: #2f4b8c;
-  --color-icon-accent: var(--color-masan);
-
   /* 텍스트 */
   --color-text: #222222;            /* 메인 텍스트: 거의 검정 */
   --color-text-sub: #666666;        /* 보조 텍스트: 회색 */
