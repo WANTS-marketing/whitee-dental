@@ -194,10 +194,16 @@ function initDoctors() {
     const items = cardsEl.children;
     return items.length > 1 ? items[1].offsetLeft - items[0].offsetLeft : cardsEl.clientWidth;
   };
+  /* 이전·다음: 카드가 한 화면에 다 들어가면(창원 5명) 숨기고, 넘칠 때(마산 6명)만 첫·마지막 보이는 카드 사진 위에 표시
+     끝에 닿은 쪽 버튼은 사라진다. 세로 위치 = 사진 가운데 (--doc-arrow-top) */
+  const nav = prevBtn.closest('.doctors__nav');
   function updateArrows() {
     const max = cardsEl.scrollWidth - cardsEl.clientWidth;
+    nav.hidden = max <= 2;
     prevBtn.disabled = cardsEl.scrollLeft <= 2;
     nextBtn.disabled = cardsEl.scrollLeft >= max - 2;
+    const photo = cardsEl.querySelector('.doc-card__photo');
+    if (photo) panel.style.setProperty('--doc-arrow-top', `${photo.getBoundingClientRect().top - panel.getBoundingClientRect().top + photo.offsetHeight / 2}px`);
   }
   prevBtn.addEventListener('click', () => cardsEl.scrollBy({ left: -step(), behavior: 'smooth' }));
   nextBtn.addEventListener('click', () => cardsEl.scrollBy({ left: step(), behavior: 'smooth' }));
@@ -239,7 +245,8 @@ function initDoctors() {
   function openModal(p, from) {
     opener = from;
     show(p);
-    modal.showModal();
+    modal.classList.remove('is-closing');
+    modal.showModal(); // 나타날 때: 딤·팝업이 서서히 (main.css .doc-modal 애니메이션)
     document.documentElement.classList.add('is-modal-open'); // 뒤 화면 스크롤 잠금
     modal.querySelector('[data-modal-close]').focus();
   }
@@ -247,10 +254,22 @@ function initDoctors() {
     const card = e.target.closest('.doc-card');
     if (card) openModal(Number(card.dataset.pos), card);
   });
-  modal.querySelector('[data-modal-close]').addEventListener('click', () => modal.close());
+  /* 닫을 때도 서서히: .is-closing 애니메이션이 끝난 뒤 dialog 닫기 (움직임 줄이기 설정이면 바로) */
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  function closeModal() {
+    if (!modal.open || modal.classList.contains('is-closing')) return;
+    if (reduceMotion.matches) { modal.close(); return; }
+    modal.classList.add('is-closing');
+    const done = () => { clearTimeout(timer); modal.removeEventListener('animationend', onEnd); modal.classList.remove('is-closing'); modal.close(); };
+    const onEnd = (e) => { if (e.target === modal.querySelector('.doc-modal__panel')) done(); };
+    const timer = setTimeout(done, 400); // animationend 가 오지 않을 때 대비
+    modal.addEventListener('animationend', onEnd);
+  }
+  modal.addEventListener('cancel', (e) => { e.preventDefault(); closeModal(); }); // ESC
+  modal.querySelector('[data-modal-close]').addEventListener('click', closeModal);
   modal.querySelector('[data-modal-prev]').addEventListener('click', () => show(pos - 1));
   modal.querySelector('[data-modal-next]').addEventListener('click', () => show(pos + 1));
-  modal.addEventListener('click', (e) => { if (e.target === modal) modal.close(); }); // 배경(딤) 클릭
+  modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); }); // 배경(딤) 클릭
   modal.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowLeft') show(pos - 1);
     if (e.key === 'ArrowRight') show(pos + 1);

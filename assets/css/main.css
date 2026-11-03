@@ -158,7 +158,6 @@
 .doctors__tab[data-branch="masan"] { --tab-color: var(--color-masan); }
 .doctors__tab:hover { border-color: var(--tab-color); color: var(--tab-color); }
 .doctors__tab[aria-selected="true"] { border-color: var(--tab-color); background: var(--tab-color); color: #fff; }
-.doctors__nav { display: flex; gap: 8px; }
 .doctors__arrow { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: #fff; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06); transition: background var(--dur), color var(--dur); }
 .doctors__arrow:hover { background: var(--color-text); color: #fff; }
 .doctors__arrow svg { width: 20px; height: 20px; }
@@ -174,7 +173,13 @@
 /* 사진 카드 줄 (main.js initDoctors) — 가로 스크롤 + 스냅, 머리말 ‹ › 는 한 장씩
    한 화면 장수 --doc-per: 데스크톱 5 / 1280px 이하 4 / 1024px 이하 3 / 768px 이하 2 / 560px 이하 1.2(가로 스와이프)
    카드 그림자·hover 떠오름이 잘리지 않게 줄 위아래·좌우에 여유(padding)를 두고 같은 만큼 margin 으로 되돌린다 */
-.doctors__main { --doc-per: 5; --doc-gap: 24px; --doc-bleed: 6px; min-width: 0; }
+.doctors__main { --doc-per: 5; --doc-gap: 24px; --doc-bleed: 6px; position: relative; min-width: 0; }
+/* 이전·다음: 카드 줄이 넘칠 때만(main.js updateArrows) 첫·마지막 보이는 카드의 사진 가운데 위에 겹쳐 표시, 끝에 닿은 쪽은 사라짐 */
+.doctors__nav[hidden] { display: none; }
+.doctors__nav .doctors__arrow { position: absolute; z-index: 2; top: var(--doc-arrow-top, 35%); width: 48px; height: 48px; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.16); transform: translateY(-50%); transition: background var(--dur), color var(--dur), opacity var(--dur), visibility var(--dur); }
+.doctors__nav .doctors__arrow--prev { left: 16px; }
+.doctors__nav .doctors__arrow--next { right: 16px; }
+.doctors__nav .doctors__arrow:disabled { opacity: 0; visibility: hidden; }
 .doc-cards {
   display: flex; gap: var(--doc-gap);
   margin: -10px calc(var(--doc-bleed) * -1) -20px; padding: 10px var(--doc-bleed) 20px;
@@ -215,6 +220,15 @@ html:is([data-fs="lg"], [data-fs="xl"]) .doc-card__intro { --intro-lines: 3; }
 html.is-modal-open { overflow: hidden; }
 .doc-modal { width: min(1100px, 100% - 48px); max-width: none; max-height: calc(100dvh - 48px); margin: auto; padding: 0; border: 0; background: transparent; color: inherit; overflow: visible; }
 .doc-modal::backdrop { background: rgba(0, 0, 0, 0.55); }
+/* 열고 닫을 때 서서히: 딤은 페이드, 팝업은 페이드 + 살짝 위로 (닫기는 main.js closeModal 이 .is-closing 후 닫음) */
+.doc-modal[open]::backdrop { animation: doc-fade-in 0.35s ease both; }
+.doc-modal[open] .doc-modal__panel { animation: doc-modal-in 0.4s var(--ease) both; }
+.doc-modal.is-closing::backdrop { animation: doc-fade-out 0.25s ease both; }
+.doc-modal.is-closing .doc-modal__panel { animation: doc-modal-out 0.25s ease both; }
+@keyframes doc-fade-in { from { opacity: 0; } }
+@keyframes doc-fade-out { to { opacity: 0; } }
+@keyframes doc-modal-in { from { opacity: 0; transform: translateY(24px) scale(0.98); } }
+@keyframes doc-modal-out { to { opacity: 0; transform: translateY(12px) scale(0.98); } }
 .doc-modal__panel { display: flex; flex-direction: column; max-height: calc(100dvh - 48px); overflow: hidden; border-radius: 16px; background: #fff; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25); }
 .doc-modal__bar { display: flex; flex: none; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 16px 14px 24px; border-bottom: 1px solid #ebe7e2; }
 .doc-modal__nav { display: flex; align-items: center; gap: 12px; }
