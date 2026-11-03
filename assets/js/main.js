@@ -204,9 +204,11 @@ function initDoctors() {
   tabs.forEach((tab, i) => {
     tab.addEventListener('click', () => selectTab(tab));
     tab.addEventListener('keydown', (e) => {
-      if (!['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight'].includes(e.key)) return;
+      // 좌우(위아래) 방향키 = 이전·다음 탭, Home·End = 처음·마지막 탭
+      if (!['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(e.key)) return;
       e.preventDefault();
-      const next = tabs[(i + (e.key === 'ArrowDown' || e.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length];
+      const next = e.key === 'Home' ? tabs[0] : e.key === 'End' ? tabs[tabs.length - 1]
+        : tabs[(i + (e.key === 'ArrowDown' || e.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length];
       next.focus();
       selectTab(next);
     });

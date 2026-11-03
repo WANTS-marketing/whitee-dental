@@ -134,19 +134,19 @@
 .doctors { background: #f5f3f0; } /* 배경 사진 대신 은은한 단색 */
 /* 머리말(소개 | 지점 탭·이전/다음) 한 줄 + 아래 프로필 패널이 컨테이너 전체 폭 */
 .doctors__inner { position: relative; display: flex; flex-direction: column; gap: 28px; }
-.doctors__head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px 40px; }
+.doctors__head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 24px 40px; } /* 좁거나 글자가 크면 탭·화살표가 제목 아래로 */
+.doctors__intro { flex: 1 1 32rem; } /* 제목 묶음 기본 폭 32rem 보다 좁아질 때만 탭이 아래 줄로 */
 .doctors__label { font-size: var(--fs-h4); font-weight: 600; text-transform: none; }
 .doctors__title { font-size: var(--fs-h2); line-height: 1.35; letter-spacing: -0.02em; }
 .doctors__desc { margin-top: 8px; font-size: var(--fs-sm); color: var(--color-text-sub); }
 .doctors__controls { display: flex; align-items: center; gap: 16px; flex: none; }
-.doctors__tabs { display: grid; grid-template-columns: 1fr 1fr; width: 380px; }
-.doctors__tab { display: flex; justify-content: space-between; align-items: center; height: 40px; padding: 0 20px; background: #fff; font-size: var(--fs-sm); font-weight: 700; transition: background var(--dur), color var(--dur); }
-.doctors__tab svg { width: 16px; height: 16px; }
-.doctors__tab[data-branch="changwon"] svg { color: var(--color-changwon); }
-.doctors__tab[data-branch="masan"] svg { color: var(--color-masan); }
-.doctors__tab[aria-selected="true"][data-branch="changwon"] { background: var(--color-changwon); color: #fff; }
-.doctors__tab[aria-selected="true"][data-branch="masan"] { background: var(--color-masan); color: #fff; }
-.doctors__tab[aria-selected="true"] svg { color: #fff; }
+/* 지점 탭: 한국어만, 글자 길이에 맞춘 폭(두 버튼 같은 폭 = grid 1fr), 높이 = 옆 원형 버튼(44px), 모서리 = 사이트 버튼(pill)
+   글자 크게 보기에서도 줄바꿈 없이 폭이 늘어난다 */
+.doctors__tabs { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 8px; }
+.doctors__tab { --tab-color: var(--color-changwon); display: flex; align-items: center; justify-content: center; min-width: 140px; height: 44px; padding: 0 28px; border: 1px solid var(--color-line); border-radius: var(--radius-pill); background: #fff; color: #444; font-size: 1rem; font-weight: 700; line-height: 1; white-space: nowrap; transition: background var(--dur), color var(--dur), border-color var(--dur); }
+.doctors__tab[data-branch="masan"] { --tab-color: var(--color-masan); }
+.doctors__tab:hover { border-color: var(--tab-color); color: var(--tab-color); }
+.doctors__tab[aria-selected="true"] { border-color: var(--tab-color); background: var(--tab-color); color: #fff; }
 .doctors__nav { display: flex; gap: 8px; }
 .doctors__arrow { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: #fff; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06); transition: background var(--dur), color var(--dur); }
 .doctors__arrow:hover { background: var(--color-text); color: #fff; }
@@ -312,7 +312,7 @@
 
   .philosophy__inner, .doctors__inner, .clinic__inner, .cases__inner, .faq-preview__inner, .story__inner { grid-template-columns: minmax(0, 1fr); gap: 40px; }
   .doctors__head { flex-direction: column; align-items: stretch; }
-  .doctors__tabs { width: auto; max-width: 520px; flex: 1; }
+  .doctors__intro { flex: none; } /* 세로 배치에서는 기본 폭(32rem)이 높이로 적용되지 않게 */
   /* 프로필: 사진 위·정보 아래, 약력 1열 */
   .doc-profile { grid-template-columns: minmax(0, 1fr); gap: 24px; }
   .doc-profile__photo { width: 100%; max-width: 260px; }
@@ -357,8 +357,10 @@
 
   .doctors { padding: 56px 0; }
   .doctors__title { font-size: var(--fs-h3); }
-  .doctors__tab { padding: 0 14px; font-size: var(--fs-xs); }
-  .doctors__nav { display: none; }
+  /* 모바일: 두 지점 탭이 남는 폭을 반씩, 이전·다음 버튼은 그 오른쪽 */
+  .doctors__controls { gap: 12px; }
+  .doctors__tabs { flex: 1; grid-template-columns: 1fr 1fr; }
+  .doctors__tab { min-width: 0; padding: 0 12px; }
   /* 모바일: 약력 처음 6개만 + '약력 더보기', 썸네일 줄은 가로 스크롤 */
   .doc-profiles { padding: 20px; }
   .doc-profile__photo { max-width: 220px; }
