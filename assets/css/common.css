@@ -342,6 +342,10 @@ body.is-locked { overflow: hidden; }
 .branch-card--masan .branch-card__tel svg { color: var(--color-masan); }
 .branch-card__hours { display: flex; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--color-line); font-size: var(--fs-lg); color: var(--color-text-sub); }
 .branch-card__hours strong { flex: none; margin-right: 14px; color: var(--color-text); font-weight: 600; }
+/* 진료시간: 시간 범위는 중간에서 꺾이지 않게. 좁으면 '·' 뒤에서만 줄바꿈, 일요일 휴진은 항상 다음 줄 */
+.branch-card__time { white-space: nowrap; }
+.branch-card__closed { display: block; }
+.branch-card__addr-sub { font-size: var(--fs-xs); color: var(--color-text-muted); } /* 지번(괄호) 주소는 한 단계 작게 — 어르신 가독성 기준상 #666 보다 연하게는 안 씀 */
 .branch-card__actions { display: flex; gap: 8px; margin-top: 16px; }
 .map-ph { aspect-ratio: 16 / 9; margin-top: 16px; border-radius: var(--radius-md); }
 

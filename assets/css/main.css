@@ -89,6 +89,36 @@
 .philosophy__inner { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.75fr); gap: 40px; align-items: center; }
 .philosophy__title { font-size: var(--fs-h1); line-height: 1.45; letter-spacing: -0.02em; }
 .philosophy__desc { margin-top: 32px; font-size: var(--fs-sm); color: var(--color-text-sub); }
+/* 모바일·태블릿: 지번 주소는 예전처럼 다음 줄 */
+@media (max-width: 1024px) {
+  .philosophy .branch-card__addr-sub { display: block; font-size: inherit; }
+}
+/* 데스크톱: 지점 카드 영역을 오른쪽으로 넓혀 카드를 가로로 길게 → 섹션 높이 줄이기
+   왼쪽 시작선 = 기존 컨테이너 안쪽 시작선(그대로), 오른쪽 여백 = 기존 여백과 80px 중 작은 값(초광폭은 전체 1760px 까지)
+   100cqw = .philosophy 너비. --page-pad 는 1025~1359px 에서 52px(표시기 여백), 그 밖은 --gutter */
+@media (min-width: 1025px) {
+  .philosophy { container-type: inline-size; }
+  .philosophy__inner {
+    --ph-l: calc((100cqw - min(100cqw, var(--container) + var(--gutter) * 2)) / 2 + var(--page-pad, var(--gutter)));
+    max-width: none;
+    padding-left: var(--ph-l);
+    padding-right: min(var(--ph-l), max(80px, (100cqw - 1760px) / 2));
+    grid-template-columns: minmax(0, 340px) minmax(0, 1fr);
+  }
+  /* 카드 안쪽 위아래 여백 20% 축소 (32/24 → 26/19) */
+  .philosophy .branch-card { container: branch / inline-size; padding-top: 26px; padding-bottom: 19px; }
+}
+/* 카드가 충분히 넓을 때만: [전화번호 | 세로선 | 진료시간 3줄] 좌우 배치. 좁으면(또는 글자 크게) 위아래 그대로
+   필요 안쪽 폭(여백 제외) ≈ 전화 297 + 구분 41 + 진료시간 130 = 468px → 29.5rem. rem 기준이라 글자 크기 단계에 따라 자동 전환 */
+@container branch (min-width: 29.5rem) {
+  .philosophy .branch-card__addr { margin-top: 10px; }
+  .philosophy .branch-card__contact { display: flex; align-items: center; margin-top: 14px; }
+  .philosophy .branch-card__tel { flex: none; margin-top: 0; white-space: nowrap; }
+  .philosophy .branch-card__hours { margin: 0 0 0 20px; padding: 2px 0 2px 20px; border-top: 0; border-left: 1px solid var(--color-line); line-height: 1.5; }
+  .philosophy .branch-card__hours strong,
+  .philosophy .branch-card__sep { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .philosophy .branch-card__time { display: block; }
+}
 
 /* ---------- ④ 의료진 ---------- */
 .doctors { position: relative; overflow: hidden; padding: 60px 0; }
