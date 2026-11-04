@@ -185,6 +185,14 @@
         const w = Math.max(slot[i], Math.floor(half * 2));
         s.style.left = `calc(50% - ${w / 2}px)`; s.style.right = 'auto'; s.style.width = `${w}px`;
       });
+      // 맨 오른쪽(FAQ) 열: 끊을 수 없는 낱말(상담문의하기 등)이 열보다 길면 오른쪽 바깥으로만 넓힌다(왼쪽 이웃 열 간격은 그대로, 이때만 중심이 조금 어긋남)
+      const last = subs[subs.length - 1];
+      if (last) {
+        const cur = last.offsetWidth;
+        last.style.width = 'min-content'; const minW = last.offsetWidth; last.style.width = cur + 'px';
+        if (minW > cur) { last.style.left = `calc(50% - ${(last.style.left ? cur : slot[subs.length - 1]) / 2}px)`; last.style.right = 'auto'; last.style.width = `${minW}px`; }
+        else if (!last.style.left) last.style.removeProperty('width');
+      }
     };
     const fitMegaHeight = () => {
       fitColumns();

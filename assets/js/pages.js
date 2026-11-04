@@ -43,7 +43,7 @@ function renderDoctorsPage() {
 
 /* ---------- 병원소개 (about/clinic.html) = 예전 병원 둘러보기 + 오시는길 ----------
    지점 탭(창원점·마산점): 선택한 지점 패널만 보이고 주소 해시가 #changwon / #masan 으로 바뀐다(직접 링크·뒤로가기 가능)
-   패널마다 ① 지점명·한 줄 소개 ② 내부 둘러보기(갤러리 + 라이트박스) ③ 오시는길(카카오맵 + 정보) ④ 교통·주차 안내
+   패널마다 ① 지점명·한 줄 소개 ② 내부 둘러보기(갤러리 + 라이트박스) ③ 오시는길(카카오맵 + 주소·전화·이메일·진료시간) ④ 교통·주차 안내
    지도: .loc__map 안의 카카오맵 '지도 퍼가기' 코드는 페이지를 읽는 동안 실행돼야 해서 HTML 에 그대로 둔다(API 키 불필요).
    숨긴 패널은 display:none 이 아니라 화면 밖에 같은 너비로 두므로(sub.css .clinic-panel) 지도가 처음부터 제 크기로 그려지고,
    탭이 열릴 때 relayout(지도 다시 맞추기)도 한 번 더 한다 */
@@ -61,15 +61,11 @@ function renderClinic() {
     if (info) {
       info.innerHTML = `
         <dl>
-          <dt>주소</dt><dd><strong>${esc(b.address)} (${esc(b.addressNote)})</strong>${b.landmark ? `<span class="loc__sub">${esc(b.landmark)}</span>` : ''}</dd>
+          <dt>주소</dt><dd><strong>${esc(b.address)}</strong><strong>(${esc(b.addressNote)})</strong>${b.landmark ? `<span class="loc__sub">${esc(b.landmark)}</span>` : ''}</dd>
           <dt class="loc__dt--mid">전화</dt><dd><a class="loc__tel" href="${telHref(b.tel)}">${esc(b.tel)}</a></dd>
-          <dt>이메일</dt><dd><a href="mailto:${esc(b.email)}">${esc(b.email)}</a></dd>
+          <dt>이메일</dt><dd>${esc(b.email)}</dd>
           <dt>진료시간</dt><dd><strong>${esc(b.hoursShort)}</strong></dd>
-        </dl>
-        <div class="loc__actions">
-          <a class="btn btn--${b.id}" href="${esc(b.naverMap)}" target="_blank" rel="noopener">네이버 지도로 보기</a>
-          <a class="btn btn--line" href="${telHref(b.tel)}">전화하기</a>
-        </div>`;
+        </dl>`;
     }
     const transit = document.querySelector(`[data-loc-transit="${b.id}"]`);
     if (transit) {
