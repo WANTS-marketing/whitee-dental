@@ -233,7 +233,8 @@ html:is([data-fs="lg"], [data-fs="xl"]) .doc-card__intro { --intro-lines: 3; }
 
 /* ---------- 약력 팝업 (dialog) — 화면 가운데, 배경 딤, 모바일은 전체 화면 ---------- */
 html.is-modal-open { overflow: hidden; }
-.doc-modal { width: min(1100px, 100% - 48px); max-width: none; max-height: calc(100dvh - 48px); margin: auto; padding: 0; border: 0; background: transparent; color: inherit; overflow: visible; }
+/* 너비: 약력 2열이 한 줄씩 들어가는 폭(글자 단계만큼 넓어지도록 rem), 화면에서는 양옆 바깥 화살표 자리(56+24px ×2 + 여백)를 뺀 만큼까지 */
+.doc-modal { width: min(88rem, 100% - 208px); max-width: none; max-height: calc(100dvh - 48px); margin: auto; padding: 0; border: 0; background: transparent; color: inherit; overflow: visible; }
 .doc-modal::backdrop { background: rgba(0, 0, 0, 0.55); }
 /* 열고 닫을 때 서서히: 딤은 페이드, 팝업은 페이드 + 살짝 위로 (닫기는 main.js closeModal 이 .is-closing 후 닫음) */
 .doc-modal[open]::backdrop { animation: doc-fade-in 0.35s ease both; }
@@ -250,11 +251,13 @@ html.is-modal-open { overflow: hidden; }
 .doc-modal__close { position: absolute; z-index: 3; top: 12px; right: 12px; display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: #fff; color: #222; transition: background var(--dur); }
 .doc-modal__close:hover { background: #f3f1ee; }
 .doc-modal__close svg { width: 24px; height: 24px; }
+/* 사진 너비(팝업의 38%) — 사진 칸·'4 / 5' 위치가 함께 쓴다 */
+.doc-modal__panel { --doc-photo-w: 38%; }
 /* 데스크톱: 묶음 상자 없이 화살표·'4 / 5'가 각각 팝업 박스(.doc-modal__panel) 기준으로 놓인다 */
 .doc-modal__foot { display: contents; }
 /* 하단 가운데 '4 / 5' — 아래 여백(--doc-pad) 가운데 */
 /* 흰 바탕: 긴 약력이 스크롤될 때(좁은 화면 + 큰 글자) 글자가 숫자 밑으로 지나가도 겹쳐 보이지 않게 */
-.doc-modal__count { position: absolute; z-index: 2; left: 50%; bottom: calc(var(--doc-pad) / 2); min-width: 3.5em; padding: 2px 10px; border-radius: 999px; background: #fff; font-size: 0.875rem; font-weight: 500; color: #888; text-align: center; font-variant-numeric: tabular-nums; transform: translate(-50%, 50%); }
+.doc-modal__count { position: absolute; z-index: 2; left: calc(var(--doc-photo-w) + (100% - var(--doc-photo-w)) / 2); /* 정보 영역(사진 오른쪽) 가운데 */ bottom: calc(var(--doc-pad) / 2); min-width: 3.5em; padding: 2px 10px; border-radius: 999px; background: #fff; font-size: 0.875rem; font-weight: 500; color: #888; text-align: center; font-variant-numeric: tabular-nums; transform: translate(-50%, 50%); }
 /* 이전·다음 원장 (처음·끝에서 이어짐) — 흰 원 + 옅은 그림자, hover 시 지점 색 테두리 */
 .doc-modal__arrow {
   position: absolute; z-index: 2; top: 50%; translate: 0 -50%; display: grid; place-items: center; width: 56px; height: 56px; border: 2px solid transparent; border-radius: 50%;
@@ -266,12 +269,16 @@ html.is-modal-open { overflow: hidden; }
 .doc-modal__arrow--prev { left: calc(-56px - 24px); }
 .doc-modal__arrow--next { right: calc(-56px - 24px); }
 
-.doc-profiles { --doc-photo-w: 300px; display: grid; min-height: 0; padding: var(--doc-pad); border-radius: inherit; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; }
+.doc-profiles { display: grid; min-height: 0; padding: 0; border-radius: inherit; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; }
 .doc-profiles::-webkit-scrollbar { display: none; } /* 스크롤바만 숨김 — 휠·터치·키보드 스크롤은 그대로 */
-.doc-profile { grid-area: 1 / 1; align-self: center; display: grid; grid-template-columns: var(--doc-photo-w) minmax(0, 1fr); gap: 48px; align-items: center; opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s; }
+/* [사진 | 정보] — 사진은 팝업 위·아래·왼쪽 끝까지 여백 없이 꽉, 정보 영역에만 안쪽 여백.
+   프로필은 한 칸에 겹쳐 있어 칸 높이 = 가장 긴 약력 → 사진 높이도 팝업 높이 100% */
+.doc-profile { grid-area: 1 / 1; display: grid; grid-template-columns: var(--doc-photo-w) minmax(0, 1fr); opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s; }
 .doc-profile.is-active { opacity: 1; visibility: visible; }
-.doc-profile__photo { aspect-ratio: 4 / 5; border-radius: 12px; }
-.doc-profile__body { display: flex; flex-direction: column; min-width: 0; color: #333; }
+/* 사진: 바깥 모서리(왼쪽 위·아래)만 팝업과 같은 반지름, 정보 영역 쪽은 직각. 사진이 없으면 .img-ph 베이지 그라데이션 */
+.doc-profile__photo { min-height: 100%; border-radius: 16px 0 0 16px; }
+.doc-profile__photo > img { object-position: center top; } /* 얼굴이 잘리지 않게 위 기준 */
+.doc-profile__body { align-self: center; display: flex; flex-direction: column; min-width: 0; padding: var(--doc-pad) var(--doc-pad-r, var(--doc-pad)) var(--doc-pad) var(--doc-pad); color: #333; }
 /* 지점 · 진료과 — 진료과 16px 굵게 지점 색 */
 .doc-profile__meta { font-size: 1rem; color: #555; }
 .doc-profile__dept { font-size: 1rem; font-weight: 700; color: var(--doc-color, var(--color-point)); }
@@ -279,7 +286,8 @@ html.is-modal-open { overflow: hidden; }
 .doc-profile__name small { margin-left: 6px; font-size: 1.125rem; font-weight: 500; letter-spacing: 0; color: #555; }
 .doc-profile__certs { margin-top: 16px; font-size: 1.0625rem; font-weight: 700; line-height: 1.7; color: #222; }
 /* 약력: 학력·경력(왼쪽 열) / 학회 활동(오른쪽 열), 소제목 14px 굵게 지점 색, 그룹 사이 20px */
-.doc-profile__cols { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 0 40px; margin-top: 20px; padding-top: 20px; border-top: 1px solid #ebe7e2; }
+/* 두 열 너비는 내용 길이에 비례(auto) — 긴 경력 열이 더 넓게 가져가 줄바꿈을 줄인다 */
+.doc-profile__cols { display: grid; grid-template-columns: auto auto; gap: 0 32px; margin-top: 20px; padding-top: 20px; border-top: 1px solid #ebe7e2; }
 .doc-profile__col { display: flex; flex-direction: column; gap: 20px; min-width: 0; }
 .doc-profile__col:empty { display: none; }
 .doc-group__title { margin-bottom: 4px; font-size: 0.875rem; font-weight: 700; letter-spacing: 0.02em; color: var(--doc-color, var(--color-point)); }
@@ -302,8 +310,6 @@ html.is-modal-open { overflow: hidden; }
 }
 @media (min-width: 1025px) and (max-height: 820px) {
   .doc-modal__panel { --doc-pad: 44px; }
-  .doc-profiles { --doc-photo-w: 248px; }
-  .doc-profile { gap: 32px; }
   .doc-profile__name { font-size: 2.125rem; }
 }
 
@@ -311,7 +317,8 @@ html.is-modal-open { overflow: hidden; }
 @media (min-width: 769px) and (max-width: 1280px) {
   .doc-modal__arrow--prev { left: 16px; }
   .doc-modal__arrow--next { right: 16px; }
-  .doc-profiles { padding-inline: calc(16px + 56px + 16px); }
+  .doc-modal { width: min(88rem, 100% - 48px); } /* 화살표가 박스 안으로 들어오므로 바깥 자리 불필요 */
+  .doc-modal__panel { --doc-pad-r: calc(16px + 56px + 16px); } /* 정보 영역 오른쪽: 박스 안 › 버튼 자리 (‹ 는 사진 위에 놓인다) */
 }
 
 /* ---------- ⑤ 진료안내 ---------- */
@@ -407,8 +414,7 @@ html.is-modal-open { overflow: hidden; }
   .doctors__intro { flex: none; } /* 세로 배치에서는 기본 폭(32rem)이 높이로 적용되지 않게 */
   .doctors__main { --doc-per: 3; }
   /* 프로필: 사진 위·정보 아래, 약력 1열 */
-  .doc-profile { grid-template-columns: minmax(0, 1fr); gap: 24px; }
-  .doc-profile__photo { width: 100%; max-width: 260px; }
+  /* 팝업(태블릿): 사진 칸은 그대로, 약력만 1열 */
   .doc-profile__cols { grid-template-columns: minmax(0, 1fr); }
   .doc-profile__col { gap: 16px; }
   .doc-profile__col + .doc-profile__col { margin-top: 16px; }
@@ -470,14 +476,15 @@ html.is-modal-open { overflow: hidden; }
   .doc-modal { width: 100%; height: 100%; max-height: none; }
   .doc-modal__panel { height: 100%; max-height: none; border-radius: 0; box-shadow: none; }
   .doc-modal__panel { --doc-pad: var(--gutter); }
-  .doc-profiles { padding: 64px var(--gutter) 24px; } /* 위: 닫기 버튼 자리 */
-  .doc-profile { align-self: start; }
+  /* 모바일: 사진을 맨 위에 가로 꽉(3:2, 위 기준으로 잘림), 정보는 그 아래 */
+  .doc-profile { grid-template-columns: minmax(0, 1fr); align-content: start; }
+  .doc-profile__photo { min-height: 0; aspect-ratio: 3 / 2; border-radius: 0; }
+  .doc-profile__body { align-self: start; padding: 20px var(--gutter) 24px; }
   /* 모바일: 하단 고정 줄 [‹  4 / 5  ›] */
   .doc-modal__foot { display: flex; flex: none; align-items: center; justify-content: center; gap: 16px; padding: 12px var(--gutter) calc(12px + env(safe-area-inset-bottom)); border-top: 1px solid #ebe7e2; }
   .doc-modal__foot .doc-modal__arrow, .doc-modal__count { position: static; translate: none; transform: none; }
   .doc-modal__foot .doc-modal__arrow { width: 48px; height: 48px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12); }
   .doc-modal__count { font-size: 0.9375rem; }
-  .doc-profile__photo { max-width: 220px; }
   .doc-profile__name { font-size: 1.875rem; }
   /* 모바일 플로팅 퀵메뉴: 태블릿 규칙(120×72) 대신 한 줄 알약 버튼 */
   .quick--hero .quick__btn { width: auto; min-width: 150px; height: 48px; gap: 8px; font-size: var(--fs-xs); }
