@@ -103,7 +103,13 @@ function initQuickbarOverlap() {
   layout();
 }
 
-/* ---------- ① 히어로 슬라이더 ---------- */
+/* ---------- ① 히어로 슬라이더 — 가로 슬라이드 전환 ----------
+   다음: 지금 슬라이드가 왼쪽으로 밀려나고 새 슬라이드가 오른쪽에서 들어온다(이전은 반대). 4번 → 1번도 같은 방향(loop)
+   이동 0.9s cubic-bezier(0.65, 0, 0.35, 1), 들어오는 사진은 scale 1.06 → 1(1.2s)
+   문구: 나가는 슬라이드는 0.3s fade-out, 들어오는 슬라이드는 이미지가 자리 잡은 뒤 라벨 → 타이틀 → 서브 → 버튼 fade-up(0.1s 간격)
+   조작: ‹ › · 재생/정지 · 키보드 ←→(히어로에 포커스가 있을 때) · 터치 스와이프(손가락을 따라 움직이다 놓으면 넘김)
+   자동재생 6초, 마우스가 히어로 위에 있으면 잠시 멈춤, 전환 중 추가 입력 무시. 움직임 줄이기면 짧은 fade 만
+   스타일: main.css '① 히어로' (.is-active / .is-shown / .is-moving / .is-leaving / .is-entering) */
 function initHero() {
   const slider = document.getElementById('hero-slider');
   if (!slider) return;
@@ -111,25 +117,72 @@ function initHero() {
   const current = slider.querySelector('[data-hero-current]');
   const playBtn = slider.querySelector('[data-hero-play]');
   const pauseBtn = slider.querySelector('[data-hero-pause]');
-  const DELAY = 5000;
+  const DELAY = 6000;
+  const MOVE = 900;
+  const reduceMq = window.matchMedia('(prefers-reduced-motion: reduce)');
   let index = 0;
   let timer = null;
+  let hoverPaused = false;
+  let busy = false;
 
   slider.querySelector('[data-hero-total]').textContent = slides.length;
+  if (!slider.hasAttribute('tabindex')) slider.tabIndex = 0; // 키보드 ←→ 로 넘기려면 히어로에 포커스가 들어와야 한다
 
-  function go(next) {
-    index = (next + slides.length) % slides.length;
-    slides.forEach((s, i) => {
-      const active = i === index;
-      s.classList.toggle('is-active', active);
-      s.setAttribute('aria-hidden', String(!active));
-      s.querySelectorAll('a, button').forEach((el) => (el.tabIndex = active ? 0 : -1));
+  const wrap = (i) => (i + slides.length) % slides.length;
+  function mark(i) {
+    slides.forEach((s, k) => {
+      const on = k === i;
+      s.setAttribute('aria-hidden', String(!on));
+      s.querySelectorAll('a, button').forEach((el) => (el.tabIndex = on ? 0 : -1));
     });
-    current.textContent = index + 1;
+    current.textContent = i + 1;
   }
+  const setX = (el, x, animate) => {
+    el.classList.toggle('is-moving', !!animate);
+    el.style.visibility = 'visible';
+    el.style.transform = `translateX(${x})`;
+  };
+  // 이동 끝: 나간 슬라이드는 숨기고 들어온 슬라이드에 문구 등장
+  function settle(from, to) {
+    from.classList.remove('is-active', 'is-shown', 'is-moving', 'is-leaving');
+    from.style.removeProperty('transform'); from.style.removeProperty('visibility');
+    to.classList.remove('is-moving');
+    to.style.removeProperty('transform'); to.style.removeProperty('visibility');
+    to.classList.add('is-active', 'is-shown');
+    busy = false;
+  }
+
+  /* to 로 이동. dir: +1 = 다음(오른쪽에서 들어옴), -1 = 이전. dragged: 손가락으로 끌던 위치(px)에서 이어서 */
+  function go(to, dir, dragged = null) {
+    to = wrap(to);
+    if (busy || to === index) return;
+    const from = slides[index];
+    const next = slides[to];
+    index = to;
+    mark(to);
+    if (reduceMq.matches) { // 움직임 줄이기: 짧은 fade (main.css)
+      from.classList.remove('is-active', 'is-shown');
+      next.classList.add('is-active', 'is-shown');
+      return;
+    }
+    busy = true;
+    if (dragged === null) {
+      // 들어올 슬라이드를 화면 밖(오른쪽 또는 왼쪽)에 먼저 놓는다
+      next.classList.add('is-entering');
+      setX(next, `${dir * 100}%`, false);
+      void next.offsetWidth;
+    }
+    from.classList.remove('is-shown');
+    from.classList.add('is-leaving');
+    setX(from, `${-dir * 100}%`, true);
+    setX(next, '0px', true);
+    requestAnimationFrame(() => requestAnimationFrame(() => next.classList.remove('is-entering'))); // 사진 1.06 → 1
+    setTimeout(() => settle(from, next), MOVE);
+  }
+
   function play() {
     stop();
-    timer = setInterval(() => go(index + 1), DELAY);
+    timer = setInterval(() => { if (!hoverPaused) go(index + 1, 1); }, DELAY);
     playBtn.setAttribute('aria-pressed', 'true');
     pauseBtn.setAttribute('aria-pressed', 'false');
   }
@@ -139,24 +192,82 @@ function initHero() {
     playBtn.setAttribute('aria-pressed', 'false');
     pauseBtn.setAttribute('aria-pressed', 'true');
   }
-  const restart = () => { if (timer) play(); };
+  const restart = () => { if (timer) play(); }; // 손으로 넘기면 6초를 처음부터 다시
 
-  slider.querySelector('[data-hero-prev]').addEventListener('click', () => { go(index - 1); restart(); });
-  slider.querySelector('[data-hero-next]').addEventListener('click', () => { go(index + 1); restart(); });
+  slider.querySelector('[data-hero-prev]').addEventListener('click', () => { if (busy) return; go(index - 1, -1); restart(); });
+  slider.querySelector('[data-hero-next]').addEventListener('click', () => { if (busy) return; go(index + 1, 1); restart(); });
   playBtn.addEventListener('click', play);
   pauseBtn.addEventListener('click', stop); // 첫 진입 중에 누르면 애니메이션이 끝나도 자동재생하지 않는다 (아래 aria-pressed 확인)
 
-  // 모바일 스와이프
-  let startX = null;
-  slider.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; }, { passive: true });
-  slider.addEventListener('touchend', (e) => {
-    if (startX === null) return;
-    const dx = e.changedTouches[0].clientX - startX;
-    if (Math.abs(dx) > 50) { go(index + (dx < 0 ? 1 : -1)); restart(); }
-    startX = null;
+  // 키보드 ←→ (히어로 안에 포커스가 있을 때만)
+  slider.addEventListener('keydown', (e) => {
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    e.preventDefault();
+    if (busy) return;
+    const d = e.key === 'ArrowRight' ? 1 : -1;
+    go(index + d, d);
+    restart();
   });
 
-  go(0);
+  // 마우스가 히어로 위에 있는 동안 자동재생 잠시 멈춤(재생/정지 상태는 그대로)
+  slider.addEventListener('mouseenter', () => { hoverPaused = true; });
+  slider.addEventListener('mouseleave', () => { hoverPaused = false; restart(); });
+
+  // 터치 스와이프: 손가락을 따라 지금·옆 슬라이드가 움직이고, 놓을 때 20% 이상 끌었거나 빠르게 밀었으면 넘김
+  let drag = null;
+  slider.addEventListener('pointerdown', (e) => {
+    if (e.pointerType === 'mouse' || busy || reduceMq.matches) return;
+    drag = { x: e.clientX, y: e.clientY, t: performance.now(), dx: 0, dir: 0, id: e.pointerId, moved: false };
+  });
+  slider.addEventListener('pointermove', (e) => {
+    if (!drag || e.pointerId !== drag.id) return;
+    const dx = e.clientX - drag.x;
+    const dy = e.clientY - drag.y;
+    if (!drag.moved) {
+      if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+      if (Math.abs(dy) > Math.abs(dx)) { drag = null; return; } // 세로로 움직이면 페이지 스크롤에 맡김
+      drag.moved = true;
+      try { slider.setPointerCapture(e.pointerId); } catch (err) { /* 캡처 불가(합성 이벤트 등) — 그대로 진행 */ }
+    }
+    const dir = dx < 0 ? 1 : -1; // 왼쪽으로 끌면 다음
+    if (dir !== drag.dir) { // 방향이 바뀌면 반대쪽 옆 슬라이드로 교체
+      if (drag.dir) { const old = slides[wrap(index + drag.dir)]; old.style.removeProperty('transform'); old.style.removeProperty('visibility'); }
+      drag.dir = dir;
+    }
+    drag.dx = dx;
+    const w = slider.clientWidth;
+    setX(slides[index], `${dx}px`, false);
+    setX(slides[wrap(index + dir)], `${dir * w + dx}px`, false);
+  });
+  const endDrag = (e) => {
+    if (!drag || e.pointerId !== drag.id) return;
+    const d = drag;
+    drag = null;
+    if (!d.moved || !d.dir) return;
+    const w = slider.clientWidth;
+    const fast = Math.abs(d.dx) / (performance.now() - d.t) > 0.5;
+    const near = slides[wrap(index + d.dir)];
+    if (e.type !== 'pointercancel' && (Math.abs(d.dx) > w * 0.2 || fast)) {
+      go(index + d.dir, d.dir, d.dx);
+      restart();
+    } else { // 제자리로
+      busy = true;
+      setX(slides[index], '0px', true);
+      setX(near, `${d.dir * 100}%`, true);
+      setTimeout(() => {
+        slides[index].classList.remove('is-moving'); slides[index].style.removeProperty('transform'); slides[index].style.removeProperty('visibility');
+        near.classList.remove('is-moving'); near.style.removeProperty('transform'); near.style.removeProperty('visibility');
+        busy = false;
+      }, MOVE);
+    }
+    // 끌고 난 뒤 손가락을 뗀 자리의 링크(버튼)가 눌리지 않게
+    slider.addEventListener('click', (ev) => { ev.preventDefault(); ev.stopPropagation(); }, { capture: true, once: true });
+  };
+  slider.addEventListener('pointerup', endDrag);
+  slider.addEventListener('pointercancel', endDrag);
+
+  slides[0].classList.add('is-active', 'is-shown');
+  mark(0);
   // 첫 진입 애니메이션이 끝났음을 알린다 → onboarding.js 가 이 신호 뒤에 이용 안내를 시작
   const introDone = () => {
     window.__heroIntroDone = true;

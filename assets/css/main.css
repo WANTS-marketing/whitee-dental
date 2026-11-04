@@ -13,13 +13,18 @@ html::-webkit-scrollbar { display: none; }
 .hero__inner.container { position: relative; width: 100%; max-width: none; padding: 0; }
 /* translateZ·backface-visibility: 펼침(clip-path)·확대 애니메이션 중 서브픽셀 흔들림 방지 */
 .hero__slider { position: relative; height: max(640px, 100vh); overflow: hidden; color: #fff; transform: translateZ(0); backface-visibility: hidden; }
-.hero__slide { position: absolute; inset: 0; opacity: 0; visibility: hidden; transition: opacity 0.8s var(--ease), visibility 0.8s; }
-.hero__slide.is-active { opacity: 1; visibility: visible; }
+/* 가로 슬라이드 전환 (main.js initHero): 보이는 슬라이드 = .is-active, 이동 중인 두 장 = .is-moving(+ JS 가 translateX 지정)
+   숨은 슬라이드는 오른쪽 밖에 대기. 터치로 끌 때는 transition 없이 손가락을 따라간다 */
+.hero__slider { touch-action: pan-y; } /* 세로 스크롤은 브라우저, 가로 끌기는 슬라이더 */
+.hero__slide { position: absolute; inset: 0; visibility: hidden; transform: translateX(100%); }
+.hero__slide.is-active { visibility: visible; transform: none; }
+.hero__slide.is-moving { transition: transform 0.9s cubic-bezier(0.65, 0, 0.35, 1); }
 .hero__media { position: absolute; inset: 0; background: linear-gradient(120deg, #3a3330, #151515); } /* 사진이 없을 때 */
 .hero__media img { width: 100%; height: 100%; object-fit: cover; }
 .hero__media::before { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(90deg, rgba(10, 10, 10, 0.85) 0%, rgba(10, 10, 10, 0.65) 50%, rgba(10, 10, 10, 0.5) 100%); }
-.hero__slide.is-active .hero__media img { animation: hero-zoom 7s linear forwards; }
-@keyframes hero-zoom { from { transform: scale(1.06); } to { transform: scale(1); } }
+/* 들어오는 사진: scale 1.06 → 1 (전환과 함께 1.2s) */
+.hero__media img { transform: scale(1); transition: transform 1.2s cubic-bezier(0.65, 0, 0.35, 1); }
+.hero__slide.is-entering .hero__media img { transform: scale(1.06); transition: none; }
 /* 세로 위치: 헤더에 가려지지 않는 부분(헤더 아래 ~ 히어로 끝)의 가운데 */
 .hero__content { position: absolute; z-index: 2; top: calc(50% + var(--header-h) / 2); left: var(--hero-x); right: calc(var(--hero-x) + 160px); transform: translateY(-50%); } /* 오른쪽 160px: 플로팅 퀵메뉴 자리 */
 .hero__label { font-size: var(--fs-h4); font-weight: 400; opacity: 0.95; }
@@ -32,11 +37,23 @@ html::-webkit-scrollbar { display: none; }
 .hero__desc { margin-top: 20px; font-size: var(--fs-lg); line-height: 1.55; opacity: 0.9; }
 .hero__strong { margin-top: 24px; font-size: var(--fs-lg); font-weight: 700; }
 .hero__btn { margin-top: 32px; height: 44px; padding: 0 28px; font-size: var(--fs-md); }
-.hero__slide.is-active .hero__content > * { animation: hero-up 0.8s var(--ease) both; }
-.hero__slide.is-active .hero__content > :nth-child(2) { animation-delay: 0.1s; }
-.hero__slide.is-active .hero__content > :nth-child(3) { animation-delay: 0.2s; }
-.hero__slide.is-active .hero__content > :nth-child(n+4) { animation-delay: 0.3s; }
+/* 문구: 이미지가 자리 잡은 뒤(.is-shown) 라벨 → 타이틀 → 서브 → 버튼 순서로 fade-up(0.1s 간격), 나가는 슬라이드(.is-leaving)는 0.3s fade-out
+   문구는 이미지와 함께 밀려가지 않게 보이지 않는 상태에서만 움직인다 */
+.hero__content > * { opacity: 0; }
+.hero__slide.is-shown .hero__content > * { animation: hero-up 0.8s var(--ease) both; }
+.hero__slide.is-shown .hero__content > :nth-child(2) { animation-delay: 0.1s; }
+.hero__slide.is-shown .hero__content > :nth-child(3) { animation-delay: 0.2s; }
+.hero__slide.is-shown .hero__content > :nth-child(n+4) { animation-delay: 0.3s; }
+.hero__slide.is-leaving .hero__content > * { animation: hero-out 0.3s ease both; }
 @keyframes hero-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
+@keyframes hero-out { from { opacity: 1; } to { opacity: 0; } }
+/* 움직임 줄이기: 슬라이드 이동 없이 짧은 fade (전역 0.01ms 규칙보다 우선) */
+@media (prefers-reduced-motion: reduce) {
+  .hero__slide, .hero__slide.is-active { transform: none !important; }
+  .hero__slide { opacity: 0; transition: opacity 0.3s ease, visibility 0s 0.3s !important; }
+  .hero__slide.is-active { opacity: 1; transition: opacity 0.3s ease !important; }
+  .hero__content > * { opacity: 1; }
+}
 
 .hero__controls { position: absolute; z-index: 3; right: var(--hero-x); bottom: 48px; display: flex; align-items: center; gap: 6px; }
 .hero__ctrl { display: grid; place-items: center; width: 36px; height: 36px; color: #fff; opacity: 0.85; }
@@ -595,10 +612,10 @@ html[data-fs="xl"] .doc-modal { width: min(680px, 100% - 48px); }
   /* 펼치는 동안 다른 슬라이드가 비치지 않게 현재 슬라이드만 그린다 */
   .is-intro .hero__slide:not(.is-active) { display: none; }
   .is-intro .hero__slide.is-active .hero__media { animation: intro-zoom 1s cubic-bezier(0.65, 0, 0.35, 1) both; }
-  .is-intro .hero__slide.is-active .hero__content > * { animation-delay: 1.3s; }
-  .is-intro .hero__slide.is-active .hero__content > :nth-child(2) { animation-delay: 1.4s; }
-  .is-intro .hero__slide.is-active .hero__content > :nth-child(3) { animation-delay: 1.5s; }
-  .is-intro .hero__slide.is-active .hero__content > :nth-child(n+4) { animation-delay: 1.6s; }
+  .is-intro .hero__slide.is-shown .hero__content > * { animation-delay: 1.3s; }
+  .is-intro .hero__slide.is-shown .hero__content > :nth-child(2) { animation-delay: 1.4s; }
+  .is-intro .hero__slide.is-shown .hero__content > :nth-child(3) { animation-delay: 1.5s; }
+  .is-intro .hero__slide.is-shown .hero__content > :nth-child(n+4) { animation-delay: 1.6s; }
   .is-intro .hero__controls { animation: intro-fade 0.5s ease 1.3s both; }
   .is-intro .quick--float { animation: intro-fade 0.5s ease 1.6s both; }
   .is-intro .clinic-bar { animation: intro-rise 0.7s var(--ease) 1.9s both; }
