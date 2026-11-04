@@ -21,7 +21,6 @@
 | `doctor-kim-youngwoo.jpg` | 김영우 원장 (창원·마산 겸직) | 600×750 |
 | `doctor-jeong-hoseok.jpg` | 정호석 대표원장 (마산) | 600×750 |
 | `doctor-song-heetae.jpg` | 송희태 원장 (마산) | 600×750 |
-| `doctor-kim-hyeontak.jpg` | 김현탁 원장 (마산) | 600×750 |
 | `doctor-cho-yongjeong.jpg` | 조용정 원장 (마산) | 600×750 |
 | `doctor-cho-hyejin.jpg` | 조혜진 원장 (마산) | 600×750 |
 | `doctor-{영문 이름}-cut.png` (예: `doctor-lee-eunju-cut.png`, 위 원장별 사진 파일명 + `-cut.png`) | 메인 의료진 섹션 인물 나열용 **배경 제거된 상반신 사진** — 투명 PNG, 세로 1200px 이상, 모든 원장 같은 크롭 기준(머리 위 여백·어깨선 높이 동일). 사진 칸 아래 끝 기준으로 놓여 머리·어깨선이 한 줄로 맞는다. 없으면 인물 실루엣 플레이스홀더가 보인다(임시 인물 사진 쓰지 않음) | 세로 1200px 이상 |
