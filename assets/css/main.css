@@ -539,32 +539,26 @@ html.is-modal-open { overflow: hidden; }
   }
 }
 /* 폭이 모자랄 때 2단계: 퀵바를 2줄로 — 윗줄 [빠른 진료 안내 | FAQ], 아랫줄 진료 카드 5개
-   기준 = 1단계로 줄여도 카드 글자(4글자 낱말)가 한 줄에 안 들어가는 화면 폭 → 보통·크게 1139px 이하, 아주 크게 1199px 이하
-   첫 화면 높이를 지키려고 2줄일 때는 낮게: 윗줄은 [타이틀 + 버튼] 한 줄(FAQ 설명 문구 생략), 카드는 [아이콘 + 글자] 가로 배치
-   (두 블록은 같은 내용 — 고칠 때 함께 고칠 것) */
-@media (min-width: 1025px) and (max-width: 1139px) and (min-height: 700px) {
-  html:not([data-fs="xl"]) .screen-home .clinic-bar__inner { grid-template-columns: minmax(0, 1fr) max-content; row-gap: 12px; padding-top: 16px; padding-bottom: 16px; }
-  html:not([data-fs="xl"]) .screen-home .clinic-bar__head { grid-area: 1 / 1; margin-right: 0; display: flex; flex-wrap: wrap; align-items: center; column-gap: 20px; }
-  html:not([data-fs="xl"]) .screen-home .clinic-bar__head .sec-label { flex-basis: 100%; }
-  html:not([data-fs="xl"]) .screen-home .clinic-bar__title { margin-bottom: 0; }
-  html:not([data-fs="xl"]) .screen-home .clinic-bar__faq { grid-area: 1 / 2; display: flex; align-items: center; align-self: end; gap: 20px; }
-  html:not([data-fs="xl"]) .screen-home .clinic-bar__faq .clinic-bar__title { margin: 0; }
-  html:not([data-fs="xl"]) .screen-home .clinic-bar__faq-desc { display: none; }
-  html:not([data-fs="xl"]) .screen-home .clinic-bar__list { grid-area: 2 / 1 / 3 / 3; }
-  html:not([data-fs="xl"]) .screen-home .clinic-bar__card { flex-direction: row; gap: 10px; min-height: 60px; padding: 6px 10px; line-height: 1.3; }
-  html:not([data-fs="xl"]) .screen-home .clinic-bar__card img { --ic-k: 0.5; }
-}
-@media (min-width: 1025px) and (max-width: 1199px) and (min-height: 700px) {
-  html[data-fs="xl"] .screen-home .clinic-bar__inner { grid-template-columns: minmax(0, 1fr) max-content; row-gap: 12px; padding-top: 16px; padding-bottom: 16px; }
-  html[data-fs="xl"] .screen-home .clinic-bar__head { grid-area: 1 / 1; margin-right: 0; display: flex; flex-wrap: wrap; align-items: center; column-gap: 20px; }
-  html[data-fs="xl"] .screen-home .clinic-bar__head .sec-label { flex-basis: 100%; }
-  html[data-fs="xl"] .screen-home .clinic-bar__title { margin-bottom: 0; }
-  html[data-fs="xl"] .screen-home .clinic-bar__faq { grid-area: 1 / 2; display: flex; align-items: center; align-self: end; gap: 20px; }
-  html[data-fs="xl"] .screen-home .clinic-bar__faq .clinic-bar__title { margin: 0; }
-  html[data-fs="xl"] .screen-home .clinic-bar__faq-desc { display: none; }
-  html[data-fs="xl"] .screen-home .clinic-bar__list { grid-area: 2 / 1 / 3 / 3; }
-  html[data-fs="xl"] .screen-home .clinic-bar__card { flex-direction: row; gap: 10px; min-height: 60px; padding: 6px 10px; line-height: 1.3; }
-  html[data-fs="xl"] .screen-home .clinic-bar__card img { --ic-k: 0.5; }
+   기준 = 퀵바 칸(.clinic-bar > .container) 실제 너비. 1단계로 줄여도 카드 글자(4글자 낱말)가 한 줄에 안 들어가는 너비에서 전환
+   - 필요한 너비는 글자 크기에 비례하는 부분(타이틀·FAQ·카드 글자 = 30rem)과 고정 부분(여백·아이콘 = 495px)의 합
+     → container query 안의 rem 은 html 글자 크기(보통 16 / 크게 18 / 아주 크게 20px)를 따르므로 글자 단계별 분기가 필요 없다
+   - 최소 1035px: 보통 글자도 크게와 같은 너비에서 2줄 (보통은 계산상 975px까지 들어가지만 카드가 너무 좁아져서)
+   - 1025~1359px(좌우 여백 52px) 기준 화면 폭으로: 보통·크게 1139px · 아주 크게 1199px 이하에서 2줄
+   첫 화면 높이를 지키려고 2줄일 때는 낮게: 윗줄은 [타이틀 + 버튼] 한 줄(FAQ 설명 문구 생략), 카드는 [아이콘 + 글자] 가로 배치 */
+@media (min-width: 1025px) and (min-height: 700px) {
+  .screen-home .clinic-bar > .container { container: qb / inline-size; }
+  @container qb (max-width: max(1035px, 30rem + 495px)) {
+    .screen-home .clinic-bar__inner { grid-template-columns: minmax(0, 1fr) max-content; row-gap: 12px; padding-top: 16px; padding-bottom: 16px; }
+    .screen-home .clinic-bar__head { grid-area: 1 / 1; margin-right: 0; display: flex; flex-wrap: wrap; align-items: center; column-gap: 20px; }
+    .screen-home .clinic-bar__head .sec-label { flex-basis: 100%; }
+    .screen-home .clinic-bar__title { margin-bottom: 0; }
+    .screen-home .clinic-bar__faq { grid-area: 1 / 2; display: flex; align-items: center; align-self: end; gap: 20px; }
+    .screen-home .clinic-bar__faq .clinic-bar__title { margin: 0; }
+    .screen-home .clinic-bar__faq-desc { display: none; }
+    .screen-home .clinic-bar__list { grid-area: 2 / 1 / 3 / 3; }
+    .screen-home .clinic-bar__card { flex-direction: row; gap: 10px; min-height: 60px; padding: 6px 10px; line-height: 1.3; }
+    .screen-home .clinic-bar__card img { --ic-k: 0.5; }
+  }
 }
 
 /* 좁은 데스크톱(1360px 미만) 좌우 안쪽 여백 52px (예전 왼쪽 섹션 표시기 자리 — 표시기는 삭제했지만 레이아웃이 바뀌지 않게 여백은 유지) */

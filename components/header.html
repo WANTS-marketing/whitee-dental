@@ -46,16 +46,21 @@
       </ul>
     </nav>
 
+    <!-- 유틸: 묶음 A [가 가 가 | 이용 안내] · 묶음 B [로그인 | 회원가입] (두 묶음 사이는 간격만, 구분선 없음) -->
     <div class="util">
-      <div class="fs-ctrl" role="group" aria-label="글자 크기">
-        <button type="button" class="fs-ctrl__btn" data-fs-set="md" aria-label="글자 보통" aria-pressed="true">가</button>
-        <button type="button" class="fs-ctrl__btn" data-fs-set="lg" aria-label="글자 크게" aria-pressed="false">가</button>
-        <button type="button" class="fs-ctrl__btn" data-fs-set="xl" aria-label="글자 아주 크게" aria-pressed="false">가</button>
+      <div class="util__group util__group--a">
+        <div class="fs-ctrl" role="group" aria-label="글자 크기">
+          <button type="button" class="fs-ctrl__btn" data-fs-set="md" aria-label="글자 보통" aria-pressed="true">가</button>
+          <button type="button" class="fs-ctrl__btn" data-fs-set="lg" aria-label="글자 크게" aria-pressed="false">가</button>
+          <button type="button" class="fs-ctrl__btn" data-fs-set="xl" aria-label="글자 아주 크게" aria-pressed="false">가</button>
+        </div>
+        <!-- 이용 안내 다시 보기 — 메인(PC)에서만 보임, onboarding.js -->
+        <a class="util__guide" href="{{ROOT}}/index.html#guide" data-guide-open title="이용 안내 다시 보기"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="10" cy="10" r="8.2"/><path d="M7.7 7.6a2.4 2.4 0 1 1 3.3 2.2c-.6.3-1 .8-1 1.5v.4"/><circle cx="10" cy="14.4" r=".4" fill="currentColor"/></svg><span class="util__guide-text">이용 안내</span></a>
       </div>
-      <!-- 이용 안내 다시 보기 — 메인(PC)에서만 보임, onboarding.js -->
-      <a class="util__guide" href="{{ROOT}}/index.html#guide" data-guide-open title="이용 안내 다시 보기"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="10" cy="10" r="8.2"/><path d="M7.7 7.6a2.4 2.4 0 1 1 3.3 2.2c-.6.3-1 .8-1 1.5v.4"/><circle cx="10" cy="14.4" r=".4" fill="currentColor"/></svg><span class="util__guide-text">이용 안내</span></a>
-      <a href="{{ROOT}}/member/login.html">로그인</a>
-      <a href="{{ROOT}}/member/join.html">회원가입</a>
+      <div class="util__group util__group--b">
+        <a href="{{ROOT}}/member/login.html">로그인</a>
+        <a href="{{ROOT}}/member/join.html">회원가입</a>
+      </div>
     </div>
 
     <button class="hamburger" type="button" aria-label="메뉴 열기" aria-controls="mnav" aria-expanded="false" data-mnav-open>
