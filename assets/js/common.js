@@ -153,8 +153,17 @@
     let timer = null;
     // 열고 닫을 때는 전환 효과 없이 바로 (헤더 배경·글자색 0.3s 전환은 스크롤할 때만) — 다음 화면 그리기 뒤에 .is-instant 해제
     const instant = () => { header.classList.add('is-instant'); requestAnimationFrame(() => requestAnimationFrame(() => header.classList.remove('is-instant'))); };
-    const open = () => { clearTimeout(timer); if (!header.classList.contains('is-mega')) instant(); header.classList.add('is-mega'); };
-    const close = () => { clearTimeout(timer); if (header.classList.contains('is-mega')) instant(); header.classList.remove('is-mega'); };
+    const open = () => { clearTimeout(timer); clearTimeout(closingTimer); header.classList.remove('is-closing'); if (!header.classList.contains('is-mega')) instant(); header.classList.add('is-mega'); };
+    // 닫힐 때는 하위 목록이 0.3초 동안 걷히므로, 그동안 메인 투명 헤더가 먼저 투명해지지 않게 .is-closing 으로 흰 헤더 유지
+    let closingTimer = null;
+    const close = () => {
+      clearTimeout(timer);
+      if (!header.classList.contains('is-mega')) return;
+      header.classList.remove('is-mega');
+      header.classList.add('is-closing');
+      clearTimeout(closingTimer);
+      closingTimer = setTimeout(() => { instant(); header.classList.remove('is-closing'); }, 300);
+    };
     const closeLater = () => { clearTimeout(timer); timer = setTimeout(close, CLOSE_DELAY); };
 
     let escaping = false; // ESC 로 닫으며 포커스를 옮길 때 focusin 으로 다시 열리지 않게

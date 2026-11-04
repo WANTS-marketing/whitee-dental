@@ -58,12 +58,12 @@ html::-webkit-scrollbar { display: none; }
    40px 이상 스크롤(.is-scrolled), 메가메뉴 열림(.is-mega), 모바일 메뉴 열림(.is-mnav) — common.js */
 .header { transition: background-color 0.3s, box-shadow 0.3s, color 0.3s; }
 .header .logo__img, .header .gnb__link, .header .gnb__link svg, .header .util a, .header .fs-ctrl__btn, .header .hamburger { transition: color 0.3s, filter 0.3s; }
-.header:not(.is-scrolled):not(.is-mega):not(.is-mnav):not(.is-hover):not(:has(:focus-visible)) { background-color: transparent; box-shadow: none; color: #fff; }
-.header:not(.is-scrolled):not(.is-mega):not(.is-mnav):not(.is-hover):not(:has(:focus-visible)) .logo__img { filter: brightness(0) invert(1); }
-.header:not(.is-scrolled):not(.is-mega):not(.is-mnav):not(.is-hover):not(:has(:focus-visible)) :is(.gnb__link, .gnb__link svg, .util a, .hamburger) { color: #fff; }
-.header:not(.is-scrolled):not(.is-mega):not(.is-mnav):not(.is-hover):not(:has(:focus-visible)) .fs-ctrl__btn:not([aria-pressed="true"]) { color: #fff; } /* 선택된 '가'는 포인트 컬러 그대로 */
-.header:not(.is-scrolled):not(.is-mega):not(.is-mnav):not(.is-hover):not(:has(:focus-visible)) :is(.util a, .fs-ctrl__btn:not([aria-pressed="true"])):hover { color: var(--color-point); }
-.header:not(.is-scrolled):not(.is-mega):not(.is-mnav):not(.is-hover):not(:has(:focus-visible)) :is(.util__group--b a + a, .util__guide)::before { background: rgba(255, 255, 255, 0.55); }
+.header:not(.is-scrolled):not(.is-mega):not(.is-closing):not(.is-mnav):not(.is-hover):not(:has(:focus-visible)) { background-color: transparent; box-shadow: none; color: #fff; }
+.header:not(.is-scrolled):not(.is-mega):not(.is-closing):not(.is-mnav):not(.is-hover):not(:has(:focus-visible)) .logo__img { filter: brightness(0) invert(1); }
+.header:not(.is-scrolled):not(.is-mega):not(.is-closing):not(.is-mnav):not(.is-hover):not(:has(:focus-visible)) :is(.gnb__link, .gnb__link svg, .util a, .hamburger) { color: #fff; }
+.header:not(.is-scrolled):not(.is-mega):not(.is-closing):not(.is-mnav):not(.is-hover):not(:has(:focus-visible)) .fs-ctrl__btn:not([aria-pressed="true"]) { color: #fff; } /* 선택된 '가'는 포인트 컬러 그대로 */
+.header:not(.is-scrolled):not(.is-mega):not(.is-closing):not(.is-mnav):not(.is-hover):not(:has(:focus-visible)) :is(.util a, .fs-ctrl__btn:not([aria-pressed="true"])):hover { color: var(--color-point); }
+.header:not(.is-scrolled):not(.is-mega):not(.is-closing):not(.is-mnav):not(.is-hover):not(:has(:focus-visible)) :is(.util__group--b a + a, .util__guide)::before { background: rgba(255, 255, 255, 0.55); }
 
 /* ---------- ② 빠른 진료 안내 ---------- */
 .clinic-bar { padding: 64px 0 0; }
@@ -106,7 +106,7 @@ html::-webkit-scrollbar { display: none; }
 @media (min-width: 1025px) {
   .philosophy { container-type: inline-size; padding-bottom: 22px; }
   .philosophy .philosophy__inner.container { /* 파일 뒤쪽 .screen-home .container(1025~1359px 52px 여백)보다 우선 */
-    --ph-side: calc((100cqw - min(100cqw, var(--container) + var(--gutter) * 2)) / 2 + var(--page-pad, var(--gutter)) + var(--ph-qb, 0px));
+    --ph-side: max(var(--quick-edge, 0px), calc((100cqw - min(100cqw, var(--container) + var(--gutter) * 2)) / 2 + var(--page-pad, var(--gutter)) + var(--ph-qb, 0px))); /* 최소 = 퀵메뉴 자리(common.css) */
     max-width: none;
     padding-left: var(--ph-side);
     padding-right: var(--ph-side);
@@ -175,13 +175,10 @@ html::-webkit-scrollbar { display: none; }
 .doctors__arrow svg { width: 20px; height: 20px; }
 .doctors__arrow:disabled { opacity: 0.35; pointer-events: none; }
 /* 의료진 섹션만 컨테이너 최대 폭 해제. 머리말(제목·탭·‹ ›)과 카드 줄이 같은 끝선
-   좌우 여백 = 오른쪽 플로팅 퀵메뉴에 카드가 가리지 않는 폭: 기본형(1561px 이상, 버튼 폭 최대 약 100px) 120px / 슬림형 76px
+   좌우 여백 = 오른쪽 플로팅 퀵메뉴에 카드가 가리지 않는 폭 --quick-edge (common.css: 1561px 이상 148 / 1441~1560 96 / 1440 이하 80px)
    위·아래 섹션(진료 철학·지점, 진료안내)은 기존 컨테이너 폭 그대로 */
 @media (min-width: 1025px) {
-  .doctors .doctors__inner.container { max-width: none; padding-left: 120px; padding-right: 120px; }
-}
-@media (min-width: 1025px) and (max-width: 1560px) {
-  .doctors .doctors__inner.container { padding-left: 76px; padding-right: 76px; }
+  .doctors .doctors__inner.container { max-width: none; padding-left: var(--quick-edge); padding-right: var(--quick-edge); }
 }
 /* 사진 카드 줄 (main.js initDoctors) — 가로 스크롤 + 스냅, 머리말 ‹ › 는 한 장씩
    한 화면 장수 --doc-per: 데스크톱 5 / 1280px 이하 4 / 1024px 이하 3 / 768px 이하 2 / 560px 이하 1.2(가로 스와이프)
@@ -534,37 +531,55 @@ html.is-modal-open { overflow: hidden; }
      퀵바 카드 전체를 히어로 안쪽 하단에 올림: 카드 아래 끝 = 화면 아래 끝에서 --qb-gap(40px, 낮은 화면 24px) 위
      --qb-h = 퀵바 카드 실제 높이(main.js initQuickbarOverlap 이 넣음, 2줄 모드·글자 크기에 따라 바뀜)
      --qb-top = 히어로 아래에서 퀵바 윗선까지. 문구는 '헤더 아래 ~ 퀵바 위'의 세로 가운데, 조작 버튼은 퀵바 바로 위 오른쪽 */
-  .screen-home__first { --qb-gap: 40px; --qb-top: calc(var(--qb-h, 180px) + var(--qb-gap)); }
-  .screen-home .hero__content { top: calc((100% - var(--qb-top) - var(--ctrl-space) + var(--header-h)) / 2); }
-  .screen-home .hero { --ctrl-space: 52px; } /* 조작 버튼 줄(36px) + 퀵바와의 간격(16px) — 문구가 이 줄과 겹치지 않게 */
-  .screen-home .hero__controls { bottom: calc(var(--qb-top) + 16px); }
-  .screen-home .clinic-bar { position: relative; z-index: 5; margin-top: calc(var(--qb-top) * -1); padding: 0 0 var(--qb-gap); }
+  .screen-home__first { --qb-gap: 40px; --qb-top: calc(var(--qb-h, 150px) + var(--qb-gap)); }
+  /* 문구 세로 위치: main.js layoutHomeHero 가 --hero-center 로 넣는다 ('헤더 아래 ~ 퀵바·재생바 위' 공간의 57.5% 지점, 아래와 최소 48px)
+     JS 가 없을 때는 같은 공간의 가운데 */
+  .screen-home .hero__content { top: var(--hero-center, calc((100% - var(--qb-top) + var(--header-h)) / 2)); }
+  /* 재생바(‹ 1/4 › ▶ ❚❚): 왼쪽 아래 = 문구 시작선, 아래 끝 = 퀵바 아래 끝과 같은 줄
+     퀵바와 가로로 24px 이상 떨어지지 않으면(좁은 화면·2줄 모드·큰 글자) 퀵바 위 왼쪽으로 (.is-ctrl-up — main.js) */
+  .screen-home .hero__controls { left: var(--hero-x); right: auto; bottom: var(--qb-gap); }
+  .screen-home__first.is-ctrl-up .hero__controls { bottom: calc(var(--qb-top) + 16px); }
+  /* 퀵바: 오른쪽 아래, 오른쪽 끝 = 헤더 유틸(회원가입) 끝선 = 화면 끝에서 max(40px, (화면 - 1600px) / 2) */
+  .screen-home .clinic-bar { position: relative; z-index: 5; margin-top: calc(var(--qb-top) * -1); padding: 0 0 var(--qb-gap); container-type: inline-size; pointer-events: none; } /* 빈 왼쪽 영역은 아래 재생바가 클릭되게 */
+  .screen-home .clinic-bar > .container {
+    width: var(--qb-w); max-width: none; margin: 0 max(40px, (100cqw - 1600px) / 2) 0 auto; padding: 0; pointer-events: auto;
+    /* 너비 = 예전 가운데 정렬 퀵바 너비(컨테이너 - 좌우 margin 48px)의 80% */
+    --qb-w: calc((min(100cqw, var(--container) + var(--gutter) * 2) - var(--gutter) * 2 - 48px) * 0.8);
+  }
   .screen-home .philosophy { padding-top: 72px; } /* 첫 화면(히어로) 아래 다음 묶음 */
-  .screen-home .clinic-bar__inner { margin: 0 24px; border-bottom: 0; border-radius: var(--radius-xl); background: #fff; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12); }
-  .screen-home .clinic-bar__card { aspect-ratio: auto; height: 100%; min-height: clamp(108px, 15vh, 140px); } /* min-height: 글자가 두 줄이 돼도 카드 밖으로 넘치지 않게, height 100%: 한 장만 두 줄일 때도 다섯 장 높이를 같게 */
+  /* 퀵바 크기 80% (transform 없이 값 자체를 0.8배). 카드 라벨·FAQ 문구·버튼 글자는 최소 14px */
+  .screen-home .clinic-bar__inner { margin: 0; border-bottom: 0; border-radius: var(--radius-xl); background: #fff; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12); }
+  .screen-home .clinic-bar__card { aspect-ratio: auto; height: 100%; min-height: clamp(86px, 12vh, 112px); gap: 11px; padding: 6px 5px; border-radius: 10px; } /* min-height: 글자가 두 줄이 돼도 카드 밖으로 넘치지 않게, height 100%: 한 장만 두 줄일 때도 다섯 장 높이를 같게 */
   /* 퀵바 카드 정렬: [빠른 진료 안내 | 아이콘 5개 | FAQ]
      왼쪽: 카드 끝 ↔ 글자 = 글자 끝 ↔ 첫 아이콘 = --qb-pad(40px), 글자 블록 너비 = 타이틀 길이(max-content)
      오른쪽: 아이콘 ↔ 구분선 = 구분선 ↔ FAQ 글자 = FAQ 글자 끝 ↔ 카드 끝 = --qb-r
      두 타이틀(빠른 진료 안내 / 자주 묻는 질문) 폭이 같아서 --qb-r = (40×2 − 구분선 1px) ÷ 3 ≈ 26px 이면
      왼쪽 묶음 폭 = 오른쪽 묶음 폭 → 가운데 아이콘(일반치료) 중심선 = 카드 중심선. 남는 폭은 아이콘 묶음이 가져간다 */
   .screen-home .clinic-bar__inner {
-    --qb-pad: 40px; --qb-r: calc((var(--qb-pad) * 2 - 1px) / 3);
+    --qb-pad: 32px; --qb-r: calc((var(--qb-pad) * 2 - 1px) / 3);
     display: grid; grid-template-columns: max-content minmax(0, 1fr) max-content; align-items: center; column-gap: 0;
-    padding: 24px var(--qb-r) 24px var(--qb-pad);
+    padding: 19px var(--qb-r) 19px var(--qb-pad);
   }
+  .screen-home .clinic-bar__head .sec-label { font-size: max(14px, 0.8rem); }
+  .screen-home .clinic-bar__title { font-size: 1.3rem; margin-bottom: 10px; }
+  .screen-home .clinic-bar .btn--sm { height: 26px; padding: 0 13px; gap: 6px; font-size: max(14px, 0.7rem); }
+  .screen-home .clinic-bar .btn--sm svg { width: 13px; height: 13px; }
+  .screen-home .clinic-bar__list { gap: 10px; }
+  .screen-home .clinic-bar__faq .clinic-bar__title { margin: 3px 0; }
+  .screen-home .clinic-bar__faq-desc { margin-bottom: 10px; font-size: max(14px, 0.7rem); }
   .screen-home .clinic-bar__head { width: auto; margin-right: var(--qb-pad); }
   .screen-home .clinic-bar__list { order: 0; }
   .screen-home .clinic-bar__faq { width: auto; display: grid; justify-items: start; align-self: stretch; align-content: center; margin-left: var(--qb-r); padding-left: var(--qb-r); }
   .screen-home .clinic-bar__faq-desc br { display: inline; }
   .screen-home .clinic-bar__title { white-space: nowrap; }
-  .screen-home .clinic-bar__card { font-size: var(--fs-sm); }
-  .screen-home .clinic-bar__card img { --ic-k: 0.75; }
+  .screen-home .clinic-bar__card { font-size: max(14px, 0.8rem); }
+  .screen-home .clinic-bar__card img { --ic-k: 0.6; }
 
   /* 폭이 모자랄 때 1단계: 목록 칸이 좁으면 카드 안쪽 여백·아이콘·간격을 줄인다 (목록 칸 기준 container query) */
   .screen-home .clinic-bar__list { container: qb-list / inline-size; }
-  @container qb-list (max-width: 640px) {
-    .screen-home .clinic-bar__card { gap: 8px; padding-inline: 4px; }
-    .screen-home .clinic-bar__card img { --ic-k: 0.6; }
+  @container qb-list (max-width: 512px) {
+    .screen-home .clinic-bar__card { gap: 6px; padding-inline: 3px; }
+    .screen-home .clinic-bar__card img { --ic-k: 0.48; }
   }
 }
 @media (min-width: 1025px) and (min-height: 700px) and (max-height: 800px) {
@@ -579,17 +594,18 @@ html.is-modal-open { overflow: hidden; }
    첫 화면 높이를 지키려고 2줄일 때는 낮게: 윗줄은 [타이틀 + 버튼] 한 줄(FAQ 설명 문구 생략), 카드는 [아이콘 + 글자] 가로 배치 */
 @media (min-width: 1025px) and (min-height: 700px) {
   .screen-home .clinic-bar > .container { container: qb / inline-size; }
-  @container qb (max-width: max(1035px, 30rem + 495px)) {
-    .screen-home .clinic-bar__inner { grid-template-columns: minmax(0, 1fr) max-content; row-gap: 12px; padding-top: 16px; padding-bottom: 16px; }
-    .screen-home .clinic-bar__head { grid-area: 1 / 1; margin-right: 0; display: flex; flex-wrap: wrap; align-items: center; column-gap: 20px; }
+  /* 퀵바 80% 이후: 기준 = 퀵바 카드 자체 너비(.clinic-bar > .container = 카드 폭), 예전 기준(카드 = 칸 - 48px)의 80% + 최소 글자 14px 여유 */
+  @container qb (max-width: max(800px, 24rem + 370px)) {
+    .screen-home .clinic-bar__inner { grid-template-columns: minmax(0, 1fr) max-content; row-gap: 10px; padding-top: 13px; padding-bottom: 13px; }
+    .screen-home .clinic-bar__head { grid-area: 1 / 1; margin-right: 0; display: flex; flex-wrap: wrap; align-items: center; column-gap: 16px; }
     .screen-home .clinic-bar__head .sec-label { flex-basis: 100%; }
     .screen-home .clinic-bar__title { margin-bottom: 0; }
-    .screen-home .clinic-bar__faq { grid-area: 1 / 2; display: flex; align-items: center; align-self: end; gap: 20px; }
+    .screen-home .clinic-bar__faq { grid-area: 1 / 2; display: flex; align-items: center; align-self: end; gap: 16px; }
     .screen-home .clinic-bar__faq .clinic-bar__title { margin: 0; }
     .screen-home .clinic-bar__faq-desc { display: none; }
     .screen-home .clinic-bar__list { grid-area: 2 / 1 / 3 / 3; }
-    .screen-home .clinic-bar__card { flex-direction: row; gap: 10px; min-height: 60px; padding: 6px 10px; line-height: 1.3; }
-    .screen-home .clinic-bar__card img { --ic-k: 0.5; }
+    .screen-home .clinic-bar__card { flex-direction: row; gap: 8px; min-height: 48px; padding: 5px 8px; line-height: 1.3; }
+    .screen-home .clinic-bar__card img { --ic-k: 0.4; }
   }
 }
 
@@ -602,10 +618,6 @@ html.is-modal-open { overflow: hidden; }
   /* 좁아진 지점 카드에서 전화번호가 두 줄로 꺾이지 않게 */
   .branch-card { padding-left: 24px; padding-right: 24px; }
   .branch-card__tel { font-size: clamp(1.5rem, 2.2vw, 2.25rem); }
-}
-/* 슬림 퀵메뉴 구간(1025~1560px): 히어로 조작 버튼이 퀵메뉴 아래쪽과 겹치지 않게 오른쪽 끝을 76px 안으로 */
-@media (min-width: 1025px) and (max-width: 1560px) {
-  .hero__controls { right: max(var(--hero-x), 76px); }
 }
 /* ---------- 히어로 시작선 (데스크톱) ----------
    헤더 칸(common.css .header__inner: 최대 1600px, 좌우 최소 40px)과 같은 선 → 문구 왼쪽 = 로고 시작선, 조작 버튼 오른쪽 = 헤더 오른쪽 끝선 */
@@ -651,6 +663,10 @@ html.is-modal-open { overflow: hidden; }
   .screen-home .hero__desc { margin-top: 14px; }
   .screen-home .hero__btn { margin-top: 22px; }
   html:is([data-fs="lg"], [data-fs="xl"]) .screen-home .hero__desc { display: none; }
+}
+/* 그래도 문구 아래 48px 이 안 남으면(좁은 화면에서 재생바가 퀵바 위로 올라간 경우 등) 서브 문구 숨김 — main.js 가 판단 */
+@media (min-width: 1025px) and (min-height: 700px) {
+  .screen-home__first.is-hero-tight .hero__desc { display: none; }
 }
 @keyframes intro-open { from { clip-path: inset(30% 35% round 24px); } to { clip-path: inset(0 round 0); } }
 @keyframes intro-zoom { from { transform: scale(1.15); } to { transform: scale(1); } }

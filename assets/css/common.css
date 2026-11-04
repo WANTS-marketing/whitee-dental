@@ -135,7 +135,8 @@ html[data-fs="xl"] .gnb { --gnb-gap: clamp(20px, 12vw - 140px, 96px); }
   position: absolute; z-index: 2; top: 100%; left: calc(var(--gnb-gap) / -2); right: calc(var(--gnb-gap) / -2);
   height: var(--mega-h); padding: 28px 0; color: var(--color-text); text-align: center;
   border-top: 2px solid transparent;
-  visibility: hidden; clip-path: inset(0 0 100% 0); /* 닫힌 상태: 아래쪽이 모두 가려짐 — 열 때 위에서 아래로 드러난다 */
+  visibility: hidden; clip-path: inset(0 0 100% 0); /* 닫힌 상태: 아래쪽이 모두 가려짐 — 열 때 위에서 아래로 드러나고, 닫을 때 아래에서 위로 걷힌다 */
+  transition: clip-path 0.3s var(--ease), visibility 0s 0.3s;
 }
 .gnb__item + .gnb__item .gnb__sub { border-left: 1px solid var(--color-line); }
 /* 열 너비가 하위 메뉴 글자보다 좁을 때(좁은 화면·큰 글자):
@@ -150,19 +151,20 @@ html[data-fs="xl"] .gnb { --gnb-gap: clamp(20px, 12vw - 140px, 96px); }
   position: absolute; z-index: 1; top: 100%; left: 0; right: 0; height: var(--mega-h);
   background: #fff; color: var(--color-text); border-bottom: 1px solid var(--color-line); box-shadow: 0 12px 24px rgba(0, 0, 0, 0.06);
   visibility: hidden; clip-path: inset(0 0 100% 0);
+  transition: clip-path 0.3s var(--ease), visibility 0s 0.3s;
 }
 /* 본문 딤 — 마우스가 딤 위로 가면 헤더를 벗어난 것으로 보고 닫히도록 pointer-events 없음 */
-.mega-dim { position: fixed; z-index: 0; top: var(--header-h); left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.35); opacity: 0; visibility: hidden; pointer-events: none; }
+.mega-dim { position: fixed; z-index: 0; top: var(--header-h); left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.35); opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 0.3s var(--ease), visibility 0s 0.3s; }
 
 /* 펼침 중에는 헤더 아래 구분선·그림자를 없애 패널과 하나로 이어 보이게 한다 */
 .header.is-mega { box-shadow: none; }
-/* 하위 목록: 열 때만 위에서 아래로 서서히(0.35s) 드러나고, 닫을 때는 바로 사라진다(닫힌 상태엔 transition 없음)
+/* 하위 목록: 열 때 위에서 아래로 서서히(0.35s) 드러나고, 닫을 때도 아래에서 위로 서서히(0.3s) 걷힌다
    헤더 배경·글자색(메인 투명 ↔ 흰 헤더)은 효과 없이 바로 — common.js initMegaMenu 의 .is-instant (하위 목록·패널·딤은 제외)
    .mega 는 아래 그림자(24px)가 잘리지 않게 아래쪽을 40px 더 열어 둔다 */
-.header.is-mega .gnb__sub, .header.is-mega .mega { visibility: visible; clip-path: inset(0); transition: clip-path 0.35s var(--ease); }
+.header.is-mega .gnb__sub, .header.is-mega .mega { visibility: visible; clip-path: inset(0); transition: clip-path 0.35s var(--ease), visibility 0s; }
 .header.is-mega .mega { clip-path: inset(0 0 -40px 0); }
 .header.is-instant, .header.is-instant *:not(.gnb__sub, .mega, .mega-dim) { transition: none !important; }
-.header.is-mega .mega-dim { opacity: 1; visibility: visible; transition: opacity 0.35s var(--ease); }
+.header.is-mega .mega-dim { opacity: 1; visibility: visible; transition: opacity 0.35s var(--ease), visibility 0s; }
 /* 지금 hover·focus 중인 대메뉴의 열만 포인트 컬러로 강조 */
 .header.is-mega .gnb__item:is(:hover, :focus-within) .gnb__link { color: var(--color-point); }
 .header.is-mega .gnb__item:is(:hover, :focus-within) .gnb__link svg { transform: rotate(180deg); }
@@ -221,7 +223,10 @@ body.is-locked { overflow: hidden; }
      마우스를 옮기는 동안 hover 영역이 끊기지 않는다. 벗어나면 0.2초 뒤 닫힘(JS)
    768px 이하: 오른쪽 아래 '+' 버튼 안에 4개 항목 (아래 모바일 규칙)
    ========================================================================== */
-.quick--float { position: fixed; right: 16px; top: 50%; transform: translateY(-50%); z-index: var(--z-quick); }
+/* 위치: 오른쪽 40px(1440px 이하 24px), 아래 끝 = 화면 아래에서 120px — 버튼이 늘면(TOP) 위로 늘어난다
+   메인 첫 화면에서 퀵바와 가로로 겹치면 main.js 가 --quick-bottom 으로 퀵바 위 끝보다 24px 위까지 올린다 */
+.quick--float { position: fixed; right: 40px; top: auto; bottom: var(--quick-bottom, 120px); transform: none; z-index: var(--z-quick); transition: bottom 0.3s var(--ease); }
+@media (max-width: 1440px) { .quick--float { right: 24px; } }
 .quick__toggle, .quick__list { display: none; }
 .quick__sns { display: grid; gap: 8px; } /* 두 버튼 폭 = 더 긴 글자(인스타그램)에 맞춰 같게 */
 .quick__item { position: relative; }
@@ -277,14 +282,14 @@ body.is-locked { overflow: hidden; }
   .quick__item:not([data-quick-item]) .quick__sns-btn:hover::after { transform: translateX(-140px) rotate(12deg); }
   .quick__item:not([data-quick-item]) .quick__sns-btn:hover svg { transform: scale(1.1); }
 }
-/* TOP: 첫 화면(스크롤 200px 전)에서는 숨김 — 자리는 그대로 두어 다른 버튼이 움직이지 않게 (common.js initQuickTop → .is-top-visible) */
-.quick__item--top { transition: opacity 0.2s, visibility 0.2s; }
-.quick:not(.is-top-visible) .quick__item--top { opacity: 0; visibility: hidden; }
+/* TOP: 첫 화면(스크롤 200px 전)에서는 숨김 — 퀵메뉴 아래 끝 기준은 그대로, 나타나면 다른 버튼이 위로 밀린다 (common.js initQuickTop → .is-top-visible) */
+.quick:not(.is-top-visible) .quick__item--top { display: none; }
+.quick.is-top-visible .quick__item--top { animation: quick-top-in 0.25s ease both; }
+@keyframes quick-top-in { from { opacity: 0; } to { opacity: 1; } }
 
 /* 슬림형(769~1560px): 아이콘만 48×48, 라벨은 hover·포커스 때 왼쪽 툴팁 (인스타·블로그는 펼친 칩 앞 라벨이 대신)
    기준 1560px: 그보다 좁으면 기본형(약 80~100px 폭)이 본문 오른쪽 끝(1440px 에서 화면 끝 80px)을 가린다 */
 @media (min-width: 769px) and (max-width: 1560px) {
-  .quick--float { right: 12px; }
   .quick__sns { gap: 6px; }
   .quick__sns-btn { width: 48px; min-width: 48px; min-height: 48px; padding: 0; overflow: visible; }
   .quick__sns-btn::after { display: none; } /* 툴팁이 잘리지 않게 overflow 를 풀어 빛 효과는 생략 */
@@ -302,11 +307,14 @@ body.is-locked { overflow: hidden; }
   .quick__sns-btn::after { display: none; }
   .quick__item.is-open .quick__sns-btn svg, .quick__item.is-open .quick__sns-btn .quick__blog-ico, .quick__sns-btn:hover svg { transform: none !important; }
 }
-/* 본문이 퀵메뉴(화면 오른쪽 끝 ~ 60px)에 가리지 않게: PC 에서 본문 칸 좌우 끝이 화면 끝에서 최소 76px
+/* 본문이 퀵메뉴에 가리지 않게: PC 에서 본문 칸 좌우 끝이 화면 끝에서 최소 --quick-edge
    (넓은 화면은 원래 여백이 더 커서 그대로, 1366px 이하 등 좁은 화면에서만 컨테이너 좌우 여백이 늘어난다) */
 @media (min-width: 1025px) {
-  .container { --quick-safe: max(0px, 76px - max(0px, (100vw - var(--container) - var(--gutter) * 2) / 2)); padding-left: max(var(--gutter), var(--quick-safe)); padding-right: max(var(--gutter), var(--quick-safe)); }
+  :root { --quick-edge: 148px; } /* 기본형: 오른쪽 40 + 버튼 최대 약 100 + 8 */
+  .container { --quick-safe: max(0px, var(--quick-edge) - max(0px, (100vw - var(--container) - var(--gutter) * 2) / 2)); padding-left: max(var(--gutter), var(--quick-safe)); padding-right: max(var(--gutter), var(--quick-safe)); }
 }
+@media (min-width: 1025px) and (max-width: 1560px) { :root { --quick-edge: 96px; } } /* 슬림형: 오른쪽 40 + 48 + 8 */
+@media (min-width: 1025px) and (max-width: 1440px) { :root { --quick-edge: 80px; } } /* 슬림형: 오른쪽 24 + 48 + 8 */
 
 /* 모바일 '+' 안의 항목 (768px 이하에서만 보임) */
 .quick__btn { display: flex; align-items: center; justify-content: center; gap: 12px; border-radius: var(--radius-sm); font-weight: 500; line-height: 1.3; text-align: center; }
