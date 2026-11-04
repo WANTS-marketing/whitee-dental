@@ -49,7 +49,7 @@
 | hero-01.jpg | [3779713](https://www.pexels.com/photo/3779713/) | Andrea Piacquadio | Pexels License |
 | hero-02.jpg | [3845625](https://www.pexels.com/photo/3845625/) | Pexels 페이지에서 확인 | Pexels License |
 | hero-03-event-implant.jpg, visual-implant.jpg | [6502306](https://www.pexels.com/photo/6502306/) | cottonbro studio | Pexels License |
-| hero-bg.jpg, og-image.jpg, tour-*-01/05 | [6812453](https://www.pexels.com/photo/6812453/) | Pavel Danilyuk | Pexels License |
+| hero-bg.jpg, hero-03-night.jpg(임시), og-image.jpg, tour-*-01/05 | [6812453](https://www.pexels.com/photo/6812453/) | Pavel Danilyuk | Pexels License |
 | doctors-bg.jpg, tour-*-04/01 | [8459996](https://www.pexels.com/photo/8459996/) | Pexels 페이지에서 확인 | Pexels License |
 | branch-bar-bg.jpg, tour-*-05/03 | [305568](https://www.pexels.com/photo/305568/) | Pexels 페이지에서 확인 | Pexels License |
 | clinic-implant.jpg, case-implant-before.jpg | [6502340](https://www.pexels.com/photo/6502340/) | cottonbro studio | Pexels License |

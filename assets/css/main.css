@@ -395,6 +395,9 @@ html.is-modal-open { overflow: hidden; }
   .hero__inner { padding: 0 var(--gutter); }
   .hero__slider { height: 480px; border-radius: var(--radius-lg); }
   .hero__content { left: 24px; right: 24px; top: auto; bottom: 88px; transform: none; }
+  /* 제목: 가장 긴 줄(약 10.5글자 폭)이 한 줄에 들어가는 크기까지만 — 글자 크게 단계에서도 '/' 줄바꿈 그대로 2줄 유지
+     100vw - 80px = 문구 칸 너비(좌우 gutter 16px×2 + 문구 여백 24px×2) */
+  .hero__title { font-size: min(var(--fs-display), calc((100vw - 80px) / 10.8)); }
   .hero__label { font-size: var(--fs-sm); }
   .hero__desc { font-size: var(--fs-sm); margin-top: 12px; }
   .hero__strong { font-size: var(--fs-md); margin-top: 12px; }
@@ -469,7 +472,7 @@ html.is-modal-open { overflow: hidden; }
   .doctors__main { --doc-per: 1.2; --doc-gap: 12px; }
 }
 @media (max-width: 400px) {
-  .hero__title { font-size: 1.75rem; }
+  .hero__title { font-size: min(1.75rem, calc((100vw - 80px) / 10.8)); }
   .hero__slider { height: 460px; }
 }
 
@@ -619,8 +622,8 @@ html.is-modal-open { overflow: hidden; }
   html[data-fs="lg"] .hero__slider { height: 540px; }
   html[data-fs="xl"] .hero__slider { height: 600px; }
 }
-/* 아주 크게(125%) + 낮은 화면: 히어로 제목이 슬라이더를 넘지 않게 한 단계 작게 */
-@media (max-height: 820px) {
+/* 아주 크게(125%) + 낮은 화면(데스크톱): 히어로 제목이 슬라이더를 넘지 않게 한 단계 작게 — 모바일은 아래 폭 기준 규칙이 맡는다 */
+@media (min-width: 1025px) and (max-height: 820px) {
   html[data-fs="xl"] .hero__title { font-size: 2.75rem; }
 }
 @keyframes intro-open { from { clip-path: inset(30% 35% round 24px); } to { clip-path: inset(0 round 24px); } }
