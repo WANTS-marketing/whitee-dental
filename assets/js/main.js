@@ -374,15 +374,18 @@ function initDoctors() {
     if (head > 0) ds.unshift(...ds.splice(head, 1));
     list = ds.map((d) => docs.indexOf(d));
     panel.style.setProperty('--doc-count', ds.length);
+    const mid = (ds.length - 1) / 2;
     cardsEl.innerHTML = ds.map((d, p) => {
       const certs = certsOf(d);
       const rest = restOf(d);
       const bioId = `doc-bio-${branchId}-${p}`;
+      const z = 10 + Math.round((mid - Math.abs(p - mid)) * 2); // 사진이 겹칠 때 가운데 원장이 위
+      const fix = `--ps:${Number(d.photoScale) || 1};--py:${Number(d.photoOffsetY) || 0};--px:${Number(d.photoOffsetX) || 0}`; // site-data.js 사진 보정
       return `
-      <li class="doc-person" data-pos="${p}">
+      <li class="doc-person" data-pos="${p}" style="--z:${z}">
         <div class="doc-person__stage" data-doc-stage>
           ${SILHOUETTE}
-          <img class="doc-person__img" src="${cutOf(d)}" alt="${esc(d.name)} ${esc(d.title)}" loading="lazy">
+          <img class="doc-person__img" src="${cutOf(d)}" alt="${esc(d.name)} ${esc(d.title)}" loading="lazy" style="${fix}">
         </div>
         <div class="doc-person__bio" id="${bioId}" data-doc-stage>
           <div class="doc-person__bio-in">
@@ -395,7 +398,7 @@ function initDoctors() {
             <p class="doc-person__dept">${esc(d.dept)}</p>
             <p class="doc-person__name"><b>${esc(d.name)}</b> <small>${esc(d.title)}</small></p>
           </div>
-          <button type="button" class="doc-person__more" data-pos="${p}" aria-haspopup="dialog" aria-describedby="${bioId}">약력 보기</button>
+          <button type="button" class="doc-person__more" data-pos="${p}" aria-haspopup="dialog" aria-describedby="${bioId}">약력 보기 <span aria-hidden="true">+</span></button>
         </div>
       </li>`;
     }).join('');
@@ -411,7 +414,9 @@ function initDoctors() {
     const bio = li.querySelector('.doc-person__bio');
     const inner = bio.firstElementChild;
     li.classList.remove('bio-wide', 'bio-compact', 'bio-scroll');
-    li.style.setProperty('--stage-h', li.querySelector('.doc-person__stage').offsetHeight + 'px');
+    const stageEl = li.querySelector('.doc-person__stage');
+    li.style.setProperty('--stage-h', stageEl.offsetHeight + 'px');
+    li.style.setProperty('--stage-w', stageEl.offsetWidth + 'px'); // 약력 보기 때 흐린 사진을 칸 폭으로 자르는 데 (main.css)
     bio.style.removeProperty('--bio-fs');
     const base = parseFloat(getComputedStyle(bio).fontSize);
     const items = [...bio.querySelectorAll('li')];
@@ -454,18 +459,20 @@ function initDoctors() {
     const room = window.innerHeight - headerH;
     const stage = cardsEl.querySelector('.doc-person__stage');
     if (!stage) return;
-    let h = Math.round(room * 0.6);
+    let h = Math.round(room * 0.7);
     panel.style.setProperty('--doc-photo-h', h + 'px');
     if (document.documentElement.classList.contains('is-fullpage')) {
-      /* 풀스크린 넘김(섹션 = 정확히 한 화면): 한 화면 안에 들어가는 것이 우선.
-         사진 칸 = 섹션 안쪽 공간에서 머리말·이름 줄을 뺀 남는 높이 전부(인물을 최대한 크게),
-         단 사진 원본 비율(400×664)로 칸 너비에 꽉 차는 높이보다 크게는 키우지 않는다(위가 비지 않게). 최소 200px */
+      /* 풀스크린 넘김(섹션 = 정확히 한 화면): 사진 칸 = 섹션 높이의 약 70%, 단 한 화면 안에 들어가는 것이 우선
+         (섹션 안쪽 공간에서 머리말·이름 줄을 뺀 남는 높이까지). 사진이 칸보다 넓으면 옆으로 겹친다(main.css). 최소 200px
+         이름 줄이 사진 칸 높이에 비례해 겹쳐 올라가므로(margin-top) 두 번 맞춘다 */
       const cs = getComputedStyle(section);
       const avail = section.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
-      const rest = section.querySelector('.doctors__inner').offsetHeight - stage.offsetHeight; // 사진 칸을 뺀 나머지 높이
-      const byWidth = Math.round(stage.offsetWidth * 664 / 400);
-      h = Math.max(200, Math.min(byWidth, Math.floor(avail - rest)));
-      panel.style.setProperty('--doc-photo-h', h + 'px');
+      const target = Math.round(section.clientHeight * 0.7);
+      for (let k = 0; k < 2; k++) {
+        const rest = section.querySelector('.doctors__inner').offsetHeight - stage.offsetHeight; // 사진 칸을 뺀 나머지 높이
+        h = Math.max(200, Math.min(target, Math.floor(avail - rest) - 1)); // -1: 반올림으로 1px 넘치지 않게
+        panel.style.setProperty('--doc-photo-h', h + 'px');
+      }
       return;
     }
     const over = section.offsetHeight - room;

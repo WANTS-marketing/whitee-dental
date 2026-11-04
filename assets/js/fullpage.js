@@ -71,7 +71,6 @@
     const hash = i === 0 ? '' : `#${SECTIONS[i].hash}`;
     if (location.hash !== hash) history.replaceState(null, '', hash || location.pathname + location.search);
     nav?.querySelectorAll('button').forEach((b, k) => b.setAttribute('aria-current', String(k === i)));
-    nav?.classList.toggle('is-light', i === 0); // 히어로(어두운 사진) 위에서는 흰 점
   }
 
   function go(i, { instant = false } = {}) {
@@ -140,13 +139,17 @@
     go(i);
   }
 
+  /* 섹션 점 7개 — 오른쪽 플로팅 퀵메뉴 묶음 맨 위(점 → 구분선 → 인스타·블로그·상담문의·TOP)에 넣는다
+     현재 섹션 점은 포인트 컬러로 길게, 마우스를 올리면 왼쪽에 섹션 이름 툴팁, 누르면 그 섹션으로 (스타일: main.css '풀스크린 섹션 넘김') */
   function buildNav() {
     nav = document.createElement('nav');
     nav.className = 'fp-nav';
     nav.setAttribute('aria-label', '섹션 바로가기');
-    nav.innerHTML = SECTIONS.map((s, i) => `<button type="button" data-fp="${i}" aria-label="${s.label}"><span class="fp-nav__label">${s.label}</span></button>`).join('');
+    nav.innerHTML = SECTIONS.map((s, i) => `<button type="button" data-fp="${i}" aria-label="${s.label}"><span class="fp-nav__label" aria-hidden="true">${s.label}</span></button>`).join('');
     nav.addEventListener('click', (e) => { const b = e.target.closest('[data-fp]'); if (b) go(Number(b.dataset.fp)); });
-    document.body.appendChild(nav);
+    const quick = document.querySelector('.quick--float .quick__sns');
+    if (quick) quick.prepend(nav);
+    else document.body.appendChild(nav);
   }
 
   // 현재 스크롤 위치에서 가장 가까운 섹션 (창 크기 변경·직접 스크롤 후 맞추기)
