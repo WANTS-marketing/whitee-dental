@@ -137,7 +137,9 @@
   function initHeader() {
     const header = document.getElementById('header');
     if (!header) return;
-    const onScroll = () => header.classList.toggle('is-scrolled', window.scrollY > 10);
+    // 메인: 최상단에서는 히어로 위 투명 헤더(main.css '투명 헤더'), 40px 이상 스크롤하면 흰 헤더 / 서브: 10px 부터 그림자만 진하게
+    const limit = document.body.classList.contains('is-main') ? 40 : 10;
+    const onScroll = () => header.classList.toggle('is-scrolled', window.scrollY > limit);
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
   }
@@ -194,6 +196,7 @@
       nav.setAttribute('aria-hidden', String(!open));
       openBtn.setAttribute('aria-expanded', String(open));
       document.body.classList.toggle('is-locked', open);
+      document.getElementById('header')?.classList.toggle('is-mnav', open); // 메인 투명 헤더 → 메뉴가 열린 동안 흰 헤더
       if (open) nav.querySelector('.mnav__close').focus();
       else openBtn.focus();
     };

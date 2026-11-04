@@ -7,12 +7,12 @@ html { scrollbar-width: none; }
 html::-webkit-scrollbar { display: none; }
 
 /* ---------- ① 히어로 ---------- */
-/* 헤더(흰색 고정) 바로 아래부터 화면 가로 100%, 높이 = 화면 - 헤더(최소 640px), 모서리 없음
+/* 화면 맨 위(투명 헤더 뒤)부터 가로 100%, 높이 100vh(최소 640px), 모서리 없음 — 헤더는 그 위에 겹친다 (아래 '투명 헤더')
    --hero-x = 문구·조작 버튼의 좌우 시작선 = 헤더 로고 시작선 (1025px 이상은 아래 '히어로 시작선'에서 다시 계산) */
-.hero { --hero-x: var(--gutter); position: relative; padding-top: var(--header-h); container-type: inline-size; }
+.hero { --hero-x: var(--gutter); position: relative; container-type: inline-size; }
 .hero__inner.container { position: relative; width: 100%; max-width: none; padding: 0; }
 /* translateZ·backface-visibility: 펼침(clip-path)·확대 애니메이션 중 서브픽셀 흔들림 방지 */
-.hero__slider { position: relative; height: max(640px, calc(100vh - var(--header-h))); overflow: hidden; color: #fff; transform: translateZ(0); backface-visibility: hidden; }
+.hero__slider { position: relative; height: max(640px, 100vh); overflow: hidden; color: #fff; transform: translateZ(0); backface-visibility: hidden; }
 .hero__slide { position: absolute; inset: 0; opacity: 0; visibility: hidden; transition: opacity 0.8s var(--ease), visibility 0.8s; }
 .hero__slide.is-active { opacity: 1; visibility: visible; }
 .hero__media { position: absolute; inset: 0; background: linear-gradient(120deg, #3a3330, #151515); } /* 사진이 없을 때 */
@@ -20,7 +20,8 @@ html::-webkit-scrollbar { display: none; }
 .hero__media::before { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(90deg, rgba(10, 10, 10, 0.85) 0%, rgba(10, 10, 10, 0.65) 50%, rgba(10, 10, 10, 0.5) 100%); }
 .hero__slide.is-active .hero__media img { animation: hero-zoom 7s linear forwards; }
 @keyframes hero-zoom { from { transform: scale(1.06); } to { transform: scale(1); } }
-.hero__content { position: absolute; z-index: 2; top: 50%; left: var(--hero-x); right: calc(var(--hero-x) + 160px); transform: translateY(-50%); } /* 오른쪽 160px: 플로팅 퀵메뉴 자리 */
+/* 세로 위치: 헤더에 가려지지 않는 부분(헤더 아래 ~ 히어로 끝)의 가운데 */
+.hero__content { position: absolute; z-index: 2; top: calc(50% + var(--header-h) / 2); left: var(--hero-x); right: calc(var(--hero-x) + 160px); transform: translateY(-50%); } /* 오른쪽 160px: 플로팅 퀵메뉴 자리 */
 .hero__label { font-size: var(--fs-h4); font-weight: 400; opacity: 0.95; }
 /* 묶음 라벨: 묶음 사이 구분점(·)은 각 묶음 앞에 붙이고, 줄 맨 앞에 오는 구분점은 바깥 칸(overflow)으로 밀어 숨긴다
    → 한 줄이면 'A · B', 두 줄이면 'A' / 'B' (줄 끝·줄 앞에 · 가 남지 않음) */
@@ -47,6 +48,21 @@ html::-webkit-scrollbar { display: none; }
 .hero__ctrl[aria-pressed="false"] { opacity: 0.45; }
 .hero__count { font-size: var(--fs-lg); letter-spacing: 0.08em; min-width: 52px; text-align: center; }
 .hero__count strong { font-weight: 700; }
+
+/* 히어로 위쪽 어두운 그라데이션(160px): 투명 헤더의 흰 글자가 밝은 사진 위에서도 읽히게 */
+.hero__slider::after { content: ""; position: absolute; z-index: 1; top: 0; left: 0; right: 0; height: 160px; background: linear-gradient(180deg, rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0)); pointer-events: none; }
+
+/* ---------- 투명 헤더 (메인 전용 — main.css 는 index.html 에서만 읽는다) ----------
+   최상단: 배경 투명·구분선/그림자 없음·흰 글자·흰 로고(원본 컬러 PNG 를 filter 로 흰색 — 흰색 로고 파일 받으면 교체, HANDOVER)
+   흰 헤더로 바뀌는 경우: 40px 이상 스크롤(.is-scrolled), 메가메뉴 열림(.is-mega), 모바일 메뉴 열림(.is-mnav) — common.js */
+.header { transition: background-color 0.3s, box-shadow 0.3s, color 0.3s; }
+.header .logo__img, .header .gnb__link, .header .gnb__link svg, .header .util a, .header .fs-ctrl__btn, .header .hamburger { transition: color 0.3s, filter 0.3s; }
+.header:not(.is-scrolled):not(.is-mega):not(.is-mnav) { background-color: transparent; box-shadow: none; color: #fff; }
+.header:not(.is-scrolled):not(.is-mega):not(.is-mnav) .logo__img { filter: brightness(0) invert(1); }
+.header:not(.is-scrolled):not(.is-mega):not(.is-mnav) :is(.gnb__link, .gnb__link svg, .util a, .hamburger) { color: #fff; }
+.header:not(.is-scrolled):not(.is-mega):not(.is-mnav) .fs-ctrl__btn:not([aria-pressed="true"]) { color: #fff; } /* 선택된 '가'는 포인트 컬러 그대로 */
+.header:not(.is-scrolled):not(.is-mega):not(.is-mnav) :is(.util a, .fs-ctrl__btn:not([aria-pressed="true"])):hover { color: var(--color-point); }
+.header:not(.is-scrolled):not(.is-mega):not(.is-mnav) :is(.util__group--b a + a, .util__guide)::before { background: rgba(255, 255, 255, 0.55); }
 
 /* ---------- ② 빠른 진료 안내 ---------- */
 .clinic-bar { padding: 64px 0 0; }
@@ -394,7 +410,7 @@ html.is-modal-open { overflow: hidden; }
 
 @media (max-width: 768px) {
   /* 모바일: 가로 100%, 높이 약 70vh (글자가 넘치지 않게 최소 높이, 글자 크게·아주 크게는 아래에서 더 높게) */
-  .hero__slider { height: 70vh; min-height: 480px; }
+  .hero__slider { height: calc(70vh + var(--header-h)); min-height: calc(480px + var(--header-h)); }
   .hero__content { left: var(--hero-x); right: var(--hero-x); top: auto; bottom: 88px; transform: none; }
   /* 제목: 가장 긴 줄(약 10.8글자 폭)이 한 줄에 들어가는 크기까지만 — 글자 크게 단계에서도 '/' 줄바꿈 그대로 2줄 유지
      100vw - 80px = 문구 칸 너비(좌우 gutter 16px×2 + 문구 여백 24px×2) */
@@ -480,7 +496,7 @@ html.is-modal-open { overflow: hidden; }
 }
 @media (max-width: 400px) {
   .hero__title { font-size: min(1.75rem, calc((100vw - 80px) / 11.2)); }
-  .hero__slider { min-height: 460px; }
+  .hero__slider { min-height: calc(460px + var(--header-h)); }
 }
 
 /* ==========================================================================
@@ -516,7 +532,7 @@ html.is-modal-open { overflow: hidden; }
      --qb-h = 퀵바 카드 실제 높이(main.js initQuickbarOverlap 이 넣음, 2줄 모드·글자 크기에 따라 바뀜)
      히어로 문구는 '퀵바에 가려지지 않는 부분'의 세로 가운데, 조작 버튼은 퀵바 바로 위 */
   .screen-home__first { --qb-half: calc(var(--qb-h, 180px) / 2); }
-  .screen-home .hero__content { top: calc((100% - var(--qb-half)) / 2); }
+  .screen-home .hero__content { top: calc((100% - var(--qb-half) + var(--header-h)) / 2); }
   .screen-home .hero__controls { bottom: calc(var(--qb-half) + 24px); }
   .screen-home .clinic-bar { position: relative; z-index: 5; margin-top: calc(var(--qb-half) * -1); padding: 0 0 24px; }
   .screen-home .clinic-bar__inner { margin: 0 24px; border-bottom: 0; border-radius: var(--radius-xl); background: #fff; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12); }
@@ -609,8 +625,8 @@ html.is-modal-open { overflow: hidden; }
 }
 /* 모바일 크게·아주 크게: 히어로 글자가 슬라이더 위로 넘지 않게 슬라이더를 높인다 */
 @media (max-width: 768px) {
-  html[data-fs="lg"] .hero__slider { min-height: 540px; }
-  html[data-fs="xl"] .hero__slider { min-height: 600px; }
+  html[data-fs="lg"] .hero__slider { min-height: calc(540px + var(--header-h)); }
+  html[data-fs="xl"] .hero__slider { min-height: calc(600px + var(--header-h)); }
 }
 /* 아주 크게(125%) + 낮은 화면(데스크톱): 히어로 제목이 슬라이더를 넘지 않게 한 단계 작게 — 모바일은 아래 폭 기준 규칙이 맡는다 */
 @media (min-width: 1025px) and (max-height: 820px) {
