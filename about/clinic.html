@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ko" data-root="..">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>병원소개 | 화이트e치과 | 창원치과 | 마산치과</title>
+  <meta name="description" content="화이트e치과 창원점(상남동 롯데리아 3층)·마산점(마산역 도보 3분) 내부 둘러보기, 오시는길, 교통·주차 안내. 평일 저녁 9시까지 진료">
+  <meta name="naver-site-verification" content="9bc82b586e6aa173ce4c34f00fa7825fdf2832b1">
+  <link rel="canonical" href="https://wants-marketing.github.io/whitee-dental/about/clinic.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="화이트e치과">
+  <meta property="og:title" content="병원소개 | 화이트e치과 | 창원치과 | 마산치과">
+  <meta property="og:description" content="화이트e치과 창원점(상남동 롯데리아 3층)·마산점(마산역 도보 3분) 내부 둘러보기, 오시는길, 교통·주차 안내. 평일 저녁 9시까지 진료">
+  <meta property="og:url" content="https://wants-marketing.github.io/whitee-dental/about/clinic.html">
+  <meta property="og:image" content="https://wants-marketing.github.io/whitee-dental/assets/images/og-image.jpg">
+  <meta property="og:locale" content="ko_KR">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+  <link rel="stylesheet" href="../assets/css/variables.css">
+  <link rel="stylesheet" href="../assets/css/common.css">
+  <link rel="stylesheet" href="../assets/css/sub.css">
+  <script src="../assets/js/config.js" defer></script>
+  <script src="../assets/js/site-data.js" defer></script>
+  <script src="../assets/js/api.js" defer></script>
+  <script src="../assets/js/include.js" defer></script>
+  <script src="../assets/js/common.js" defer></script>
+  <script src="../assets/js/pages.js" defer></script>
+</head>
+<body class="is-sub" data-page="clinic">
+  <div data-include="header"></div>
+
+  <main id="main">
+    <section class="sub-visual sub-visual--image">
+      <div class="sub-visual__bg" style="background-image:url('../assets/images/tour-changwon-01.jpg'), url('../assets/images/temp/tour-changwon-01.jpg')"></div>
+      <div class="container">
+        <p class="sub-visual__copy">창원점 상남동 · 마산점 마산역 도보 3분</p>
+        <h1 class="sub-visual__title">병원소개</h1>
+        <ol class="breadcrumb" aria-label="현재 위치">
+          <li><a href="../index.html">홈</a></li>
+          <li>화이트e치과</li>
+          <li aria-current="page">병원소개</li>
+        </ol>
+        <nav class="sub-tabs" aria-label="화이트e치과 하위 메뉴">
+          <a href="intro.html">치과소개</a>
+          <a href="doctors.html">의료진 소개</a>
+          <a href="clinic.html" class="is-current" aria-current="page">병원소개</a>
+        </nav>
+      </div>
+    </section>
+
+    <!-- 병원소개 = 예전 '병원 둘러보기'(about/tour.html) + '오시는길'(about/location.html) — 두 주소는 이 페이지로 자동 이동
+         지점 탭: 선택한 지점 내용만 표시, 주소 #changwon / #masan 으로 바로 열 수 있다 (pages.js renderClinic)
+         숨긴 지점도 화면 밖에서 같은 너비로 그려 두어 카카오맵이 처음부터 제 크기로 그려진다(탭 전환 시 깨지지 않게) -->
+    <section class="sec">
+      <div class="container">
+        <div class="branch-tabs" role="tablist" aria-label="지점 선택">
+          <button type="button" role="tab" id="clinic-tab-changwon" aria-selected="true" aria-controls="panel-changwon" data-branch="changwon">창원점</button>
+          <button type="button" role="tab" id="clinic-tab-masan" aria-selected="false" aria-controls="panel-masan" data-branch="masan" tabindex="-1">마산점</button>
+        </div>
+
+        <div class="clinic-panels">
+        <!-- ===================== 창원점 ===================== -->
+        <section class="clinic-panel loc--changwon" id="panel-changwon" role="tabpanel" aria-labelledby="clinic-tab-changwon" data-branch="changwon">
+          <header class="clinic-panel__head">
+            <h2 class="loc__head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s7-6.2 7-11.5A7 7 0 005 9.5C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>화이트e치과 <em>창원점</em></h2>
+            <p class="clinic-panel__intro" data-clinic-intro="changwon"></p>
+          </header>
+
+          <section class="clinic-block" aria-labelledby="tour-title-changwon">
+            <h3 class="clinic-block__title" id="tour-title-changwon">내부 둘러보기</h3>
+            <!-- TODO: 실제 원내 사진(지점별 약 12장)과 공간별 캡션(접수·대기실, 진료실, 상담실, CT실 등) 병원에 요청 -->
+            <div class="gallery" data-tour-gallery="changwon"></div>
+            <p class="sec-note">현재 사진은 레이아웃 확인용 임시 이미지입니다.</p>
+          </section>
+
+          <section class="clinic-block" aria-labelledby="loc-title-changwon">
+            <h3 class="clinic-block__title" id="loc-title-changwon">오시는길</h3>
+            <div class="loc__body">
+              <div class="loc__map">
+                <!-- ▼▼▼ [창원점] 카카오맵 '지도 퍼가기' 코드를 이 줄 아래에 붙여넣으세요 ▼▼▼
+                     카카오맵 → 창원점 검색 → 공유 → 지도 퍼가기 → '소스 생성하기' → HTML 코드 복사
+                     지도 크기(가로·세로)는 아무 값이나 괜찮습니다 — CSS(sub.css .loc__map)가 칸에 맞춰 늘립니다. -->
+                <div id="daumRoughmapContainer1793586880293" class="root_daum_roughmap root_daum_roughmap_landing"></div>
+                <script charset="UTF-8" class="daum_roughmap_loader_script" src="https://t1.kakaocdn.net/kakaomapweb/roughmap/loader/prod/roughmapLoader.js"></script>
+                <script charset="UTF-8">
+                  new daum.roughmap.Lander({
+                    "timestamp" : "1793586880293",
+                    "key" : "4bkcjdoi98m",
+                    "mapWidth" : "640",
+                    "mapHeight" : "360"
+                  }).render();
+                </script>
+                <!-- ▲▲▲ [창원점] 카카오맵 코드 끝 ▲▲▲ -->
+                <div class="loc__map-ph">
+                  <p>지도 준비 중입니다</p>
+                  <a class="btn btn--changwon" href="https://naver.me/FY3f3LdP" target="_blank" rel="noopener">네이버 지도로 보기</a>
+                </div>
+              </div>
+              <div class="loc__info" data-loc-info="changwon"></div>
+            </div>
+          </section>
+
+          <section class="clinic-block" aria-labelledby="traffic-title-changwon">
+            <h3 class="clinic-block__title" id="traffic-title-changwon">교통·주차 안내</h3>
+            <div data-loc-transit="changwon"></div>
+          </section>
+        </section>
+
+        <!-- ===================== 마산점 ===================== -->
+        <section class="clinic-panel loc--masan" id="panel-masan" role="tabpanel" aria-labelledby="clinic-tab-masan" data-branch="masan">
+          <header class="clinic-panel__head">
+            <h2 class="loc__head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s7-6.2 7-11.5A7 7 0 005 9.5C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>화이트e치과 <em>마산점</em></h2>
+            <p class="clinic-panel__intro" data-clinic-intro="masan"></p>
+          </header>
+
+          <section class="clinic-block" aria-labelledby="tour-title-masan">
+            <h3 class="clinic-block__title" id="tour-title-masan">내부 둘러보기</h3>
+            <div class="gallery" data-tour-gallery="masan"></div>
+            <p class="sec-note">현재 사진은 레이아웃 확인용 임시 이미지입니다.</p>
+          </section>
+
+          <section class="clinic-block" aria-labelledby="loc-title-masan">
+            <h3 class="clinic-block__title" id="loc-title-masan">오시는길</h3>
+            <div class="loc__body">
+              <div class="loc__map">
+                <!-- ▼▼▼ [마산점] 카카오맵 '지도 퍼가기' 코드를 이 줄 아래에 붙여넣으세요 ▼▼▼
+                     카카오맵 → 마산점 검색 → 공유 → 지도 퍼가기 → '소스 생성하기' → HTML 코드 복사
+                     지도 크기(가로·세로)는 아무 값이나 괜찮습니다 — CSS(sub.css .loc__map)가 칸에 맞춰 늘립니다.
+                     ※ 창원점 코드에서 roughmapLoader.js 를 이미 불러오므로, 여기에는 설치 스크립트 줄을 빼고 넣었습니다. -->
+                <div id="daumRoughmapContainer1793586955730" class="root_daum_roughmap root_daum_roughmap_landing"></div>
+                <script charset="UTF-8">
+                  new daum.roughmap.Lander({
+                    "timestamp" : "1793586955730",
+                    "key" : "4bkebsb86tt",
+                    "mapWidth" : "640",
+                    "mapHeight" : "360"
+                  }).render();
+                </script>
+                <!-- ▲▲▲ [마산점] 카카오맵 코드 끝 ▲▲▲ -->
+                <div class="loc__map-ph">
+                  <p>지도 준비 중입니다</p>
+                  <a class="btn btn--masan" href="https://naver.me/xWTYEspr" target="_blank" rel="noopener">네이버 지도로 보기</a>
+                </div>
+              </div>
+              <div class="loc__info" data-loc-info="masan"></div>
+            </div>
+          </section>
+
+          <section class="clinic-block" aria-labelledby="traffic-title-masan">
+            <h3 class="clinic-block__title" id="traffic-title-masan">교통·주차 안내</h3>
+            <div data-loc-transit="masan"></div>
+          </section>
+        </section>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="quick quick--float" data-include="quick" data-keep></div>
+  <div data-include="footer"></div>
+</body>
+</html>

@@ -22,6 +22,7 @@ window.SITE = {
       hoursShort: '평일 10:00–21:00 · 토 10:00–16:00 · 일요일 휴진',
       naverMap: 'https://naver.me/FY3f3LdP',
       landmark: '상남동 다이소 앞 건물',
+      intro: '상남동 다이소 앞 밀레니엄타워 3층, 평일 저녁 9시까지 진료합니다.', // 병원소개 한 줄 소개 — TODO: 병원 확인
       parking: '건물 지하주차장 무료 · 상남동 공영주차빌딩 1시간 무료',
       amenities: ['예약', '주차', '무선인터넷', '남/녀 화장실 구분'],
       transit: [], // TODO: 창원점 대중교통 안내 병원 확인
@@ -44,6 +45,7 @@ window.SITE = {
       hoursShort: '평일 10:00–21:00 · 토 10:00–16:00 · 일요일 휴진',
       naverMap: 'https://naver.me/xWTYEspr',
       landmark: '마산역 도보 3분',
+      intro: '마산역에서 걸어서 3분, 석전동 365병원 9~10층에 있습니다.', // 병원소개 한 줄 소개 — TODO: 병원 확인
       parking: '', // TODO: 마산점 주차 안내 병원 확인
       amenities: ['예약', '주차', '무선인터넷', '남/녀 화장실 구분'],
       transit: [
@@ -55,7 +57,7 @@ window.SITE = {
     },
   ],
 
-  /* 병원 둘러보기 — TODO: 실제 원내 사진·공간별 캡션 받으면 교체 (지금은 temp/ 임시 이미지) */
+  /* 병원소개(about/clinic.html) 내부 둘러보기 — TODO: 실제 원내 사진·공간별 캡션 받으면 교체 (지금은 temp/ 임시 이미지) */
   tour: {
     changwon: [1, 2, 3, 4, 5, 6].map((n) => ({ file: `tour-changwon-0${n}.jpg`, caption: `창원점 원내 0${n}` })),
     masan: [1, 2, 3, 4, 5, 6].map((n) => ({ file: `tour-masan-0${n}.jpg`, caption: `마산점 원내 0${n}` })),

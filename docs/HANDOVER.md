@@ -27,8 +27,8 @@
 | Pretendard (jsDelivr CDN) | 웹폰트 | SIL Open Font License 1.1 (상업 사용 가능) | 없음 |
 | Web3Forms | 상담문의 메일 발송 | 무료 플랜 월 250건 | 미정 (병원 이메일로 발급) |
 | GitHub Pages / Actions | 호스팅·배포 | Public 저장소 무료 | WANTS-marketing |
-| 카카오맵 지도 퍼가기 (API 키 없음) | 오시는길 지도 — 코드 붙여넣을 위치: `about/location.html` 의 `▼▼▼ [창원점]/[마산점] 카카오맵` 주석 | 카카오맵 이용약관. 지도 로드 시 방문자 정보가 카카오로 전송됨 → 개인정보처리방침 반영 필요 | 없음 (퍼가기 코드 생성에 카카오 로그인 필요할 수 있음) |
-| 네이버 지도 단축 링크 | 오시는길 "네이버 지도로 보기" 버튼 (창원 naver.me/FY3f3LdP · 마산 naver.me/xWTYEspr) | 링크만 사용 | 없음 |
+| 카카오맵 지도 퍼가기 (API 키 없음) | 병원소개 ③오시는길 지도 — 코드 붙여넣을 위치: `about/clinic.html` 의 `▼▼▼ [창원점]/[마산점] 카카오맵` 주석 | 카카오맵 이용약관. 지도 로드 시 방문자 정보가 카카오로 전송됨 → 개인정보처리방침 반영 필요 | 없음 (퍼가기 코드 생성에 카카오 로그인 필요할 수 있음) |
+| 네이버 지도 단축 링크 | 병원소개 ③오시는길 "네이버 지도로 보기" 버튼 (창원 naver.me/FY3f3LdP · 마산 naver.me/xWTYEspr) | 링크만 사용 | 없음 |
 | Pexels 스톡 이미지 | 임시 이미지 | Pexels License (아래 표) | 없음 |
 | 아이콘 (인라인 SVG) | 메뉴·진료 아이콘·SNS | 이 프로젝트에서 직접 그림 | — |
 | uiverse.io — [elijahgummer/bright-chicken-11](https://uiverse.io/elijahgummer/bright-chicken-11) | 오른쪽 플로팅 퀵메뉴 [인스타그램][블로그] 버튼 hover 효과(빛 지나가기·바깥 링) — Tailwind 를 순수 CSS 로 바꿔 `assets/css/common.css` 퀵메뉴 부분에 적용 | MIT License (상업 사용·수정 가능, 저작권·라이선스 고지 유지) | 없음 |

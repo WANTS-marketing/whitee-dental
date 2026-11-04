@@ -6,8 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const page = document.body.dataset.page;
   const run = {
     doctors: renderDoctorsPage,
-    location: renderLocationPage,
-    tour: renderTour,
+    clinic: renderClinic,
     notice: renderNoticeList,
     news: renderNewsList,
     cases: renderCasesList,
@@ -42,17 +41,23 @@ function renderDoctorsPage() {
   if (location.hash) requestAnimationFrame(() => document.getElementById(decodeURIComponent(location.hash.slice(1)))?.scrollIntoView({ behavior: 'instant', block: 'start' }));
 }
 
-/* ---------- 오시는길 ----------
-   지도: about/location.html 의 .loc__map 안에 카카오맵 '지도 퍼가기' 코드를 직접 붙여넣는다 (API 키 불필요).
-   퍼가기 코드는 페이지를 읽는 동안 실행돼야 하므로 JS로 넣지 않고 HTML에 둔다. 여기서는 지점 정보·교통편만 채운다. */
-function renderLocationPage() {
-  if (!document.querySelector('[data-location]')) return;
-  const { esc, telHref } = window.UI;
+/* ---------- 병원소개 (about/clinic.html) = 예전 병원 둘러보기 + 오시는길 ----------
+   지점 탭(창원점·마산점): 선택한 지점 패널만 보이고 주소 해시가 #changwon / #masan 으로 바뀐다(직접 링크·뒤로가기 가능)
+   패널마다 ① 지점명·한 줄 소개 ② 내부 둘러보기(갤러리 + 라이트박스) ③ 오시는길(카카오맵 + 정보) ④ 교통·주차 안내
+   지도: .loc__map 안의 카카오맵 '지도 퍼가기' 코드는 페이지를 읽는 동안 실행돼야 해서 HTML 에 그대로 둔다(API 키 불필요).
+   숨긴 패널은 display:none 이 아니라 화면 밖에 같은 너비로 두므로(sub.css .clinic-panel) 지도가 처음부터 제 크기로 그려지고,
+   탭이 열릴 때 relayout(지도 다시 맞추기)도 한 번 더 한다 */
+function renderClinic() {
+  const panels = [...document.querySelectorAll('.clinic-panel')];
+  if (!panels.length) return;
+  const { esc, telHref, img } = window.UI;
   const DOT = '<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="4" fill="currentColor"/></svg>';
 
+  // ① 한 줄 소개 · ③ 지점 정보 · ④ 교통·주차
   window.SITE.branches.forEach((b) => {
+    const intro = document.querySelector(`[data-clinic-intro="${b.id}"]`);
+    if (intro) intro.textContent = b.intro || `${b.addressNote} · ${b.landmark}`;
     const info = document.querySelector(`[data-loc-info="${b.id}"]`);
-    const transit = document.querySelector(`[data-loc-transit="${b.id}"]`);
     if (info) {
       info.innerHTML = `
         <dl>
@@ -60,63 +65,78 @@ function renderLocationPage() {
           <dt>전화</dt><dd><a class="loc__tel" href="${telHref(b.tel)}">${esc(b.tel)}</a></dd>
           <dt>이메일</dt><dd><a href="mailto:${esc(b.email)}">${esc(b.email)}</a></dd>
           <dt>진료시간</dt><dd><strong>${esc(b.hoursShort)}</strong></dd>
-          <dt>주차</dt><dd>${b.parking ? esc(b.parking) : '주차 가능 · 자세한 안내는 전화로 문의해 주세요'}</dd>
-          <dt>이용안내</dt><dd><ul class="amenities">${b.amenities.map((a) => `<li>${DOT}${esc(a)}</li>`).join('')}</ul></dd>
         </dl>
         <div class="loc__actions">
           <a class="btn btn--${b.id}" href="${esc(b.naverMap)}" target="_blank" rel="noopener">네이버 지도로 보기</a>
           <a class="btn btn--line" href="${telHref(b.tel)}">전화하기</a>
         </div>`;
     }
-    if (transit && b.transit.length) {
+    const transit = document.querySelector(`[data-loc-transit="${b.id}"]`);
+    if (transit) {
+      const rows = [
+        { type: '주차', lines: [b.parking || '주차 가능 · 자세한 안내는 전화로 문의해 주세요'] },
+        ...b.transit,
+      ];
       transit.innerHTML = `
-        <div class="transit">
-          <h3 class="transit__title">교통편 안내</h3>
-          <ul class="transit__list">
-            ${b.transit.map((t) => `<li class="transit__item"><strong>${esc(t.type)}</strong><div>${t.lines.map((l) => `<p>${esc(l)}</p>`).join('')}</div></li>`).join('')}
-          </ul>
-        </div>`;
+        <ul class="transit__list">
+          ${rows.map((t) => `<li class="transit__item"><strong>${esc(t.type)}</strong><div>${t.lines.map((l) => `<p>${esc(l)}</p>`).join('')}</div></li>`).join('')}
+        </ul>
+        <ul class="amenities clinic-amenities" aria-label="이용안내">${b.amenities.map((a) => `<li>${DOT}${esc(a)}</li>`).join('')}</ul>`;
     }
   });
-  // 해시(#changwon / #masan)로 들어오면 렌더 후 해당 위치로 이동
-  if (location.hash) document.querySelector(location.hash)?.scrollIntoView();
-}
 
-/* ---------- 병원 둘러보기: 지점 탭 + 갤러리 + 라이트박스 ---------- */
-function renderTour() {
-  const gallery = document.querySelector('[data-tour-gallery]');
-  if (!gallery) return;
-  const { esc, img } = window.UI;
-  const tabs = [...document.querySelectorAll('.branch-tabs [role="tab"]')];
-  let photos = [];
-
-  function show(branch) {
-    photos = window.SITE.tour[branch] || [];
-    gallery.innerHTML = photos.map((p, i) => `
+  // ② 내부 둘러보기: 지점별 갤러리
+  const galleries = [...document.querySelectorAll('[data-tour-gallery]')];
+  galleries.forEach((g) => {
+    const photos = window.SITE.tour[g.dataset.tourGallery] || [];
+    g.innerHTML = photos.map((p, i) => `
       <button type="button" class="gallery__item img-ph" data-index="${i}" aria-label="${esc(p.caption)} 크게 보기">
         <img src="${img(p.file)}" alt="${esc(p.caption)}" loading="lazy">
         <span class="gallery__cap">${esc(p.caption)}</span>
       </button>`).join('');
-  }
-  function select(tab) {
-    tabs.forEach((t) => {
-      t.setAttribute('aria-selected', String(t === tab));
-      t.tabIndex = t === tab ? 0 : -1;
-    });
-    gallery.setAttribute('aria-labelledby', tab.id);
-    show(tab.dataset.branch);
-  }
-  tabs.forEach((tab, i) => {
-    tab.addEventListener('click', () => select(tab));
-    tab.addEventListener('keydown', (e) => {
-      if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
-      const next = tabs[(i + (e.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length];
-      next.focus();
-      select(next);
-    });
   });
 
-  // 라이트박스
+  // 지점 탭 (+ 주소 해시)
+  const tabs = [...document.querySelectorAll('.branch-tabs [role="tab"]')];
+  const ids = tabs.map((t) => t.dataset.branch);
+  function relayoutMaps(panel) {
+    // 카카오맵이 숨겨졌다 보일 때 깨지지 않게 다시 맞춘다 — 퍼가기 지도는 창 크기 변화(resize)를 받아 다시 그린다
+    requestAnimationFrame(() => {
+      window.dispatchEvent(new Event('resize'));
+      panel.querySelectorAll('.root_daum_roughmap').forEach((m) => { m.style.width = '99.9%'; requestAnimationFrame(() => { m.style.width = ''; }); });
+    });
+  }
+  function select(branch, { focus = false, push = false } = {}) {
+    if (!ids.includes(branch)) branch = ids[0];
+    tabs.forEach((t) => {
+      const on = t.dataset.branch === branch;
+      t.setAttribute('aria-selected', String(on));
+      t.tabIndex = on ? 0 : -1;
+      if (on && focus) t.focus();
+    });
+    panels.forEach((p) => {
+      const on = p.dataset.branch === branch;
+      p.classList.toggle('is-active', on);
+      p.inert = !on;
+      p.setAttribute('aria-hidden', String(!on));
+      if (on) relayoutMaps(p);
+    });
+    const hash = `#${branch}`;
+    if (location.hash !== hash) history[push ? 'pushState' : 'replaceState'](null, '', hash);
+  }
+  tabs.forEach((tab, i) => {
+    tab.addEventListener('click', () => select(tab.dataset.branch, { push: true }));
+    tab.addEventListener('keydown', (e) => {
+      if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+      e.preventDefault();
+      select(tabs[(i + (e.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length].dataset.branch, { focus: true, push: true });
+    });
+  });
+  window.addEventListener('popstate', () => select(location.hash.slice(1)));
+  window.addEventListener('hashchange', () => select(location.hash.slice(1)));
+  select(location.hash.slice(1));
+
+  // 라이트박스 (두 지점 갤러리 공용 — 연 갤러리의 사진만 넘긴다)
   const box = document.createElement('div');
   box.className = 'lightbox';
   box.setAttribute('role', 'dialog');
@@ -130,6 +150,8 @@ function renderTour() {
   document.body.appendChild(box);
   const lbImg = box.querySelector('.lightbox__img');
   const lbCap = box.querySelector('.lightbox__cap');
+  let gallery = null;
+  let photos = [];
   let index = 0;
   let opener = null;
 
@@ -151,12 +173,14 @@ function renderTour() {
     document.body.classList.remove('is-locked');
     opener?.focus();
   }
-  gallery.addEventListener('click', (e) => {
+  galleries.forEach((g) => g.addEventListener('click', (e) => {
     const item = e.target.closest('.gallery__item');
     if (!item) return;
+    gallery = g;
+    photos = window.SITE.tour[g.dataset.tourGallery] || [];
     opener = item;
     open(Number(item.dataset.index));
-  });
+  }));
   box.querySelector('.lightbox__close').addEventListener('click', close);
   box.querySelector('.lightbox__prev').addEventListener('click', () => open(index - 1));
   box.querySelector('.lightbox__next').addEventListener('click', () => open(index + 1));
@@ -167,8 +191,6 @@ function renderTour() {
     if (e.key === 'ArrowLeft') open(index - 1);
     if (e.key === 'ArrowRight') open(index + 1);
   });
-
-  select(tabs[0]);
 }
 
 /* ---------- 공지사항 ---------- */

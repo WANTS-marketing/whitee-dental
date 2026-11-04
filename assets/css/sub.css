@@ -159,7 +159,19 @@
 .lightbox__prev { left: 16px; top: 50%; transform: translateY(-50%); }
 .lightbox__next { right: 16px; top: 50%; transform: translateY(-50%); }
 
-/* ---------- 오시는길 ---------- */
+/* ---------- 병원소개 (about/clinic.html) — 지점 탭 패널 ----------
+   선택한 지점 패널만 보인다. 숨긴 패널은 display:none 대신 같은 자리·같은 너비로 겹쳐 두고 보이지 않게 → 카카오맵이 제 크기로 그려진다
+   (overflow: clip — 숨긴 패널이 더 길어도 페이지가 길어지지 않게) */
+.clinic-panels { position: relative; overflow: clip; }
+.clinic-panel { position: absolute; top: 0; left: 0; right: 0; visibility: hidden; pointer-events: none; }
+.clinic-panel.is-active { position: static; visibility: visible; pointer-events: auto; }
+.clinic-panel__head .loc__head { margin-bottom: 8px; }
+.clinic-panel__intro { font-size: var(--fs-lg); color: var(--color-text-sub); word-break: keep-all; }
+.clinic-block { margin-top: var(--space-3xl, 56px); }
+.clinic-block__title { margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid var(--color-text); font-size: var(--fs-h3); }
+.clinic-amenities { margin-top: 16px; }
+
+/* ---------- 오시는길 (병원소개 ③) ---------- */
 .loc + .loc { margin-top: var(--space-4xl); padding-top: var(--space-4xl); border-top: 1px solid var(--color-line); }
 .loc__head { display: flex; align-items: center; gap: 10px; margin-bottom: 24px; font-size: var(--fs-h2); }
 .loc__head svg { width: 28px; height: 28px; }
