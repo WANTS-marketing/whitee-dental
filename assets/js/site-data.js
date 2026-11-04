@@ -61,12 +61,12 @@ window.SITE = {
     masan: [1, 2, 3, 4, 5, 6].map((n) => ({ file: `tour-masan-0${n}.jpg`, caption: `마산점 원내 0${n}` })),
   },
 
-  /* 지점별 SNS — TODO: 병원에서 실제 URL 받으면 입력 (비어 있으면 링크가 비활성 처리됨) */
+  /* 지점별 SNS (비어 있으면 링크가 비활성 처리됨) */
   social: {
-    changwonInstagram: '', // TODO
-    changwonBlog: '',      // TODO
-    masanInstagram: '',    // TODO
-    masanBlog: '',         // TODO
+    changwonInstagram: 'https://www.instagram.com/changwon_white2/',
+    changwonBlog: 'https://blog.naver.com/whitee2018',
+    masanInstagram: 'https://www.instagram.com/masan_white2/',
+    masanBlog: 'https://blog.naver.com/whitee2024',
   },
 
   /* 의료진 — 지점별, 대표원장 먼저. branches 가 2개면 '창원·마산' 겸직 태그

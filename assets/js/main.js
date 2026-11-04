@@ -149,19 +149,7 @@ function initDoctors() {
     const fields = certs.map((c) => c.replace(/^보건복지부 인증\s*/, '').replace(/\s*전문의$/, ''));
     return `보건복지부 인증 ${fields.join(' · ')} 전문의`; // '·' 가 줄 맨 앞에 오지 않게 앞 단어에 붙임
   };
-  /* 진료과 배지 아이콘 (흰 선, 64×64) — 교정=교정장치, 보철=크라운, 치주=잇몸 치아, 보존=충치 치아, 구강악안면외과=치과 기구, 통합=치아 */
-  const TOOTH = 'M22 14c-6 0-9 4-9 10 0 7 3 11 4 17 .5 4 1.5 10 4.5 10 3.5 0 3.5-7 5-11 .8-1.6 1.6-2.4 3.5-2.4s2.7.8 3.5 2.4c1.5 4 1.5 11 5 11 3 0 4-6 4.5-10 1-6 4-10 4-17 0-6-3-10-9-10-4 0-5 2.5-8 2.5s-4-2.5-8-2.5z';
-  const ICON = {
-    ortho: '<path d="M6 40c4-5 9-7 13-7h26c4 0 9 2 13 7"/><rect x="9" y="19" width="13" height="13" rx="3"/><rect x="25.5" y="19" width="13" height="13" rx="3"/><rect x="42" y="19" width="13" height="13" rx="3"/><path d="M5 25.5h54"/>',
-    prosth: '<path d="M18 22c0-6 5-10 14-10s14 4 14 10c0 4-1 7-3 9H21c-2-2-3-5-3-9z"/><path d="M21 15l5 4 6-6 6 6 5-4"/><path d="M22 31c0 7 2 12 3 18 .4 3 1.4 5 3 5 2 0 2-6 4-9 2 3 2 9 4 9 1.6 0 2.6-2 3-5 1-6 3-11 3-18"/>',
-    perio: `<path d="${TOOTH}"/><path d="M6 34c5-3 9 3 14 0s9-3 12 0 7 3 12 0 9-3 14 0"/>`,
-    endo: `<path d="${TOOTH}"/><circle cx="38" cy="23" r="3.5"/><path d="M23 22c1-2 2-3 4-3"/>`,
-    surgery: '<circle cx="20" cy="13" r="6"/><path d="M20 19v38M42 8c0-3 6-3 6 1 0 3-3 4-3 7v41"/><path d="M15 40h10M40 40h10"/>',
-    general: `<path d="${TOOTH}"/>`,
-  };
-  const iconKey = (dept) => (/교정/.test(dept) ? 'ortho' : /보철/.test(dept) ? 'prosth' : /치주/.test(dept) ? 'perio'
-    : /보존/.test(dept) ? 'endo' : /구강악안면/.test(dept) ? 'surgery' : 'general');
-  const badge = (dept) => `<span class="doc-card__badge" aria-hidden="true"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">${ICON[iconKey(dept)]}</svg></span>`;
+
 
   // 팝업 안 큰 프로필 (원장마다 1개, 선택한 1개만 보임)
   box.innerHTML = docs.map((d, i) => {
@@ -194,7 +182,7 @@ function initDoctors() {
   /* ---------- 카드 줄 ---------- */
   function render(branchId) {
     branch = branchId;
-    panel.dataset.branch = branchId; // 진료과·배지·링크 색 = 지점 색 (common.css --doc-color)
+    panel.dataset.branch = branchId; // 진료과·약력 보기 버튼 색 = 지점 색 (common.css --doc-color)
     modal.dataset.branch = branchId;
     const ds = window.SITE.getDoctorsByBranch(branchId);
     const head = ds.findIndex((d) => d.title === '대표원장');
@@ -202,12 +190,12 @@ function initDoctors() {
     list = ds.map((d) => docs.indexOf(d));
     cardsEl.innerHTML = ds.map((d, p) => `
       <li class="doc-cards__item"><button type="button" class="doc-card" data-pos="${p}" aria-haspopup="dialog">
-        <span class="doc-card__photo img-ph"><img src="${img(d.photo)}" alt="" loading="lazy">${badge(d.dept)}</span>
+        <span class="doc-card__photo img-ph"><img src="${img(d.photo)}" alt="" loading="lazy"></span>
         <span class="doc-card__body">
           <span class="doc-card__dept">${esc(d.dept)}</span>
           <span class="doc-card__name"><b>${esc(d.name)}</b> <small>${esc(d.title)}</small></span>
           <span class="doc-card__intro">${esc(intro(d))}</span>
-          <span class="doc-card__more">약력 보기<span class="doc-card__line" aria-hidden="true"></span></span>
+          <span class="doc-card__more">약력 보기<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></span>
         </span>
       </button></li>`).join('');
     cardsEl.scrollLeft = 0;

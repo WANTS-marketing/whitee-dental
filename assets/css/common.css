@@ -219,6 +219,7 @@ body.is-locked { overflow: hidden; }
 .quick__btn { display: flex; align-items: center; justify-content: center; gap: 12px; width: 150px; height: 90px; padding: 0 16px; border-radius: var(--radius-sm); font-size: var(--fs-md); font-weight: 500; line-height: 1.3; text-align: center; transition: transform var(--dur), box-shadow var(--dur); }
 .quick__btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-card); }
 .quick__btn svg { width: 30px; height: 30px; flex: none; }
+.quick__blog-ico { width: auto; height: 28px; flex: none; } /* 블로그 아이콘(네이버 블로그 말풍선, 129×120) — 높이 기준, svg 아이콘과 같은 크기감 */
 .quick__btn--changwon { background: var(--color-changwon); color: #fff; }
 .quick__btn--changwon-line { background: #fff; color: var(--color-text); border: 1px solid var(--color-changwon-light); }
 .quick__btn--masan { background: var(--color-masan); color: #fff; }
@@ -229,6 +230,7 @@ body.is-locked { overflow: hidden; }
 .quick--float .quick__list { gap: 8px; }
 .quick--float .quick__btn { width: 84px; height: 72px; flex-direction: column; gap: 4px; font-size: var(--fs-xxs); padding: 0 6px; box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08); }
 .quick--float .quick__btn svg { width: 22px; height: 22px; }
+.quick--float .quick__blog-ico { height: 21px; }
 
 /* ==========================================================================
    지점 바로가기 바 (메인 ⑨, 서브페이지 하단 공통)
@@ -531,6 +533,7 @@ body.is-locked { overflow: hidden; }
   /* 글자 크기 단계가 커져도 넘치지 않게 폭은 내용에 맞춤(최소 150px) */
   .quick__btn, .quick--float .quick__btn { flex-direction: row; justify-content: flex-start; width: auto; min-width: 150px; white-space: nowrap; height: 48px; gap: 8px; font-size: var(--fs-xs); border-radius: var(--radius-pill); box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15); }
   .quick__btn svg, .quick--float .quick__btn svg { width: 20px; height: 20px; }
+  .quick__blog-ico, .quick--float .quick__blog-ico { height: 19px; }
   .quick__btn br { display: none; }
 
   .bottom-bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: var(--z-bottom-bar); display: grid; grid-template-columns: repeat(3, 1fr); height: calc(var(--bottom-bar-h) + env(safe-area-inset-bottom)); padding-bottom: env(safe-area-inset-bottom); background: var(--color-btn-dark); color: #fff; }
