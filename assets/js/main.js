@@ -8,7 +8,26 @@ document.addEventListener('DOMContentLoaded', () => {
   renderFaqPreview();
   renderLatestNews();
   initReveal();
+  initQuickReveal();
 });
+
+/* ---------- 모바일: 히어로가 보이는 동안 SNS 플로팅 버튼(+) 숨김 ----------
+   첫 화면에서 히어로 조작 버튼을 가리지 않게. 히어로를 완전히 지나 스크롤하면 나타난다 (main.css .is-hero-visible)
+   JS 가 없으면 클래스가 붙지 않아 항상 보인다 */
+function initQuickReveal() {
+  const hero = document.querySelector('.hero');
+  const quick = document.querySelector('.quick--hero');
+  if (!hero || !quick || !('IntersectionObserver' in window)) return;
+  const mobile = window.matchMedia('(max-width: 768px)');
+  let heroVisible = true;
+  const apply = () => {
+    const hide = mobile.matches && heroVisible;
+    quick.classList.toggle('is-hero-visible', hide);
+    if (hide && quick.classList.contains('is-open')) quick.querySelector('.quick__toggle')?.click(); // 펼친 채로 숨기지 않게 닫기
+  };
+  new IntersectionObserver(([entry]) => { heroVisible = entry.isIntersecting; apply(); }).observe(hero);
+  mobile.addEventListener('change', apply);
+}
 
 /* ---------- ① 히어로 슬라이더 ---------- */
 function initHero() {

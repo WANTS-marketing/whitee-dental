@@ -20,6 +20,11 @@ html::-webkit-scrollbar { display: none; }
 @keyframes hero-zoom { from { transform: scale(1.06); } to { transform: scale(1); } }
 .hero__content { position: absolute; z-index: 2; top: 50%; left: 120px; right: 240px; transform: translateY(-50%); }
 .hero__label { font-size: var(--fs-h4); font-weight: 400; opacity: 0.95; }
+/* 묶음 라벨: 묶음 사이 구분점(·)은 각 묶음 앞에 붙이고, 줄 맨 앞에 오는 구분점은 바깥 칸(overflow)으로 밀어 숨긴다
+   → 한 줄이면 'A · B', 두 줄이면 'A' / 'B' (줄 끝·줄 앞에 · 가 남지 않음) */
+.hero__label { overflow: hidden; }
+.hero__label-row { display: flex; flex-wrap: wrap; margin-left: -0.76em; }
+.hero__label-row > span::before { content: "·"; display: inline-block; width: 0.76em; text-align: center; } /* 0.76em = 라벨 안 " · " 폭과 같게 */
 .hero__title { margin-top: 12px; font-size: var(--fs-display); font-weight: 800; line-height: 1.25; letter-spacing: 0; }
 .hero__desc { margin-top: 20px; font-size: var(--fs-lg); line-height: 1.55; opacity: 0.9; }
 .hero__strong { margin-top: 24px; font-size: var(--fs-lg); font-weight: 700; }
@@ -402,10 +407,13 @@ html.is-modal-open { overflow: hidden; }
   .hero__desc { font-size: var(--fs-sm); margin-top: 12px; }
   .hero__strong { font-size: var(--fs-md); margin-top: 12px; }
   .hero__btn { margin-top: 20px; height: 40px; font-size: var(--fs-sm); }
-  .hero__controls { left: 16px; right: 16px; bottom: 20px; justify-content: flex-end; }
-  .hero__ctrl--play { margin-left: auto; }
+  /* 조작 버튼(이전·다음·1/4·재생·정지)은 왼쪽 아래 한 묶음 — 오른쪽 아래는 SNS 플로팅 버튼 자리 */
+  .hero__controls { left: 16px; right: auto; bottom: 20px; justify-content: flex-start; }
+  .hero__ctrl--play { margin-left: 8px; }
   /* 히어로 퀵메뉴 → 우측 하단 플로팅 (위치는 common.css 모바일 규칙) */
-  .quick--hero { position: fixed; top: auto; right: 16px; bottom: calc(var(--bottom-bar-h) + 16px); padding: 0; background: none; border-radius: 0; }
+  .quick--hero { position: fixed; top: auto; right: 16px; bottom: calc(var(--bottom-bar-h) + env(safe-area-inset-bottom) + 16px); padding: 0; background: none; border-radius: 0; transition: opacity var(--dur), visibility var(--dur), transform var(--dur); }
+  /* 히어로가 화면에 보이는 동안은 숨김 — 히어로를 지나 스크롤하면 나타난다 (main.js initQuickReveal) */
+  .quick--hero.is-hero-visible { opacity: 0; visibility: hidden; transform: translateY(12px); pointer-events: none; }
   .quick--hero::before, .quick--hero::after { display: none; }
 
   .clinic-bar { padding-top: 40px; }

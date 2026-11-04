@@ -522,7 +522,7 @@ body.is-locked { overflow: hidden; }
   .logo__img { width: 150px; }
 
   /* 퀵메뉴 → 우측 하단 플로팅 버튼 */
-  .quick, .quick--float { position: fixed; top: auto; right: 16px; bottom: calc(var(--bottom-bar-h) + 16px); left: auto; transform: none; z-index: var(--z-quick); padding: 0; background: none; }
+  .quick, .quick--float { position: fixed; top: auto; right: 16px; bottom: calc(var(--bottom-bar-h) + env(safe-area-inset-bottom) + 16px); /* 하단 고정 바(아이폰 홈 표시줄 여백 포함) 바로 위 */ left: auto; transform: none; z-index: var(--z-quick); padding: 0; background: none; }
   .quick__toggle { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 50%; background: var(--color-btn-dark); color: #fff; box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25); }
   .quick__toggle svg { width: 24px; height: 24px; transition: transform var(--dur); }
   .quick.is-open .quick__toggle svg { transform: rotate(45deg); }
