@@ -35,8 +35,8 @@
   <main id="main">
     <h1 class="sr-only">화이트e치과 — 창원점 · 마산점</h1>
 
-    <!-- 홈 묶음: 히어로 + 빠른 진료 안내 + 진료 철학·지점
-         데스크톱: 히어로가 헤더 아래 화면을 꽉 채우고(가로 100%), 퀵바 카드가 히어로 아래 끝에 절반쯤 걸친다 -->
+    <!-- 홈 묶음(첫 화면): 히어로 + 빠른 진료 안내 퀵바 — 이어서 진료안내 → 의료진 → 치료사례 → FAQ → 치과소식 → (푸터) 지점 바로가기 바
+         진료 철학 문구는 치과소개(about/intro.html)로, 지점 정보는 하단 지점 바로가기 바로 옮겼다 -->
     <div class="screen-home" id="screen-home">
     <div class="screen-home__first">
     <!-- ① 히어로 슬라이더 -->
@@ -140,68 +140,9 @@
     </section>
     </div>
 
-    <!-- ③ 진료 철학 + 지점 정보 -->
-    <section class="philosophy" aria-labelledby="philosophy-title">
-      <div class="container philosophy__inner">
-        <div class="philosophy__text">
-          <h2 class="philosophy__title" id="philosophy-title">좋은 진료는<br>충분한 <span class="text-point">이해</span>에서 시작됩니다.</h2>
-          <p class="philosophy__desc">화이트e치과는 환자의 이야기에 귀 기울이고, 정확한 진단과 충분한 설명을 바탕으로 한 사람에게 꼭 필요한 진료만을 계획합니다.</p>
-        </div>
-        <div class="branch-cards">
-          <article class="branch-card branch-card--changwon">
-            <h3 class="branch-card__name">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s7-6.2 7-11.5A7 7 0 005 9.5C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
-              화이트e치과 <em>창원점</em></h3>
-            <p class="branch-card__addr">경상남도 창원시 성산구 단정로 7 밀레니엄타워 3층 <span class="branch-card__addr-sub">(상남동 롯데리아 3층)</span></p>
-            <div class="branch-card__contact">
-              <a class="branch-card__tel" href="tel:0557162884" aria-label="창원점 전화 055-716-2884">
-                <svg viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" opacity=".45" d="M7 6h4l2.5 6-3 2a14 14 0 006.5 6.5l2-3 6 2.5v4a3 3 0 01-3 3A21 21 0 014 9a3 3 0 013-3z"/><circle cx="23" cy="8" r="5" fill="currentColor"/></svg>
-                055-716-2884</a>
-              <p class="branch-card__hours"><strong>진료시간</strong><span class="branch-card__hours-body"><span class="branch-card__time">평일 10:00–21:00</span><span class="branch-card__sep"> · </span><span class="branch-card__time">토 10:00–16:00</span> <span class="branch-card__time branch-card__closed">일요일 휴진</span></span></p>
-            </div>
-          </article>
-          <article class="branch-card branch-card--masan">
-            <h3 class="branch-card__name">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s7-6.2 7-11.5A7 7 0 005 9.5C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
-              화이트e치과 <em>마산점</em></h3>
-            <p class="branch-card__addr">경상남도 창원시 마산회원구 3·15대로 686, 9~10층 <span class="branch-card__addr-sub">(석전동 365병원)</span></p>
-            <div class="branch-card__contact">
-              <a class="branch-card__tel" href="tel:0552552000" aria-label="마산점 전화 055-255-2000">
-                <svg viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" opacity=".45" d="M7 6h4l2.5 6-3 2a14 14 0 006.5 6.5l2-3 6 2.5v4a3 3 0 01-3 3A21 21 0 014 9a3 3 0 013-3z"/><circle cx="23" cy="8" r="5" fill="currentColor"/></svg>
-                055-255-2000</a>
-              <p class="branch-card__hours"><strong>진료시간</strong><span class="branch-card__hours-body"><span class="branch-card__time">평일 10:00–21:00</span><span class="branch-card__sep"> · </span><span class="branch-card__time">토 10:00–16:00</span> <span class="branch-card__time branch-card__closed">일요일 휴진</span></span></p>
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
     </div>
 
-    <!-- ④ 의료진 -->
-    <section class="doctors screen" id="screen-doctors" aria-labelledby="doctors-title">
-      <div class="container doctors__inner">
-        <!-- 머리말: 왼쪽 소개 / 오른쪽 지점 탭·이전/다음 — 아래 프로필 패널이 컨테이너 전체 폭을 쓴다 -->
-        <div class="doctors__head">
-          <div class="doctors__intro">
-            <span class="sec-label doctors__label">OUR DOCTORS</span>
-            <h2 class="doctors__title" id="doctors-title">분야별 전문의가<br class="only-mobile"> 직접 진료합니다</h2>
-            <p class="doctors__desc">교정과 · 치주과 · 보철과 · 보존과 · 구강악안면외과 · 통합치의학과 전문의가 지점별로 함께합니다.</p>
-          </div>
-          <div class="doctors__controls">
-          <div class="doctors__tabs" role="tablist" aria-label="지점 선택">
-            <button class="doctors__tab" type="button" role="tab" id="tab-changwon" aria-selected="true" aria-controls="doctors-panel" data-branch="changwon">창원점</button>
-            <button class="doctors__tab" type="button" role="tab" id="tab-masan" aria-selected="false" aria-controls="doctors-panel" data-branch="masan" tabindex="-1">마산점</button>
-          </div>
-          </div>
-        </div>
-        <!-- 인물 나열 (PC: 지점 의료진 전원 한 줄, 태블릿 3명·모바일 1.3명 가로 스와이프) — main.js initDoctors, 데이터: site-data.js doctors -->
-        <div class="doctors__main" id="doctors-panel" data-branch="changwon" role="tabpanel" aria-labelledby="tab-changwon">
-          <ul class="doc-cards" data-doc-cards aria-label="의료진 목록"></ul>
-        </div>
-      </div>
-    </section>
-
-    <!-- ⑤ 진료안내 -->
+    <!-- ③ 진료안내 -->
     <section class="clinic screen" id="screen-clinic" aria-labelledby="clinic-title">
       <div class="container clinic__inner">
         <div class="clinic__head">
@@ -254,7 +195,31 @@
       </div>
     </section>
 
-    <!-- ⑥ 치료사례 -->
+    <!-- ④ 의료진 -->
+    <section class="doctors screen" id="screen-doctors" aria-labelledby="doctors-title">
+      <div class="container doctors__inner">
+        <!-- 머리말: 왼쪽 소개 / 오른쪽 지점 탭·이전/다음 — 아래 프로필 패널이 컨테이너 전체 폭을 쓴다 -->
+        <div class="doctors__head">
+          <div class="doctors__intro">
+            <span class="sec-label doctors__label">OUR DOCTORS</span>
+            <h2 class="doctors__title" id="doctors-title">분야별 전문의가<br class="only-mobile"> 직접 진료합니다</h2>
+            <p class="doctors__desc">교정과 · 치주과 · 보철과 · 보존과 · 구강악안면외과 · 통합치의학과 전문의가 지점별로 함께합니다.</p>
+          </div>
+          <div class="doctors__controls">
+          <div class="doctors__tabs" role="tablist" aria-label="지점 선택">
+            <button class="doctors__tab" type="button" role="tab" id="tab-changwon" aria-selected="true" aria-controls="doctors-panel" data-branch="changwon">창원점</button>
+            <button class="doctors__tab" type="button" role="tab" id="tab-masan" aria-selected="false" aria-controls="doctors-panel" data-branch="masan" tabindex="-1">마산점</button>
+          </div>
+          </div>
+        </div>
+        <!-- 인물 나열 (PC: 지점 의료진 전원 한 줄, 태블릿 3명·모바일 1.3명 가로 스와이프) — main.js initDoctors, 데이터: site-data.js doctors -->
+        <div class="doctors__main" id="doctors-panel" data-branch="changwon" role="tabpanel" aria-labelledby="tab-changwon">
+          <ul class="doc-cards" data-doc-cards aria-label="의료진 목록"></ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ⑤ 치료사례 -->
     <section class="cases screen" id="screen-cases" aria-labelledby="cases-title">
       <div class="container cases__inner">
         <div class="cases__head">
@@ -291,7 +256,7 @@
       </div>
     </section>
 
-    <!-- ⑦ FAQ 미리보기 -->
+    <!-- ⑥ FAQ 미리보기 -->
     <section class="faq-preview screen" id="screen-faq" aria-labelledby="faq-preview-title">
       <div class="container faq-preview__inner">
         <div class="faq-preview__head">
@@ -304,7 +269,7 @@
       </div>
     </section>
 
-    <!-- ⑧ 치과소식 -->
+    <!-- ⑦ 치과소식 -->
     <section class="story screen" id="screen-story" aria-labelledby="story-title">
       <div class="container story__inner">
         <div class="story__head">
@@ -331,7 +296,7 @@
     </div>
   </dialog>
 
-  <!-- ⑨ 지점 바로가기 바 + ⑩ 푸터 + 모바일 하단 바 -->
+  <!-- ⑧ 지점 바로가기 바 + ⑨ 푸터 + 모바일 하단 바 (components/footer.html) -->
   <div data-include="footer"></div>
 </body>
 </html>

@@ -130,6 +130,7 @@
     initQuick();
     fillSocialLinks();
     renderFooterBranches();
+    renderBranchBar();
     initCallSheet();
     initRollText(); // 헤더·푸터 등 컴포넌트 안의 .roll-text
   });
@@ -336,6 +337,19 @@
           <dt>전화</dt><dd><a href="${telHref(b.tel)}">${esc(b.tel)}</a> · 이메일 <a href="mailto:${esc(b.email)}">${esc(b.email)}</a></dd>
           <dt>진료시간</dt><dd>${b.hours.map((h) => `${esc(h.label)} ${esc(h.time)}`).join(' · ')}</dd>
         </dl>
+      </div>`).join('');
+  }
+
+  /** 지점 바로가기 바(푸터 바로 위): 지점명(지점 색) · 전화번호(tel) · 진료시간 · '병원소개·오시는길 →' */
+  function renderBranchBar() {
+    const box = document.querySelector('[data-branch-bar]');
+    if (!box) return;
+    box.innerHTML = SITE.branches.map((b) => `
+      <div class="branch-bar__item branch-bar__item--${b.id}">
+        <h2 class="branch-bar__name">화이트e치과 <em class="text-${b.id}">${esc(b.name)}</em></h2>
+        <a class="branch-bar__tel" href="${telHref(b.tel)}" aria-label="${esc(b.name)} 전화 ${esc(b.tel)}">${esc(b.tel)}</a>
+        <p class="branch-bar__hours">${esc(b.hoursShort)}</p>
+        <a class="branch-bar__more" href="${root}/about/clinic.html#${b.id}">병원소개·오시는길 <span aria-hidden="true">→</span></a>
       </div>`).join('');
   }
 

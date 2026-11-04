@@ -471,8 +471,8 @@ async function renderLatestNews() {
    의료진 섹션부터 적용. 섹션 타이틀은 fade-up, 카드 묶음은 자식이 0.08s 간격으로 순차 등장 (간격은 main.css). 움직임 줄이기 설정이면 끔 */
 function initReveal() {
   if (!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  const singles = '.philosophy__text, .doctors__head, .doctors__main, .clinic__head, .cases__head, .faq-preview__head, .faq-preview__box, .story__head';
-  const groups = '.branch-cards, .clinic__grid, .cases__list, .story__list';
+  const singles = '.doctors__head, .doctors__main, .clinic__head, .cases__head, .faq-preview__head, .faq-preview__box, .story__head';
+  const groups = '.clinic__grid, .cases__list, .story__list';
   const targets = [
     ...[...document.querySelectorAll(singles)].map((el) => { el.classList.add('reveal'); return el; }),
     ...[...document.querySelectorAll(groups)].map((el) => { el.classList.add('reveal-group'); return el; }),

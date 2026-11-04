@@ -330,18 +330,24 @@ body.is-locked { overflow: hidden; }
 .quick__btn--top { background: #fff; color: var(--color-text); border: 1px solid var(--color-line); }
 
 /* ==========================================================================
-   지점 바로가기 바 (메인 ⑨, 서브페이지 하단 공통)
+   지점 바로가기 바 (메인 ⑧, 서브페이지 하단 공통 — components/footer.html, common.js renderBranchBar)
    ========================================================================== */
-.branch-bar__photo { height: 320px; background: #cfcac4 center / cover no-repeat; }
+/* 원내 사진 띠 + 어두운 바 [창원점 | 마산점] — 각 칸: 지점명(지점 색) / 전화번호(크게, tel) / 진료시간 / '병원소개·오시는길 →'
+   창원점 칸은 가운데 구분선 쪽(오른쪽)으로, 마산점 칸은 왼쪽으로 붙여 두 칸이 가운데에서 마주 보게. 사진 띠는 예전보다 낮춰 전체 높이가 크게 늘지 않게 */
+.branch-bar__photo { height: 260px; background: #cfcac4 center / cover no-repeat; }
 .branch-bar__links { display: grid; grid-template-columns: 1fr 1fr; background: var(--color-bg-dark); color: #fff; }
-.branch-bar__link { display: flex; align-items: center; gap: 16px; padding: 44px 80px; font-size: var(--fs-h3); font-weight: 500; transition: background var(--dur); }
-.branch-bar__link:hover { background: #000; }
-.branch-bar__link svg { width: 32px; height: 32px; flex: none; transition: transform var(--dur); }
-.branch-bar__link--changwon { justify-content: flex-end; border-right: 1px solid rgba(255, 255, 255, 0.9); }
-.branch-bar__link--changwon svg { color: var(--color-changwon); }
-.branch-bar__link--changwon:hover svg { transform: translateX(-6px); }
-.branch-bar__link--masan svg { color: var(--color-masan); }
-.branch-bar__link--masan:hover svg { transform: translateX(6px); }
+.branch-bar__item { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; padding: 40px 80px 44px; }
+.branch-bar__item--changwon { align-items: flex-end; text-align: right; border-right: 1px solid rgba(255, 255, 255, 0.25); }
+.branch-bar__name { font-size: var(--fs-h4); font-weight: 600; }
+.branch-bar__name em { font-style: normal; }
+.branch-bar__tel { margin-top: 2px; font-size: 2.25rem; font-weight: 800; letter-spacing: 0.01em; line-height: 1.2; color: #fff; }
+.branch-bar__hours { font-size: var(--fs-sm); color: rgba(255, 255, 255, 0.75); word-break: keep-all; }
+.branch-bar__more { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; padding-bottom: 2px; border-bottom: 1px solid rgba(255, 255, 255, 0.5); font-size: var(--fs-sm); font-weight: 600; color: #fff; transition: color var(--dur), border-color var(--dur); }
+.branch-bar__item--changwon .branch-bar__more:hover { color: var(--color-changwon); border-color: currentColor; }
+.branch-bar__item--masan .branch-bar__more:hover { color: var(--color-masan); border-color: currentColor; }
+/* JS 가 없을 때만 남는 예전 링크 */
+.branch-bar__link { display: flex; align-items: center; justify-content: center; gap: 12px; padding: 32px 24px; font-size: var(--fs-h4); }
+.branch-bar__link svg { width: 24px; height: 24px; flex: none; }
 
 /* ==========================================================================
    푸터
@@ -587,7 +593,8 @@ body.is-locked { overflow: hidden; }
 
   .footer__nav ul { grid-template-columns: repeat(3, 1fr); }
   .footer__nav li { border-bottom: 1px solid var(--color-line-dark); }
-  .branch-bar__link { padding: 36px 32px; font-size: var(--fs-h4); }
+  .branch-bar__item { padding: 32px 32px 36px; }
+  .branch-bar__tel { font-size: 1.875rem; }
   .branch-card { padding: 24px; }
   .branch-card__tel { font-size: 1.75rem; }
   .card-grid { grid-template-columns: repeat(2, 1fr); }
@@ -639,11 +646,12 @@ body.is-locked { overflow: hidden; }
   .bottom-bar > * + * { border-left: 1px solid rgba(255, 255, 255, 0.12); }
   .bottom-bar svg { width: 20px; height: 20px; }
 
-  .branch-bar__photo { height: 180px; }
+  .branch-bar__photo { height: 160px; }
   .branch-bar__links { grid-template-columns: 1fr; }
-  .branch-bar__link { justify-content: center !important; padding: 22px 16px; font-size: var(--fs-md); }
-  .branch-bar__link svg { width: 22px; height: 22px; }
-  .branch-bar__link--changwon { border-right: 0; border-bottom: 1px solid rgba(255, 255, 255, 0.2); }
+  .branch-bar__item, .branch-bar__item--changwon { align-items: center; text-align: center; padding: 26px 16px 28px; }
+  .branch-bar__item--changwon { border-right: 0; border-bottom: 1px solid rgba(255, 255, 255, 0.2); }
+  .branch-bar__name { font-size: var(--fs-md); }
+  .branch-bar__tel { font-size: 1.75rem; }
 
   .footer__nav ul { grid-template-columns: repeat(2, 1fr); }
   .footer__nav a { padding: 14px 16px; }

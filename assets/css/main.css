@@ -89,63 +89,6 @@ html::-webkit-scrollbar { display: none; }
 .clinic-bar__faq .btn:is(:hover, :focus-visible) { background: var(--color-masan); }
 .clinic-bar__faq-desc br { display: none; } /* 홈 퀵바 카드(좁은 FAQ 열)에서만 줄바꿈 */
 
-/* ---------- ③ 진료 철학 + 지점 ---------- */
-.philosophy { padding: 0px 0 28px; }
-.philosophy__inner { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.75fr); gap: 40px; align-items: center; }
-.philosophy__title { font-size: var(--fs-h1); line-height: 1.45; letter-spacing: -0.02em; }
-.philosophy__desc { margin-top: 32px; font-size: var(--fs-sm); color: var(--color-text-sub); }
-/* 모바일·태블릿: 지번 주소는 예전처럼 다음 줄 */
-@media (max-width: 1024px) {
-  .philosophy .branch-card__addr-sub { display: block; font-size: inherit; }
-}
-/* 데스크톱: [문구 묶음 | 카드 2장] 한 줄 — 전체를 기존의 80%로 축소(transform 없이 값 자체를 0.8배, 글자는 rem)
-   좌우 끝선 = 위 퀵바 카드 끝선: 컨테이너 안쪽 시작선 + 퀵바 카드 바깥 여백(--ph-qb, 화면 단위 구성에서 24px)
-     --page-pad 는 1025~1359px 에서 52px, 그 밖은 --gutter → 1920·1440·1366 모두 줄 폭 1232px
-   문구 칸 384px(기존 480의 80%, 글자 크게 보기에서도 카드 폭 확보를 위해 px), 1025~1359px 은 272px(340의 80%)
-   간격 80%: 문구↔첫 카드 38px, 카드끼리 19px. 본문·주소·진료시간 글자는 최소 1rem(가독성 기준) */
-@media (min-width: 1025px) {
-  .philosophy { container-type: inline-size; padding-bottom: 22px; }
-  .philosophy .philosophy__inner.container { /* 파일 뒤쪽 .screen-home .container(1025~1359px 52px 여백)보다 우선 */
-    --ph-side: max(var(--quick-edge, 0px), calc((100cqw - min(100cqw, var(--container) + var(--gutter) * 2)) / 2 + var(--page-pad, var(--gutter)) + var(--ph-qb, 0px))); /* 최소 = 퀵메뉴 자리(common.css) */
-    max-width: none;
-    padding-left: var(--ph-side);
-    padding-right: var(--ph-side);
-    grid-template-columns: var(--ph-text, 384px) minmax(0, 1fr);
-    column-gap: 38px;
-  }
-  .philosophy__title { font-size: 2rem; }       /* 2.5rem × 0.8 */
-  .philosophy__desc { margin-top: 26px; }        /* 32 × 0.8, 글자 1rem 유지(최소) */
-  .philosophy .branch-cards { gap: 19px; }
-  /* 카드: 안쪽 여백 26/36/19 → 21/29/15 */
-  .philosophy .branch-card { container: branch / inline-size; padding: 21px 29px 15px; }
-  .philosophy .branch-card__name { font-size: 1rem; gap: 5px; }           /* 1.25rem × 0.8 */
-  .philosophy .branch-card__name svg { width: 18px; height: 18px; }      /* 22 × 0.8 */
-  .philosophy .branch-card__addr { margin-top: 10px; }                    /* 글자 1rem 유지(최소) */
-  .philosophy .branch-card__tel { gap: 8px; margin-top: 10px; font-size: 1.8rem; } /* 2.25rem × 0.8 */
-  .philosophy .branch-card__tel svg { width: 24px; height: 24px; }       /* 30 × 0.8 */
-  .philosophy .branch-card__hours { margin-top: 16px; padding-top: 13px; font-size: 1rem; } /* 1.125rem × 0.8 → 최소 1rem */
-  .philosophy .branch-card__hours strong { margin-right: 11px; }
-}
-@media (min-width: 1025px) and (min-height: 700px) {
-  .screen-home .philosophy__inner { --ph-qb: 24px; } /* 퀵바 카드(.clinic-bar__inner)의 좌우 margin 24px 과 같게 */
-}
-@media (min-width: 1025px) and (max-width: 1359px) {
-  .philosophy__inner { --ph-text: 272px; }
-  .philosophy .branch-card { padding-left: 19px; padding-right: 19px; }
-  .philosophy .branch-card__tel { font-size: clamp(1.2rem, 1.76vw, 1.8rem); }
-}
-/* 카드가 충분히 넓을 때만: [전화번호 | 세로선 | 진료시간 3줄] 좌우 배치. 좁으면(또는 글자 크게) 위아래
-   필요 안쪽 폭(여백 제외) ≈ 전화 238 + 구분 33 + 진료시간 116 = 387px → 24.5rem. rem 기준이라 글자 크기 단계에 따라 자동 전환 */
-@container branch (min-width: 24.5rem) {
-  .philosophy .branch-card__addr { margin-top: 8px; }
-  .philosophy .branch-card__contact { display: flex; align-items: center; margin-top: 11px; }
-  .philosophy .branch-card__tel { flex: none; margin-top: 0; white-space: nowrap; }
-  .philosophy .branch-card__hours { margin: 0 0 0 16px; padding: 2px 0 2px 16px; border-top: 0; border-left: 1px solid var(--color-line); line-height: 1.5; }
-  .philosophy .branch-card__hours strong,
-  .philosophy .branch-card__sep { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-  .philosophy .branch-card__time { display: block; }
-}
-
 /* ---------- ④ 의료진 ---------- */
 .doctors { position: relative; overflow: hidden; padding: 60px 0; }
 .doctors { background: #fff; } /* 섹션 배경 흰색 */
@@ -339,7 +282,7 @@ html.is-modal-open { overflow: hidden; }
 
 
 /* ---------- ⑤ 진료안내 ---------- */
-.clinic { padding: var(--space-4xl) 0; background: var(--color-bg-soft); }
+.clinic { padding: var(--space-4xl) 0; background: var(--color-bg-warm); } /* 연베이지 — 바로 아래 의료진(흰색)과 구분 */
 .clinic__inner { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 60px; align-items: center; }
 .clinic__title { font-size: var(--fs-h1); letter-spacing: -0.02em; }
 .clinic__grid {
@@ -418,7 +361,7 @@ html.is-modal-open { overflow: hidden; }
 
 @media (max-width: 1024px) {
 
-  .philosophy__inner, .doctors__inner, .clinic__inner, .cases__inner, .faq-preview__inner, .story__inner { grid-template-columns: minmax(0, 1fr); gap: 40px; }
+  .doctors__inner, .clinic__inner, .cases__inner, .faq-preview__inner, .story__inner { grid-template-columns: minmax(0, 1fr); gap: 40px; }
   .doctors__head { align-items: stretch; } /* 모바일: 탭이 전체 폭 */
   /* 태블릿: 3명씩 가로 스와이프, 줄은 화면 끝까지 */
   .doctors__main { --doc-per: 3; --doc-gap: 20px; }
@@ -462,7 +405,6 @@ html.is-modal-open { overflow: hidden; }
   .clinic-bar__faq { order: 4; flex-basis: 100%; padding: 20px; border: 0; border-radius: var(--radius-md); background: var(--color-bg-warm); }
   .clinic-bar__title { font-size: var(--fs-h3); }
 
-  .philosophy__desc { margin-top: 16px; }
 
   .doctors { padding: 56px 0; }
   .doctors__title { font-size: var(--fs-h3); }
@@ -565,7 +507,6 @@ html.is-modal-open { overflow: hidden; }
     /* 너비 = 예전 가운데 정렬 퀵바 너비(컨테이너 - 좌우 margin 48px)의 80% */
     --qb-w: calc((min(100cqw, var(--container) + var(--gutter) * 2) - var(--gutter) * 2 - 48px) * 0.8);
   }
-  .screen-home .philosophy { padding-top: 72px; } /* 첫 화면(히어로) 아래 다음 묶음 */
   /* 퀵바 크기 80% (transform 없이 값 자체를 0.8배). 카드 라벨·FAQ 문구·버튼 글자는 최소 14px */
   .screen-home .clinic-bar__inner { margin: 0; border-bottom: 0; border-radius: var(--radius-xl); background: #fff; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12); }
   .screen-home .clinic-bar__card { aspect-ratio: auto; height: 100%; min-height: clamp(86px, 12vh, 112px); gap: 11px; padding: 6px 5px; border-radius: 10px; } /* min-height: 글자가 두 줄이 돼도 카드 밖으로 넘치지 않게, height 100%: 한 장만 두 줄일 때도 다섯 장 높이를 같게 */
@@ -634,9 +575,6 @@ html.is-modal-open { overflow: hidden; }
   .screen-home .hero__inner { padding-left: 0; padding-right: 0; } /* 히어로는 화면 가로 100% (문구 시작선은 --hero-x) */
   /* 히어로는 컨테이너가 아니라 화면 너비 - 80px → 넓힌 여백 제외. 대신 글자 시작선 계산에 52px 반영 */
   .screen-home { --page-pad: 52px; }
-  /* 좁아진 지점 카드에서 전화번호가 두 줄로 꺾이지 않게 */
-  .branch-card { padding-left: 24px; padding-right: 24px; }
-  .branch-card__tel { font-size: clamp(1.5rem, 2.2vw, 2.25rem); }
 }
 /* ---------- 히어로 시작선 (데스크톱) ----------
    헤더 칸(common.css .header__inner: 최대 1600px, 좌우 최소 40px)과 같은 선 → 문구 왼쪽 = 로고 시작선, 조작 버튼 오른쪽 = 헤더 오른쪽 끝선 */
