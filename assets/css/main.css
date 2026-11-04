@@ -148,7 +148,12 @@ html::-webkit-scrollbar { display: none; }
 
 /* ---------- ④ 의료진 ---------- */
 .doctors { position: relative; overflow: hidden; padding: 60px 0; }
-.doctors { background: #f5f3f0; } /* 배경 사진 대신 은은한 단색 */
+/* 배경: 연한 베이지 + 아주 옅은 선 패턴(큰 원·격자, 600px 반복) — 레퍼런스처럼 은은하게 */
+.doctors {
+  background-color: #f6f3ee;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='600' fill='none' stroke='%23000' stroke-opacity='.045'%3E%3Ccircle cx='300' cy='300' r='240'/%3E%3Cpath d='M0 .5h600M.5 0v600'/%3E%3C/svg%3E");
+  background-position: center top;
+}
 /* 머리말(가운데 정렬 소개 + 지점 탭) + 아래 프로필 패널이 컨테이너 전체 폭 */
 .doctors__inner { position: relative; display: flex; flex-direction: column; gap: 28px; }
 .doctors__inner { container: doc-inner / inline-size; }
@@ -170,60 +175,73 @@ html::-webkit-scrollbar { display: none; }
 .doctors__tab[data-branch="masan"] { --tab-color: var(--color-masan); }
 .doctors__tab:hover { border-color: var(--tab-color); color: var(--tab-color); }
 .doctors__tab[aria-selected="true"] { border-color: var(--tab-color); background: var(--tab-color); color: #fff; }
-.doctors__arrow { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: #fff; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06); transition: background var(--dur), color var(--dur); }
-.doctors__arrow:hover { background: var(--color-text); color: #fff; }
-.doctors__arrow svg { width: 20px; height: 20px; }
-.doctors__arrow:disabled { opacity: 0.35; pointer-events: none; }
-/* 의료진 섹션만 컨테이너 최대 폭 해제. 머리말(제목·탭·‹ ›)과 카드 줄이 같은 끝선
+/* 의료진 섹션만 컨테이너 최대 폭 해제. 머리말(제목·탭)과 인물 줄이 같은 끝선
    좌우 여백 = 오른쪽 플로팅 퀵메뉴에 카드가 가리지 않는 폭 --quick-edge (common.css: 1561px 이상 148 / 1441~1560 96 / 1440 이하 80px)
    위·아래 섹션(진료 철학·지점, 진료안내)은 기존 컨테이너 폭 그대로 */
 @media (min-width: 1025px) {
   .doctors .doctors__inner.container { max-width: none; padding-left: var(--quick-edge); padding-right: var(--quick-edge); }
 }
-/* 사진 카드 줄 (main.js initDoctors) — 가로 스크롤 + 스냅, 머리말 ‹ › 는 한 장씩
-   한 화면 장수 --doc-per: 데스크톱 5 / 1280px 이하 4 / 1024px 이하 3 / 768px 이하 2 / 560px 이하 1.2(가로 스와이프)
-   카드 그림자·hover 떠오름이 잘리지 않게 줄 위아래·좌우에 여유(padding)를 두고 같은 만큼 margin 으로 되돌린다 */
-.doctors__main { --doc-per: 5; --doc-gap: 24px; --doc-bleed: 6px; position: relative; min-width: 0; }
-/* 이전·다음: 카드 줄이 넘칠 때만(main.js updateArrows) 첫·마지막 보이는 카드의 세로 가운데 위에 겹쳐 표시, 끝에 닿은 쪽은 사라짐 */
-.doctors__nav[hidden] { display: none; }
-.doctors__nav .doctors__arrow { position: absolute; z-index: 2; top: var(--doc-arrow-top, 35%); width: 48px; height: 48px; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.16); transform: translateY(-50%); transition: background var(--dur), color var(--dur), opacity var(--dur), visibility var(--dur); }
-/* 가로 위치: 버튼 가운데가 카드 바깥 끝선(첫 카드 왼쪽 변 / 마지막 카드 오른쪽 변)에 오게 */
-.doctors__nav .doctors__arrow--prev { left: -24px; }
-.doctors__nav .doctors__arrow--next { right: -24px; }
-.doctors__nav .doctors__arrow:disabled { opacity: 0; visibility: hidden; }
+/* 인물 나열 (main.js initDoctors) — 카드 박스 없이 배경을 지운 상반신 사진을 나란히
+   PC: 지점 의료진 전원이 한 줄(--doc-per = 인원수 --doc-count), 태블릿 3명·모바일 1.3명씩 가로 스와이프
+   사진 칸 높이 --doc-photo-h(main.js: 섹션 높이의 약 60%), 사진은 아래 끝 기준 → 같은 크롭 사진이면 머리·어깨선 높이가 같다 */
+.doctors__main[data-branch="changwon"] { --doc-tint: rgba(253, 91, 155, 0.08); }
+.doctors__main[data-branch="masan"] { --doc-tint: rgba(254, 109, 51, 0.08); }
+.doctors__main { --doc-per: var(--doc-count, 5); --doc-gap: 24px; position: relative; min-width: 0; }
 .doc-cards {
   display: flex; gap: var(--doc-gap);
-  margin: -10px calc(var(--doc-bleed) * -1) -20px; padding: 10px var(--doc-bleed) 20px;
-  overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--doc-bleed); scrollbar-width: none; overscroll-behavior-x: contain;
+  overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain;
 }
 .doc-cards::-webkit-scrollbar { display: none; }
-.doc-cards__item { display: flex; flex: 0 0 calc((100% - var(--doc-gap) * (var(--doc-per) - 1)) / var(--doc-per)); min-width: 0; scroll-snap-align: start; }
-/* 카드 = 버튼 하나(카드 어디를 눌러도 약력 팝업) — 흰 배경, 아주 옅은 그림자(hover 때도 그대로), 모서리 10px, hover 시 -4px
-   카드 자체가 크기 기준(container) → 안쪽 글자·여백이 카드 폭(cqw)에 비례 (카드 폭 약 250px → 340px 에서 최소 → 최대) */
-.doc-card {
-  container-type: inline-size;
-  display: flex; flex-direction: column; width: 100%; overflow: hidden; border-radius: 10px; background: #fff; text-align: left;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 6px 18px rgba(0, 0, 0, 0.04);
-  transition: transform 0.3s var(--ease);
+.doc-person { container: person / inline-size; flex: 0 0 calc((100% - var(--doc-gap) * (var(--doc-per) - 1)) / var(--doc-per)); min-width: 0; scroll-snap-align: start; transition: opacity 0.35s var(--ease); }
+/* 사진 칸: 실루엣 플레이스홀더(사진이 없을 때) 위에 PNG, 아래에서 올라오는 약력 패널 */
+.doc-person__stage { position: relative; height: var(--doc-photo-h, 420px); overflow: hidden; cursor: pointer; }
+.doc-person__ph { position: absolute; left: 50%; bottom: 0; height: 82%; transform: translateX(-50%); fill: rgba(120, 100, 80, 0.09); }
+.doc-person__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; object-position: center bottom; }
+.doc-person__img.is-missing { display: none; }
+/* 아래쪽을 배경색으로 살짝 녹여 이름 줄과 이어지게 (레퍼런스처럼) */
+.doc-person__stage::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 18%; background: linear-gradient(180deg, rgba(246, 243, 238, 0), #f6f3ee); pointer-events: none; }
+/* 약력 패널: 반투명 흰색 + 지점 색 8% 틴트, 아래에서 0.35s 올라온다 */
+.doc-person__bio {
+  position: absolute; z-index: 1; left: 0; right: 0; bottom: 0; max-height: 100%; overflow: hidden;
+  display: flex; flex-direction: column; /* 사진 칸이 낮으면 약력 목록이 남은 높이만큼 줄어든다 */
+  padding: 20px 18px 18px; border-radius: 12px 12px 0 0;
+  background: linear-gradient(var(--doc-tint, rgba(254, 109, 51, 0.08)), var(--doc-tint, rgba(254, 109, 51, 0.08))), rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(6px);
+  font-size: 0.9375rem; line-height: 1.5; color: #333; word-break: keep-all; text-align: left;
+  transform: translateY(101%); visibility: hidden;
+  transition: transform 0.35s var(--ease), visibility 0s 0.35s;
 }
-.doc-card:is(:hover, :focus-visible) { transform: translateY(-4px); } /* hover 때 그림자는 바꾸지 않는다 */
-/* 사진 4:5 카드 폭 꽉 채움(cover). 사진이 없으면 .img-ph 베이지 그라데이션
-   섹션이 한 화면(100vh - 헤더)을 넘는 낮은 화면에서는 main.js 가 --doc-photo-h 로 높이를 줄인다(최소 1:1) */
-.doc-card__photo { position: relative; display: block; aspect-ratio: 4 / 5; height: var(--doc-photo-h, auto); }
-/* 안쪽 여백 20~28px, 진료과·소개 15~17px, 이름 24~30px */
-.doc-card__body { --doc-pad: clamp(20px, 9.1cqw - 3px, 28px); display: flex; flex: 1; flex-direction: column; padding: calc(var(--doc-pad) - 2px) var(--doc-pad) var(--doc-pad); }
-.doc-card__dept { font-size: clamp(0.9375rem, 0.58rem + 2.27cqw, 1.0625rem); font-weight: 600; color: var(--doc-color, var(--color-point)); }
-.doc-card__name { margin-top: 2px; line-height: 1.35; }
-.doc-card__name b { font-size: clamp(1.5rem, 0.42rem + 6.8cqw, 1.875rem); font-weight: 800; letter-spacing: -0.02em; color: #111; }
-.doc-card__name small { margin-left: 4px; font-size: clamp(0.9375rem, 0.58rem + 2.27cqw, 1.0625rem); color: #666; }
-/* 짧은 소개(전문의 항목): 높이 고정 → 원장마다 카드 높이가 같다. 보통 2줄, 글자 크게·아주 크게 3줄 */
-.doc-card__intro { --intro-lines: 2; display: -webkit-box; height: calc(1.6em * var(--intro-lines)); margin-top: 10px; overflow: hidden; font-size: clamp(0.9375rem, 0.58rem + 2.27cqw, 1.0625rem); line-height: 1.6; color: #444; word-break: keep-all; -webkit-box-orient: vertical; -webkit-line-clamp: var(--intro-lines); }
-html:is([data-fs="lg"], [data-fs="xl"]) .doc-card__intro { --intro-lines: 3; }
-/* '약력 보기' 버튼: 지점 색 테두리 pill, 카드 hover·초점 때 지점 색으로 채워짐 (카드 전체가 하나의 버튼이라 모양만 버튼) */
-.doc-card__intro { margin-bottom: 18px; } /* 소개와 약력 보기 버튼 사이 최소 간격 */
-.doc-card__more { display: inline-flex; align-self: flex-start; align-items: center; gap: 4px; margin-top: auto; height: 40px; padding: 0 14px 0 20px; border: 1px solid var(--doc-color, var(--color-point)); border-radius: var(--radius-pill); font-size: clamp(0.9375rem, 0.58rem + 2.27cqw, 1.0625rem); font-weight: 700; line-height: 1; white-space: nowrap; color: var(--doc-color, var(--color-point)); transition: background var(--dur), color var(--dur); }
-.doc-card__more svg { width: 16px; height: 16px; flex: none; }
-.doc-card:is(:hover, :focus-visible) .doc-card__more { background: var(--doc-color, var(--color-point)); color: #fff; }
+.doc-person__certs { flex: none; margin-bottom: 10px; font-weight: 700; color: #111; }
+/* 주요 약력: 6줄까지 (넘치면 main.js 가 '전체 약력 보기' 를 보여 준다) */
+.doc-person__career { flex: 0 1 auto; min-height: 1.5em; max-height: calc(1.5em * 6); overflow: hidden; }
+/* 잘렸을 때 마지막 줄을 흐리게 → 아래 '전체 약력 보기' 로 이어짐 */
+.doc-person.is-clipped .doc-person__career { -webkit-mask-image: linear-gradient(180deg, #000 calc(100% - 1.5em), transparent); mask-image: linear-gradient(180deg, #000 calc(100% - 1.5em), transparent); }
+.doc-person__career li { position: relative; padding-left: 10px; }
+.doc-person__career li::before { content: ""; position: absolute; left: 0; top: 0.7em; width: 4px; height: 4px; border-radius: 50%; background: var(--doc-color, var(--color-point)); }
+.doc-person__all { flex: none; align-self: flex-start; margin-top: 10px; padding: 2px 0; font-size: 0.9375rem; font-weight: 700; color: var(--doc-color, var(--color-point)); text-decoration: underline; text-underline-offset: 3px; }
+/* 열림: PC 는 사진 hover·키보드 포커스, 터치는 탭(.is-open) */
+.doc-person.is-open .doc-person__bio, .doc-person:has(:focus-visible) .doc-person__bio { /* 키보드 포커스(마우스 클릭 포커스는 제외) */ transform: none; visibility: visible; transition-delay: 0s; }
+@media (hover: hover) {
+  .doc-person__stage:hover .doc-person__bio { transform: none; visibility: visible; transition-delay: 0s; }
+  .doc-cards:has(.doc-person__stage:hover) .doc-person:not(:has(.doc-person__stage:hover)) { opacity: 0.6; }
+}
+.doc-cards:has(.doc-person.is-open, .doc-person :focus-visible) .doc-person:not(.is-open):not(:has(:focus-visible)) { opacity: 0.6; }
+/* 사진 아래 정보: [진료과 / 이름 직함] 왼쪽, '약력 보기'(테두리형) 오른쪽
+   인물 칸이 좁으면(이름·직함·버튼이 한 줄에 안 들어가는 폭, 글자 크기에 비례하는 rem 기준) 모든 인물이 똑같이 버튼을 아래 줄로 */
+.doc-person__info { display: flex; align-items: flex-end; justify-content: space-between; gap: 8px 12px; padding-top: 12px; }
+@container person (max-width: calc(14.6rem + 44px)) { /* 이름 3자(약 6.6rem)+직함(약 3.9rem)+버튼(약 3.9rem+28px)+간격 */
+  .doc-person__info { flex-direction: column; align-items: flex-start; }
+}
+.doc-person__dept { font-size: 0.9375rem; font-weight: 600; color: var(--doc-color, var(--color-point)); }
+.doc-person__name { margin-top: 2px; line-height: 1.2; }
+.doc-person__name b { white-space: nowrap; }
+.doc-person__name b { font-size: 2rem; font-weight: 300; letter-spacing: 0.08em; color: #111; } /* 레퍼런스처럼 얇은 큰 글씨 */
+.doc-person__name small { display: inline-block; margin-left: 2px; font-size: 0.9375rem; color: #666; white-space: nowrap; }
+.doc-person__more { flex: none; height: 36px; padding: 0 14px; border: 1px solid #cfcac3; border-radius: 6px; background: rgba(255, 255, 255, 0.7); font-size: 0.9375rem; font-weight: 500; color: #333; white-space: nowrap; transition: border-color var(--dur), color var(--dur), background var(--dur); }
+.doc-person__more:hover, .doc-person__more:focus-visible { border-color: var(--doc-color, var(--color-point)); color: var(--doc-color, var(--color-point)); background: #fff; }
+@media (prefers-reduced-motion: reduce) {
+  .doc-person__bio, .doc-person { transition: none; }
+}
 
 /* ---------- 약력 팝업 (dialog) — 화면 가운데, 배경 딤, 모바일은 전체 화면 ---------- */
 html.is-modal-open { overflow: hidden; }
@@ -293,7 +311,6 @@ html.is-modal-open { overflow: hidden; }
 
 /* 1280px 이하: 카드 4장 */
 @media (max-width: 1280px) {
-  .doctors__main { --doc-per: 4; }
 }
 /* 의료진 섹션 높이 — 화면 단위 구성: 위·아래 여백 64px, 높이 940px 이하 화면은 40px (1440×900 에서 카드 줄이 한 화면에 들어가게) */
 @media (min-width: 1025px) and (min-height: 700px) {
@@ -301,6 +318,23 @@ html.is-modal-open { overflow: hidden; }
 }
 @media (min-width: 1025px) and (max-height: 940px) {
   .doctors.screen { padding-block: 40px; }
+}
+/* 높이 940px 이하 + 글자 크게·아주 크게: 같은 이유로 설명 문구를 숨기고 지점 탭을 제목 오른쪽에 */
+@media (min-width: 1025px) and (max-height: 940px) {
+  html:is([data-fs="lg"], [data-fs="xl"]) .doctors__desc { display: none; }
+  html:is([data-fs="lg"], [data-fs="xl"]) .doctors__head { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: end; gap: 16px; }
+  html:is([data-fs="lg"], [data-fs="xl"]) .doctors__intro { grid-column: 2; }
+  html:is([data-fs="lg"], [data-fs="xl"]) .doctors__controls { grid-column: 3; justify-self: end; }
+}
+/* 낮은 화면(높이 820px 이하): 사진 칸을 섹션 높이의 60% 가까이 확보하려고 머리말을 한 줄로 — 설명 문구 숨김, 지점 탭은 제목 오른쪽 */
+@media (min-width: 1025px) and (max-height: 820px) {
+  .doctors.screen { padding-block: 24px; }
+  .doctors__inner { gap: 20px; }
+  .doctors__desc { display: none; }
+  .doctors__head { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: end; gap: 16px; }
+  .doctors__intro { grid-column: 2; }
+  .doctors__controls { grid-column: 3; justify-self: end; }
+  .doctors__title { font-size: var(--fs-h3); }
 }
 @media (min-width: 1025px) and (max-height: 820px) {
   .doc-modal__panel { --doc-pad: 44px; }
@@ -397,7 +431,10 @@ html.is-modal-open { overflow: hidden; }
 
   .philosophy__inner, .doctors__inner, .clinic__inner, .cases__inner, .faq-preview__inner, .story__inner { grid-template-columns: minmax(0, 1fr); gap: 40px; }
   .doctors__head { align-items: stretch; } /* 모바일: 탭이 전체 폭 */
-  .doctors__main { --doc-per: 3; }
+  /* 태블릿: 3명씩 가로 스와이프, 줄은 화면 끝까지 */
+  .doctors__main { --doc-per: 3; --doc-gap: 20px; }
+  .doc-cards { margin: 0 calc(var(--gutter) * -1); padding: 0 var(--gutter); scroll-padding-inline: var(--gutter); }
+  .doc-person__stage { height: 380px; }
   /* 프로필: 사진 위·정보 아래, 약력 1열 */
   /* 팝업(태블릿): 사진 칸은 그대로, 약력만 1열 */
   .doc-profile__cols { grid-template-columns: minmax(0, 1fr); }
@@ -450,11 +487,11 @@ html.is-modal-open { overflow: hidden; }
   .doctors__tabs { flex: 1; grid-template-columns: 1fr 1fr; }
   .doctors__tab { min-width: 0; padding: 0 12px; }
   /* 모바일: 화면 밖으로 잘리지 않게 카드 안쪽 8px */
-  .doctors__nav .doctors__arrow--prev { left: 8px; }
-  .doctors__nav .doctors__arrow--next { right: 8px; }
   /* 카드 2장, 줄은 화면 끝까지(좌우 여백 = gutter) */
-  .doctors__main { --doc-per: 2; --doc-gap: 16px; --doc-bleed: var(--gutter); }
-  .doc-card__body { padding: 16px 16px 18px; }
+  /* 모바일: 1.3명씩 가로 스와이프 (다음 인물이 살짝 보여 넘길 수 있음을 알림) */
+  .doctors__main { --doc-per: 1.3; --doc-gap: 16px; }
+  .doc-person__stage { height: 340px; }
+  .doc-person__name b { font-size: 1.75rem; }
   /* 약력 팝업: 전체 화면 */
   .doc-modal { width: 100%; height: 100%; max-height: none; }
   .doc-modal__panel { height: 100%; max-height: none; border-radius: 0; box-shadow: none; }
@@ -491,7 +528,6 @@ html.is-modal-open { overflow: hidden; }
 
 /* 좁은 모바일: 카드 1.2장(다음 카드가 살짝 보여 가로 스와이프를 알 수 있게) */
 @media (max-width: 560px) {
-  .doctors__main { --doc-per: 1.2; --doc-gap: 12px; }
 }
 @media (max-width: 400px) {
   .hero__title { font-size: min(1.75rem, calc((100vw - 80px) / 11.2)); }

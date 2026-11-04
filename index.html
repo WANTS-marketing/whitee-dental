@@ -194,16 +194,9 @@
           </div>
           </div>
         </div>
-        <!-- 사진 카드 줄 (가로 스크롤 + ‹ › 한 장씩) — main.js initDoctors, 데이터: site-data.js doctors -->
+        <!-- 인물 나열 (PC: 지점 의료진 전원 한 줄, 태블릿 3명·모바일 1.3명 가로 스와이프) — main.js initDoctors, 데이터: site-data.js doctors -->
         <div class="doctors__main" id="doctors-panel" data-branch="changwon" role="tabpanel" aria-labelledby="tab-changwon">
           <ul class="doc-cards" data-doc-cards aria-label="의료진 목록"></ul>
-          <!-- 이전·다음: 한 화면에 다 보이지 않을 때만(마산 6명) 첫·마지막 보이는 카드 사진 위에 표시 -->
-          <div class="doctors__nav" hidden>
-            <button type="button" class="doctors__arrow doctors__arrow--prev" data-doc-prev aria-label="이전 의료진">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
-            <button type="button" class="doctors__arrow doctors__arrow--next" data-doc-next aria-label="다음 의료진">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
-          </div>
         </div>
       </div>
     </section>

@@ -188,8 +188,6 @@ function initDoctors() {
   if (!box || !cardsEl || !modal || !window.SITE) return;
   const panel = document.getElementById('doctors-panel');
   const tabs = [...document.querySelectorAll('.doctors__tab')];
-  const prevBtn = document.querySelector('[data-doc-prev]');
-  const nextBtn = document.querySelector('[data-doc-next]');
   const countEl = modal.querySelector('[data-modal-count]');
   const { esc, img } = window.UI;
   const docs = window.SITE.doctors;
@@ -215,15 +213,13 @@ function initDoctors() {
     if (!tail) return [c];
     return parts.map((p, i) => (i === parts.length - 1 ? p : p + tail[2]));
   };
-  /* 카드 짧은 소개: '보건복지부 인증 ○○ 전문의' 항목을 한 문장으로 (2개면 "… 치과교정과 · 통합치의학과 전문의")
-     전문의 항목이 없으면 약력 첫 줄 */
-  const intro = (d) => {
-    const certs = (d.career || []).filter((c) => c.startsWith('보건복지부 인증'));
-    if (!certs.length) return (d.career || [])[0] || '';
-    const fields = certs.map((c) => c.replace(/^보건복지부 인증\s*/, '').replace(/\s*전문의$/, ''));
-    return `보건복지부 인증 ${fields.join(' · ')} 전문의`; // '·' 가 줄 맨 앞에 오지 않게 앞 단어에 붙임
-  };
-
+  /* 인물 hover 약력 패널: 보건복지부 인증 전문의 항목(굵게) + 나머지 약력(데이터 순서) — 6줄까지만 보이고 넘치면 '전체 약력 보기' */
+  const certsOf = (d) => (d.career || []).filter((c) => c.startsWith('보건복지부 인증'));
+  const restOf = (d) => (d.career || []).filter((c) => !c.startsWith('보건복지부 인증'));
+  /* 배경을 지운 상반신 사진: assets/images/doctor-{영문 이름}-cut.png (예: doctor-lee-eunju-cut.png)
+     없으면 이미지가 숨겨지고 인물 실루엣 플레이스홀더가 보인다 (common.js 이미지 대체, 임시 인물 사진은 쓰지 않음) */
+  const cutOf = (d) => img(String(d.photo || '').replace(/\.[a-z]+$/i, '-cut.png'));
+  const SILHOUETTE = '<svg class="doc-person__ph" viewBox="0 0 200 260" aria-hidden="true"><circle cx="100" cy="78" r="44"/><path d="M14 260c0-62 38-100 86-100s86 38 86 100z"/></svg>';
 
   // 팝업 안 큰 프로필 (원장마다 1개, 선택한 1개만 보임)
   box.innerHTML = docs.map((d, i) => {
@@ -253,7 +249,11 @@ function initDoctors() {
   let pos = 0;   // 팝업에서 보고 있는 원장 (list 안 순번)
   let opener = null; // 팝업을 연 카드 (닫히면 포커스 복귀)
 
-  /* ---------- 카드 줄 ---------- */
+  /* ---------- 인물 나열 ----------
+     PC: 지점 의료진 전원 한 줄(칸 수 = 인원수, --doc-per). 사진은 아래 끝 기준 정렬(머리·어깨선 높이 맞춤)
+     약력 패널: PC 는 사진에 마우스를 올리거나 키보드 포커스가 들어오면 아래에서 올라온다(CSS),
+     터치 기기는 사진을 탭할 때마다 열고 닫는다(.is-open). 사진(PC)·'약력 보기'·'전체 약력 보기' = 약력 팝업 */
+  const touch = window.matchMedia('(hover: none)');
   function render(branchId) {
     branch = branchId;
     panel.dataset.branch = branchId; // 진료과·약력 보기 버튼 색 = 지점 색 (common.css --doc-color)
@@ -262,53 +262,77 @@ function initDoctors() {
     const head = ds.findIndex((d) => d.title === '대표원장');
     if (head > 0) ds.unshift(...ds.splice(head, 1));
     list = ds.map((d) => docs.indexOf(d));
-    cardsEl.innerHTML = ds.map((d, p) => `
-      <li class="doc-cards__item"><button type="button" class="doc-card" data-pos="${p}" aria-haspopup="dialog">
-        <span class="doc-card__photo img-ph"><img src="${img(d.photo)}" alt="" loading="lazy"></span>
-        <span class="doc-card__body">
-          <span class="doc-card__dept">${esc(d.dept)}</span>
-          <span class="doc-card__name"><b>${esc(d.name)}</b> <small>${esc(d.title)}</small></span>
-          <span class="doc-card__intro">${esc(intro(d))}</span>
-          <span class="doc-card__more">약력 보기<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></span>
-        </span>
-      </button></li>`).join('');
+    panel.style.setProperty('--doc-count', ds.length);
+    cardsEl.innerHTML = ds.map((d, p) => {
+      const certs = certsOf(d);
+      const rest = restOf(d);
+      const bioId = `doc-bio-${branchId}-${p}`;
+      return `
+      <li class="doc-person" data-pos="${p}">
+        <div class="doc-person__stage" data-doc-stage>
+          ${SILHOUETTE}
+          <img class="doc-person__img" src="${cutOf(d)}" alt="${esc(d.name)} ${esc(d.title)}" loading="lazy">
+          <div class="doc-person__bio" id="${bioId}">
+            ${certs.length ? `<p class="doc-person__certs">${certs.map(esc).join('<br>')}</p>` : ''}
+            <ul class="doc-person__career">${rest.map((c) => `<li>${esc(c)}</li>`).join('')}</ul>
+            <button type="button" class="doc-person__all" data-pos="${p}" aria-haspopup="dialog" hidden>전체 약력 보기 <span aria-hidden="true">→</span></button>
+          </div>
+        </div>
+        <div class="doc-person__info">
+          <div class="doc-person__who">
+            <p class="doc-person__dept">${esc(d.dept)}</p>
+            <p class="doc-person__name"><b>${esc(d.name)}</b> <small>${esc(d.title)}</small></p>
+          </div>
+          <button type="button" class="doc-person__more" data-pos="${p}" aria-haspopup="dialog" aria-describedby="${bioId}">약력 보기</button>
+        </div>
+      </li>`;
+    }).join('');
     cardsEl.scrollLeft = 0;
     refit();
   }
-  // ‹ › = 카드 한 장씩 (카드 너비 + 간격). 끝에 닿으면 비활성
-  const step = () => {
-    const items = cardsEl.children;
-    return items.length > 1 ? items[1].offsetLeft - items[0].offsetLeft : cardsEl.clientWidth;
-  };
-  /* 이전·다음: 카드가 한 화면에 다 들어가면(창원 5명) 숨기고, 넘칠 때(마산 6명)만 첫·마지막 보이는 카드 사진 위에 표시
-     끝에 닿은 쪽 버튼은 사라진다. 세로 위치 = 카드 가운데 (--doc-arrow-top) */
-  const nav = prevBtn.closest('.doctors__nav');
-  function updateArrows() {
-    const max = cardsEl.scrollWidth - cardsEl.clientWidth;
-    nav.hidden = max <= 2;
-    prevBtn.disabled = cardsEl.scrollLeft <= 2;
-    nextBtn.disabled = cardsEl.scrollLeft >= max - 2;
-    const card = cardsEl.querySelector('.doc-card');
-    if (card) panel.style.setProperty('--doc-arrow-top', `${card.getBoundingClientRect().top - panel.getBoundingClientRect().top + card.offsetHeight / 2}px`);
+  // 약력이 6줄(또는 사진 칸 높이)을 넘는 인물만 '전체 약력 보기' 표시 (글자 크기·폭·높이가 바뀌면 다시 계산)
+  function markClipped() {
+    cardsEl.querySelectorAll('.doc-person').forEach((li) => {
+      const ul = li.querySelector('.doc-person__career');
+      // 패널이 닫혀 있어도(visibility: hidden) 크기는 계산되므로 그대로 비교. 버튼을 먼저 보여 둔 상태로 재야 남은 높이가 맞다
+      const all = li.querySelector('.doc-person__all');
+      all.hidden = false;
+      const clipped = ul.scrollHeight > ul.clientHeight + 1;
+      all.hidden = !clipped;
+      li.classList.toggle('is-clipped', clipped);
+    });
   }
-  prevBtn.addEventListener('click', () => cardsEl.scrollBy({ left: -step(), behavior: 'smooth' }));
-  nextBtn.addEventListener('click', () => cardsEl.scrollBy({ left: step(), behavior: 'smooth' }));
-  cardsEl.addEventListener('scroll', () => requestAnimationFrame(updateArrows), { passive: true });
-  /* 낮은 화면: 섹션이 한 화면(100vh - 헤더)을 넘으면 넘친 만큼 사진 높이를 줄인다 (최소 1:1, 기본 4:5)
-     화면 단위 구성(1025px 이상·높이 700px 이상)에서만. 창 크기·글자 크기·지점 탭이 바뀔 때마다 다시 계산 */
+  cardsEl.addEventListener('click', (e) => {
+    const btn = e.target.closest('.doc-person__more, .doc-person__all');
+    if (btn) { openModal(Number(btn.dataset.pos), btn); return; }
+    const stage = e.target.closest('[data-doc-stage]');
+    if (!stage) return;
+    const li = stage.closest('.doc-person');
+    if (touch.matches) { // 터치: 탭할 때마다 약력 패널 토글 (한 번에 한 명)
+      const open = !li.classList.contains('is-open');
+      cardsEl.querySelectorAll('.doc-person.is-open').forEach((o) => o.classList.remove('is-open'));
+      li.classList.toggle('is-open', open);
+    } else {
+      openModal(Number(li.dataset.pos), li.querySelector('.doc-person__more'));
+    }
+  });
+  /* 사진 높이 = 섹션 높이(화면 - 헤더)의 약 60%, 섹션이 한 화면을 넘으면 넘친 만큼 줄인다 (화면 단위 구성: 1025px 이상·높이 700px 이상) */
   const section = panel.closest('.doctors');
   const screenMode = window.matchMedia('(min-width: 1025px) and (min-height: 700px)');
   function fitHeight() {
     panel.style.removeProperty('--doc-photo-h');
-    const photo = cardsEl.querySelector('.doc-card__photo');
-    if (!screenMode.matches || !photo || !section) return;
+    if (!screenMode.matches || !section) return;
     const headerH = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-h')) || 0;
-    const over = section.offsetHeight - (window.innerHeight - headerH);
-    if (over <= 0) return;
-    panel.style.setProperty('--doc-photo-h', `${Math.max(photo.offsetWidth, photo.offsetHeight - over - 1)}px`);
+    const room = window.innerHeight - headerH;
+    const stage = cardsEl.querySelector('.doc-person__stage');
+    if (!stage) return;
+    let h = Math.round(room * 0.6);
+    panel.style.setProperty('--doc-photo-h', h + 'px');
+    const over = section.offsetHeight - room;
+    if (over > 0) panel.style.setProperty('--doc-photo-h', Math.max(200, h - over - 1) + 'px');
   }
   let fitRaf = 0;
-  const refit = () => { cancelAnimationFrame(fitRaf); fitRaf = requestAnimationFrame(() => { fitHeight(); updateArrows(); }); };
+  const refit = () => { cancelAnimationFrame(fitRaf); fitRaf = requestAnimationFrame(() => { fitHeight(); markClipped(); }); };
   window.addEventListener('resize', refit);
   new MutationObserver(refit).observe(document.documentElement, { attributes: true, attributeFilter: ['data-fs'] }); // 글자 크기 단계
   document.fonts?.ready.then(refit);
@@ -336,10 +360,6 @@ function initDoctors() {
     document.documentElement.classList.add('is-modal-open'); // 뒤 화면 스크롤 잠금
     modal.querySelector('[data-modal-close]').focus();
   }
-  cardsEl.addEventListener('click', (e) => {
-    const card = e.target.closest('.doc-card');
-    if (card) openModal(Number(card.dataset.pos), card);
-  });
   /* 닫을 때도 서서히: .is-closing 애니메이션이 끝난 뒤 dialog 닫기 (움직임 줄이기 설정이면 바로) */
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   function closeModal() {
@@ -362,11 +382,11 @@ function initDoctors() {
   });
   modal.addEventListener('close', () => {
     document.documentElement.classList.remove('is-modal-open');
-    // 팝업 안에서 다른 원장으로 넘겼다면 그 원장 카드로 포커스
-    const card = cardsEl.querySelector(`.doc-card[data-pos="${pos}"]`) || opener;
-    if (!card) return;
-    card.focus({ preventScroll: true });
-    card.parentElement.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' });
+    // 팝업 안에서 다른 원장으로 넘겼다면 그 원장의 '약력 보기' 버튼으로 포커스
+    const btn = cardsEl.querySelector(`.doc-person__more[data-pos="${pos}"]`) || opener;
+    if (!btn) return;
+    btn.focus({ preventScroll: true });
+    btn.closest('.doc-person')?.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' });
   });
 
   /* ---------- 지점 탭 ---------- */
