@@ -336,15 +336,55 @@ body.is-locked { overflow: hidden; }
    창원점 칸은 가운데 구분선 쪽(오른쪽)으로, 마산점 칸은 왼쪽으로 붙여 두 칸이 가운데에서 마주 보게. 사진 띠는 예전보다 낮춰 전체 높이가 크게 늘지 않게 */
 .branch-bar__photo { height: 260px; background: #cfcac4 center / cover no-repeat; }
 .branch-bar__links { display: grid; grid-template-columns: 1fr 1fr; background: var(--color-bg-dark); color: #fff; }
-.branch-bar__item { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; padding: 40px 80px 44px; }
+.branch-bar__item { --bb-color: var(--color-changwon); position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; padding: 40px 80px 44px; transition: opacity 0.4s ease; }
+.branch-bar__item--masan { --bb-color: var(--color-masan); }
 .branch-bar__item--changwon { align-items: flex-end; text-align: right; border-right: 1px solid rgba(255, 255, 255, 0.25); }
 .branch-bar__name { font-size: var(--fs-h4); font-weight: 600; }
 .branch-bar__name em { font-style: normal; }
 .branch-bar__tel { margin-top: 2px; font-size: 2.25rem; font-weight: 800; letter-spacing: 0.01em; line-height: 1.2; color: #fff; }
-.branch-bar__hours { font-size: var(--fs-sm); color: rgba(255, 255, 255, 0.75); word-break: keep-all; }
-.branch-bar__more { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; padding-bottom: 2px; border-bottom: 1px solid rgba(255, 255, 255, 0.5); font-size: var(--fs-sm); font-weight: 600; color: #fff; transition: color var(--dur), border-color var(--dur); }
-.branch-bar__item--changwon .branch-bar__more:hover { color: var(--color-changwon); border-color: currentColor; }
-.branch-bar__item--masan .branch-bar__more:hover { color: var(--color-masan); border-color: currentColor; }
+.branch-bar__more { display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; font-size: var(--fs-sm); font-weight: 600; color: #fff; }
+.branch-bar__arrow { display: inline-block; transition: transform 0.4s ease; }
+
+/* 칸 전체 링크(덮개) — 글자는 그 위(z-index 2), 클릭은 덮개가 받고 전화번호만 따로 tel 링크(z-index 3) */
+.branch-bar__cover { position: absolute; z-index: 1; inset: 0; }
+.branch-bar__item > :not(.branch-bar__cover) { position: relative; z-index: 2; pointer-events: none; }
+.branch-bar__item > .branch-bar__tel { z-index: 3; pointer-events: auto; }
+.branch-bar__cover:focus-visible { outline: 3px solid #fff; outline-offset: -6px; }
+.branch-bar__tel:focus-visible { outline: 2px solid #fff; outline-offset: 4px; border-radius: 4px; }
+
+/* hover 줄무늬 채우기 (참고: uiverse.io/doniaskima/nervous-wombat-2, MIT — docs/HANDOVER.md)
+   ::before = 1·3번째 세로 칸(25%씩)이 아래에서, ::after = 2·4번째 칸이 위에서 들어와 맞물리며 칸 전체가 지점 색으로.
+   원본의 mix-blend-mode 는 쓰지 않고 글자는 z-index 로 위·흰색 유지, 지점명 강조색은 흰색으로 */
+.branch-bar__item::before, .branch-bar__item::after {
+  content: ""; position: absolute; z-index: 0; inset: 0; pointer-events: none;
+  transition: transform 0.4s ease;
+}
+.branch-bar__item::before { background: linear-gradient(90deg, var(--bb-color) 0 25%, transparent 25% 50%, var(--bb-color) 50% 75%, transparent 75%); transform: translateY(101%); } /* 101%: 소수점 반올림으로 끝선 1px 이 비치지 않게 */
+.branch-bar__item::after { background: linear-gradient(90deg, transparent 0 25%, var(--bb-color) 25% 50%, transparent 50% 75%, var(--bb-color) 75%); transform: translateY(-101%); }
+.branch-bar__name em { transition: color 0.4s ease; }
+/* 켜짐: 마우스(hover 되는 기기만) · 키보드 포커스(칸 링크·전화번호) */
+@media (hover: hover) {
+  .branch-bar__item:hover::before, .branch-bar__item:hover::after { transform: translateY(0); }
+  .branch-bar__item:hover .branch-bar__name em { color: #fff; }
+  .branch-bar__item--changwon:hover .branch-bar__arrow { transform: translateX(-6px); } /* 화살표는 가리키는 쪽(바깥)으로 6px */
+  .branch-bar__item--masan:hover .branch-bar__arrow { transform: translateX(6px); }
+  .branch-bar__links:has(.branch-bar__item:hover) .branch-bar__item:not(:hover) { opacity: 0.7; }
+}
+.branch-bar__item:has(:focus-visible)::before, .branch-bar__item:has(:focus-visible)::after { transform: translateY(0); }
+.branch-bar__item:has(:focus-visible) .branch-bar__name em { color: #fff; }
+.branch-bar__item--changwon:has(:focus-visible) .branch-bar__arrow { transform: translateX(-6px); }
+.branch-bar__item--masan:has(:focus-visible) .branch-bar__arrow { transform: translateX(6px); }
+.branch-bar__links:has(:focus-visible) .branch-bar__item:not(:has(:focus-visible)) { opacity: 0.7; }
+/* 움직임 줄이기: 줄무늬 이동 없이 칸 배경색만 서서히 (전역 0.01ms 규칙보다 우선) */
+@media (prefers-reduced-motion: reduce) {
+  .branch-bar__item::before, .branch-bar__item::after { display: none; }
+  .branch-bar__item { transition: background-color 0.4s ease, opacity 0.4s ease !important; }
+  .branch-bar__item:has(:focus-visible) { background-color: var(--bb-color); }
+  .branch-bar__arrow { transform: none !important; }
+}
+@media (prefers-reduced-motion: reduce) and (hover: hover) {
+  .branch-bar__item:hover { background-color: var(--bb-color); }
+}
 /* JS 가 없을 때만 남는 예전 링크 */
 .branch-bar__link { display: flex; align-items: center; justify-content: center; gap: 12px; padding: 32px 24px; font-size: var(--fs-h4); }
 .branch-bar__link svg { width: 24px; height: 24px; flex: none; }

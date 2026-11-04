@@ -340,16 +340,18 @@
       </div>`).join('');
   }
 
-  /** 지점 바로가기 바(푸터 바로 위): 지점명(지점 색) · 전화번호(tel) · 진료시간 · '병원소개·오시는길 →' */
+  /** 지점 바로가기 바(푸터 바로 위): 칸 전체 = 병원소개 해당 지점 링크(.branch-bar__cover), 그 위에 전화번호(tel) 링크
+      칸 내용: 지점명(지점 색) · 전화번호 · '오시는길' 안내 텍스트(화살표는 바깥쪽 — 왼쪽 창원점 ←, 오른쪽 마산점 →)
+      진료시간은 바로 아래 푸터에 있어 생략. hover 줄무늬 효과는 common.css '지점 바로가기 바' */
   function renderBranchBar() {
     const box = document.querySelector('[data-branch-bar]');
     if (!box) return;
     box.innerHTML = SITE.branches.map((b) => `
       <div class="branch-bar__item branch-bar__item--${b.id}">
+        <a class="branch-bar__cover" href="${root}/about/clinic.html#${b.id}" aria-label="화이트e치과 ${esc(b.name)} 오시는길 (병원소개)"></a>
         <h2 class="branch-bar__name">화이트e치과 <em class="text-${b.id}">${esc(b.name)}</em></h2>
         <a class="branch-bar__tel" href="${telHref(b.tel)}" aria-label="${esc(b.name)} 전화 ${esc(b.tel)}">${esc(b.tel)}</a>
-        <p class="branch-bar__hours">${esc(b.hoursShort)}</p>
-        <a class="branch-bar__more" href="${root}/about/clinic.html#${b.id}">병원소개·오시는길 <span aria-hidden="true">→</span></a>
+        <p class="branch-bar__more" aria-hidden="true">${b.id === 'changwon' ? '<span class="branch-bar__arrow">←</span> 오시는길' : '오시는길 <span class="branch-bar__arrow">→</span>'}</p>
       </div>`).join('');
   }
 
