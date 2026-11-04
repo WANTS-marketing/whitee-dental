@@ -61,8 +61,8 @@ function renderClinic() {
     if (info) {
       info.innerHTML = `
         <dl>
-          <dt>주소</dt><dd><strong>${esc(b.address)} (${esc(b.addressNote)})</strong>${b.landmark ? `<br>${esc(b.landmark)}` : ''}</dd>
-          <dt>전화</dt><dd><a class="loc__tel" href="${telHref(b.tel)}">${esc(b.tel)}</a></dd>
+          <dt>주소</dt><dd><strong>${esc(b.address)} (${esc(b.addressNote)})</strong>${b.landmark ? `<span class="loc__sub">${esc(b.landmark)}</span>` : ''}</dd>
+          <dt class="loc__dt--mid">전화</dt><dd><a class="loc__tel" href="${telHref(b.tel)}">${esc(b.tel)}</a></dd>
           <dt>이메일</dt><dd><a href="mailto:${esc(b.email)}">${esc(b.email)}</a></dd>
           <dt>진료시간</dt><dd><strong>${esc(b.hoursShort)}</strong></dd>
         </dl>
