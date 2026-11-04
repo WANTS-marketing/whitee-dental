@@ -188,7 +188,6 @@ function initDoctors() {
   if (!box || !cardsEl || !modal || !window.SITE) return;
   const panel = document.getElementById('doctors-panel');
   const tabs = [...document.querySelectorAll('.doctors__tab')];
-  const countEl = modal.querySelector('[data-modal-count]');
   const { esc, img } = window.UI;
   const docs = window.SITE.doctors;
   const BRANCH_NAME = { changwon: '창원점', masan: '마산점' };
@@ -234,7 +233,6 @@ function initDoctors() {
     const cols = `<div class="doc-profile__cols"><div class="doc-profile__col">${group('edu')}${group('career')}</div><div class="doc-profile__col">${group('society')}</div></div>`;
     return `
       <article class="doc-profile" data-doc="${i}" aria-hidden="true" inert>
-        <div class="doc-profile__photo img-ph"><img src="${img(d.photo)}" alt="${esc(d.name)} ${esc(d.title)} 사진" loading="lazy"></div>
         <div class="doc-profile__body">
           <p class="doc-profile__meta"><span data-doc-branch>${BRANCH_NAME[d.branches[0]]}</span> · <b class="doc-profile__dept">${esc(d.dept)}</b></p>
           <h3 class="doc-profile__name">${esc(d.name)} <small>${esc(d.title)}</small></h3>
@@ -356,7 +354,7 @@ function initDoctors() {
 
   /* ---------- 약력 팝업 (dialog: 포커스 가두기·ESC 닫기는 브라우저 기본 동작) ---------- */
   function show(p) {
-    pos = (p + list.length) % list.length;
+    pos = p; // 선택한 원장 한 명만 (다른 원장으로 넘기기 없음)
     const di = list[pos];
     profiles.forEach((el, i) => {
       const on = i === di;
@@ -366,7 +364,6 @@ function initDoctors() {
     });
     // 겸직 원장의 지점 표기는 지금 보고 있는 지점
     profiles[di].querySelector('[data-doc-branch]').textContent = BRANCH_NAME[branch];
-    countEl.textContent = `${pos + 1} / ${list.length}`;
     box.scrollTop = 0;
   }
   function openModal(p, from) {
@@ -390,16 +387,10 @@ function initDoctors() {
   }
   modal.addEventListener('cancel', (e) => { e.preventDefault(); closeModal(); }); // ESC
   modal.querySelector('[data-modal-close]').addEventListener('click', closeModal);
-  modal.querySelector('[data-modal-prev]').addEventListener('click', () => show(pos - 1));
-  modal.querySelector('[data-modal-next]').addEventListener('click', () => show(pos + 1));
   modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); }); // 배경(딤) 클릭
-  modal.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowLeft') show(pos - 1);
-    if (e.key === 'ArrowRight') show(pos + 1);
-  });
   modal.addEventListener('close', () => {
     document.documentElement.classList.remove('is-modal-open');
-    // 팝업 안에서 다른 원장으로 넘겼다면 그 원장의 '약력 보기' 버튼으로 포커스
+    // 연 원장의 '약력 보기' 버튼으로 포커스
     const btn = cardsEl.querySelector(`.doc-person__more[data-pos="${pos}"]`) || opener;
     if (!btn) return;
     btn.focus({ preventScroll: true });

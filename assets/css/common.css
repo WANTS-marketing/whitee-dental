@@ -244,6 +244,8 @@ body.is-locked { overflow: hidden; }
 .quick__sns-btn > * { position: relative; z-index: 1; }
 .quick__sns-btn svg { width: 26px; height: 26px; flex: none; transition: transform 0.3s; }
 .quick__sns-btn .quick__blog-ico { width: auto; height: 24px; transition: transform 0.3s; }
+/* 인스타그램 로고(공식 그라데이션 PNG, 96×96) — 아이콘 자리 크기에 맞춤 */
+.quick__insta-ico { flex: none; width: 26px; height: 26px; transition: transform 0.3s; }
 /* 빛 지나가기 (참고: uiverse.io/elijahgummer/bright-chicken-11, MIT — docs/HANDOVER.md) */
 .quick__sns-btn::after {
   content: ""; position: absolute; z-index: 0; top: -100%; right: 0; width: 32px; height: 300%;
@@ -253,7 +255,7 @@ body.is-locked { overflow: hidden; }
 .quick__item.is-open .quick__sns-btn, .quick__sns-btn:focus-visible { outline-color: var(--color-text); }
 /* 왼쪽 바깥까지: 버튼 너비(76~100px) + 막대가 기울어 퍼지는 폭 */
 .quick__item.is-open .quick__sns-btn::after { transform: translateX(-140px) rotate(12deg); }
-.quick__item.is-open .quick__sns-btn svg, .quick__item.is-open .quick__sns-btn .quick__blog-ico { transform: scale(1.1); }
+.quick__item.is-open .quick__sns-btn :is(svg, .quick__blog-ico, .quick__insta-ico) { transform: scale(1.1); }
 
 .quick__chips {
   position: absolute; top: 50%; right: 100%; display: flex; gap: 6px; padding-right: 10px;
@@ -295,6 +297,7 @@ body.is-locked { overflow: hidden; }
   .quick__sns-btn::after { display: none; } /* 툴팁이 잘리지 않게 overflow 를 풀어 빛 효과는 생략 */
   .quick__sns-btn svg { width: 22px; height: 22px; }
   .quick__sns-btn .quick__blog-ico { height: 20px; }
+  .quick__sns-btn .quick__insta-ico { width: 22px; height: 22px; }
   .quick__label {
     position: absolute; z-index: 2; top: 50%; right: calc(100% + 10px); padding: 7px 12px; border-radius: 6px;
     background: #222; color: #fff; font-size: var(--fs-xxs); font-weight: 600; line-height: 1.3;
@@ -305,7 +308,7 @@ body.is-locked { overflow: hidden; }
 }
 @media (prefers-reduced-motion: reduce) {
   .quick__sns-btn::after { display: none; }
-  .quick__item.is-open .quick__sns-btn svg, .quick__item.is-open .quick__sns-btn .quick__blog-ico, .quick__sns-btn:hover svg { transform: none !important; }
+  .quick__item.is-open .quick__sns-btn :is(svg, .quick__blog-ico, .quick__insta-ico), .quick__sns-btn:hover svg { transform: none !important; }
 }
 /* 본문이 퀵메뉴에 가리지 않게: PC 에서 본문 칸 좌우 끝이 화면 끝에서 최소 --quick-edge
    (넓은 화면은 원래 여백이 더 커서 그대로, 1366px 이하 등 좁은 화면에서만 컨테이너 좌우 여백이 늘어난다) */
@@ -629,6 +632,7 @@ body.is-locked { overflow: hidden; }
   .quick__btn, .quick--float .quick__btn { flex-direction: row; justify-content: flex-start; width: auto; min-width: 150px; white-space: nowrap; height: 48px; gap: 8px; font-size: var(--fs-xs); border-radius: var(--radius-pill); box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15); }
   .quick__btn svg, .quick--float .quick__btn svg { width: 20px; height: 20px; }
   .quick__blog-ico, .quick--float .quick__blog-ico { height: 19px; }
+  .quick__insta-ico { width: 20px; height: 20px; }
 
   .bottom-bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: var(--z-bottom-bar); display: grid; grid-template-columns: repeat(3, 1fr); height: calc(var(--bottom-bar-h) + env(safe-area-inset-bottom)); padding-bottom: env(safe-area-inset-bottom); background: var(--color-btn-dark); color: #fff; }
   .bottom-bar a, .bottom-bar button { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: var(--fs-xxs); }
