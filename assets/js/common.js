@@ -151,15 +151,27 @@
     if (!gnb) return;
     const CLOSE_DELAY = 200;
     let timer = null;
-    const open = () => { clearTimeout(timer); header.classList.add('is-mega'); };
-    const close = () => { clearTimeout(timer); header.classList.remove('is-mega'); };
+    // 열고 닫을 때는 전환 효과 없이 바로 (헤더 배경·글자색 0.3s 전환은 스크롤할 때만) — 다음 화면 그리기 뒤에 .is-instant 해제
+    const instant = () => { header.classList.add('is-instant'); requestAnimationFrame(() => requestAnimationFrame(() => header.classList.remove('is-instant'))); };
+    const open = () => { clearTimeout(timer); if (!header.classList.contains('is-mega')) instant(); header.classList.add('is-mega'); };
+    const close = () => { clearTimeout(timer); if (header.classList.contains('is-mega')) instant(); header.classList.remove('is-mega'); };
     const closeLater = () => { clearTimeout(timer); timer = setTimeout(close, CLOSE_DELAY); };
 
     let escaping = false; // ESC 로 닫으며 포커스를 옮길 때 focusin 으로 다시 열리지 않게
 
+    // 하위 메뉴는 대메뉴(카테고리) 위에 올렸을 때만 펼친다. 대메뉴 줄·펼친 패널을 벗어나면 0.2초 뒤 닫힘
+    // (로고·유틸 등 헤더의 다른 곳에서는 열리지 않고, 배경만 흰색으로 바뀐다 — main.css '투명 헤더')
+    const mega = header.querySelector('.mega');
     gnb.addEventListener('mouseover', (e) => { if (e.target.closest('.gnb__item')) open(); });
-    header.addEventListener('mouseenter', () => { if (header.classList.contains('is-mega')) open(); }); // 닫히기 전에 돌아오면 유지
-    header.addEventListener('mouseleave', closeLater);
+    gnb.addEventListener('mouseleave', closeLater);
+    mega?.addEventListener('mouseenter', () => { if (header.classList.contains('is-mega')) open(); }); // 패널 위로 내려오면 유지
+    mega?.addEventListener('mouseleave', closeLater);
+    // 메인 투명 헤더: 헤더 박스에 마우스를 올리면 흰 배경 — 바뀔 때 전환 효과 없이 바로
+    // (터치로 누른 뒤 hover 가 남아 흰 헤더로 굳지 않게 마우스일 때만 .is-hover)
+    header.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') { instant(); header.classList.add('is-hover'); } });
+    header.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse') { instant(); header.classList.remove('is-hover'); } });
+    header.addEventListener('focusin', instant);  // 키보드 포커스로 흰 헤더가 될 때도 바로
+    header.addEventListener('focusout', instant);
     gnb.addEventListener('focusin', () => { if (!escaping) open(); });
     header.addEventListener('focusout', (e) => { if (!header.contains(e.relatedTarget)) closeLater(); });
     document.addEventListener('keydown', (e) => {
@@ -225,7 +237,25 @@
         btn.setAttribute('aria-label', open ? '지점 SNS 메뉴 닫기' : '지점 SNS 메뉴 열기');
       });
       initQuickChips(quick);
+      initQuickTop(quick);
     });
+  }
+
+  /* TOP(맨 위로): 첫 화면에서는 숨기고 200px 이상 스크롤하면 표시(.is-top-visible), 누르면 맨 위로 부드럽게
+     (움직임 줄이기 설정이면 바로 이동). 키보드로 누르면 포커스를 '본문 바로가기' 링크로 옮겨 맨 위에서 다시 시작 */
+  function initQuickTop(quick) {
+    const btns = quick.querySelectorAll('[data-quick-top]');
+    if (!btns.length) return;
+    const onScroll = () => quick.classList.toggle('is-top-visible', window.scrollY > 200);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+    btns.forEach((btn) => btn.addEventListener('click', (e) => {
+      window.scrollTo({ top: 0, behavior: reduce.matches ? 'auto' : 'smooth' });
+      if (quick.classList.contains('is-open')) quick.querySelector('.quick__toggle')?.click(); // 모바일 '+' 닫기
+      if (e.detail === 0) document.querySelector('.skip-link')?.focus({ preventScroll: true }); // 키보드(Enter·Space)로 눌렀을 때만
+      else btn.blur();
+    }));
   }
 
   /* 769px 이상 플로팅 [인스타그램][블로그] → '창원점 / 마산점' 칩

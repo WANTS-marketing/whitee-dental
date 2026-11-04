@@ -54,15 +54,16 @@ html::-webkit-scrollbar { display: none; }
 
 /* ---------- 투명 헤더 (메인 전용 — main.css 는 index.html 에서만 읽는다) ----------
    최상단: 배경 투명·구분선/그림자 없음·흰 글자·흰 로고(원본 컬러 PNG 를 filter 로 흰색 — 흰색 로고 파일 받으면 교체, HANDOVER)
-   흰 헤더로 바뀌는 경우: 40px 이상 스크롤(.is-scrolled), 메가메뉴 열림(.is-mega), 모바일 메뉴 열림(.is-mnav) — common.js */
+   흰 헤더로 바뀌는 경우: 헤더 박스에 마우스를 올리거나(.is-hover) 키보드 포커스가 들어올 때(:focus-visible), 둘 다 바로 바뀜,
+   40px 이상 스크롤(.is-scrolled), 메가메뉴 열림(.is-mega), 모바일 메뉴 열림(.is-mnav) — common.js */
 .header { transition: background-color 0.3s, box-shadow 0.3s, color 0.3s; }
 .header .logo__img, .header .gnb__link, .header .gnb__link svg, .header .util a, .header .fs-ctrl__btn, .header .hamburger { transition: color 0.3s, filter 0.3s; }
-.header:not(.is-scrolled):not(.is-mega):not(.is-mnav) { background-color: transparent; box-shadow: none; color: #fff; }
-.header:not(.is-scrolled):not(.is-mega):not(.is-mnav) .logo__img { filter: brightness(0) invert(1); }
-.header:not(.is-scrolled):not(.is-mega):not(.is-mnav) :is(.gnb__link, .gnb__link svg, .util a, .hamburger) { color: #fff; }
-.header:not(.is-scrolled):not(.is-mega):not(.is-mnav) .fs-ctrl__btn:not([aria-pressed="true"]) { color: #fff; } /* 선택된 '가'는 포인트 컬러 그대로 */
-.header:not(.is-scrolled):not(.is-mega):not(.is-mnav) :is(.util a, .fs-ctrl__btn:not([aria-pressed="true"])):hover { color: var(--color-point); }
-.header:not(.is-scrolled):not(.is-mega):not(.is-mnav) :is(.util__group--b a + a, .util__guide)::before { background: rgba(255, 255, 255, 0.55); }
+.header:not(.is-scrolled):not(.is-mega):not(.is-mnav):not(.is-hover):not(:has(:focus-visible)) { background-color: transparent; box-shadow: none; color: #fff; }
+.header:not(.is-scrolled):not(.is-mega):not(.is-mnav):not(.is-hover):not(:has(:focus-visible)) .logo__img { filter: brightness(0) invert(1); }
+.header:not(.is-scrolled):not(.is-mega):not(.is-mnav):not(.is-hover):not(:has(:focus-visible)) :is(.gnb__link, .gnb__link svg, .util a, .hamburger) { color: #fff; }
+.header:not(.is-scrolled):not(.is-mega):not(.is-mnav):not(.is-hover):not(:has(:focus-visible)) .fs-ctrl__btn:not([aria-pressed="true"]) { color: #fff; } /* 선택된 '가'는 포인트 컬러 그대로 */
+.header:not(.is-scrolled):not(.is-mega):not(.is-mnav):not(.is-hover):not(:has(:focus-visible)) :is(.util a, .fs-ctrl__btn:not([aria-pressed="true"])):hover { color: var(--color-point); }
+.header:not(.is-scrolled):not(.is-mega):not(.is-mnav):not(.is-hover):not(:has(:focus-visible)) :is(.util__group--b a + a, .util__guide)::before { background: rgba(255, 255, 255, 0.55); }
 
 /* ---------- ② 빠른 진료 안내 ---------- */
 .clinic-bar { padding: 64px 0 0; }
@@ -173,13 +174,14 @@ html::-webkit-scrollbar { display: none; }
 .doctors__arrow:hover { background: var(--color-text); color: #fff; }
 .doctors__arrow svg { width: 20px; height: 20px; }
 .doctors__arrow:disabled { opacity: 0.35; pointer-events: none; }
-/* 의료진 섹션만 컨테이너 최대 폭 해제 — 좌우 여백 60px (1440px 이하 40px). 머리말(제목·탭·‹ ›)과 카드 줄이 같은 끝선
+/* 의료진 섹션만 컨테이너 최대 폭 해제. 머리말(제목·탭·‹ ›)과 카드 줄이 같은 끝선
+   좌우 여백 = 오른쪽 플로팅 퀵메뉴에 카드가 가리지 않는 폭: 기본형(1561px 이상, 버튼 폭 최대 약 100px) 120px / 슬림형 76px
    위·아래 섹션(진료 철학·지점, 진료안내)은 기존 컨테이너 폭 그대로 */
 @media (min-width: 1025px) {
-  .doctors .doctors__inner.container { max-width: none; padding-left: 60px; padding-right: 60px; }
+  .doctors .doctors__inner.container { max-width: none; padding-left: 120px; padding-right: 120px; }
 }
-@media (min-width: 1025px) and (max-width: 1440px) {
-  .doctors .doctors__inner.container { padding-left: 40px; padding-right: 40px; }
+@media (min-width: 1025px) and (max-width: 1560px) {
+  .doctors .doctors__inner.container { padding-left: 76px; padding-right: 76px; }
 }
 /* 사진 카드 줄 (main.js initDoctors) — 가로 스크롤 + 스냅, 머리말 ‹ › 는 한 장씩
    한 화면 장수 --doc-per: 데스크톱 5 / 1280px 이하 4 / 1024px 이하 3 / 768px 이하 2 / 560px 이하 1.2(가로 스와이프)
@@ -528,13 +530,16 @@ html.is-modal-open { overflow: hidden; }
     scroll-snap-align: start;
   }
 
-  /* 홈 묶음: 퀵바 카드를 히어로 아래 끝에 걸친다 — 높이의 절반은 히어로 위, 절반은 아래
+  /* 홈 첫 화면(풀스크린 한 장) = 히어로(100vh) 안에 [헤더 → 문구 → 조작 버튼 → 퀵바] 가 모두 들어간다
+     퀵바 카드 전체를 히어로 안쪽 하단에 올림: 카드 아래 끝 = 화면 아래 끝에서 --qb-gap(40px, 낮은 화면 24px) 위
      --qb-h = 퀵바 카드 실제 높이(main.js initQuickbarOverlap 이 넣음, 2줄 모드·글자 크기에 따라 바뀜)
-     히어로 문구는 '퀵바에 가려지지 않는 부분'의 세로 가운데, 조작 버튼은 퀵바 바로 위 */
-  .screen-home__first { --qb-half: calc(var(--qb-h, 180px) / 2); }
-  .screen-home .hero__content { top: calc((100% - var(--qb-half) + var(--header-h)) / 2); }
-  .screen-home .hero__controls { bottom: calc(var(--qb-half) + 24px); }
-  .screen-home .clinic-bar { position: relative; z-index: 5; margin-top: calc(var(--qb-half) * -1); padding: 0 0 24px; }
+     --qb-top = 히어로 아래에서 퀵바 윗선까지. 문구는 '헤더 아래 ~ 퀵바 위'의 세로 가운데, 조작 버튼은 퀵바 바로 위 오른쪽 */
+  .screen-home__first { --qb-gap: 40px; --qb-top: calc(var(--qb-h, 180px) + var(--qb-gap)); }
+  .screen-home .hero__content { top: calc((100% - var(--qb-top) - var(--ctrl-space) + var(--header-h)) / 2); }
+  .screen-home .hero { --ctrl-space: 52px; } /* 조작 버튼 줄(36px) + 퀵바와의 간격(16px) — 문구가 이 줄과 겹치지 않게 */
+  .screen-home .hero__controls { bottom: calc(var(--qb-top) + 16px); }
+  .screen-home .clinic-bar { position: relative; z-index: 5; margin-top: calc(var(--qb-top) * -1); padding: 0 0 var(--qb-gap); }
+  .screen-home .philosophy { padding-top: 72px; } /* 첫 화면(히어로) 아래 다음 묶음 */
   .screen-home .clinic-bar__inner { margin: 0 24px; border-bottom: 0; border-radius: var(--radius-xl); background: #fff; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12); }
   .screen-home .clinic-bar__card { aspect-ratio: auto; height: 100%; min-height: clamp(108px, 15vh, 140px); } /* min-height: 글자가 두 줄이 돼도 카드 밖으로 넘치지 않게, height 100%: 한 장만 두 줄일 때도 다섯 장 높이를 같게 */
   /* 퀵바 카드 정렬: [빠른 진료 안내 | 아이콘 5개 | FAQ]
@@ -562,6 +567,9 @@ html.is-modal-open { overflow: hidden; }
     .screen-home .clinic-bar__card img { --ic-k: 0.6; }
   }
 }
+@media (min-width: 1025px) and (min-height: 700px) and (max-height: 800px) {
+  .screen-home__first { --qb-gap: 24px; } /* 낮은 화면: 퀵바를 화면 아래 끝에 더 붙인다 */
+}
 /* 폭이 모자랄 때 2단계: 퀵바를 2줄로 — 윗줄 [빠른 진료 안내 | FAQ], 아랫줄 진료 카드 5개
    기준 = 퀵바 칸(.clinic-bar > .container) 실제 너비. 1단계로 줄여도 카드 글자(4글자 낱말)가 한 줄에 안 들어가는 너비에서 전환
    - 필요한 너비는 글자 크기에 비례하는 부분(타이틀·FAQ·카드 글자 = 30rem)과 고정 부분(여백·아이콘 = 495px)의 합
@@ -587,13 +595,17 @@ html.is-modal-open { overflow: hidden; }
 
 /* 좁은 데스크톱(1360px 미만) 좌우 안쪽 여백 52px (예전 왼쪽 섹션 표시기 자리 — 표시기는 삭제했지만 레이아웃이 바뀌지 않게 여백은 유지) */
 @media (min-width: 1025px) and (max-width: 1359px) and (min-height: 700px) {
-  .screen .container, .screen-home .container { padding-left: 52px; padding-right: 52px; }
+  .screen .container, .screen-home .container { padding-left: max(52px, var(--quick-safe)); padding-right: max(52px, var(--quick-safe)); } /* --quick-safe: common.css 퀵메뉴 자리 */
   .screen-home .hero__inner { padding-left: 0; padding-right: 0; } /* 히어로는 화면 가로 100% (문구 시작선은 --hero-x) */
   /* 히어로는 컨테이너가 아니라 화면 너비 - 80px → 넓힌 여백 제외. 대신 글자 시작선 계산에 52px 반영 */
   .screen-home { --page-pad: 52px; }
   /* 좁아진 지점 카드에서 전화번호가 두 줄로 꺾이지 않게 */
   .branch-card { padding-left: 24px; padding-right: 24px; }
   .branch-card__tel { font-size: clamp(1.5rem, 2.2vw, 2.25rem); }
+}
+/* 슬림 퀵메뉴 구간(1025~1560px): 히어로 조작 버튼이 퀵메뉴 아래쪽과 겹치지 않게 오른쪽 끝을 76px 안으로 */
+@media (min-width: 1025px) and (max-width: 1560px) {
+  .hero__controls { right: max(var(--hero-x), 76px); }
 }
 /* ---------- 히어로 시작선 (데스크톱) ----------
    헤더 칸(common.css .header__inner: 최대 1600px, 좌우 최소 40px)과 같은 선 → 문구 왼쪽 = 로고 시작선, 조작 버튼 오른쪽 = 헤더 오른쪽 끝선 */
@@ -631,6 +643,14 @@ html.is-modal-open { overflow: hidden; }
 /* 아주 크게(125%) + 낮은 화면(데스크톱): 히어로 제목이 슬라이더를 넘지 않게 한 단계 작게 — 모바일은 아래 폭 기준 규칙이 맡는다 */
 @media (min-width: 1025px) and (max-height: 820px) {
   html[data-fs="xl"] .hero__title { font-size: 2.75rem; }
+}
+/* 낮은 화면(높이 800px 이하): 첫 화면 한 장에 [문구 → 조작 버튼 → 퀵바] 가 다 들어가도록 단계적으로 줄인다
+   1단계 제목 크기를 화면 높이 기준으로 축소(최대 6vh) + 문구 간격 축소 → 2단계 서브 문구 숨김(글자 크게·아주 크게) */
+@media (min-width: 1025px) and (min-height: 700px) and (max-height: 800px) {
+  html .screen-home .hero__title { font-size: min(var(--fs-display), 5.4vw, 6vh); margin-top: 8px; }
+  .screen-home .hero__desc { margin-top: 14px; }
+  .screen-home .hero__btn { margin-top: 22px; }
+  html:is([data-fs="lg"], [data-fs="xl"]) .screen-home .hero__desc { display: none; }
 }
 @keyframes intro-open { from { clip-path: inset(30% 35% round 24px); } to { clip-path: inset(0 round 0); } }
 @keyframes intro-zoom { from { transform: scale(1.15); } to { transform: scale(1); } }
