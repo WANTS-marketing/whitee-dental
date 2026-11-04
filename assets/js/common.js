@@ -167,6 +167,37 @@
     };
     const closeLater = () => { clearTimeout(timer); timer = setTimeout(close, CLOSE_DELAY); };
 
+    /* 패널 높이 = 가장 긴 하위 메뉴 열(위 28 + 항목 + 아래 32px) — 글자 크기·창 너비(줄바꿈)가 바뀔 때마다 다시 */
+    const subs = [...gnb.querySelectorAll('.gnb__sub')];
+    /* 열 너비: 기본은 [대메뉴 글자 칸 + 간격](CSS). 하위 메뉴 글자가 더 길면 글자 중심을 지킨 채 양옆으로 넓히되,
+       이웃 열 글자와 12px 이상 떨어지는 만큼만 — 그래도 모자라면 열 안에서 줄바꿈 */
+    const fitColumns = () => {
+      const items = subs.map((s) => s.parentElement);
+      subs.forEach((s) => { s.style.removeProperty('left'); s.style.removeProperty('right'); s.style.removeProperty('width'); });
+      const slot = subs.map((s) => s.offsetWidth);
+      const center = items.map((it) => { const r = it.getBoundingClientRect(); return r.left + r.width / 2; });
+      const natural = subs.map((s) => { s.style.width = 'max-content'; const w = s.offsetWidth; s.style.removeProperty('width'); return w; });
+      const textHalf = natural.map((w, i) => Math.min(w, slot[i]) / 2 - 12); // 이웃 열 글자 반폭(좌우 안쪽 여백 12px 제외)
+      subs.forEach((s, i) => {
+        if (natural[i] <= slot[i]) return;
+        let half = natural[i] / 2;
+        [i - 1, i + 1].forEach((j) => { if (j >= 0 && j < subs.length) half = Math.min(half, Math.abs(center[i] - center[j]) - textHalf[j] - 12); });
+        const w = Math.max(slot[i], Math.floor(half * 2));
+        s.style.left = `calc(50% - ${w / 2}px)`; s.style.right = 'auto'; s.style.width = `${w}px`;
+      });
+    };
+    const fitMegaHeight = () => {
+      fitColumns();
+      subs.forEach((s) => { s.style.height = 'auto'; });
+      const h = Math.max(...subs.map((s) => s.offsetHeight));
+      subs.forEach((s) => { s.style.height = ''; });
+      if (h > 0) header.style.setProperty('--mega-h', Math.ceil(h) + 'px');
+    };
+    fitMegaHeight();
+    window.addEventListener('resize', fitMegaHeight);
+    new MutationObserver(fitMegaHeight).observe(document.documentElement, { attributes: true, attributeFilter: ['data-fs'] });
+    document.fonts?.ready.then(fitMegaHeight);
+
     let escaping = false; // ESC 로 닫으며 포커스를 옮길 때 focusin 으로 다시 열리지 않게
 
     // 하위 메뉴는 대메뉴(카테고리) 위에 올렸을 때만 펼친다. 대메뉴 줄·펼친 패널을 벗어나면 0.2초 뒤 닫힘
