@@ -272,10 +272,11 @@ function initDoctors() {
         <div class="doc-person__stage" data-doc-stage>
           ${SILHOUETTE}
           <img class="doc-person__img" src="${cutOf(d)}" alt="${esc(d.name)} ${esc(d.title)}" loading="lazy">
-          <div class="doc-person__bio" id="${bioId}">
-            ${certs.length ? `<ul class="doc-person__certs">${certs.map((c) => `<li title="${esc(c)}">${esc(c)}</li>`).join('')}</ul>` : ''}
-            <ul class="doc-person__career">${rest.map((c) => `<li title="${esc(c)}">${esc(c)}</li>`).join('')}</ul>
-            <button type="button" class="doc-person__all" data-pos="${p}" aria-haspopup="dialog" hidden>전체 약력 보기 <span aria-hidden="true">→</span></button>
+        </div>
+        <div class="doc-person__bio" id="${bioId}" data-doc-stage>
+          <div class="doc-person__bio-in">
+            ${certs.length ? `<ul class="doc-person__certs">${certs.map((c) => `<li>${esc(c)}</li>`).join('')}</ul>` : ''}
+            <ul class="doc-person__career">${rest.map((c) => `<li>${esc(c)}</li>`).join('')}</ul>
           </div>
         </div>
         <div class="doc-person__info">
@@ -290,11 +291,16 @@ function initDoctors() {
     cardsEl.scrollLeft = 0;
     refit();
   }
-  // 약력이 6줄(또는 사진 칸 높이)을 넘는 인물만 '전체 약력 보기' 표시 (글자 크기·폭·높이가 바뀌면 다시 계산)
-  /* 약력 글자 크기: 기본 1rem(16px), 가장 긴 항목이 사진 영역 너비에 한 줄로 들어가게 줄인다(최소 14px)
-     최소 크기로도 넘치는 긴 항목만 다음 줄로 넘어간다(… 로 자르지 않음) */
+  /* 약력은 잘리지 않고 전부 보인다. 글자 크기: 기본 1rem(16px), 가장 긴 항목이 한 줄에 들어가게 줄임(최소 14px)
+     — 그래도 넘치는 긴 항목만 다음 줄로(들여쓰기). 사진 칸에 다 들어가지 않으면 단계적으로:
+     ① .bio-wide  표시 영역을 인물 칸 전체(사진 + 이름 영역)로 넓힘 (이름 영역은 약력이 보이는 동안 숨김)
+     ② .bio-compact 글자 13px · 줄 간격 1.5
+     ③ .bio-scroll  약력 영역 안에서 세로 스크롤(얇은 스크롤바) */
   function fitBio(li) {
     const bio = li.querySelector('.doc-person__bio');
+    const inner = bio.firstElementChild;
+    li.classList.remove('bio-wide', 'bio-compact', 'bio-scroll');
+    li.style.setProperty('--stage-h', li.querySelector('.doc-person__stage').offsetHeight + 'px');
     bio.style.removeProperty('--bio-fs');
     const base = parseFloat(getComputedStyle(bio).fontSize);
     const items = [...bio.querySelectorAll('li')];
@@ -304,21 +310,17 @@ function initDoctors() {
     const room = items[0].clientWidth;
     bio.classList.remove('is-measuring');
     if (need > room) bio.style.setProperty('--bio-fs', Math.max(14, Math.floor(base * room / need * 10) / 10) + 'px');
+    const fits = () => { const cs = getComputedStyle(bio); return inner.offsetHeight <= bio.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom) + 0.5; };
+    if (fits()) return;
+    li.classList.add('bio-wide');
+    if (fits()) return;
+    li.classList.add('bio-compact');
+    if (fits()) return;
+    li.classList.add('bio-scroll');
   }
-  function markClipped() {
-    cardsEl.querySelectorAll('.doc-person').forEach((li) => {
-      fitBio(li);
-      const ul = li.querySelector('.doc-person__career');
-      // 패널이 닫혀 있어도(visibility: hidden) 크기는 계산되므로 그대로 비교. 버튼을 먼저 보여 둔 상태로 재야 남은 높이가 맞다
-      const all = li.querySelector('.doc-person__all');
-      all.hidden = false;
-      const clipped = ul.scrollHeight > ul.clientHeight + 1;
-      all.hidden = !clipped;
-      li.classList.toggle('is-clipped', clipped);
-    });
-  }
+  function fitBios() { cardsEl.querySelectorAll('.doc-person').forEach(fitBio); }
   cardsEl.addEventListener('click', (e) => {
-    const btn = e.target.closest('.doc-person__more, .doc-person__all');
+    const btn = e.target.closest('.doc-person__more');
     if (btn) { openModal(Number(btn.dataset.pos), btn); return; }
     const stage = e.target.closest('[data-doc-stage]');
     if (!stage) return;
@@ -347,7 +349,7 @@ function initDoctors() {
     if (over > 0) panel.style.setProperty('--doc-photo-h', Math.max(200, h - over - 1) + 'px');
   }
   let fitRaf = 0;
-  const refit = () => { cancelAnimationFrame(fitRaf); fitRaf = requestAnimationFrame(() => { fitHeight(); markClipped(); }); };
+  const refit = () => { cancelAnimationFrame(fitRaf); fitRaf = requestAnimationFrame(() => { fitHeight(); fitBios(); }); };
   window.addEventListener('resize', refit);
   new MutationObserver(refit).observe(document.documentElement, { attributes: true, attributeFilter: ['data-fs'] }); // 글자 크기 단계
   document.fonts?.ready.then(refit);

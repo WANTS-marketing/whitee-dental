@@ -201,42 +201,50 @@ html::-webkit-scrollbar { display: none; }
 .doc-person__stage::before { content: ""; position: absolute; z-index: 1; inset: 0; background: rgba(255, 255, 255, 0.35); opacity: 0; transition: opacity 0.35s var(--ease); pointer-events: none; }
 /* 아래쪽을 배경색으로 살짝 녹여 이름 줄과 이어지게 (레퍼런스처럼) */
 .doc-person__stage::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 18%; background: linear-gradient(180deg, rgba(255, 255, 255, 0), #fff); pointer-events: none; }
-/* 약력: 사진 영역 전체를 덮는 위치, 세로 가운데. 글자 16px(--bio-fs: main.js 가 항목이 한 줄에 들어가게 줄임, 최소 14px) */
+/* 약력: 사진 칸 위(--stage-h, main.js)에 세로 가운데 — 배경 박스 없음, 잘리지 않고 전부 표시
+   글자 16px(--bio-fs: main.js 가 가장 긴 항목이 한 줄에 들어가게 줄임, 최소 14px), 그래도 긴 항목만 다음 줄(내어쓰기)
+   다 안 들어가면 main.js fitBio: ① .bio-wide 인물 칸 전체 ② .bio-compact 13px·1.5 ③ .bio-scroll 세로 스크롤 */
 .doc-person__bio {
-  position: absolute; z-index: 2; inset: 0; overflow: hidden;
-  display: flex; flex-direction: column; justify-content: center;
+  position: absolute; z-index: 2; left: 0; right: 0; top: 0; height: var(--stage-h, var(--doc-photo-h, 420px)); overflow: hidden;
+  display: flex; flex-direction: column;
   padding: 20px 16px;
-  font-size: var(--bio-fs, 1rem); font-weight: 500; line-height: 1.7; color: #222; text-align: left;
+  font-size: var(--bio-fs, 1rem); font-weight: 500; line-height: 1.7; color: #222; text-align: left; cursor: pointer;
   opacity: 0; transform: translateY(12px); visibility: hidden;
   transition: opacity 0.35s var(--ease), transform 0.35s var(--ease), visibility 0s 0.35s;
 }
-.doc-person__bio li { position: relative; padding-left: 12px; word-break: keep-all; } /* 항목은 한 줄이 기본 — 최소 14px 로도 안 들어가는 긴 항목만 다음 줄로 (내어쓰기) */
+.doc-person__bio-in { flex: none; margin: auto 0; } /* 세로 가운데 — 넘칠 때는 위부터(스크롤 시 윗부분이 잘리지 않게) */
+.doc-person__bio li { position: relative; padding-left: 12px; word-break: keep-all; }
 .doc-person__bio.is-measuring li { white-space: nowrap; }
 .doc-person__bio li::before { content: ""; position: absolute; left: 0; top: 0.78em; width: 5px; height: 5px; border-radius: 50%; background: #9a948c; }
 /* 전문의 항목: 굵게 + 지점 색 불릿 */
-.doc-person__certs { flex: none; margin-bottom: 8px; font-weight: 700; color: #111; }
+.doc-person__certs { margin-bottom: 8px; font-weight: 700; color: #111; }
 .doc-person__certs li::before { background: var(--doc-color, var(--color-point)); }
-/* 주요 약력: 최대 6줄 (넘치면 main.js 가 마지막 줄을 흐리게 하고 '전체 약력 보기' 를 보여 준다) */
-.doc-person__career { flex: 0 1 auto; min-height: 1.7em; max-height: calc(1.7em * 6); overflow: hidden; }
-.doc-person.is-clipped .doc-person__career { -webkit-mask-image: linear-gradient(180deg, #000 calc(100% - 1.7em), transparent); mask-image: linear-gradient(180deg, #000 calc(100% - 1.7em), transparent); }
-.doc-person__all { flex: none; align-self: flex-start; margin-top: 8px; padding: 2px 0; font-size: max(14px, 0.9375rem); font-weight: 700; color: var(--doc-color, var(--color-point)); text-decoration: underline; text-underline-offset: 3px; }
-/* 약력 보기 상태: 터치 탭(.is-open)·키보드 포커스(마우스 클릭 포커스는 제외) */
+/* ① 인물 칸 전체로 넓힘: 흰 막도 이름 영역까지, 이름 영역은 약력이 보이는 동안 숨김 */
+.doc-person.bio-wide .doc-person__bio { height: 100%; }
+.doc-person__info { transition: opacity 0.35s var(--ease); }
+.doc-person::after { content: ""; position: absolute; z-index: 1; left: 0; right: 0; top: var(--stage-h, 0); bottom: 0; background: #fff; opacity: 0; pointer-events: none; transition: opacity 0.35s var(--ease); }
+/* ② 글자 13px · 줄 간격 1.5 */
+.doc-person.bio-compact .doc-person__bio { font-size: 13px; line-height: 1.5; }
+.doc-person.bio-compact .doc-person__bio li::before { top: 0.68em; }
+/* ③ 세로 스크롤 (얇은 스크롤바) */
+.doc-person.bio-scroll .doc-person__bio { overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: rgba(0, 0, 0, 0.25) transparent; }
+.doc-person.bio-scroll .doc-person__bio::-webkit-scrollbar { width: 4px; }
+.doc-person.bio-scroll .doc-person__bio::-webkit-scrollbar-thumb { border-radius: 2px; background: rgba(0, 0, 0, 0.25); }
+/* 약력 보기 상태: 터치 탭(.is-open)·키보드 포커스(마우스 클릭 포커스는 제외)·PC 사진 hover(약력 위에 머무는 동안 유지) */
 .doc-person.is-open :is(.doc-person__ph, .doc-person__img), .doc-person:has(:focus-visible) :is(.doc-person__ph, .doc-person__img) { filter: blur(8px) brightness(1.1); }
 .doc-person.is-open .doc-person__stage::before, .doc-person:has(:focus-visible) .doc-person__stage::before { opacity: 1; }
 .doc-person.is-open .doc-person__bio, .doc-person:has(:focus-visible) .doc-person__bio { opacity: 1; transform: none; visibility: visible; transition-delay: 0s; }
+.doc-person.bio-wide:is(.is-open, :has(:focus-visible))::after { opacity: 1; }
 @media (hover: hover) {
-  .doc-person__stage:hover :is(.doc-person__ph, .doc-person__img) { filter: blur(8px) brightness(1.1); }
-  .doc-person__stage:hover::before { opacity: 1; }
-  .doc-person__stage:hover .doc-person__bio { opacity: 1; transform: none; visibility: visible; transition-delay: 0s; }
-  .doc-cards:has(.doc-person__stage:hover) .doc-person:not(:has(.doc-person__stage:hover)) { opacity: 0.6; }
+  .doc-person:has(.doc-person__stage:hover, .doc-person__bio:hover) :is(.doc-person__ph, .doc-person__img) { filter: blur(8px) brightness(1.1); }
+  .doc-person:has(.doc-person__stage:hover, .doc-person__bio:hover) .doc-person__stage::before { opacity: 1; }
+  .doc-person:has(.doc-person__stage:hover, .doc-person__bio:hover) .doc-person__bio { opacity: 1; transform: none; visibility: visible; transition-delay: 0s; }
+  .doc-person.bio-wide:has(.doc-person__stage:hover, .doc-person__bio:hover)::after { opacity: 1; }
+  .doc-cards:has(.doc-person__stage:hover, .doc-person__bio:hover) .doc-person:not(:has(.doc-person__stage:hover, .doc-person__bio:hover)) { opacity: 0.6; }
 }
 .doc-cards:has(.doc-person.is-open, .doc-person :focus-visible) .doc-person:not(.is-open):not(:has(:focus-visible)) { opacity: 0.6; }
-/* 사진 아래 정보: [진료과 / 이름 직함] 왼쪽, '약력 보기'(테두리형) 오른쪽
-   인물 칸이 좁으면(이름·직함·버튼이 한 줄에 안 들어가는 폭, 글자 크기에 비례하는 rem 기준) 모든 인물이 똑같이 버튼을 아래 줄로 */
-.doc-person__info { display: flex; align-items: flex-end; justify-content: space-between; gap: 8px 12px; padding-top: 12px; }
-@container person (max-width: calc(14.6rem + 44px)) { /* 이름 3자(약 6.6rem)+직함(약 3.9rem)+버튼(약 3.9rem+28px)+간격 */
-  .doc-person__info { flex-direction: column; align-items: flex-start; }
-}
+/* 사진 아래 정보: 진료과 / 이름 + 직함 / '약력 보기'(테두리형) — 인물 칸 가운데 정렬 */
+.doc-person__info { display: flex; flex-direction: column; align-items: center; gap: 10px; padding-top: 12px; text-align: center; } /* 진료과 / 이름·직함 / 약력 보기 — 모두 가운데 */
 .doc-person__dept { font-size: 0.9375rem; font-weight: 600; color: var(--doc-color, var(--color-point)); }
 .doc-person__name { margin-top: 2px; line-height: 1.2; }
 .doc-person__name b { white-space: nowrap; }
@@ -245,7 +253,7 @@ html::-webkit-scrollbar { display: none; }
 .doc-person__more { flex: none; height: 36px; padding: 0 14px; border: 1px solid #cfcac3; border-radius: 6px; background: rgba(255, 255, 255, 0.7); font-size: 0.9375rem; font-weight: 500; color: #333; white-space: nowrap; transition: border-color var(--dur), color var(--dur), background var(--dur); }
 .doc-person__more:hover, .doc-person__more:focus-visible { border-color: var(--doc-color, var(--color-point)); color: var(--doc-color, var(--color-point)); background: #fff; }
 @media (prefers-reduced-motion: reduce) {
-  .doc-person__bio, .doc-person, .doc-person__ph, .doc-person__img, .doc-person__stage::before { transition: none; }
+  .doc-person__bio, .doc-person, .doc-person__ph, .doc-person__img, .doc-person__stage::before, .doc-person::after, .doc-person__info { transition: none; }
 }
 
 /* ---------- 약력 팝업 (dialog) — 화면 가운데, 배경 딤, 모바일은 전체 화면 ---------- */
