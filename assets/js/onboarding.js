@@ -57,7 +57,7 @@
       <div class="coach__block" data-coach-close aria-hidden="true"></div>
       <div class="coach__block" data-coach-close aria-hidden="true"></div>
       <div class="coach__cover" data-coach-close aria-hidden="true"></div>
-      <div class="coach__tip" role="dialog" aria-modal="true" aria-labelledby="coach-title" aria-describedby="coach-text">
+      <div class="coach__tip" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="coach-title" aria-describedby="coach-text">
         <span class="coach__arrow" aria-hidden="true"></span>
         <h2 class="coach__title" id="coach-title"></h2>
         <p class="coach__text" id="coach-text"></p>
@@ -83,6 +83,7 @@
     if (!items.length) return;
     const first = items[0];
     const last = items[items.length - 1];
+    if (document.activeElement === el.querySelector('.coach__tip')) { e.preventDefault(); (e.shiftKey ? last : first).focus(); return; } // 말풍선 자체에 포커스가 있을 때
     if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
     else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
   }
@@ -90,8 +91,7 @@
   function onFocusIn(e) {
     if (!el || el.contains(e.target)) return;
     if (STEPS[step] && STEPS[step].allowClick && e.target.closest('.util .fs-ctrl')) return; // 마우스로 '가' 누른 경우는 허용
-    const btn = el.querySelector('.coach__btns button, .coach__btns a');
-    if (btn) btn.focus();
+    el.querySelector('.coach__tip')?.focus({ preventScroll: true });
   }
 
   function unionRect(nodes, pad) {
@@ -173,7 +173,7 @@
     position();
     void tip.offsetWidth;
     tip.classList.add('is-in');
-    el.querySelector('.coach__btns button, .coach__btns a').focus({ preventScroll: true });
+    tip.focus({ preventScroll: true }); // 말풍선 자체로(테두리 없음) — 마우스로 열거나 넘길 때 버튼에 포커스 테두리가 보이지 않게, 키보드는 Tab 으로 버튼
   }
 
   function open() {

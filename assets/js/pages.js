@@ -142,6 +142,7 @@ function renderClinic() {
   box.setAttribute('role', 'dialog');
   box.setAttribute('aria-modal', 'true');
   box.setAttribute('aria-label', '사진 크게 보기');
+  box.tabIndex = -1; // 열릴 때 포커스는 라이트박스 자체로(테두리 없음) — 키보드는 Tab 으로 닫기·이전·다음
   box.innerHTML = `
     <figure class="lightbox__figure"><img class="lightbox__img" alt=""><figcaption class="lightbox__cap"></figcaption></figure>
     <button type="button" class="lightbox__btn lightbox__close" aria-label="닫기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
@@ -165,7 +166,7 @@ function renderClinic() {
     if (!box.classList.contains('is-open')) {
       box.classList.add('is-open');
       document.body.classList.add('is-locked');
-      box.querySelector('.lightbox__close').focus();
+      box.focus({ preventScroll: true });
     }
   }
   function close() {

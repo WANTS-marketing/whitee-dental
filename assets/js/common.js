@@ -219,7 +219,7 @@
       openBtn.setAttribute('aria-expanded', String(open));
       document.body.classList.toggle('is-locked', open);
       document.getElementById('header')?.classList.toggle('is-mnav', open); // 메인 투명 헤더 → 메뉴가 열린 동안 흰 헤더
-      if (open) nav.querySelector('.mnav__close').focus();
+      if (open) nav.querySelector('.mnav__panel').focus({ preventScroll: true }); // 패널 자체로(테두리 없음) — 키보드는 Tab 으로 닫기 버튼
       else openBtn.focus();
     };
     openBtn.addEventListener('click', () => setOpen(true));

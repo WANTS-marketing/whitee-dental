@@ -374,7 +374,8 @@ function initDoctors() {
     modal.classList.remove('is-closing');
     modal.showModal(); // 나타날 때: 딤·팝업이 서서히 (main.css .doc-modal 애니메이션)
     document.documentElement.classList.add('is-modal-open'); // 뒤 화면 스크롤 잠금
-    modal.querySelector('[data-modal-close]').focus();
+    // 포커스는 팝업 본문으로(테두리 없음) — 마우스로 열 때 닫기(×)에 포커스 테두리가 보이지 않게, 키보드는 Tab 한 번에 닫기 버튼
+    modal.querySelector('.doc-modal__panel').focus({ preventScroll: true });
   }
   /* 닫을 때도 서서히: .is-closing 애니메이션이 끝난 뒤 dialog 닫기 (움직임 줄이기 설정이면 바로) */
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -390,6 +391,15 @@ function initDoctors() {
   modal.addEventListener('cancel', (e) => { e.preventDefault(); closeModal(); }); // ESC
   modal.querySelector('[data-modal-close]').addEventListener('click', closeModal);
   modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); }); // 배경(딤) 클릭
+  // 포커스 가두기: Tab·Shift+Tab 이 팝업 밖(브라우저 주소창 등)으로 나가지 않고 팝업 안 버튼·링크만 돈다
+  modal.addEventListener('keydown', (e) => {
+    if (e.key !== 'Tab') return;
+    const items = [...modal.querySelectorAll('button, a[href]')].filter((el) => el.offsetParent && !el.closest('[inert]'));
+    if (!items.length) return;
+    const i = items.indexOf(document.activeElement);
+    e.preventDefault();
+    items[i < 0 ? (e.shiftKey ? items.length - 1 : 0) : (i + (e.shiftKey ? -1 : 1) + items.length) % items.length].focus();
+  });
   modal.addEventListener('close', () => {
     document.documentElement.classList.remove('is-modal-open');
     // 연 원장의 '약력 보기' 버튼으로 포커스

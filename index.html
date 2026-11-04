@@ -288,7 +288,7 @@
 
   <!-- 의료진 약력 팝업 (main.js initDoctors) — 카드·'약력 보기' 클릭 시 열림 -->
   <dialog class="doc-modal" data-doc-modal aria-labelledby="doc-modal-title">
-    <div class="doc-modal__panel">
+    <div class="doc-modal__panel" tabindex="-1"><!-- 열릴 때 포커스는 여기(테두리 없음) — 키보드는 Tab 한 번에 닫기(×) -->
       <h2 class="sr-only" id="doc-modal-title">의료진 약력</h2>
       <button type="button" class="doc-modal__close" data-modal-close aria-label="닫기">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
