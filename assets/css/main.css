@@ -71,6 +71,46 @@ html::-webkit-scrollbar { display: none; }
 @media (min-width: 769px) {
   /* 첫 버튼 오른쪽 위는 히어로 모서리와 같은 반지름 (예전엔 슬라이더 둥근 모서리에 잘려 생기던 모양) */
   .quick--hero .quick__list > li:first-child .quick__btn { border-top-right-radius: var(--notch-r); }
+  /* hover 그림자 = 공통(--shadow-card 0 10px 30px)의 50% (모바일 플로팅 버튼은 자체 그림자 유지) */
+  .quick--hero .quick__btn:hover { box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08); }
+
+  /* 히어로 SNS 버튼 hover: 빛 지나가기 + 바깥 링 + 아이콘 확대
+     참고: uiverse.io/elijahgummer/bright-chicken-11 (MIT, Tailwind → 순수 CSS) — 출처는 docs/HANDOVER.md
+     --qb-w = 버튼 너비(1025px 이상 150px, 769~1024px 120px). 빛 막대 높이 = 버튼 높이의 3배(300%)라 낮은 화면(72px)도 자동 */
+  .quick--hero .quick__btn {
+    --qb-w: 150px; --qb-ring: var(--color-changwon); --qb-shine: rgba(255, 255, 255, 0.25);
+    position: relative; overflow: hidden;
+    outline: 2px solid transparent; outline-offset: 2px;
+    transition: transform var(--dur), box-shadow var(--dur), outline-color 0.3s, color 0.3s;
+  }
+  .quick--hero .quick__btn--masan, .quick--hero .quick__btn--masan-line { --qb-ring: var(--color-masan); }
+  .quick--hero .quick__btn--changwon-line { --qb-shine: rgba(253, 91, 155, 0.15); } /* 창원 핑크 15% */
+  .quick--hero .quick__btn--masan-line { --qb-shine: rgba(254, 109, 51, 0.15); }    /* 마산 오렌지 15% */
+  .quick--hero .quick__btn > * { position: relative; z-index: 1; } /* 글자·아이콘은 빛 위 */
+  .quick--hero .quick__btn svg, .quick--hero .quick__blog-ico { transition: transform 0.3s; }
+  /* 기울어진 막대: 처음엔 버튼 오른쪽 바깥 */
+  .quick--hero .quick__btn::after {
+    content: ""; position: absolute; z-index: 0; top: -100%; right: 0; width: 32px; height: 300%;
+    background: var(--qb-shine); pointer-events: none;
+    transform: translateX(48px) rotate(12deg); transition: transform 1s ease-out;
+  }
+  /* 키보드 포커스에도 같은 링 */
+  .quick--hero .quick__btn:focus-visible { outline-color: var(--qb-ring); }
+}
+@media (min-width: 769px) and (max-width: 1024px) {
+  .quick--hero .quick__btn { --qb-w: 120px; }
+}
+@media (min-width: 769px) and (hover: hover) {
+  .quick--hero .quick__btn:hover { outline-color: var(--qb-ring); }
+  /* 왼쪽 바깥까지: 버튼 너비 + 막대가 기울어 퍼지는 폭만큼 */
+  .quick--hero .quick__btn:hover::after { transform: translateX(calc(var(--qb-w) * -1 - 24px)) rotate(12deg); }
+  .quick--hero .quick__btn:hover svg, .quick--hero .quick__btn:hover .quick__blog-ico { transform: scale(1.1); }
+  .quick--hero .quick__btn--changwon-line:hover, .quick--hero .quick__btn--masan-line:hover { color: var(--qb-ring); }
+}
+/* 움직임 줄이기: 빛 이동 없이 링만 */
+@media (prefers-reduced-motion: reduce) {
+  .quick--hero .quick__btn::after { display: none; }
+  .quick--hero .quick__btn svg, .quick--hero .quick__blog-ico { transform: none !important; }
 }
 
 /* ---------- ② 빠른 진료 안내 ---------- */
