@@ -229,13 +229,15 @@ function initDoctors() {
     const group = (key) => (by[key].length ? `
             <section class="doc-group"><h4 class="doc-group__title">${GROUP_TITLE[key]}</h4><ul class="doc-group__list">${by[key].map(li).join('')}</ul></section>` : '');
     const certs = by.cert.length ? `<ul class="doc-profile__certs">${by.cert.map(li).join('')}</ul>` : '';
-    // 왼쪽 열: 학력·경력 / 오른쪽 열: 학회 활동
-    const cols = `<div class="doc-profile__cols"><div class="doc-profile__col">${group('edu')}${group('career')}</div><div class="doc-profile__col">${group('society')}</div></div>`;
+    // 1열: 학력 → 경력 → 학회 활동 차례로
+    const cols = `<div class="doc-profile__cols">${group('edu')}${group('career')}${group('society')}</div>`;
     return `
       <article class="doc-profile" data-doc="${i}" aria-hidden="true" inert>
         <div class="doc-profile__body">
-          <p class="doc-profile__meta"><span data-doc-branch>${BRANCH_NAME[d.branches[0]]}</span> · <b class="doc-profile__dept">${esc(d.dept)}</b></p>
-          <h3 class="doc-profile__name">${esc(d.name)} <small>${esc(d.title)}</small></h3>
+          <header class="doc-profile__head"><!-- 스크롤해도 위에 고정 -->
+            <p class="doc-profile__meta"><span data-doc-branch>${BRANCH_NAME[d.branches[0]]}</span> · <b class="doc-profile__dept">${esc(d.dept)}</b></p>
+            <h3 class="doc-profile__name">${esc(d.name)} <small>${esc(d.title)}</small></h3>
+          </header>
           ${certs}${cols}
         </div>
       </article>`;
