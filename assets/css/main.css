@@ -693,3 +693,26 @@ html.is-coach { overflow: hidden; }
   .coach, .coach__spot { transition: none; }
   .coach__spot::after, .coach__tip.is-in { animation: none; }
 }
+
+/* ==========================================================================
+   풀스크린 섹션 넘김 (assets/js/fullpage.js 가 PC·높이 700px 이상에서 html.is-fullpage 를 붙일 때만)
+   각 섹션 = 정확히 한 화면(100vh), 내용은 헤더 아래 공간의 세로 가운데. 마지막(지점 바로가기 바 + 푸터)은 높이 자동
+   ========================================================================== */
+html.is-fullpage { scroll-snap-type: none; scroll-behavior: auto; scroll-padding-top: 0; overflow-anchor: none; } /* overflow-anchor: 아코디언이 열려 섹션 안 내용 높이가 바뀌어도 페이지가 밀리지 않게 */ /* 부드러운 스크롤은 fullpage.js 가 직접 — CSS smooth 와 겹치면 위치가 어긋난다 */
+html.is-fullpage .screen {
+  height: 100vh; min-height: 0; box-sizing: border-box;
+  padding: calc(var(--header-h) + 24px) 0 24px; scroll-snap-align: none;
+}
+/* FAQ: 열린 답변이 길면 목록 칸 안에서만 스크롤 (끝에 닿은 뒤 한 번 더 휠하면 다음 섹션) */
+html.is-fullpage .faq-preview__box { max-height: calc(100vh - var(--header-h) - 48px); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; }
+/* 왼쪽 섹션 표시기: 점을 누르면 그 섹션으로, 지금 섹션은 길게(포인트 컬러). 히어로 위에서는 흰 점 */
+.fp-nav { display: none; }
+html.is-fullpage .fp-nav { position: fixed; z-index: 80; top: 50%; left: 16px; display: flex; flex-direction: column; gap: 6px; transform: translateY(-50%); }
+.fp-nav[hidden] { display: none !important; }
+.fp-nav button { position: relative; display: grid; place-items: center; width: 20px; height: 20px; }
+.fp-nav button::before { content: ""; width: 6px; height: 6px; border-radius: 3px; background: rgba(0, 0, 0, 0.25); transition: height 0.3s var(--ease), background 0.3s; }
+.fp-nav button[aria-current=true]::before { height: 18px; background: var(--color-point); }
+.fp-nav.is-light button::before { background: rgba(255, 255, 255, 0.55); }
+.fp-nav.is-light button[aria-current=true]::before { background: #fff; }
+.fp-nav__label { position: absolute; left: 26px; top: 50%; padding: 3px 8px; border-radius: 4px; background: #222; color: #fff; font-size: var(--fs-xxs); white-space: nowrap; transform: translateY(-50%); opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+.fp-nav button:is(:hover, :focus-visible) .fp-nav__label { opacity: 1; }

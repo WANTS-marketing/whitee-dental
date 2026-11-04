@@ -300,7 +300,8 @@
     window.addEventListener('scroll', onScroll, { passive: true });
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
     btns.forEach((btn) => btn.addEventListener('click', (e) => {
-      window.scrollTo({ top: 0, behavior: reduce.matches ? 'auto' : 'smooth' });
+      if (window.Fullpage?.isActive()) window.Fullpage.go(0); // 메인 풀스크린 넘김 중이면 첫 섹션으로
+      else window.scrollTo({ top: 0, behavior: reduce.matches ? 'auto' : 'smooth' });
       if (quick.classList.contains('is-open')) quick.querySelector('.quick__toggle')?.click(); // 모바일 '+' 닫기
       if (e.detail === 0) document.querySelector('.skip-link')?.focus({ preventScroll: true }); // 키보드(Enter·Space)로 눌렀을 때만
       else btn.blur();

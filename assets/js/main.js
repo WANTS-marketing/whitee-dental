@@ -345,7 +345,12 @@ function initDoctors() {
     if (!stage) return;
     let h = Math.round(room * 0.6);
     panel.style.setProperty('--doc-photo-h', h + 'px');
-    const over = section.offsetHeight - room;
+    // 풀스크린 넘김(html.is-fullpage): 섹션 높이 = 100vh 고정 → 안쪽 내용 높이가 섹션 안쪽 공간을 넘친 만큼 줄인다
+    let over = section.offsetHeight - room;
+    if (document.documentElement.classList.contains('is-fullpage')) {
+      const cs = getComputedStyle(section);
+      over = section.querySelector('.doctors__inner').offsetHeight - (section.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom));
+    }
     if (over > 0) panel.style.setProperty('--doc-photo-h', Math.max(200, h - over - 1) + 'px');
   }
   let fitRaf = 0;
