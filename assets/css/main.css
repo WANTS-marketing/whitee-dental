@@ -596,3 +596,63 @@ html.is-modal-open { overflow: hidden; }
 @keyframes intro-zoom { from { transform: scale(1.15); } to { transform: scale(1); } }
 @keyframes intro-fade { from { opacity: 0; } to { opacity: 1; } }
 @keyframes intro-rise { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: none; } }
+
+/* ==========================================================================
+   이용 안내(코치마크) — PC 메인 첫 방문 (assets/js/onboarding.js)
+   딤 = .coach__spot 의 큰 box-shadow (대상만 둥글게 뚫림). 클릭은 바깥 네 칸 .coach__block 이 받아 닫는다
+   ========================================================================== */
+html.is-coach { overflow: hidden; }
+.coach { position: fixed; inset: 0; z-index: 1000; pointer-events: none; opacity: 0; transition: opacity 0.3s ease; }
+.coach.is-open { opacity: 1; }
+.coach__block, .coach__cover { position: fixed; pointer-events: auto; cursor: pointer; }
+.coach__cover[hidden] { display: none; }
+.coach__spot {
+  position: fixed; border-radius: 14px; box-shadow: 0 0 0 200vmax rgba(0, 0, 0, 0.62);
+  transition: left 0.45s var(--ease), top 0.45s var(--ease), width 0.45s var(--ease), height 0.45s var(--ease);
+}
+.coach__spot::after {
+  content: ""; position: absolute; inset: -3px; border: 3px solid var(--color-point); border-radius: 17px;
+  animation: coach-pulse 1.6s ease-out infinite;
+}
+@keyframes coach-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(254, 109, 51, 0.55); }
+  70% { box-shadow: 0 0 0 12px rgba(254, 109, 51, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(254, 109, 51, 0); }
+}
+
+.coach__tip {
+  position: fixed; width: min(24rem, calc(100vw - 32px)); padding: 24px 24px 18px; border-radius: 16px;
+  background: #fff; color: var(--color-text); box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25); pointer-events: auto;
+}
+.coach__tip.is-in { animation: coach-in 0.35s var(--ease) both; }
+.coach__tip[data-place="top"].is-in { animation-name: coach-in-up; }
+@keyframes coach-in { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
+@keyframes coach-in-up { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+/* 꼬리: 말풍선 쪽에 붙은 마름모 반쪽 */
+.coach__arrow { position: absolute; width: 16px; height: 16px; margin-left: -8px; background: #fff; transform: rotate(45deg); border-radius: 3px; }
+.coach__tip[data-place="bottom"] .coach__arrow { top: -7px; }
+.coach__tip[data-place="top"] .coach__arrow { bottom: -7px; }
+.coach__title { position: relative; font-size: 1.1875rem; font-weight: 700; line-height: 1.4; letter-spacing: -0.02em; }
+.coach__text { position: relative; margin-top: 8px; font-size: 1.0625rem; line-height: 1.6; color: #444; word-break: keep-all; }
+.coach__foot { display: flex; align-items: center; gap: 12px; margin-top: 20px; }
+.coach__count { font-size: var(--fs-xs); color: var(--color-text-sub); }
+.coach__count strong { color: var(--color-point); }
+.coach__skip { margin-left: auto; padding: 6px 2px; font-size: var(--fs-xs); color: var(--color-text-sub); text-decoration: underline; text-underline-offset: 3px; }
+.coach__skip:hover { color: var(--color-text); }
+.coach__skip[hidden] { display: none; }
+.coach__skip[hidden] + .coach__btns { margin-left: auto; }
+.coach__btns { display: flex; gap: 8px; }
+.coach__btn {
+  display: inline-flex; align-items: center; justify-content: center; height: 42px; padding: 0 20px; border-radius: var(--radius-pill);
+  background: var(--color-point); color: #fff; font-size: var(--fs-sm); font-weight: 600; white-space: nowrap; transition: background var(--dur), color var(--dur), border-color var(--dur);
+}
+.coach__btn:hover { background: #e85a22; }
+.coach__btn--line { border: 1px solid var(--color-line); background: #fff; color: var(--color-text); }
+.coach__btn--line:hover { border-color: var(--color-text); background: #fff; }
+.coach :focus-visible { outline: 3px solid var(--color-point); outline-offset: 2px; }
+
+/* 움직임 줄이기: 펄스·이동·등장 연출 없이 바로 표시 (테두리는 그대로) */
+@media (prefers-reduced-motion: reduce) {
+  .coach, .coach__spot { transition: none; }
+  .coach__spot::after, .coach__tip.is-in { animation: none; }
+}

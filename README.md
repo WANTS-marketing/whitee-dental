@@ -45,6 +45,7 @@ assets/js/
   include.js               컴포넌트 삽입
   common.js                헤더·모바일 메뉴·퀵메뉴·아코디언 등 공통 동작
   main.js / pages.js / admin.js   페이지별 동작
+  onboarding.js            메인 PC 첫 방문 이용 안내(코치마크)
   config.js                자동 생성 (커밋 안 함)
 assets/data/*.json         공지·소식·사례·FAQ·문의 더미 데이터
 assets/images/             이미지 (목록: assets/images/README.md) · temp/ = 임시 스톡 이미지(Pexels)
@@ -62,6 +63,7 @@ docs/                      배포·인수인계 문서
 | 색상·글자 크기 | `assets/css/variables.css` |
 | 메뉴 | `components/header.html` (데스크톱·모바일 두 군데) |
 | FAQ·소식 (1차) | `assets/data/*.json` |
+| 메인 첫 방문 이용 안내(코치마크) 문구·단계 | `assets/js/onboarding.js` 의 `STEPS` (스타일: `main.css` 끝 '이용 안내') |
 
 ## 서브페이지 문구 출처
 

@@ -64,10 +64,15 @@ function initHero() {
   });
 
   go(0);
+  // 첫 진입 애니메이션이 끝났음을 알린다 → onboarding.js 가 이 신호 뒤에 이용 안내를 시작
+  const introDone = () => {
+    window.__heroIntroDone = true;
+    document.dispatchEvent(new CustomEvent('hero:introend'));
+  };
   // 움직임 줄이기 설정 사용자는 첫 진입 애니메이션·자동재생 없이 바로 표시
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (reduce) { document.body.classList.remove('is-intro'); stop(); return; }
-  if (!document.body.classList.contains('is-intro')) { play(); return; }
+  if (reduce) { document.body.classList.remove('is-intro'); stop(); introDone(); return; }
+  if (!document.body.classList.contains('is-intro')) { play(); introDone(); return; }
   // 첫 진입 애니메이션(main.css '첫 진입 애니메이션')이 끝난 뒤 자동재생 시작. 그동안 버튼은 재생 상태로 표시
   const INTRO_MS = window.matchMedia('(max-width: 768px)').matches ? 500 : 2600;
   playBtn.setAttribute('aria-pressed', 'true');
@@ -75,6 +80,7 @@ function initHero() {
   setTimeout(() => {
     document.body.classList.remove('is-intro');
     if (playBtn.getAttribute('aria-pressed') === 'true' && !timer) play();
+    introDone();
   }, INTRO_MS);
 }
 
