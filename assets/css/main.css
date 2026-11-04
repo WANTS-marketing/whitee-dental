@@ -20,7 +20,7 @@ html::-webkit-scrollbar { display: none; }
 @keyframes hero-zoom { from { transform: scale(1.06); } to { transform: scale(1); } }
 .hero__content { position: absolute; z-index: 2; top: 50%; left: 120px; right: 240px; transform: translateY(-50%); }
 .hero__label { font-size: var(--fs-h4); font-weight: 400; opacity: 0.95; }
-.hero__title { margin-top: 12px; font-size: var(--fs-display); font-weight: 800; line-height: 1.25; letter-spacing: -0.02em; }
+.hero__title { margin-top: 12px; font-size: var(--fs-display); font-weight: 800; line-height: 1.25; letter-spacing: 0; }
 .hero__desc { margin-top: 20px; font-size: var(--fs-lg); line-height: 1.55; opacity: 0.9; }
 .hero__strong { margin-top: 24px; font-size: var(--fs-lg); font-weight: 700; }
 .hero__btn { margin-top: 32px; height: 44px; padding: 0 28px; font-size: var(--fs-md); }
@@ -395,9 +395,9 @@ html.is-modal-open { overflow: hidden; }
   .hero__inner { padding: 0 var(--gutter); }
   .hero__slider { height: 480px; border-radius: var(--radius-lg); }
   .hero__content { left: 24px; right: 24px; top: auto; bottom: 88px; transform: none; }
-  /* 제목: 가장 긴 줄(약 10.5글자 폭)이 한 줄에 들어가는 크기까지만 — 글자 크게 단계에서도 '/' 줄바꿈 그대로 2줄 유지
+  /* 제목: 가장 긴 줄(약 10.8글자 폭)이 한 줄에 들어가는 크기까지만 — 글자 크게 단계에서도 '/' 줄바꿈 그대로 2줄 유지
      100vw - 80px = 문구 칸 너비(좌우 gutter 16px×2 + 문구 여백 24px×2) */
-  .hero__title { font-size: min(var(--fs-display), calc((100vw - 80px) / 10.8)); }
+  .hero__title { font-size: min(var(--fs-display), calc((100vw - 80px) / 11.2)); }
   .hero__label { font-size: var(--fs-sm); }
   .hero__desc { font-size: var(--fs-sm); margin-top: 12px; }
   .hero__strong { font-size: var(--fs-md); margin-top: 12px; }
@@ -472,7 +472,7 @@ html.is-modal-open { overflow: hidden; }
   .doctors__main { --doc-per: 1.2; --doc-gap: 12px; }
 }
 @media (max-width: 400px) {
-  .hero__title { font-size: min(1.75rem, calc((100vw - 80px) / 10.8)); }
+  .hero__title { font-size: min(1.75rem, calc((100vw - 80px) / 11.2)); }
   .hero__slider { height: 460px; }
 }
 
@@ -589,6 +589,8 @@ html.is-modal-open { overflow: hidden; }
 @media (min-width: 1025px) {
   .hero { container-type: inline-size; }
   .hero__inner { width: min(1600px, 100% - 80px); max-width: none; padding: 0; }
+  /* 좁은 데스크톱 + 글자 크게: 가장 긴 제목 줄이 문구 칸(오른쪽 240px 비움)을 넘어 3줄이 되지 않게 화면 폭 기준 상한 */
+  .hero__title { font-size: min(var(--fs-display), 5.4vw); }
   /* 최소 48px: 퀵바가 카드 모양이 아닌 낮은 화면에서 글자가 히어로 끝에 붙지 않게 */
   .hero__content { left: max(48px, calc((min(1600px, 100cqw - 80px) - min(100cqw, var(--container) + var(--gutter) * 2)) / 2 + var(--page-pad, var(--gutter)) + var(--qb-inset, 0px))); }
 }
