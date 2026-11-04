@@ -7,18 +7,20 @@ html { scrollbar-width: none; }
 html::-webkit-scrollbar { display: none; }
 
 /* ---------- ① 히어로 ---------- */
-/* 헤더(흰색 고정) 바로 아래에서 시작. 뒤 배경은 페이지 흰색 그대로 */
-.hero { position: relative; padding-top: calc(var(--header-h) + 24px); }
-.hero__inner { position: relative; }
+/* 헤더(흰색 고정) 바로 아래부터 화면 가로 100%, 높이 = 화면 - 헤더(최소 640px), 모서리 없음
+   --hero-x = 문구·조작 버튼의 좌우 시작선 = 헤더 로고 시작선 (1025px 이상은 아래 '히어로 시작선'에서 다시 계산) */
+.hero { --hero-x: var(--gutter); position: relative; padding-top: var(--header-h); container-type: inline-size; }
+.hero__inner.container { position: relative; width: 100%; max-width: none; padding: 0; }
 /* translateZ·backface-visibility: 펼침(clip-path)·확대 애니메이션 중 서브픽셀 흔들림 방지 */
-.hero__slider { position: relative; height: 640px; border-radius: var(--radius-xl); overflow: hidden; background: #111; color: #fff; transform: translateZ(0); backface-visibility: hidden; }
+.hero__slider { position: relative; height: max(640px, calc(100vh - var(--header-h))); overflow: hidden; color: #fff; transform: translateZ(0); backface-visibility: hidden; }
 .hero__slide { position: absolute; inset: 0; opacity: 0; visibility: hidden; transition: opacity 0.8s var(--ease), visibility 0.8s; }
 .hero__slide.is-active { opacity: 1; visibility: visible; }
-.hero__media { position: absolute; inset: 0; background: linear-gradient(120deg, #3a3330, #151515); }
+.hero__media { position: absolute; inset: 0; background: linear-gradient(120deg, #3a3330, #151515); } /* 사진이 없을 때 */
+.hero__media img { width: 100%; height: 100%; object-fit: cover; }
 .hero__media::before { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(90deg, rgba(10, 10, 10, 0.85) 0%, rgba(10, 10, 10, 0.65) 50%, rgba(10, 10, 10, 0.5) 100%); }
 .hero__slide.is-active .hero__media img { animation: hero-zoom 7s linear forwards; }
 @keyframes hero-zoom { from { transform: scale(1.06); } to { transform: scale(1); } }
-.hero__content { position: absolute; z-index: 2; top: 50%; left: 120px; right: 240px; transform: translateY(-50%); }
+.hero__content { position: absolute; z-index: 2; top: 50%; left: var(--hero-x); right: calc(var(--hero-x) + 160px); transform: translateY(-50%); } /* 오른쪽 160px: 플로팅 퀵메뉴 자리 */
 .hero__label { font-size: var(--fs-h4); font-weight: 400; opacity: 0.95; }
 /* 묶음 라벨: 묶음 사이 구분점(·)은 각 묶음 앞에 붙이고, 줄 맨 앞에 오는 구분점은 바깥 칸(overflow)으로 밀어 숨긴다
    → 한 줄이면 'A · B', 두 줄이면 'A' / 'B' (줄 끝·줄 앞에 · 가 남지 않음) */
@@ -35,7 +37,7 @@ html::-webkit-scrollbar { display: none; }
 .hero__slide.is-active .hero__content > :nth-child(n+4) { animation-delay: 0.3s; }
 @keyframes hero-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
 
-.hero__controls { position: absolute; z-index: 3; right: 48px; bottom: 48px; display: flex; align-items: center; gap: 6px; }
+.hero__controls { position: absolute; z-index: 3; right: var(--hero-x); bottom: 48px; display: flex; align-items: center; gap: 6px; }
 .hero__ctrl { display: grid; place-items: center; width: 36px; height: 36px; color: #fff; opacity: 0.85; }
 .hero__ctrl:hover { opacity: 1; }
 .hero__ctrl svg { width: 24px; height: 24px; }
@@ -45,73 +47,6 @@ html::-webkit-scrollbar { display: none; }
 .hero__ctrl[aria-pressed="false"] { opacity: 0.45; }
 .hero__count { font-size: var(--fs-lg); letter-spacing: 0.08em; min-width: 52px; text-align: center; }
 .hero__count strong { font-weight: 700; }
-
-/* 히어로 우측 퀵메뉴 — 슬라이더 오른쪽 위를 파낸 칸 (CSS만으로)
-   칸 자체: 페이지 배경색(흰색) + 왼쪽 아래 모서리 둥글게.
-   오목 모서리 2개는 반지름 R 짜리 정사각형에 radial-gradient 로 4분원만 투명하게 뚫어 만든다:
-   ::before = 칸 왼쪽 위 (히어로 윗선이 둥글게 꺾여 내려감)
-   ::after  = 칸 아래 오른쪽 (그 아래 히어로 오른쪽 위 모서리가 둥글게)
-   → 히어로 외곽선이 끊김 없이 하나의 둥근 선으로 이어진다
-   칸은 슬라이더 밖(.hero__inner 기준)에 있고, 슬라이더 오른쪽 끝·윗선보다 --notch-bleed(2px) 바깥까지 덮는다.
-   (슬라이더 안에 두면 overflow 에 잘려 끝선 1px 이 펼침 애니메이션 중 비친다) */
-.quick--hero {
-  --notch-r: var(--radius-xl); --notch-bg: #fff; --notch-bleed: 2px;
-  position: absolute; z-index: 4; top: calc(var(--notch-bleed) * -1); right: calc(var(--notch-bleed) * -1);
-  padding: var(--notch-bleed) var(--notch-bleed) 20px 20px;
-  background: var(--notch-bg); border-bottom-left-radius: var(--notch-r);
-}
-.quick--hero::before, .quick--hero::after {
-  content: ""; position: absolute; pointer-events: none;
-  background: radial-gradient(circle at 0 100%, transparent calc(var(--notch-r) - 0.5px), var(--notch-bg) var(--notch-r));
-}
-/* 칸 왼쪽 위: 윗선보다 2px 위까지 */
-.quick--hero::before { top: 0; right: 100%; width: var(--notch-r); height: calc(var(--notch-r) + var(--notch-bleed)); }
-/* 칸 아래 오른쪽: 오른쪽 끝보다 2px 바깥까지 */
-.quick--hero::after { top: 100%; right: 0; width: calc(var(--notch-r) + var(--notch-bleed)); height: var(--notch-r); }
-@media (min-width: 769px) {
-  /* 첫 버튼 오른쪽 위는 히어로 모서리와 같은 반지름 (예전엔 슬라이더 둥근 모서리에 잘려 생기던 모양) */
-  .quick--hero .quick__list > li:first-child .quick__btn { border-top-right-radius: var(--notch-r); }
-  /* hover 그림자 = 공통(--shadow-card 0 10px 30px)의 50% (모바일 플로팅 버튼은 자체 그림자 유지) */
-  .quick--hero .quick__btn:hover { box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08); }
-
-  /* 히어로 SNS 버튼 hover: 빛 지나가기 + 바깥 링 + 아이콘 확대
-     참고: uiverse.io/elijahgummer/bright-chicken-11 (MIT, Tailwind → 순수 CSS) — 출처는 docs/HANDOVER.md
-     --qb-w = 버튼 너비(1025px 이상 150px, 769~1024px 120px). 빛 막대 높이 = 버튼 높이의 3배(300%)라 낮은 화면(72px)도 자동 */
-  .quick--hero .quick__btn {
-    --qb-w: 150px; --qb-ring: var(--color-changwon); --qb-shine: rgba(255, 255, 255, 0.25);
-    position: relative; overflow: hidden;
-    outline: 2px solid transparent; outline-offset: 2px;
-    transition: transform var(--dur), box-shadow var(--dur), outline-color 0.3s, color 0.3s;
-  }
-  .quick--hero .quick__btn--masan, .quick--hero .quick__btn--masan-line { --qb-ring: var(--color-masan); }
-  .quick--hero .quick__btn--changwon-line { --qb-shine: rgba(253, 91, 155, 0.15); } /* 창원 핑크 15% */
-  .quick--hero .quick__btn--masan-line { --qb-shine: rgba(254, 109, 51, 0.15); }    /* 마산 오렌지 15% */
-  .quick--hero .quick__btn > * { position: relative; z-index: 1; } /* 글자·아이콘은 빛 위 */
-  .quick--hero .quick__btn svg, .quick--hero .quick__blog-ico { transition: transform 0.3s; }
-  /* 기울어진 막대: 처음엔 버튼 오른쪽 바깥 */
-  .quick--hero .quick__btn::after {
-    content: ""; position: absolute; z-index: 0; top: -100%; right: 0; width: 32px; height: 300%;
-    background: var(--qb-shine); pointer-events: none;
-    transform: translateX(48px) rotate(12deg); transition: transform 1s ease-out;
-  }
-  /* 키보드 포커스에도 같은 링 */
-  .quick--hero .quick__btn:focus-visible { outline-color: var(--qb-ring); }
-}
-@media (min-width: 769px) and (max-width: 1024px) {
-  .quick--hero .quick__btn { --qb-w: 120px; }
-}
-@media (min-width: 769px) and (hover: hover) {
-  .quick--hero .quick__btn:hover { outline-color: var(--qb-ring); }
-  /* 왼쪽 바깥까지: 버튼 너비 + 막대가 기울어 퍼지는 폭만큼 */
-  .quick--hero .quick__btn:hover::after { transform: translateX(calc(var(--qb-w) * -1 - 24px)) rotate(12deg); }
-  .quick--hero .quick__btn:hover svg, .quick--hero .quick__btn:hover .quick__blog-ico { transform: scale(1.1); }
-  .quick--hero .quick__btn--changwon-line:hover, .quick--hero .quick__btn--masan-line:hover { color: var(--qb-ring); }
-}
-/* 움직임 줄이기: 빛 이동 없이 링만 */
-@media (prefers-reduced-motion: reduce) {
-  .quick--hero .quick__btn::after { display: none; }
-  .quick--hero .quick__btn svg, .quick--hero .quick__blog-ico { transform: none !important; }
-}
 
 /* ---------- ② 빠른 진료 안내 ---------- */
 .clinic-bar { padding: 64px 0 0; }
@@ -437,7 +372,6 @@ html.is-modal-open { overflow: hidden; }
    ========================================================================== */
 
 @media (max-width: 1200px) {
-  .hero__content { left: 64px; }
   .clinic-bar__inner { flex-wrap: wrap; }
   .clinic-bar__list { order: 3; flex-basis: 100%; }
   .clinic-bar__head { width: auto; flex: 1; }
@@ -445,14 +379,6 @@ html.is-modal-open { overflow: hidden; }
 }
 
 @media (max-width: 1024px) {
-  /* 태블릿: .hero__inner 에 좌우 여백(gutter)이 있어 칸 위치를 슬라이더 끝에 맞춘다 */
-  .quick--hero { right: calc(var(--gutter) - var(--notch-bleed)); }
-  .hero__slider { height: 560px; }
-  .hero__content { left: 48px; right: 200px; }
-  .quick__btn { width: 120px; height: 72px; font-size: var(--fs-sm); gap: 8px; }
-  .quick__btn svg { width: 24px; height: 24px; }
-  .quick__blog-ico { height: 22px; }
-  .quick__list { gap: 10px; }
 
   .philosophy__inner, .doctors__inner, .clinic__inner, .cases__inner, .faq-preview__inner, .story__inner { grid-template-columns: minmax(0, 1fr); gap: 40px; }
   .doctors__head { align-items: stretch; } /* 모바일: 탭이 전체 폭 */
@@ -467,10 +393,9 @@ html.is-modal-open { overflow: hidden; }
 }
 
 @media (max-width: 768px) {
-  .hero { padding-top: calc(var(--header-h) + 16px); }
-  .hero__inner { padding: 0 var(--gutter); }
-  .hero__slider { height: 480px; border-radius: var(--radius-lg); }
-  .hero__content { left: 24px; right: 24px; top: auto; bottom: 88px; transform: none; }
+  /* 모바일: 가로 100%, 높이 약 70vh (글자가 넘치지 않게 최소 높이, 글자 크게·아주 크게는 아래에서 더 높게) */
+  .hero__slider { height: 70vh; min-height: 480px; }
+  .hero__content { left: var(--hero-x); right: var(--hero-x); top: auto; bottom: 88px; transform: none; }
   /* 제목: 가장 긴 줄(약 10.8글자 폭)이 한 줄에 들어가는 크기까지만 — 글자 크게 단계에서도 '/' 줄바꿈 그대로 2줄 유지
      100vw - 80px = 문구 칸 너비(좌우 gutter 16px×2 + 문구 여백 24px×2) */
   .hero__title { font-size: min(var(--fs-display), calc((100vw - 80px) / 11.2)); }
@@ -479,13 +404,12 @@ html.is-modal-open { overflow: hidden; }
   .hero__strong { font-size: var(--fs-md); margin-top: 12px; }
   .hero__btn { margin-top: 20px; height: 40px; font-size: var(--fs-sm); }
   /* 조작 버튼(이전·다음·1/4·재생·정지)은 왼쪽 아래 한 묶음 — 오른쪽 아래는 SNS 플로팅 버튼 자리 */
-  .hero__controls { left: 16px; right: auto; bottom: 20px; justify-content: flex-start; }
+  .hero__controls { left: var(--hero-x); right: auto; bottom: 20px; justify-content: flex-start; }
   .hero__ctrl--play { margin-left: 8px; }
   /* 히어로 퀵메뉴 → 우측 하단 플로팅 (위치는 common.css 모바일 규칙) */
-  .quick--hero { position: fixed; top: auto; right: 16px; bottom: calc(var(--bottom-bar-h) + env(safe-area-inset-bottom) + 16px); padding: 0; background: none; border-radius: 0; transition: opacity var(--dur), visibility var(--dur), transform var(--dur); }
-  /* 히어로가 화면에 보이는 동안은 숨김 — 히어로를 지나 스크롤하면 나타난다 (main.js initQuickReveal) */
-  .quick--hero.is-hero-visible { opacity: 0; visibility: hidden; transform: translateY(12px); pointer-events: none; }
-  .quick--hero::before, .quick--hero::after { display: none; }
+  /* 히어로가 보이는 동안 '+' 플로팅 버튼 숨김 (main.js initQuickReveal) — 히어로 조작 버튼을 가리지 않게 */
+  .quick { transition: opacity var(--dur), visibility var(--dur), transform var(--dur); }
+  .quick.is-hero-visible { opacity: 0; visibility: hidden; transform: translateY(12px); pointer-events: none; }
 
   .clinic-bar { padding-top: 40px; }
   .clinic-bar__inner { gap: 20px; }
@@ -530,10 +454,6 @@ html.is-modal-open { overflow: hidden; }
   .doc-modal__foot .doc-modal__arrow { width: 48px; height: 48px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12); }
   .doc-modal__count { font-size: 0.9375rem; }
   .doc-profile__name { font-size: 1.875rem; }
-  /* 모바일 플로팅 퀵메뉴: 태블릿 규칙(120×72) 대신 한 줄 알약 버튼 */
-  .quick--hero .quick__btn { width: auto; min-width: 150px; height: 48px; gap: 8px; font-size: var(--fs-xs); }
-  .quick--hero .quick__btn svg { width: 20px; height: 20px; }
-  .quick--hero .quick__blog-ico { height: 19px; }
 
   .clinic__grid { grid-template-columns: 1fr; grid-template-rows: none; grid-template-areas: none; grid-auto-rows: 180px; }
   .clinic-card { grid-area: auto !important; }
@@ -560,7 +480,7 @@ html.is-modal-open { overflow: hidden; }
 }
 @media (max-width: 400px) {
   .hero__title { font-size: min(1.75rem, calc((100vw - 80px) / 11.2)); }
-  .hero__slider { height: 460px; }
+  .hero__slider { min-height: 460px; }
 }
 
 /* ==========================================================================
@@ -592,15 +512,13 @@ html.is-modal-open { overflow: hidden; }
     scroll-snap-align: start;
   }
 
-  /* 홈 묶음: 히어로+퀵바가 첫 화면(100vh)을 채우고 퀵바가 히어로 하단에 겹친다.
-     진료 철학·지점 정보는 화면 단위 없이 일반 여백으로 바로 이어진다 */
-  .screen-home__first { --overlap: 72px; display: flex; flex-direction: column; min-height: 100vh; }
-  .screen-home .hero { flex: 1; display: flex; flex-direction: column; }
-  .screen-home .hero__inner { flex: 1; display: flex; flex-direction: column; }
-  .screen-home .hero__slider { flex: 1; height: auto; min-height: 440px; }
-  .screen-home .hero__content { top: calc(50% - var(--overlap) / 2); }
-  .screen-home .hero__controls { bottom: calc(var(--overlap) + 28px); }
-  .screen-home .clinic-bar { position: relative; z-index: 5; margin-top: calc(var(--overlap) * -1); padding: 0 0 24px; }
+  /* 홈 묶음: 퀵바 카드를 히어로 아래 끝에 걸친다 — 높이의 절반은 히어로 위, 절반은 아래
+     --qb-h = 퀵바 카드 실제 높이(main.js initQuickbarOverlap 이 넣음, 2줄 모드·글자 크기에 따라 바뀜)
+     히어로 문구는 '퀵바에 가려지지 않는 부분'의 세로 가운데, 조작 버튼은 퀵바 바로 위 */
+  .screen-home__first { --qb-half: calc(var(--qb-h, 180px) / 2); }
+  .screen-home .hero__content { top: calc((100% - var(--qb-half)) / 2); }
+  .screen-home .hero__controls { bottom: calc(var(--qb-half) + 24px); }
+  .screen-home .clinic-bar { position: relative; z-index: 5; margin-top: calc(var(--qb-half) * -1); padding: 0 0 24px; }
   .screen-home .clinic-bar__inner { margin: 0 24px; border-bottom: 0; border-radius: var(--radius-xl); background: #fff; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12); }
   .screen-home .clinic-bar__card { aspect-ratio: auto; height: 100%; min-height: clamp(108px, 15vh, 140px); } /* min-height: 글자가 두 줄이 돼도 카드 밖으로 넘치지 않게, height 100%: 한 장만 두 줄일 때도 다섯 장 높이를 같게 */
   /* 퀵바 카드 정렬: [빠른 진료 안내 | 아이콘 5개 | FAQ]
@@ -654,41 +572,24 @@ html.is-modal-open { overflow: hidden; }
 /* 좁은 데스크톱(1360px 미만) 좌우 안쪽 여백 52px (예전 왼쪽 섹션 표시기 자리 — 표시기는 삭제했지만 레이아웃이 바뀌지 않게 여백은 유지) */
 @media (min-width: 1025px) and (max-width: 1359px) and (min-height: 700px) {
   .screen .container, .screen-home .container { padding-left: 52px; padding-right: 52px; }
+  .screen-home .hero__inner { padding-left: 0; padding-right: 0; } /* 히어로는 화면 가로 100% (문구 시작선은 --hero-x) */
   /* 히어로는 컨테이너가 아니라 화면 너비 - 80px → 넓힌 여백 제외. 대신 글자 시작선 계산에 52px 반영 */
-  .screen-home .hero__inner { padding-left: 0; padding-right: 0; }
   .screen-home { --page-pad: 52px; }
   /* 좁아진 지점 카드에서 전화번호가 두 줄로 꺾이지 않게 */
   .branch-card { padding-left: 24px; padding-right: 24px; }
   .branch-card__tel { font-size: clamp(1.5rem, 2.2vw, 2.25rem); }
 }
-/* 높이가 낮은 데스크톱: 히어로 오른쪽 퀵메뉴를 줄여 슬라이드 조작 버튼과 겹치지 않게 */
-@media (min-width: 1025px) and (min-height: 700px) and (max-height: 880px) {
-  .screen-home .quick__btn { height: 72px; gap: 8px; font-size: var(--fs-sm); }
-  .screen-home .quick__btn svg { width: 24px; height: 24px; }
-  .screen-home .quick__blog-ico { height: 22px; }
-  .screen-home .quick__list { gap: 10px; }
-}
-
-/* ---------- 히어로 넓게 (데스크톱) ----------
-   히어로 카드만 본문 컨테이너보다 넓게: 최대 1600px, 좌우 여백 최소 40px.
-   텍스트 시작선 = 퀵바 'OUR CLINIC BAR' 시작선
-   = 컨테이너 안쪽 시작(컨테이너 좌우 여백 --page-pad, 기본 24px) + 퀵바 카드 안쪽 여백(--qb-inset)
-   100cqw = .hero 너비(= 본문 너비). 퀵메뉴 파인 칸은 슬라이더 오른쪽에 붙어 있어 자동으로 따라간다 */
+/* ---------- 히어로 시작선 (데스크톱) ----------
+   헤더 칸(common.css .header__inner: 최대 1600px, 좌우 최소 40px)과 같은 선 → 문구 왼쪽 = 로고 시작선, 조작 버튼 오른쪽 = 헤더 오른쪽 끝선 */
 @media (min-width: 1025px) {
-  .hero { container-type: inline-size; }
-  .hero__inner { width: min(1600px, 100% - 80px); max-width: none; padding: 0; }
-  /* 좁은 데스크톱 + 글자 크게: 가장 긴 제목 줄이 문구 칸(오른쪽 240px 비움)을 넘어 3줄이 되지 않게 화면 폭 기준 상한 */
+  .hero { --hero-x: max(40px, (100cqw - 1600px) / 2); }
+  /* 좁은 데스크톱 + 글자 크게: 가장 긴 제목 줄이 3줄이 되지 않게 화면 폭 기준 상한 */
   .hero__title { font-size: min(var(--fs-display), 5.4vw); }
-  /* 최소 48px: 퀵바가 카드 모양이 아닌 낮은 화면에서 글자가 히어로 끝에 붙지 않게 */
-  .hero__content { left: max(48px, calc((min(1600px, 100cqw - 80px) - min(100cqw, var(--container) + var(--gutter) * 2)) / 2 + var(--page-pad, var(--gutter)) + var(--qb-inset, 0px))); }
-}
-@media (min-width: 1025px) and (min-height: 700px) {
-  .screen-home { --qb-inset: 64px; } /* 퀵바 카드 margin 24px + 왼쪽 padding 40px (--qb-pad) */
 }
 
 /* ---------- 첫 진입 애니메이션 (페이지 로드 시 1회) ----------
    body.is-intro 동안만 동작하고, main.js initHero 가 애니메이션이 끝나면(INTRO_MS) 클래스를 빼고 자동재생을 시작한다.
-   순서: 히어로 펼침(0~1s) → 텍스트 fade-up(1.3s~) → 퀵메뉴·오목 모서리 fade-in(1.6s~) → 퀵바 올라오기(1.9s~) */
+   순서: 히어로 펼침(가운데 작은 사각형 → 화면 전체, 0~1s) → 텍스트 fade-up(1.3s~) → 플로팅 퀵메뉴 fade-in(1.6s~) → 퀵바 올라오기(1.9s~) */
 @media (prefers-reduced-motion: no-preference) and (min-width: 769px) {
   .is-intro .hero__slider { animation: intro-open 1s cubic-bezier(0.65, 0, 0.35, 1) both; }
   /* 펼치는 동안 다른 슬라이드가 비치지 않게 현재 슬라이드만 그린다 */
@@ -699,8 +600,7 @@ html.is-modal-open { overflow: hidden; }
   .is-intro .hero__slide.is-active .hero__content > :nth-child(3) { animation-delay: 1.5s; }
   .is-intro .hero__slide.is-active .hero__content > :nth-child(n+4) { animation-delay: 1.6s; }
   .is-intro .hero__controls { animation: intro-fade 0.5s ease 1.3s both; }
-  /* 파인 칸 장식은 펼침이 끝난 뒤 나타나야 모서리가 어긋나 보이지 않는다 */
-  .is-intro .quick--hero { animation: intro-fade 0.5s ease 1.6s both; }
+  .is-intro .quick--float { animation: intro-fade 0.5s ease 1.6s both; }
   .is-intro .clinic-bar { animation: intro-rise 0.7s var(--ease) 1.9s both; }
 }
 /* 모바일: 펼침 대신 짧은 fade-in */
@@ -709,14 +609,14 @@ html.is-modal-open { overflow: hidden; }
 }
 /* 모바일 크게·아주 크게: 히어로 글자가 슬라이더 위로 넘지 않게 슬라이더를 높인다 */
 @media (max-width: 768px) {
-  html[data-fs="lg"] .hero__slider { height: 540px; }
-  html[data-fs="xl"] .hero__slider { height: 600px; }
+  html[data-fs="lg"] .hero__slider { min-height: 540px; }
+  html[data-fs="xl"] .hero__slider { min-height: 600px; }
 }
 /* 아주 크게(125%) + 낮은 화면(데스크톱): 히어로 제목이 슬라이더를 넘지 않게 한 단계 작게 — 모바일은 아래 폭 기준 규칙이 맡는다 */
 @media (min-width: 1025px) and (max-height: 820px) {
   html[data-fs="xl"] .hero__title { font-size: 2.75rem; }
 }
-@keyframes intro-open { from { clip-path: inset(30% 35% round 24px); } to { clip-path: inset(0 round 24px); } }
+@keyframes intro-open { from { clip-path: inset(30% 35% round 24px); } to { clip-path: inset(0 round 0); } }
 @keyframes intro-zoom { from { transform: scale(1.15); } to { transform: scale(1); } }
 @keyframes intro-fade { from { opacity: 0; } to { opacity: 1; } }
 @keyframes intro-rise { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: none; } }

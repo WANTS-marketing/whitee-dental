@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
   renderLatestNews();
   initReveal();
   initQuickReveal();
+  initQuickbarOverlap();
 });
 
 /* ---------- 모바일: 히어로가 보이는 동안 SNS 플로팅 버튼(+) 숨김 ----------
@@ -16,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
    JS 가 없으면 클래스가 붙지 않아 항상 보인다 */
 function initQuickReveal() {
   const hero = document.querySelector('.hero');
-  const quick = document.querySelector('.quick--hero');
+  const quick = document.querySelector('.quick--float');
   if (!hero || !quick || !('IntersectionObserver' in window)) return;
   const mobile = window.matchMedia('(max-width: 768px)');
   let heroVisible = true;
@@ -27,6 +28,16 @@ function initQuickReveal() {
   };
   new IntersectionObserver(([entry]) => { heroVisible = entry.isIntersecting; apply(); }).observe(hero);
   mobile.addEventListener('change', apply);
+}
+
+/* ---------- 퀵바 카드 높이 → --qb-h ----------
+   데스크톱(1025px 이상·높이 700px 이상)에서 퀵바 카드를 히어로 아래 끝에 절반 걸치기 위한 값 (main.css '홈 묶음')
+   2줄 모드·글자 크기·창 크기에 따라 높이가 바뀌므로 ResizeObserver 로 계속 맞춘다 */
+function initQuickbarOverlap() {
+  const box = document.querySelector('.screen-home__first');
+  const bar = box?.querySelector('.clinic-bar__inner');
+  if (!bar || !('ResizeObserver' in window)) return;
+  new ResizeObserver(() => box.style.setProperty('--qb-h', Math.round(bar.offsetHeight) + 'px')).observe(bar);
 }
 
 /* ---------- ① 히어로 슬라이더 ---------- */

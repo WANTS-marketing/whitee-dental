@@ -213,6 +213,7 @@
 
   function initQuick() {
     document.querySelectorAll('.quick').forEach((quick) => {
+      // 모바일 '+' 토글
       const btn = quick.querySelector('.quick__toggle');
       btn?.addEventListener('click', () => {
         const open = !quick.classList.contains('is-open');
@@ -220,6 +221,51 @@
         btn.setAttribute('aria-expanded', String(open));
         btn.setAttribute('aria-label', open ? '지점 SNS 메뉴 닫기' : '지점 SNS 메뉴 열기');
       });
+      initQuickChips(quick);
+    });
+  }
+
+  /* 769px 이상 플로팅 [인스타그램][블로그] → '창원점 / 마산점' 칩
+     - 마우스: 버튼·칩(같은 .quick__item 안) 위에 있는 동안 열림, 벗어나면 0.2초 뒤 닫힘
+     - 키보드: 버튼에 포커스 → 열림, Tab 으로 칩 이동, 묶음 밖으로 포커스가 나가거나 ESC → 닫힘
+     - 터치(hover 없는 기기): 탭으로 열고 닫기, 바깥을 누르면 닫힘 */
+  function initQuickChips(quick) {
+    const items = [...quick.querySelectorAll('[data-quick-item]')];
+    if (!items.length) return;
+    const CLOSE_DELAY = 200;
+    const canHover = window.matchMedia('(hover: hover)');
+    const set = (item, open) => {
+      clearTimeout(item._qt);
+      item.classList.toggle('is-open', open);
+      item.querySelector('.quick__sns-btn').setAttribute('aria-expanded', String(open));
+      if (open) items.forEach((o) => { if (o !== item) set(o, false); }); // 한 번에 하나만
+    };
+    items.forEach((item) => {
+      const btn = item.querySelector('.quick__sns-btn');
+      item.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') set(item, true); });
+      item.addEventListener('pointerleave', (e) => {
+        if (e.pointerType !== 'mouse' || item.querySelector(':focus-visible')) return; // 키보드 포커스가 안에 있으면 유지
+        clearTimeout(item._qt);
+        item._qt = setTimeout(() => set(item, false), CLOSE_DELAY);
+      });
+      // 마우스 사용자는 hover 로 이미 열려 있으므로 클릭은 '열기'만, 터치는 탭할 때마다 열기/닫기
+      btn.addEventListener('click', () => set(item, canHover.matches ? true : !item.classList.contains('is-open')));
+      item.addEventListener('focusin', (e) => {
+        if (item._escaped) { item._escaped = false; return; } // ESC 로 닫고 버튼에 돌려준 포커스로는 다시 열지 않는다
+        // 버튼은 키보드 포커스일 때만(마우스·터치로 누른 포커스는 hover·탭이 맡는다), 칩은 언제나
+        if (e.target !== btn || btn.matches(':focus-visible')) set(item, true);
+      });
+      item.addEventListener('focusout', (e) => { if (!item.contains(e.relatedTarget) && !item.matches(':hover')) set(item, false); });
+      item.addEventListener('keydown', (e) => {
+        if (e.key !== 'Escape' || !item.classList.contains('is-open')) return;
+        e.preventDefault();
+        set(item, false);
+        if (document.activeElement !== btn) { item._escaped = true; btn.focus({ preventScroll: true }); }
+      });
+    });
+    // 바깥을 누르면 닫힘 (터치·마우스 공통)
+    document.addEventListener('pointerdown', (e) => {
+      items.forEach((item) => { if (!item.contains(e.target)) set(item, false); });
     });
   }
 
