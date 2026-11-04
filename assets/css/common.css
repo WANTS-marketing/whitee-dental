@@ -170,7 +170,7 @@ html[data-fs="xl"] .gnb { --gnb-gap: clamp(20px, 12vw - 140px, 96px); }
 /* 지금 hover·focus 중인 대메뉴의 열만 포인트 컬러로 강조 */
 .header.is-mega .gnb__item:is(:hover, :focus-within) .gnb__link { color: var(--color-point); }
 .header.is-mega .gnb__item:is(:hover, :focus-within) .gnb__link svg { transform: rotate(180deg); }
-.header.is-mega .gnb__item:is(:hover, :focus-within) .gnb__sub { border-top-color: var(--color-point); background: linear-gradient(180deg, rgba(254, 109, 51, 0.06), rgba(254, 109, 51, 0) 70%); }
+.header.is-mega .gnb__item:is(:hover, :focus-within) .gnb__sub { border-top-color: var(--color-point); } /* 열 배경은 다른 열과 같은 흰색 — 위쪽 선만 */
 .header.is-mega .gnb__item:is(:hover, :focus-within) .gnb__sub a { color: var(--color-text); }
 .header.is-mega .gnb__item:is(:hover, :focus-within) .gnb__sub a:hover, .header.is-mega .gnb__item .gnb__sub a:focus-visible { color: var(--color-point); }
 
@@ -239,9 +239,8 @@ body.is-locked { overflow: hidden; }
   width: 100%; min-width: 76px; min-height: 76px; padding: 10px 8px;
   border: 1px solid var(--color-line); border-radius: var(--radius-md); background: #fff; color: var(--color-text);
   font-size: var(--fs-xxs); font-weight: 600; line-height: 1.2; white-space: nowrap;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
-  outline: 2px solid transparent; outline-offset: 2px;
-  transition: outline-color 0.3s, box-shadow var(--dur);
+  outline: 2px solid transparent; outline-offset: 2px; /* 그림자 없음, 테두리 링은 키보드 포커스(:focus-visible)에만 */
+  transition: outline-color 0.3s;
 }
 .quick__sns-btn > * { position: relative; z-index: 1; }
 .quick__sns-btn svg { width: 26px; height: 26px; flex: none; transition: transform 0.3s; }
@@ -254,7 +253,7 @@ body.is-locked { overflow: hidden; }
   background: var(--qb-shine); pointer-events: none;
   transform: translateX(48px) rotate(12deg); transition: transform 1s ease-out;
 }
-.quick__item.is-open .quick__sns-btn, .quick__sns-btn:focus-visible { outline-color: var(--color-text); }
+.quick__sns-btn:focus-visible { outline-color: var(--color-text); }
 /* 왼쪽 바깥까지: 버튼 너비(76~100px) + 막대가 기울어 퍼지는 폭 */
 .quick__item.is-open .quick__sns-btn::after { transform: translateX(-140px) rotate(12deg); }
 .quick__item.is-open .quick__sns-btn :is(svg, .quick__blog-ico, .quick__insta-ico) { transform: scale(1.1); }
@@ -281,8 +280,6 @@ body.is-locked { overflow: hidden; }
 .quick__sns-btn--consult { --qb-shine: rgba(255, 255, 255, 0.25); border-color: var(--color-point); background: var(--color-point); color: #fff; }
 .quick__sns-btn--consult:focus-visible { outline-color: var(--color-point); }
 @media (hover: hover) {
-  .quick__item:not([data-quick-item]) .quick__sns-btn:hover { outline-color: var(--color-text); }
-  .quick__item:not([data-quick-item]) .quick__sns-btn--consult:hover { outline-color: var(--color-point); }
   .quick__item:not([data-quick-item]) .quick__sns-btn:hover::after { transform: translateX(-140px) rotate(12deg); }
   .quick__item:not([data-quick-item]) .quick__sns-btn:hover svg { transform: scale(1.1); }
 }
