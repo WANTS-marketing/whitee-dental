@@ -345,12 +345,19 @@ function initDoctors() {
     if (!stage) return;
     let h = Math.round(room * 0.6);
     panel.style.setProperty('--doc-photo-h', h + 'px');
-    // 풀스크린 넘김(html.is-fullpage): 섹션 높이 = 100vh 고정 → 안쪽 내용 높이가 섹션 안쪽 공간을 넘친 만큼 줄인다
-    let over = section.offsetHeight - room;
     if (document.documentElement.classList.contains('is-fullpage')) {
+      /* 풀스크린 넘김(섹션 = 정확히 한 화면): 한 화면 안에 들어가는 것이 우선.
+         사진 칸 = 섹션 안쪽 공간에서 머리말·이름 줄을 뺀 남는 높이 전부(인물을 최대한 크게),
+         단 사진 원본 비율(400×664)로 칸 너비에 꽉 차는 높이보다 크게는 키우지 않는다(위가 비지 않게). 최소 200px */
       const cs = getComputedStyle(section);
-      over = section.querySelector('.doctors__inner').offsetHeight - (section.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom));
+      const avail = section.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+      const rest = section.querySelector('.doctors__inner').offsetHeight - stage.offsetHeight; // 사진 칸을 뺀 나머지 높이
+      const byWidth = Math.round(stage.offsetWidth * 664 / 400);
+      h = Math.max(200, Math.min(byWidth, Math.floor(avail - rest)));
+      panel.style.setProperty('--doc-photo-h', h + 'px');
+      return;
     }
+    const over = section.offsetHeight - room;
     if (over > 0) panel.style.setProperty('--doc-photo-h', Math.max(200, h - over - 1) + 'px');
   }
   let fitRaf = 0;
