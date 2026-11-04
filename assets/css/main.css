@@ -148,12 +148,7 @@ html::-webkit-scrollbar { display: none; }
 
 /* ---------- ④ 의료진 ---------- */
 .doctors { position: relative; overflow: hidden; padding: 60px 0; }
-/* 배경: 연한 베이지 + 아주 옅은 선 패턴(큰 원·격자, 600px 반복) — 레퍼런스처럼 은은하게 */
-.doctors {
-  background-color: #f6f3ee;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='600' fill='none' stroke='%23000' stroke-opacity='.045'%3E%3Ccircle cx='300' cy='300' r='240'/%3E%3Cpath d='M0 .5h600M.5 0v600'/%3E%3C/svg%3E");
-  background-position: center top;
-}
+.doctors { background: #fff; } /* 섹션 배경 흰색 */
 /* 머리말(가운데 정렬 소개 + 지점 탭) + 아래 프로필 패널이 컨테이너 전체 폭 */
 .doctors__inner { position: relative; display: flex; flex-direction: column; gap: 28px; }
 .doctors__inner { container: doc-inner / inline-size; }
@@ -184,8 +179,6 @@ html::-webkit-scrollbar { display: none; }
 /* 인물 나열 (main.js initDoctors) — 카드 박스 없이 배경을 지운 상반신 사진을 나란히
    PC: 지점 의료진 전원이 한 줄(--doc-per = 인원수 --doc-count), 태블릿 3명·모바일 1.3명씩 가로 스와이프
    사진 칸 높이 --doc-photo-h(main.js: 섹션 높이의 약 60%), 사진은 아래 끝 기준 → 같은 크롭 사진이면 머리·어깨선 높이가 같다 */
-.doctors__main[data-branch="changwon"] { --doc-tint: rgba(253, 91, 155, 0.08); }
-.doctors__main[data-branch="masan"] { --doc-tint: rgba(254, 109, 51, 0.08); }
 .doctors__main { --doc-per: var(--doc-count, 5); --doc-gap: 24px; position: relative; min-width: 0; }
 .doc-cards {
   display: flex; gap: var(--doc-gap);
@@ -193,36 +186,48 @@ html::-webkit-scrollbar { display: none; }
 }
 .doc-cards::-webkit-scrollbar { display: none; }
 .doc-person { container: person / inline-size; flex: 0 0 calc((100% - var(--doc-gap) * (var(--doc-per) - 1)) / var(--doc-per)); min-width: 0; scroll-snap-align: start; transition: opacity 0.35s var(--ease); }
-/* 사진 칸: 실루엣 플레이스홀더(사진이 없을 때) 위에 PNG, 아래에서 올라오는 약력 패널 */
+/* 인물 사이 구분선: 두 인물 사이 간격(--doc-gap)의 가운데에 세로 1px (사진 칸 위 ~ 정보 아래까지) */
+.doc-person { position: relative; }
+.doc-person + .doc-person::before { content: ""; position: absolute; top: 0; bottom: 0; left: calc(var(--doc-gap) / -2); width: 1px; background: #e8e4df; pointer-events: none; }
+/* 사진 칸: 실루엣 플레이스홀더(사진이 없을 때) 위에 PNG
+   약력 보기 상태(PC hover·키보드 포커스, 터치는 탭 .is-open): 사진이 흐려지고(blur 8px·밝기 1.1) 옅은 흰 막이 깔린 뒤
+   그 위 사진 영역 가운데에 약력 글자가 바로 나타난다(배경 박스 없음) */
 .doc-person__stage { position: relative; height: var(--doc-photo-h, 420px); overflow: hidden; cursor: pointer; }
-.doc-person__ph { position: absolute; left: 50%; bottom: 0; height: 82%; transform: translateX(-50%); fill: rgba(120, 100, 80, 0.09); }
+.doc-person__ph { position: absolute; left: 50%; bottom: 0; height: 82%; transform: translateX(-50%); fill: rgba(120, 100, 80, 0.08); }
 .doc-person__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; object-position: center bottom; }
 .doc-person__img.is-missing { display: none; }
+.doc-person__ph, .doc-person__img { transition: filter 0.35s var(--ease); }
+/* 글자 대비용 옅은 흰 막 — 사진 영역 전체에 은은하게 */
+.doc-person__stage::before { content: ""; position: absolute; z-index: 1; inset: 0; background: rgba(255, 255, 255, 0.35); opacity: 0; transition: opacity 0.35s var(--ease); pointer-events: none; }
 /* 아래쪽을 배경색으로 살짝 녹여 이름 줄과 이어지게 (레퍼런스처럼) */
-.doc-person__stage::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 18%; background: linear-gradient(180deg, rgba(246, 243, 238, 0), #f6f3ee); pointer-events: none; }
-/* 약력 패널: 반투명 흰색 + 지점 색 8% 틴트, 아래에서 0.35s 올라온다 */
+.doc-person__stage::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 18%; background: linear-gradient(180deg, rgba(255, 255, 255, 0), #fff); pointer-events: none; }
+/* 약력: 사진 영역 전체를 덮는 위치, 세로 가운데. 글자 16px(--bio-fs: main.js 가 항목이 한 줄에 들어가게 줄임, 최소 14px) */
 .doc-person__bio {
-  position: absolute; z-index: 1; left: 0; right: 0; bottom: 0; max-height: 100%; overflow: hidden;
-  display: flex; flex-direction: column; /* 사진 칸이 낮으면 약력 목록이 남은 높이만큼 줄어든다 */
-  padding: 20px 18px 18px; border-radius: 12px 12px 0 0;
-  background: linear-gradient(var(--doc-tint, rgba(254, 109, 51, 0.08)), var(--doc-tint, rgba(254, 109, 51, 0.08))), rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(6px);
-  font-size: 0.9375rem; line-height: 1.5; color: #333; word-break: keep-all; text-align: left;
-  transform: translateY(101%); visibility: hidden;
-  transition: transform 0.35s var(--ease), visibility 0s 0.35s;
+  position: absolute; z-index: 2; inset: 0; overflow: hidden;
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 20px 16px;
+  font-size: var(--bio-fs, 1rem); font-weight: 500; line-height: 1.7; color: #222; text-align: left;
+  opacity: 0; transform: translateY(12px); visibility: hidden;
+  transition: opacity 0.35s var(--ease), transform 0.35s var(--ease), visibility 0s 0.35s;
 }
-.doc-person__certs { flex: none; margin-bottom: 10px; font-weight: 700; color: #111; }
-/* 주요 약력: 6줄까지 (넘치면 main.js 가 '전체 약력 보기' 를 보여 준다) */
-.doc-person__career { flex: 0 1 auto; min-height: 1.5em; max-height: calc(1.5em * 6); overflow: hidden; }
-/* 잘렸을 때 마지막 줄을 흐리게 → 아래 '전체 약력 보기' 로 이어짐 */
-.doc-person.is-clipped .doc-person__career { -webkit-mask-image: linear-gradient(180deg, #000 calc(100% - 1.5em), transparent); mask-image: linear-gradient(180deg, #000 calc(100% - 1.5em), transparent); }
-.doc-person__career li { position: relative; padding-left: 10px; }
-.doc-person__career li::before { content: ""; position: absolute; left: 0; top: 0.7em; width: 4px; height: 4px; border-radius: 50%; background: var(--doc-color, var(--color-point)); }
-.doc-person__all { flex: none; align-self: flex-start; margin-top: 10px; padding: 2px 0; font-size: 0.9375rem; font-weight: 700; color: var(--doc-color, var(--color-point)); text-decoration: underline; text-underline-offset: 3px; }
-/* 열림: PC 는 사진 hover·키보드 포커스, 터치는 탭(.is-open) */
-.doc-person.is-open .doc-person__bio, .doc-person:has(:focus-visible) .doc-person__bio { /* 키보드 포커스(마우스 클릭 포커스는 제외) */ transform: none; visibility: visible; transition-delay: 0s; }
+.doc-person__bio li { position: relative; padding-left: 12px; word-break: keep-all; } /* 항목은 한 줄이 기본 — 최소 14px 로도 안 들어가는 긴 항목만 다음 줄로 (내어쓰기) */
+.doc-person__bio.is-measuring li { white-space: nowrap; }
+.doc-person__bio li::before { content: ""; position: absolute; left: 0; top: 0.78em; width: 5px; height: 5px; border-radius: 50%; background: #9a948c; }
+/* 전문의 항목: 굵게 + 지점 색 불릿 */
+.doc-person__certs { flex: none; margin-bottom: 8px; font-weight: 700; color: #111; }
+.doc-person__certs li::before { background: var(--doc-color, var(--color-point)); }
+/* 주요 약력: 최대 6줄 (넘치면 main.js 가 마지막 줄을 흐리게 하고 '전체 약력 보기' 를 보여 준다) */
+.doc-person__career { flex: 0 1 auto; min-height: 1.7em; max-height: calc(1.7em * 6); overflow: hidden; }
+.doc-person.is-clipped .doc-person__career { -webkit-mask-image: linear-gradient(180deg, #000 calc(100% - 1.7em), transparent); mask-image: linear-gradient(180deg, #000 calc(100% - 1.7em), transparent); }
+.doc-person__all { flex: none; align-self: flex-start; margin-top: 8px; padding: 2px 0; font-size: max(14px, 0.9375rem); font-weight: 700; color: var(--doc-color, var(--color-point)); text-decoration: underline; text-underline-offset: 3px; }
+/* 약력 보기 상태: 터치 탭(.is-open)·키보드 포커스(마우스 클릭 포커스는 제외) */
+.doc-person.is-open :is(.doc-person__ph, .doc-person__img), .doc-person:has(:focus-visible) :is(.doc-person__ph, .doc-person__img) { filter: blur(8px) brightness(1.1); }
+.doc-person.is-open .doc-person__stage::before, .doc-person:has(:focus-visible) .doc-person__stage::before { opacity: 1; }
+.doc-person.is-open .doc-person__bio, .doc-person:has(:focus-visible) .doc-person__bio { opacity: 1; transform: none; visibility: visible; transition-delay: 0s; }
 @media (hover: hover) {
-  .doc-person__stage:hover .doc-person__bio { transform: none; visibility: visible; transition-delay: 0s; }
+  .doc-person__stage:hover :is(.doc-person__ph, .doc-person__img) { filter: blur(8px) brightness(1.1); }
+  .doc-person__stage:hover::before { opacity: 1; }
+  .doc-person__stage:hover .doc-person__bio { opacity: 1; transform: none; visibility: visible; transition-delay: 0s; }
   .doc-cards:has(.doc-person__stage:hover) .doc-person:not(:has(.doc-person__stage:hover)) { opacity: 0.6; }
 }
 .doc-cards:has(.doc-person.is-open, .doc-person :focus-visible) .doc-person:not(.is-open):not(:has(:focus-visible)) { opacity: 0.6; }
@@ -235,12 +240,12 @@ html::-webkit-scrollbar { display: none; }
 .doc-person__dept { font-size: 0.9375rem; font-weight: 600; color: var(--doc-color, var(--color-point)); }
 .doc-person__name { margin-top: 2px; line-height: 1.2; }
 .doc-person__name b { white-space: nowrap; }
-.doc-person__name b { font-size: 2rem; font-weight: 300; letter-spacing: 0.08em; color: #111; } /* 레퍼런스처럼 얇은 큰 글씨 */
+.doc-person__name b { font-size: 2rem; font-weight: 700; letter-spacing: 0.02em; color: #111; } /* 성명: 굵게 */
 .doc-person__name small { display: inline-block; margin-left: 2px; font-size: 0.9375rem; color: #666; white-space: nowrap; }
 .doc-person__more { flex: none; height: 36px; padding: 0 14px; border: 1px solid #cfcac3; border-radius: 6px; background: rgba(255, 255, 255, 0.7); font-size: 0.9375rem; font-weight: 500; color: #333; white-space: nowrap; transition: border-color var(--dur), color var(--dur), background var(--dur); }
 .doc-person__more:hover, .doc-person__more:focus-visible { border-color: var(--doc-color, var(--color-point)); color: var(--doc-color, var(--color-point)); background: #fff; }
 @media (prefers-reduced-motion: reduce) {
-  .doc-person__bio, .doc-person { transition: none; }
+  .doc-person__bio, .doc-person, .doc-person__ph, .doc-person__img, .doc-person__stage::before { transition: none; }
 }
 
 /* ---------- 약력 팝업 (dialog) — 화면 가운데, 배경 딤, 모바일은 전체 화면 ---------- */

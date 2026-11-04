@@ -273,8 +273,8 @@ function initDoctors() {
           ${SILHOUETTE}
           <img class="doc-person__img" src="${cutOf(d)}" alt="${esc(d.name)} ${esc(d.title)}" loading="lazy">
           <div class="doc-person__bio" id="${bioId}">
-            ${certs.length ? `<p class="doc-person__certs">${certs.map(esc).join('<br>')}</p>` : ''}
-            <ul class="doc-person__career">${rest.map((c) => `<li>${esc(c)}</li>`).join('')}</ul>
+            ${certs.length ? `<ul class="doc-person__certs">${certs.map((c) => `<li title="${esc(c)}">${esc(c)}</li>`).join('')}</ul>` : ''}
+            <ul class="doc-person__career">${rest.map((c) => `<li title="${esc(c)}">${esc(c)}</li>`).join('')}</ul>
             <button type="button" class="doc-person__all" data-pos="${p}" aria-haspopup="dialog" hidden>전체 약력 보기 <span aria-hidden="true">→</span></button>
           </div>
         </div>
@@ -291,8 +291,23 @@ function initDoctors() {
     refit();
   }
   // 약력이 6줄(또는 사진 칸 높이)을 넘는 인물만 '전체 약력 보기' 표시 (글자 크기·폭·높이가 바뀌면 다시 계산)
+  /* 약력 글자 크기: 기본 1rem(16px), 가장 긴 항목이 사진 영역 너비에 한 줄로 들어가게 줄인다(최소 14px)
+     최소 크기로도 넘치는 긴 항목만 다음 줄로 넘어간다(… 로 자르지 않음) */
+  function fitBio(li) {
+    const bio = li.querySelector('.doc-person__bio');
+    bio.style.removeProperty('--bio-fs');
+    const base = parseFloat(getComputedStyle(bio).fontSize);
+    const items = [...bio.querySelectorAll('li')];
+    if (!items.length) return;
+    bio.classList.add('is-measuring'); // 줄바꿈 없이 필요한 폭 (불릿 여백 포함)
+    const need = Math.max(...items.map((el) => el.scrollWidth));
+    const room = items[0].clientWidth;
+    bio.classList.remove('is-measuring');
+    if (need > room) bio.style.setProperty('--bio-fs', Math.max(14, Math.floor(base * room / need * 10) / 10) + 'px');
+  }
   function markClipped() {
     cardsEl.querySelectorAll('.doc-person').forEach((li) => {
+      fitBio(li);
       const ul = li.querySelector('.doc-person__career');
       // 패널이 닫혀 있어도(visibility: hidden) 크기는 계산되므로 그대로 비교. 버튼을 먼저 보여 둔 상태로 재야 남은 높이가 맞다
       const all = li.querySelector('.doc-person__all');
