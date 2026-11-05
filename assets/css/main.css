@@ -380,9 +380,10 @@ html[data-fs="xl"] .doc-modal { width: min(680px, 100% - 48px); }
   --cl-pad: clamp(24px, 8px + 1.25vw, 32px);         /* 카드 안쪽 여백 32 */
   --cl-arrow: clamp(40px, 16px + 1.875vw, 52px);     /* 화살표 버튼 52 */
   padding: var(--space-4xl) 0; background: var(--color-point); color: #fff; /* 포인트 컬러(네이비) — 글자는 밝은 색, 투명 헤더는 흰 글자(data-header-theme="dark") */
-  /* 배경 사진(유리 곡선, 세로 원본을 가로로 돌린 clinic-bg.jpg)을 네이비에 곱하기(multiply) — 사진의 밝은 곳은 네이비 그대로, 어두운 곳만 더 깊게 */
-  background: url("../images/clinic-bg.jpg") center / cover no-repeat, var(--color-point); background-blend-mode: multiply;
+  position: relative; isolation: isolate;
 }
+/* 배경 사진(유리 곡선, 세로 원본을 가로로 돌린 clinic-bg.jpg)을 네이비에 곱하기(multiply), 불투명도 70%(--clinic-bg-opacity) — 사진의 밝은 곳은 네이비 그대로, 어두운 곳만 더 깊게 */
+.clinic::before { content: ""; position: absolute; inset: 0; z-index: -1; background: url("../images/clinic-bg.jpg") center / cover no-repeat; mix-blend-mode: multiply; opacity: var(--clinic-bg-opacity, 0.7); pointer-events: none; }
 .clinic__inner { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 3fr); gap: clamp(40px, 3.125vw, 60px); align-items: center; }
 .clinic__head .sec-label { font-size: clamp(0.9375rem, 0.5625rem + 0.46875vw, 1.125rem); color: rgba(255, 255, 255, 0.72); }   /* 18 — 네이비 위라 라벨은 흰색 반투명 */
 .clinic__title { font-size: clamp(2.5rem, 0.5rem + 2.5vw, 3.5rem); line-height: 1.25; letter-spacing: -0.02em; color: #fff; } /* 56 */
