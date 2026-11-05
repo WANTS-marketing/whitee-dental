@@ -349,12 +349,12 @@ html[data-fs="xl"] .doc-modal { width: min(680px, 100% - 48px); }
 .clinic {
   --cl-pad: clamp(24px, 8px + 1.25vw, 32px);         /* 카드 안쪽 여백 32 */
   --cl-arrow: clamp(40px, 16px + 1.875vw, 52px);     /* 화살표 버튼 52 */
-  padding: var(--space-4xl) 0; background: var(--color-bg-warm); /* 연베이지 — 바로 아래 의료진(흰색)과 구분 */
+  padding: var(--space-4xl) 0; background: var(--color-point); color: #fff; /* 포인트 컬러(네이비) — 글자는 밝은 색, 투명 헤더는 흰 글자(data-header-theme="dark") */
 }
 .clinic__inner { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 3fr); gap: clamp(40px, 3.125vw, 60px); align-items: center; }
-.clinic__head .sec-label { font-size: clamp(0.9375rem, 0.5625rem + 0.46875vw, 1.125rem); }   /* 18 */
-.clinic__title { font-size: clamp(2.5rem, 0.5rem + 2.5vw, 3.5rem); line-height: 1.25; letter-spacing: -0.02em; } /* 56 */
-.clinic__head .sec-desc { margin-top: 16px; font-size: clamp(1rem, 0.75rem + 0.3125vw, 1.125rem); word-break: keep-all; text-wrap: balance; } /* 18 */
+.clinic__head .sec-label { font-size: clamp(0.9375rem, 0.5625rem + 0.46875vw, 1.125rem); color: rgba(255, 255, 255, 0.72); }   /* 18 — 네이비 위라 라벨은 흰색 반투명 */
+.clinic__title { font-size: clamp(2.5rem, 0.5rem + 2.5vw, 3.5rem); line-height: 1.25; letter-spacing: -0.02em; color: #fff; } /* 56 */
+.clinic__head .sec-desc { margin-top: 16px; font-size: clamp(1rem, 0.75rem + 0.3125vw, 1.125rem); word-break: keep-all; text-wrap: balance; color: rgba(255, 255, 255, 0.82); } /* 18 */
 .clinic__head .sec-desc br { display: none; } /* 칸 폭이 화면마다 달라 고정 줄바꿈 대신 균형 줄바꿈 */
 .clinic__grid {
   display: grid; gap: 20px;
@@ -384,6 +384,7 @@ html[data-fs="xl"] .doc-modal { width: min(680px, 100% - 48px); }
 .clinic-card__sub { margin-right: calc(var(--cl-arrow) + 12px); font-size: clamp(0.875rem, 0.5rem + 0.46875vw, 1.0625rem); line-height: 1.5; color: rgba(255, 255, 255, 0.88); word-break: keep-all; text-wrap: balance; } /* 17 — 오른쪽은 화살표 자리 */
 .clinic-card__sub > span { display: block; }
 .clinic-card__arrow { position: absolute; z-index: 2; right: var(--cl-pad); bottom: var(--cl-pad); display: grid; place-items: center; width: var(--cl-arrow); height: var(--cl-arrow); border: 1.5px solid #fff; border-radius: 50%; color: #fff; transition: background var(--dur), color var(--dur); }
+.clinic :focus-visible { outline-color: #fff; } /* 네이비 배경 위 키보드 초점 */
 .clinic-card__arrow svg { width: 32%; height: 32%; }
 .clinic-card:is(:hover, :focus-visible) .clinic-card__arrow { background: #fff; color: var(--color-point); }
 /* PC: 좌우 여백 = 의료진 섹션과 같은 규칙 (왼쪽 = 헤더 로고 시작선, 오른쪽 = 플로팅 퀵메뉴를 피하는 --quick-edge) */
