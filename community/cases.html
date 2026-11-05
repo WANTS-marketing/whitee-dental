@@ -26,7 +26,7 @@
   <script src="../assets/js/common.js" defer></script>
   <script src="../assets/js/pages.js" defer></script>
 </head>
-<body class="is-sub" data-page="cases">
+<body class="is-sub has-lnb" data-page="cases">
   <div data-include="header"></div>
 
   <main id="main">
@@ -38,13 +38,22 @@
           <li>커뮤니티</li>
           <li aria-current="page">치료사례</li>
         </ol>
-        <nav class="sub-tabs" aria-label="커뮤니티 하위 메뉴">
-          <a href="notice.html">공지사항</a>
-          <a href="news.html">치과소식</a>
-          <a href="cases.html" class="is-current" aria-current="page">치료사례</a>
-        </nav>
       </div>
     </section>
+
+    <!-- 서브 레이아웃: 왼쪽 LNB(하위 메뉴, 스크롤 시 따라옴) + 오른쪽 본문 — 1024px 이하는 본문 위 가로 칩 (common.css '서브 LNB') -->
+    <div class="sub-layout container">
+      <aside class="lnb">
+        <nav class="lnb__nav" aria-label="커뮤니티 하위 메뉴">
+          <p class="lnb__title">커뮤니티</p>
+          <ul class="lnb__list">
+            <li><a href="notice.html">공지사항</a></li>
+            <li><a href="news.html">치과소식</a></li>
+            <li><a href="cases.html" aria-current="page">치료사례</a></li>
+          </ul>
+        </nav>
+      </aside>
+      <div class="sub-body">
 
     <section class="sub-content">
       <div class="container">
@@ -52,6 +61,8 @@
         <ul class="card-grid" data-cases-list></ul>
       </div>
     </section>
+      </div>
+    </div>
   </main>
 
   <div class="quick quick--float" data-include="quick" data-keep></div>

@@ -10,8 +10,6 @@
 .sub-visual__copy { margin-bottom: 12px; font-size: var(--fs-lg); opacity: 0.9; word-break: keep-all; }
 .sub-visual--image .breadcrumb { color: rgba(255, 255, 255, 0.6); }
 .sub-visual--image .breadcrumb [aria-current] { color: #fff; }
-.sub-visual--image .sub-tabs a { background: rgba(255, 255, 255, 0.1); border-color: rgba(255, 255, 255, 0.3); color: #fff; }
-.sub-visual--image .sub-tabs a.is-current { background: #fff; border-color: #fff; color: var(--color-text); }
 /* 이미지 비주얼이 있는 페이지는 본문 섹션이 스스로 여백을 가진다 */
 .sub-content--flush { padding: 0; }
 
@@ -25,6 +23,12 @@
 .sec-head .sec-desc { font-size: var(--fs-md); line-height: 1.7; }
 .sec--dark .sec-desc { color: rgba(255, 255, 255, 0.7); }
 .sec-note { margin-top: 24px; font-size: var(--fs-xs); color: var(--color-text-muted); text-align: center; }
+/* LNB 옆 본문(.sub-body) 안: 섹션 위아래 여백 대신 섹션 사이 간격, 배경색 섹션은 화면 끝까지가 아니라 본문 폭의 둥근 면 */
+.sub-body .sec { padding: 0; }
+.sub-body .sec + .sec { margin-top: var(--space-4xl); }
+.sub-body :is(.sec--soft, .sec--warm, .sec--dark) { padding: 64px 48px; border-radius: var(--radius-xl); }
+.sub-body .sec--soft { background: var(--color-bg-warm); } /* 거의 흰색(#fcfcfb)이라 둥근 면으로는 경계가 안 보여 FAQ 박스 베이지로 */
+.sub-body .quick-consult { margin-top: 0; }
 
 /* 소개 (텍스트 + 이미지) */
 .intro-split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 64px; align-items: center; }
@@ -132,7 +136,7 @@
 .partner-highlight { padding: 28px; border-radius: var(--radius-lg); background: #fff; border: 1px solid var(--color-line); text-align: center; }
 .partner-highlight strong { display: block; font-size: var(--fs-h4); }
 .partner-highlight span { font-size: var(--fs-sm); color: var(--color-text-sub); }
-.partner-logos { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+.partner-logos { display: grid; grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr)); gap: 10px; } /* rem: 글자 크게 단계에서 긴 이름(중소기업융합경남연합회)이 칸을 넘지 않게 */
 .partner-logos li { display: grid; place-items: center; min-height: 64px; padding: 10px; border: 1px solid var(--color-line); border-radius: var(--radius-sm); background: #fff; font-size: var(--fs-xs); color: var(--color-text-sub); text-align: center; word-break: keep-all; }
 
 /* ---------- 병원 둘러보기 (갤러리 + 라이트박스) ---------- */
@@ -214,6 +218,21 @@
 .transit__item p { color: var(--color-text-sub); word-break: keep-all; }
 .transit__item p + p { margin-top: 4px; }
 
+/* ---------- 좁은 본문 (LNB 옆 .sub-body 실제 폭 기준 — common.css '서브 LNB') ----------
+   rem 기준이라 글자 크기 단계가 커지면 더 일찍 줄어든다. 아래 화면 폭(@media) 규칙이 뒤에 있어 태블릿·모바일은 그대로 */
+@container sub (max-width: 55rem) { /* 880px */
+  .point-grid, .merit-list, .strength-grid, .info-grid--4 { grid-template-columns: repeat(2, 1fr); }
+  .loc__body { grid-template-columns: minmax(0, 1fr); }
+  .intro-split { gap: 40px; }
+  .sub-body :is(.sec--soft, .sec--warm, .sec--dark) { padding: 56px 36px; }
+}
+@container sub (max-width: 44rem) { /* 704px */
+  .intro-split { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+  .price-cards { grid-template-columns: minmax(0, 1fr); }
+  .info-grid { grid-template-columns: repeat(2, 1fr); }
+  .type-grid { grid-template-columns: minmax(0, 1fr); }
+}
+
 /* ==========================================================================
    반응형
    ========================================================================== */
@@ -229,6 +248,13 @@
 
 @media (max-width: 768px) {
   .sub-visual--image { padding: calc(var(--header-h) + 56px) 0 44px; }
+  /* 모바일: 섹션은 예전처럼 위아래 여백으로 잇고, 배경 섹션은 화면 끝까지 (배경 띠 사이에 흰 틈이 생기지 않게) */
+  .sub-body .sec { padding: var(--space-4xl) 0; }
+  .sub-body .sec + .sec { margin-top: 0; }
+  .sub-body > .sec:first-child:not(.sec--soft, .sec--warm, .sec--dark) { padding-top: 0; }
+  .sub-body > .sec:last-child:not(.sec--soft, .sec--warm, .sec--dark) { padding-bottom: 0; }
+  .sub-layout:has(> .sub-body > .sec:last-child:is(.sec--soft, .sec--warm, .sec--dark)) { padding-bottom: 0; } /* 마지막이 배경 섹션이면 아래 흰 여백 없이 하단 띠로 */
+  .sub-body :is(.sec--soft, .sec--warm, .sec--dark) { margin-left: calc(var(--gutter) * -1); margin-right: calc(var(--gutter) * -1); padding: var(--space-4xl) var(--gutter); border-radius: 0; }
   .sub-visual__copy { font-size: var(--fs-sm); }
   .sec-head { margin-bottom: 32px; }
   .sec-head .sec-title { font-size: var(--fs-h2); }

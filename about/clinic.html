@@ -27,7 +27,7 @@
   <script src="../assets/js/common.js" defer></script>
   <script src="../assets/js/pages.js" defer></script>
 </head>
-<body class="is-sub" data-page="clinic">
+<body class="is-sub has-lnb" data-page="clinic">
   <div data-include="header"></div>
 
   <main id="main">
@@ -41,13 +41,22 @@
           <li>화이트e치과</li>
           <li aria-current="page">병원소개</li>
         </ol>
-        <nav class="sub-tabs" aria-label="화이트e치과 하위 메뉴">
-          <a href="intro.html">치과소개</a>
-          <a href="doctors.html">의료진 소개</a>
-          <a href="clinic.html" class="is-current" aria-current="page">병원소개</a>
-        </nav>
       </div>
     </section>
+
+    <!-- 서브 레이아웃: 왼쪽 LNB(하위 메뉴, 스크롤 시 따라옴) + 오른쪽 본문 — 1024px 이하는 본문 위 가로 칩 (common.css '서브 LNB') -->
+    <div class="sub-layout container">
+      <aside class="lnb">
+        <nav class="lnb__nav" aria-label="화이트e치과 하위 메뉴">
+          <p class="lnb__title">화이트e치과</p>
+          <ul class="lnb__list">
+            <li><a href="intro.html">치과소개</a></li>
+            <li><a href="doctors.html">의료진 소개</a></li>
+            <li><a href="clinic.html" aria-current="page">병원소개</a></li>
+          </ul>
+        </nav>
+      </aside>
+      <div class="sub-body">
 
     <!-- 병원소개 = 예전 '병원 둘러보기'(about/tour.html) + '오시는길'(about/location.html) — 두 주소는 이 페이지로 자동 이동
          지점 탭: 선택한 지점 내용만 표시, 주소 #changwon / #masan 으로 바로 열 수 있다 (pages.js renderClinic)
@@ -155,6 +164,8 @@
         </div>
       </div>
     </section>
+      </div>
+    </div>
   </main>
 
   <div class="quick quick--float" data-include="quick" data-keep></div>

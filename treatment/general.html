@@ -27,7 +27,7 @@
   <script src="../assets/js/common.js" defer></script>
   <script src="../assets/js/pages.js" defer></script>
 </head>
-<body class="is-sub">
+<body class="is-sub has-lnb">
   <div data-include="header"></div>
 
   <main id="main">
@@ -41,15 +41,24 @@
           <li>진료과목</li>
           <li aria-current="page">일반치료</li>
         </ol>
-        <nav class="sub-tabs" aria-label="진료과목 하위 메뉴">
-          <a href="implant.html">임플란트</a>
-          <a href="orthodontics.html">치아교정</a>
-          <a href="general.html" class="is-current" aria-current="page">일반치료</a>
-          <a href="wisdom-scaling.html">사랑니·스케일링</a>
-          <a href="aesthetic.html">심미치료</a>
-        </nav>
       </div>
     </section>
+
+    <!-- 서브 레이아웃: 왼쪽 LNB(하위 메뉴, 스크롤 시 따라옴) + 오른쪽 본문 — 1024px 이하는 본문 위 가로 칩 (common.css '서브 LNB') -->
+    <div class="sub-layout container">
+      <aside class="lnb">
+        <nav class="lnb__nav" aria-label="진료과목 하위 메뉴">
+          <p class="lnb__title">진료과목</p>
+          <ul class="lnb__list">
+            <li><a href="implant.html">임플란트</a></li>
+            <li><a href="orthodontics.html">치아교정</a></li>
+            <li><a href="general.html" aria-current="page">일반치료</a></li>
+            <li><a href="wisdom-scaling.html">사랑니·스케일링</a></li>
+            <li><a href="aesthetic.html">심미치료</a></li>
+          </ul>
+        </nav>
+      </aside>
+      <div class="sub-body">
 
 
     <section class="sec ">
@@ -158,6 +167,8 @@
         </section>
       </div>
     </section>
+      </div>
+    </div>
   </main>
 
   <div class="quick quick--float" data-include="quick" data-keep></div>
