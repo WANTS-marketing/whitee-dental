@@ -117,7 +117,7 @@
 
 /* 페이지 내 바로가기 (진료 종류 앵커) */
 .anchor-nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: 40px; }
-.anchor-nav a { padding: 8px 16px; border-radius: var(--radius-pill); background: var(--color-bg-soft); border: 1px solid var(--color-line); font-size: var(--fs-sm); }
+.anchor-nav a { padding: 8px 16px; border-radius: var(--radius-btn); background: var(--color-bg-soft); border: 1px solid var(--color-line); font-size: var(--fs-sm); }
 .anchor-nav a:hover { border-color: var(--color-text); }
 
 /* ---------- 치과소개 ---------- */
@@ -141,7 +141,7 @@
 
 /* ---------- 병원 둘러보기 (갤러리 + 라이트박스) ---------- */
 .branch-tabs { display: flex; justify-content: center; gap: 8px; margin-bottom: 40px; }
-.branch-tabs button { min-width: 140px; height: 48px; padding: 0 24px; border: 1px solid var(--color-line); border-radius: var(--radius-pill); background: #fff; font-weight: 600; transition: background var(--dur), color var(--dur), border-color var(--dur); }
+.branch-tabs button { min-width: 140px; height: 48px; padding: 0 24px; border: 1px solid var(--color-line); border-radius: var(--radius-btn); background: #fff; font-weight: 600; transition: background var(--dur), color var(--dur), border-color var(--dur); }
 .branch-tabs button[aria-selected="true"][data-branch="changwon"] { background: var(--color-changwon); border-color: var(--color-changwon); color: #fff; }
 .branch-tabs button[aria-selected="true"][data-branch="masan"] { background: var(--color-masan); border-color: var(--color-masan); color: #fff; }
 .gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }

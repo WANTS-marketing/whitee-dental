@@ -102,7 +102,9 @@ docs/                      배포·인수인계 문서
 | 전화번호·주소·진료시간 | `assets/js/site-data.js` + `index.html` ③ 지점 카드 + `faq/contact.html` 오른쪽 카드 |
 | 의료진 추가·순서 | `assets/js/site-data.js` 의 `doctors` |
 | SNS 주소 | `assets/js/site-data.js` 의 `social` |
-| 색상·글자 크기 | `assets/css/variables.css` |
+| 색상·글자 크기 | `assets/css/variables.css` (색은 아래 '색 역할 규칙'대로) |
+| 버튼·탭·입력칸 모서리 | `assets/css/variables.css` 의 `--radius-btn` (지금 4px) — 한 곳만 바꾸면 전체 적용 |
+| 서브 본문 제목 아래 부제 (진료과목) | 각 진료과목 페이지 `.sub-head__desc` |
 | 메뉴 | `components/header.html` (데스크톱·모바일 두 군데) |
 | 서브페이지 왼쪽 하위 메뉴(LNB) 행·타이틀 블록(대메뉴 이름·영문) | 각 서브페이지 `<aside class="lnb">` (같은 메뉴 묶음 페이지 모두) · 스타일 `common.css` '서브 LNB' |
 | 서브 배너 문구(영문 라벨·슬로건) · 본문 맨 위 경로·페이지 제목 | 각 서브페이지 `.sub-visual` (대메뉴 묶음마다 같은 문구) · `.sub-head` |
@@ -110,6 +112,17 @@ docs/                      배포·인수인계 문서
 | 치과소식 글 | `scripts/import/build-story.js` 로 생성 (분류 규칙·본문 정리도 여기) — 새 글은 2차 Supabase 게시판에서 |
 | 메인 첫 방문 이용 안내(코치마크) 문구·단계 | `assets/js/onboarding.js` 의 `STEPS` (스타일: `main.css` 끝 '이용 안내') |
 | 메인 의료진 사진 크기·위치 맞추기 (의료진 소개 페이지는 사진을 칸에 꽉 채움 — 보정값 안 씀) | `assets/js/site-data.js` 의 각 원장 `photoScale` · `photoOffsetY` · `photoOffsetX` (아래 '의료진 사진 보정') |
+
+### 색 역할 규칙
+
+| 색 | 변수 | 쓰는 곳 |
+|---|---|---|
+| 딥 네이비 `#16233F` | `--color-point` (옅은 면 `--color-point-soft`) | **면** — 블록·버튼 배경·선택 행 (LNB 타이틀 블록, 주요 버튼, 선택된 탭·행) |
+| 파랑 `#194EBF` | `--color-accent` | **글자** — hover·링크·강조 글자 (헤더 메뉴 hover, LNB hover, 체크 표시 등) |
+| 창원 핑크 `#FD5B9B` · 마산 주황 `#FE6D33` | `--color-changwon` · `--color-masan` | **창원·마산 구분용만** — 지점 탭·지점 카드·지점 태그·지점 바로가기·의료진 진료과·지점 항목 점 |
+
+- 어두운 배경 위에서는 네이비·파랑 대신 흰색(+밑줄)
+- 새로 색을 쓸 때 이 표에 맞추고, 지점과 상관없는 강조에 핑크·주황을 쓰지 않는다
 
 ### 의료진 사진 보정 (메인 의료진 섹션)
 
