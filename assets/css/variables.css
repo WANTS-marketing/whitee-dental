@@ -5,7 +5,7 @@
   /* ---------- 색 역할 규칙 (README '색 역할 규칙') ----------
      네이비(--color-point) = 면(블록·버튼 배경·선택 행) + 고정된 강조 글자(섹션 라벨·선택 상태·번호·아이콘)
      파랑(--color-accent) = 움직임이 있는 글자만(hover·링크·체크 표시)
-     지점 그라데이션(--color-point-gradient·-v) = 브랜드 강조(LNB 세로 막대·히어로 이벤트 가격·진행 바)
+     지점 그라데이션(--color-point-gradient·-v) = 브랜드 강조(타이틀 강조 글자 .text-point·LNB 세로 막대·히어로 이벤트 가격·진행 바)
      지점 색 단색(핑크·주황) = 창원·마산 구분용만 (지점 탭·지점 카드·지점 태그·지점 바로가기·의료진 진료과)
      어두운 배경 위에서는 둘 다 흰색(+밑줄)으로 대신한다 */
 
@@ -16,7 +16,7 @@
   --color-masan: #fe6d33;           /* 마산점 오렌지 */
   --color-masan-light: #ffc2a8;
   --color-masan-bg: #fff3ed;
-  --color-point-gradient: linear-gradient(90deg, #fd5b9b, #fe6d33);    /* 브랜드 강조: 히어로 이벤트 가격·치과소식 진행 바 */
+  --color-point-gradient: linear-gradient(90deg, #fd5b9b, #fe6d33);    /* 브랜드 강조: 타이틀 강조 글자(.text-point)·히어로 이벤트 가격·치과소식 진행 바 */
   --color-point-gradient-v: linear-gradient(180deg, #fd5b9b, #fe6d33); /* 세로: LNB 현재 행 막대·섹션 점 현재 막대·히어로 진행 단계 */
 
   /* 네이비 = 면 (블록·버튼 배경·선택 행) + 고정된 강조 글자 (섹션 라벨·선택 상태·번호·아이콘) */
