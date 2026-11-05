@@ -74,14 +74,6 @@ html::-webkit-scrollbar { display: none; }
 /* '1 / 4' 옆 얇은 진행 바: 지금 슬라이드까지 채움 (main.js mark) */
 .hero__progress { position: relative; width: 64px; height: 2px; margin: 0 6px; overflow: hidden; border-radius: 1px; background: rgba(255, 255, 255, 0.3); }
 .hero__progress-fill { position: absolute; inset: 0 auto 0 0; width: 25%; background: #fff; transition: width 0.6s var(--ease); }
-/* SCROLL 안내: 풀스크린 넘김(PC)에서만, 화면 가운데 · 퀵바 위. 평소 옅게, 마지막 슬라이드에서 진하게 + 화살표 움직임('다음 섹션') */
-.hero__scroll { display: none; }
-html.is-fullpage .hero__scroll { position: absolute; z-index: 3; left: 50%; bottom: calc(var(--qb-top, 190px) + 20px); display: flex; flex-direction: column; align-items: center; gap: 6px; color: #fff; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.2em; opacity: 0.55; transform: translateX(-50%); pointer-events: none; transition: opacity 0.4s; }
-html.is-fullpage .hero__scroll svg { width: 18px; height: 18px; }
-html.is-fullpage .hero__slider.is-last .hero__scroll { opacity: 1; }
-html.is-fullpage .hero__slider.is-last .hero__scroll svg { animation: hero-scroll-bounce 1.4s var(--ease) infinite; }
-@keyframes hero-scroll-bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
-@media (prefers-reduced-motion: reduce) { html.is-fullpage .hero__slider.is-last .hero__scroll svg { animation: none; } }
 
 /* 히어로 위쪽 어두운 그라데이션(160px): 투명 헤더의 흰 글자가 밝은 사진 위에서도 읽히게 */
 .hero__slider::after { content: ""; position: absolute; z-index: 1; top: 0; left: 0; right: 0; height: 160px; background: linear-gradient(180deg, rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0)); pointer-events: none; }
