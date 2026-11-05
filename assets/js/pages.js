@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     clinic: renderClinic,
     notice: renderNoticeList,
     news: renderNewsList,
+    'news-view': renderNewsView,
     cases: renderCasesList,
     faq: renderFaqList,
   }[page];
@@ -220,23 +221,146 @@ async function renderNoticeList() {
   }
 }
 
-/* ---------- 치과소식 ---------- */
+/* ---------- 치과소식 (기존 사이트 치과스토리 글 — assets/data/news.json) ----------
+   목록: 최신순 · 페이지당 12개 · 분류 필터. 상태는 주소(?cat=치아교정&page=2)에 남겨 뒤로 가기·새로고침·공유 그대로
+   상세: news-view.html?id=story-89 — 이전글(먼저 쓴 글) / 다음글(나중에 쓴 글) */
+const NEWS_PER_PAGE = 12;
+const NEWS_CATS = ['진료안내', '치료정보', '임플란트·틀니', '치아교정', '병원소식']; // 필터 순서 (build-story.js CATEGORY_RULES 와 같은 이름)
+const NEWS_LIST_KEY = 'witee-news-list'; // 상세에서 '목록'을 누르면 보던 분류·페이지로
+const fullDate = (iso) => { const d = new Date(iso); const p = (n) => String(n).padStart(2, '0'); return `${d.getFullYear()}.${p(d.getMonth() + 1)}.${p(d.getDate())}`; };
+
 async function renderNewsList() {
   const list = document.querySelector('[data-news-list]');
   if (!list) return;
-  const { esc, img, formatDate } = window.UI;
-  try {
-    const rows = await window.API.getNews();
-    list.innerHTML = rows.length ? rows.map((n) => `
-      <li id="news-${esc(n.id)}">
-        <div class="post-card__thumb img-ph"><img src="${img(n.thumbnail)}" alt="${esc(n.title)} 썸네일" loading="lazy"></div>
-        <p class="post-card__title">${esc(n.title)}</p>
-        <p class="post-card__date"><time datetime="${esc(n.date)}">${formatDate(n.date, true)}</time></p>
+  const { esc, img } = window.UI;
+  const catsEl = document.querySelector('[data-news-cats]');
+  const pagerEl = document.querySelector('[data-news-pager]');
+  const countEl = document.querySelector('[data-news-count]');
+  let rows = [];
+
+  const readState = () => {
+    const q = new URLSearchParams(location.search);
+    const cat = NEWS_CATS.includes(q.get('cat')) ? q.get('cat') : '';
+    return { cat, page: Math.max(1, parseInt(q.get('page'), 10) || 1) };
+  };
+  const urlOf = ({ cat, page }) => {
+    const q = new URLSearchParams();
+    if (cat) q.set('cat', cat);
+    if (page > 1) q.set('page', page);
+    const s = q.toString();
+    return location.pathname + (s ? `?${s}` : '');
+  };
+
+  function draw({ focusList = false } = {}) {
+    const { cat, page: want } = readState();
+    const shown = cat ? rows.filter((r) => r.category === cat) : rows;
+    const pages = Math.max(1, Math.ceil(shown.length / NEWS_PER_PAGE));
+    const page = Math.min(want, pages);
+    const slice = shown.slice((page - 1) * NEWS_PER_PAGE, page * NEWS_PER_PAGE);
+    try { sessionStorage.setItem(NEWS_LIST_KEY, location.pathname + location.search); } catch (e) { /* 저장 불가 — 목록은 첫 페이지로 */ }
+
+    // 분류 칩 (글 수 함께)
+    const count = (c) => (c ? rows.filter((r) => r.category === c).length : rows.length);
+    catsEl.innerHTML = ['', ...NEWS_CATS].filter((c) => count(c)).map((c) => `
+      <li><a class="news-cats__btn" href="${esc(urlOf({ cat: c, page: 1 }))}" data-cat="${esc(c)}"${c === cat ? ' aria-current="true"' : ''}>${c ? esc(c) : '전체'} <span class="news-cats__n">${count(c)}</span></a></li>`).join('');
+    if (countEl) countEl.textContent = `${cat || '전체'} ${shown.length}개 · ${page}/${pages} 페이지`;
+
+    list.innerHTML = slice.length ? slice.map((n) => `
+      <li class="news-card" id="news-${esc(n.id)}">
+        <a href="news-view.html?id=${encodeURIComponent(n.id)}">
+          <span class="news-card__thumb img-ph"><img src="${img(n.thumbnail)}" alt="" loading="lazy" decoding="async"></span>
+          <span class="news-card__cat">${esc(n.category)}</span>
+          <strong class="news-card__title">${esc(n.title)}</strong>
+          <span class="news-card__sum">${esc(n.summary || '')}</span>
+          <time class="news-card__date" datetime="${esc(n.date)}">${fullDate(n.date)}</time>
+        </a>
       </li>`).join('') : '<li class="empty">등록된 소식이 없습니다.</li>';
-    scrollToHashItem(); // 메인 치과소식 카드(#news-n6 등)로 들어오면 그 글로
+
+    // 페이지 번호: 앞뒤 화살표 + 현재 기준 최대 5개
+    if (pages <= 1) { pagerEl.innerHTML = ''; }
+    else {
+      const from = Math.max(1, Math.min(page - 2, pages - 4));
+      const to = Math.min(pages, from + 4);
+      const btn = (p, label, cls = '', aria = '') => `<a class="pager__btn ${cls}" href="${esc(urlOf({ cat, page: p }))}" data-page="${p}"${aria}>${label}</a>`;
+      const off = (label, cls) => `<span class="pager__btn ${cls} is-disabled" aria-hidden="true">${label}</span>`;
+      const ARROW_L = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>';
+      const ARROW_R = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>';
+      let h = page > 1 ? btn(page - 1, ARROW_L, 'pager__arrow', ' aria-label="이전 페이지"') : off(ARROW_L, 'pager__arrow');
+      for (let p = from; p <= to; p++) h += btn(p, p, p === page ? 'is-current' : '', p === page ? ' aria-current="page"' : ` aria-label="${p}페이지"`);
+      h += page < pages ? btn(page + 1, ARROW_R, 'pager__arrow', ' aria-label="다음 페이지"') : off(ARROW_R, 'pager__arrow');
+      pagerEl.innerHTML = h;
+    }
+    if (focusList) {
+      const top = document.querySelector('.sub-body');
+      top?.scrollIntoView({ behavior: 'instant', block: 'start' });
+    }
+  }
+
+  // 칩·페이지 번호: 주소만 바꾸고 다시 그림 (새 창·가운데 클릭은 브라우저 기본)
+  const go = (e) => {
+    const a = e.target.closest('a[data-cat], a[data-page]');
+    if (!a || e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return;
+    e.preventDefault();
+    history.pushState(null, '', a.getAttribute('href'));
+    draw({ focusList: true });
+  };
+  catsEl.addEventListener('click', go);
+  pagerEl.addEventListener('click', go);
+  window.addEventListener('popstate', () => draw());
+
+  try {
+    rows = await window.API.getNews();
+    // 예전 메인 카드 주소(#news-story-89)로 들어오면 상세로
+    const hashId = location.hash.startsWith('#news-') && decodeURIComponent(location.hash.slice(6));
+    if (hashId && rows.some((r) => r.id === hashId)) { location.replace(`news-view.html?id=${encodeURIComponent(hashId)}`); return; }
+    draw();
   } catch (err) {
     console.error(err);
     list.innerHTML = '<li class="empty">목록을 불러오지 못했습니다.</li>';
+  }
+}
+
+async function renderNewsView() {
+  const box = document.querySelector('[data-news-view]');
+  if (!box) return;
+  const { esc } = window.UI;
+  let listUrl = 'news.html';
+  try { const saved = sessionStorage.getItem(NEWS_LIST_KEY); if (saved && saved.includes('/news.html')) listUrl = saved; } catch (e) { /* 기본 목록 */ }
+  const listBtn = `<div class="article__foot"><a class="btn article__list" href="${esc(listUrl)}">목록으로</a></div>`;
+  const id = new URLSearchParams(location.search).get('id');
+  try {
+    const data = id && await window.API.getNewsPost(id);
+    if (!data) {
+      box.innerHTML = `<p class="empty">글을 찾을 수 없습니다. 삭제되었거나 주소가 바뀌었을 수 있습니다.</p>${listBtn}`;
+      return;
+    }
+    const { post, html, prev, next } = data;
+    document.title = `${post.title} | 치과소식 | 화이트e치과`;
+    document.querySelector('meta[name="description"]')?.setAttribute('content', post.summary || post.title);
+    const canon = document.createElement('link'); // 글마다 주소가 달라 canonical 은 여기서 (?id= 포함)
+    canon.rel = 'canonical';
+    canon.href = `${location.origin}${location.pathname}?id=${encodeURIComponent(post.id)}`;
+    document.head.appendChild(canon);
+    const navItem = (p, label, rel) => p
+      ? `<a class="article-nav__item" href="news-view.html?id=${encodeURIComponent(p.id)}" rel="${rel}"><span class="article-nav__label">${label}</span><span class="article-nav__title">${esc(p.title)}</span><time class="article-nav__date" datetime="${esc(p.date)}">${fullDate(p.date)}</time></a>`
+      : `<p class="article-nav__item is-empty"><span class="article-nav__label">${label}</span><span class="article-nav__title">${rel === 'prev' ? '이전 글이 없습니다.' : '다음 글이 없습니다.'}</span></p>`;
+    box.innerHTML = `
+      <article class="article">
+        <header class="article__head">
+          <a class="article__cat" href="news.html?cat=${encodeURIComponent(post.category)}">${esc(post.category)}</a>
+          <h2 class="article__title">${esc(post.title)}</h2>
+          <p class="article__meta"><time datetime="${esc(post.date)}">${fullDate(post.date)}</time></p>
+        </header>
+        <div class="article__body">${html}</div>
+      </article>
+      <nav class="article-nav" aria-label="이전글 다음글">
+        ${navItem(next, '다음글', 'next')}
+        ${navItem(prev, '이전글', 'prev')}
+      </nav>
+      ${listBtn}`;
+  } catch (err) {
+    console.error(err);
+    box.innerHTML = `<p class="empty">글을 불러오지 못했습니다.</p>${listBtn}`;
   }
 }
 

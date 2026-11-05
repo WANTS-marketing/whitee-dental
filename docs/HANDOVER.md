@@ -19,6 +19,19 @@
 - 현재 이 도메인에서 기존 사이트가 운영 중 → **오픈 전까지 DNS 변경 금지**
 - 갱신일: 미확인 / 자동 갱신 여부: 미확인 ← 도메인 관리 계정 확인 시 기록
 - 연결 절차: `docs/DEPLOYMENT.md` "도메인 연결"
+- **기존 주소 이어받기:** 기존 사이트 치과스토리 글(`/bbs/board.php?bo_table=story&wr_id=N`)은 `404.html` 이 새 주소(`community/news-view.html?id=story-N`)로 자동 이동시킨다.
+  글마다 기존 번호는 `assets/data/news.json` 의 `wrId`·`legacyUrl`. 다른 게시판(공지 등)을 옮기면 같은 방식으로 404.html 에 추가
+
+## 기존 사이트 글 가져오기 (치과스토리 → 치과소식, 2026-11-05)
+
+- 원본: https://whiteedental.co.kr/bbs/board.php?bo_table=story — 공개된 글 88개 전부 (게시판 상단 'Total 96건'은 삭제된 글이 포함된 카운터. 목록 7페이지는 비어 있고 wr_id 1·5·91 이후는 '글이 존재하지 않습니다')
+- 다시 가져오기: `cd scripts/import && npm install` → `npm run fetch` (원본 HTML → `raw/`, 1초 간격) → `npm run build` (이미지 받기·줄이기 + 데이터 생성)
+  - 받은 원본 이미지는 `scripts/import/cache/` (커밋 안 함, 약 1.6GB). 없으면 다시 받는다
+  - 생성물: `assets/data/news.json`(목록) · `assets/data/news/story-N.html`(본문) · `assets/images/news/N/`(이미지, 가로 최대 1200px · 썸네일 720px)
+  - 생성물을 직접 고치면 다시 build 할 때 덮어쓴다 → 고칠 것은 `build-story.js` 규칙(분류 CATEGORY_RULES, 본문 정리)으로
+- 분류는 제목 키워드로 자동(진료안내·치료정보·임플란트·틀니·치아교정·병원소식). 지점(branch)은 제목만으로 정할 수 없어 모두 'both'
+- 본문 정리: 글꼴·크기·색 인라인 스타일과 빈 문단 삭제, 굵게·색 강조 → `<strong>`, 밑줄 → `<mark>`(형광펜), 이미지 링크(view_image) 제거. 원래 글처럼 가운데 정렬
+- 본문 문구는 기존 사이트 그대로 — 의료광고 심의 기준 검토는 별도
 
 ## 사용한 외부 서비스·라이브러리
 

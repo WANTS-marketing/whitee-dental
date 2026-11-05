@@ -1,0 +1,12 @@
+{
+  "name": "whitee-story-import",
+  "private": true,
+  "description": "기존 사이트 치과스토리 게시판 → 치과소식 데이터 (fetch-story.js → build-story.js)",
+  "scripts": {
+    "fetch": "node fetch-story.js",
+    "build": "node build-story.js"
+  },
+  "devDependencies": {
+    "playwright-core": "1.59.0"
+  }
+}

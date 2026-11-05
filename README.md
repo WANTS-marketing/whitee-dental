@@ -47,9 +47,10 @@ assets/js/
   main.js / pages.js / admin.js   페이지별 동작
   onboarding.js            메인 PC 첫 방문 이용 안내(코치마크)
   config.js                자동 생성 (커밋 안 함)
-assets/data/*.json         공지·소식·사례·FAQ·문의 더미 데이터
+assets/data/*.json         공지·사례·FAQ·문의 더미 데이터 · news.json + news/ = 치과소식(기존 사이트 치과스토리 88개)
 assets/images/             이미지 (목록: assets/images/README.md) · temp/ = 임시 스톡 이미지(Pexels)
 scripts/build-config.js    환경변수 → config.js
+scripts/import/            기존 사이트 치과스토리 → 치과소식 가져오기 (docs/HANDOVER.md "기존 사이트 글 가져오기")
 docs/                      배포·인수인계 문서
 ```
 
@@ -63,7 +64,8 @@ docs/                      배포·인수인계 문서
 | 색상·글자 크기 | `assets/css/variables.css` |
 | 메뉴 | `components/header.html` (데스크톱·모바일 두 군데) |
 | 서브페이지 왼쪽 하위 메뉴(LNB) | 각 서브페이지 `<aside class="lnb">` (같은 메뉴 묶음 페이지 모두) · 스타일 `common.css` '서브 LNB' |
-| FAQ·소식 (1차) | `assets/data/*.json` |
+| FAQ·공지 (1차) | `assets/data/*.json` |
+| 치과소식 글 | `scripts/import/build-story.js` 로 생성 (분류 규칙·본문 정리도 여기) — 새 글은 2차 Supabase 게시판에서 |
 | 메인 첫 방문 이용 안내(코치마크) 문구·단계 | `assets/js/onboarding.js` 의 `STEPS` (스타일: `main.css` 끝 '이용 안내') |
 | 메인 의료진 사진 크기·위치 맞추기 | `assets/js/site-data.js` 의 각 원장 `photoScale` · `photoOffsetY` · `photoOffsetX` (아래 '의료진 사진 보정') |
 

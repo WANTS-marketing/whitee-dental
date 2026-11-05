@@ -479,6 +479,61 @@ body.is-locked { overflow: hidden; }
 .post-card__title { white-space: pre-line; margin-top: 16px; font-size: var(--fs-md); font-weight: 500; text-align: center; line-height: 1.5; }
 .post-card__date { margin-top: 4px; font-size: var(--fs-sm); color: var(--color-text-muted); text-align: center; }
 
+/* ---------- 치과소식 (기존 치과스토리 글) — 목록: 분류 칩 · 카드 3열 · 페이지 번호 / 상세: 글 · 이전글·다음글 (pages.js renderNewsList · renderNewsView) ---------- */
+/* 분류 칩: FAQ 모바일 칩과 같은 모양 (현재 = 포인트 배경). 넘치면 가로 스크롤 */
+.news-cats { margin-bottom: 40px; overflow-x: auto; scrollbar-width: none; }
+.news-cats::-webkit-scrollbar { display: none; }
+.news-cats__list { display: flex; flex-wrap: wrap; gap: 8px; }
+.news-cats__btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border: 1px solid #ddd; border-radius: var(--radius-pill); background: #fff; font-size: var(--fs-sm); line-height: 1.4; color: #666; white-space: nowrap; transition: color 0.2s, border-color 0.2s, background-color 0.2s; }
+.news-cats__btn:hover { border-color: #999; color: #333; }
+.news-cats__btn[aria-current] { border-color: var(--color-point); background: var(--color-point); color: #fff; font-weight: 600; }
+.news-cats__n { font-size: var(--fs-xs); opacity: 0.7; }
+/* 카드: 정사각 썸네일(메인 치과소식 카드와 같은 비율) · 분류 · 제목 2줄 · 요약 2줄 · 날짜 */
+.news-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 48px 24px; }
+.news-card a { display: block; }
+.news-card__thumb { display: block; aspect-ratio: 1; border-radius: var(--radius-sm); }
+.news-card__thumb img { transition: transform 0.6s var(--ease); }
+.news-card a:is(:hover, :focus-visible) .news-card__thumb img { transform: scale(1.04); }
+.news-card__cat { display: block; margin-top: 16px; font-size: var(--fs-xs); font-weight: 600; color: var(--color-accent); }
+.news-card__title { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; margin-top: 4px; font-size: 1.125rem; line-height: 1.45; word-break: keep-all; transition: color var(--dur); }
+.news-card a:is(:hover, :focus-visible) .news-card__title { color: var(--color-accent); }
+.news-card__sum { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; margin-top: 8px; font-size: var(--fs-sm); line-height: 1.6; color: var(--color-text-sub); word-break: keep-all; }
+.news-card__date { display: block; margin-top: 12px; font-size: var(--fs-xs); color: var(--color-text-muted); }
+.news-grid > .empty { grid-column: 1 / -1; }
+/* 페이지 번호 */
+.pager { display: flex; justify-content: center; gap: 6px; margin-top: 64px; }
+.pager:empty { display: none; }
+.pager__btn { display: grid; place-items: center; min-width: 40px; height: 40px; padding: 0 8px; border-radius: var(--radius-sm); font-size: var(--fs-sm); color: #555; transition: background-color 0.2s, color 0.2s; }
+.pager__btn:hover { background: var(--color-point-soft); color: var(--color-point); }
+.pager__btn.is-current { background: var(--color-point); color: #fff; font-weight: 700; }
+.pager__btn.is-disabled { color: #ccc; pointer-events: none; }
+.pager__arrow svg { width: 18px; height: 18px; }
+/* 상세: 제목 영역 가운데 · 본문은 원래 글처럼 가운데 정렬(줄을 나눠 쓴 글이라) · 폭 760px */
+.article__head { padding-bottom: 32px; border-bottom: 1px solid var(--color-line); text-align: center; }
+.article__cat { display: inline-block; font-size: var(--fs-sm); font-weight: 600; color: var(--color-accent); }
+.article__cat:hover { text-decoration: underline; text-underline-offset: 3px; }
+.article__title { margin-top: 8px; font-size: var(--fs-h2); line-height: 1.4; letter-spacing: -0.02em; word-break: keep-all; }
+.article__meta { margin-top: 12px; font-size: var(--fs-sm); color: var(--color-text-muted); }
+.article__body { max-width: 760px; margin: 0 auto; padding: 48px 0 64px; font-size: 1.0625rem; line-height: 1.9; color: #333; text-align: center; word-break: keep-all; overflow-wrap: break-word; }
+.article__body > * + * { margin-top: 28px; }
+.article__body figure { margin-top: 40px; margin-bottom: 40px; }
+.article__body figure img { width: auto; max-width: 100%; height: auto; margin: 0 auto; border-radius: var(--radius-sm); }
+.article__body strong { font-weight: 700; color: var(--color-text); }
+.article__body mark { background: linear-gradient(transparent 62%, rgba(25, 78, 191, 0.14) 62%); color: inherit; }
+.article__body h3 { font-size: var(--fs-h4); }
+/* 이전글·다음글: [라벨 | 제목 | 날짜] 두 줄 */
+.article-nav { border-top: 2px solid var(--color-text); }
+.article-nav__item { display: grid; grid-template-columns: 88px minmax(0, 1fr) auto; align-items: center; gap: 16px; padding: 18px 8px; border-bottom: 1px solid var(--color-line); font-size: var(--fs-sm); }
+.article-nav__label { font-weight: 700; }
+.article-nav__title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #333; transition: color var(--dur); }
+a.article-nav__item:hover .article-nav__title { color: var(--color-accent); }
+.article-nav__item.is-empty .article-nav__title { color: var(--color-text-muted); }
+.article-nav__date { font-size: var(--fs-xs); color: var(--color-text-muted); }
+.article__foot { display: flex; justify-content: center; margin-top: 40px; }
+.article__list { height: 48px; padding: 0 32px; border: 1px solid var(--color-text); background: #fff; font-weight: 600; }
+.article__list:hover { background: var(--color-text); color: #fff; }
+.news-view > .empty { padding: 80px 0 0; }
+
 /* 아코디언 (FAQ) */
 .accordion__item { border-bottom: 1px solid #ddd; }
 .accordion__item:first-child { border-top: 1px solid #ddd; }
@@ -644,6 +699,7 @@ body.is-locked { overflow: hidden; }
 }
 @container sub (max-width: 40rem) { /* 640px */
   .card-grid { grid-template-columns: repeat(2, 1fr); }
+  .news-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 /* ==========================================================================
@@ -748,6 +804,22 @@ body.is-locked { overflow: hidden; }
   .board__title { flex-basis: 100%; }
   .card-grid { grid-template-columns: 1fr 1fr; gap: 24px 12px; }
   .card-grid .post-card__title .badge { display: block; width: fit-content; margin: 0 auto 6px; }
+  /* 치과소식: 칩은 한 줄 가로 스크롤, 카드 2열(요약 숨김), 글 본문 한 단계 작게 */
+  .news-cats { margin: 0 calc(var(--gutter) * -1) 28px; padding: 0 var(--gutter); }
+  .news-cats__list { flex-wrap: nowrap; width: max-content; }
+  .news-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px 12px; }
+  .news-card__cat { margin-top: 12px; }
+  .news-card__title { font-size: var(--fs-md); }
+  .news-card__sum { display: none; }
+  .news-card__date { margin-top: 6px; }
+  .pager { margin-top: 48px; gap: 2px; }
+  .pager__btn { min-width: 36px; height: 36px; }
+  .article__title { font-size: var(--fs-h3); }
+  .article__body { padding: 32px 0 48px; font-size: var(--fs-md); line-height: 1.85; }
+  .article__body > * + * { margin-top: 22px; }
+  .article__body figure { margin-top: 28px; margin-bottom: 28px; }
+  .article-nav__item { grid-template-columns: 52px minmax(0, 1fr); gap: 2px 12px; padding: 14px 4px; }
+  .article-nav__date { grid-column: 2; }
   .accordion__btn { gap: 12px; padding: 18px 4px; font-size: var(--fs-sm); }
   .accordion__a { padding: 0 8px 20px 40px; }
   .form__row--2 { grid-template-columns: 1fr; }
