@@ -64,7 +64,7 @@
 | hero-01.jpg | [3779713](https://www.pexels.com/photo/3779713/) | Andrea Piacquadio | Pexels License |
 | hero-02.jpg | [3845625](https://www.pexels.com/photo/3845625/) | Pexels 페이지에서 확인 | Pexels License |
 | hero-03-event-implant.jpg, visual-implant.jpg | [6502306](https://www.pexels.com/photo/6502306/) | cottonbro studio | Pexels License |
-| hero-bg.jpg, hero-03-night.jpg(임시), og-image.jpg, tour-*-01/05 | [6812453](https://www.pexels.com/photo/6812453/) | Pavel Danilyuk | Pexels License |
+| hero-bg.jpg, og-image.jpg, tour-*-01/05 | [6812453](https://www.pexels.com/photo/6812453/) | Pavel Danilyuk | Pexels License |
 | doctors-bg.jpg, tour-*-04/01 | [8459996](https://www.pexels.com/photo/8459996/) | Pexels 페이지에서 확인 | Pexels License |
 | branch-bar-bg.jpg, tour-*-05/03 | [305568](https://www.pexels.com/photo/305568/) | Pexels 페이지에서 확인 | Pexels License |
 | clinic-implant.jpg, case-implant-before.jpg | [6502340](https://www.pexels.com/photo/6502340/) | cottonbro studio | Pexels License |
@@ -104,7 +104,7 @@
     - 이휘소 — "대한치과의사협회지 2021.06 논문 저자", "오스템 엔도 세미나, 김평식 엔도 세미나 수료"
   - 다르게 분류해야 하면 `site-data.js` 에 그룹을 직접 적는 방식으로 바꾸는 것을 권장
 - [x] 오시는길 카카오맵 퍼가기 코드 2개 (2026-11-02 적용). 카카오 장소정보 주소(창원 "301호", 마산 "본관 9-10층")는 사이트 표기와 달라 지도 아래 주소 블록을 CSS로 숨김 — 카카오맵 장소정보 수정 요청 여부는 병원과 상의
-- [ ] 저녁 진료실 사진(히어로 3번용) — 평일 야간진료 슬라이드. `assets/images/hero-03-night.jpg` 1500×750 이상 (현재 임시 스톡 사진)
+- [x] 히어로 3번(평일 야간진료) 사진 — 밤 건물 외관 사진으로 교체 (2026-11-05). 1536×1024 라 큰 화면에서는 약간 확대됨 → 1920px 이상 원본 있으면 교체
 - [ ] 배경 제거된 상반신 사진(PNG, 세로 1200px 이상, 같은 크롭 기준) — 메인 의료진 섹션 인물 나열용. **받음(7명, 2026-11-04)**: 이은주·권진선·이휘소·김영우·정호석·조혜진·송희태 (흰 배경 400×664 — 고해상도 받으면 교체 권장) / **남은 2명**: 정정원·조용정. 파일명 `assets/images/doctor-{영문 이름}-cut.png` (예: doctor-lee-eunju-cut.png, `assets/images/README.md` 표 참고). 지금은 실루엣 플레이스홀더
 - [ ] 공식 로고 고해상도(SVG 또는 2배 PNG) — 현재 1배 PNG(logo.png) 적용됨, 원내 사진, 진료 사진
 - [ ] 흰색 로고 파일 요청 (SVG 또는 2배 PNG, 투명 배경) — 메인 투명 헤더(히어로 위)·푸터용. 지금은 컬러 logo.png 를 CSS filter 로 흰색 처리 중 (main.css '투명 헤더', common.css .logo__img--white)
