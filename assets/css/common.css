@@ -442,6 +442,22 @@ body.is-locked { overflow: hidden; }
 .sub-tabs a { padding: 8px 18px; border: 1px solid var(--color-line); border-radius: var(--radius-pill); font-size: var(--fs-sm); background: #fff; }
 .sub-tabs a.is-current { background: var(--color-point); border-color: var(--color-point); color: #fff; }
 .sub-content { padding: var(--space-4xl) 0; min-height: 40vh; }
+
+/* ---------- 서브 LNB (body.has-lnb — 치과소개·의료진·병원소개 / 진료과목 5 / 공지·소식·사례) ----------
+   배너(.sub-visual)에는 라벨·타이틀·경로만, 하위 메뉴는 본문 왼쪽 세로 메뉴. 모양은 FAQ 왼쪽 카테고리(.faq-cats)와 같은 규칙
+   [LNB 220px | 64px | 본문] — LNB 는 스크롤해도 헤더 아래 32px 에 따라온다(sticky). 1024px 이하 = 본문 위 가로 스크롤 칩, 768px 이하 = 칩 줄이 헤더 아래 고정
+   본문(.sub-body)은 컨테이너 쿼리 기준(sub) — LNB 만큼 좁아진 실제 폭으로 열 수를 줄인다(sub.css · 아래 '좁은 본문') */
+.has-lnb .sub-visual { display: flex; flex-direction: column; justify-content: center; min-height: calc(var(--header-h) + 320px); padding: var(--header-h) 0 0; } /* 탭이 빠진 만큼 배너 낮춤: 헤더 아래 보이는 높이 320px, 글은 세로 가운데 */
+.sub-layout { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 0 64px; align-items: start; padding-top: 80px; padding-bottom: var(--space-4xl); }
+.lnb { position: sticky; top: calc(var(--header-h) + 32px); }
+.lnb__title { margin-bottom: 16px; padding-bottom: 18px; border-bottom: 1px solid var(--color-line); font-size: 1.5rem; font-weight: 700; line-height: 1.3; word-break: keep-all; }
+.lnb__list { display: flex; flex-direction: column; gap: 6px; }
+.lnb__list a { display: block; margin-left: -12px; padding: 10px 12px; border-radius: var(--radius-sm); font-size: 1.0625rem; line-height: 1.4; color: #666; word-break: keep-all; transition: color 0.2s, background-color 0.2s, border-color 0.2s; }
+.lnb__list a:hover { color: #333; }
+.lnb__list a[aria-current="page"] { background: var(--color-point-soft); color: var(--color-point); font-weight: 700; } /* = FAQ '자주 찾는 질문' 선택 상태 */
+.sub-body { container: sub / inline-size; }
+.sub-body .container { max-width: none; padding: 0; } /* 본문 안 섹션의 .container 는 폭·좌우 여백을 바깥 .sub-layout 에 맡긴다 */
+.sub-body .sub-content { padding: 0; min-height: 40vh; }
 .preparing { padding: 80px 24px; border: 1px dashed var(--color-line); border-radius: var(--radius-lg); text-align: center; color: var(--color-text-sub); }
 .preparing strong { display: block; margin-bottom: 8px; font-size: var(--fs-h4); color: var(--color-text); }
 
@@ -618,10 +634,32 @@ body.is-locked { overflow: hidden; }
 .faq-item__a { grid-column: 3; font-size: 1rem; line-height: 1.8; color: #444; white-space: pre-line; word-break: keep-all; }
 .faq-list__empty { padding: 60px 0; text-align: center; color: var(--color-text-sub); border-bottom: 1px solid #e5e5e5; }
 
+/* ---------- 좁은 본문 (LNB 옆 .sub-body 실제 폭 기준) ----------
+   rem 기준이라 글자 크기 단계(크게·아주 크게)에서는 더 일찍 열 수가 줄어든다. 아래 화면 폭(@media) 규칙이 뒤에 있어 모바일은 그대로 */
+@container sub (max-width: 55rem) { /* 880px — 1366 이하 노트북·글자 크게 */
+  .doctor-profile { grid-template-columns: 180px minmax(0, 1fr); gap: 24px; padding: 24px; }
+  .doctor-profile__career { columns: 1; }
+  .quick-consult .form { grid-template-columns: 1fr 1fr; }
+  .quick-consult .btn { grid-column: 1 / -1; }
+}
+@container sub (max-width: 40rem) { /* 640px */
+  .card-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
 /* ==========================================================================
    반응형
    ========================================================================== */
 @media (max-width: 1024px) {
+  /* 서브 LNB → 배너 바로 아래 가로 스크롤 칩 줄 (현재 페이지 = 포인트 배경, FAQ 칩과 같은 모양) */
+  .has-lnb .sub-visual { min-height: calc(var(--header-h) + 260px); }
+  .sub-layout { display: block; padding-top: 0; }
+  .lnb { position: relative; top: auto; z-index: 5; margin: 0 calc(var(--gutter) * -1) 48px; padding: 12px var(--gutter); border-bottom: 1px solid var(--color-line); background: #fff; overflow-x: auto; scrollbar-width: none; }
+  .lnb::-webkit-scrollbar { display: none; }
+  .lnb__title { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; } /* 칩 줄에서는 대메뉴 이름 숨김(읽기 프로그램용으로만) */
+  .lnb__list { flex-direction: row; gap: 8px; width: max-content; }
+  .lnb__list a { margin-left: 0; padding: 8px 16px; border: 1px solid #ddd; border-radius: var(--radius-pill); background: #fff; font-size: var(--fs-sm); white-space: nowrap; }
+  .lnb__list a[aria-current="page"] { border-color: var(--color-point); background: var(--color-point); color: #fff; }
+
   /* FAQ: 카테고리 메뉴를 목록 위 가로 스크롤 칩으로 */
   .faq-board__body { grid-template-columns: minmax(0, 1fr); gap: 24px; }
   .faq-board__cta { grid-column: auto; margin-top: 32px; }
@@ -702,6 +740,9 @@ body.is-locked { overflow: hidden; }
   .footer__bottom { flex-direction: column; align-items: flex-start; gap: 16px; padding-bottom: 32px; }
 
   .sub-visual { padding: calc(var(--header-h) + 40px) 0 36px; }
+  .has-lnb .sub-visual { min-height: calc(var(--header-h) + 200px); padding: var(--header-h) 0 0; }
+  .lnb { position: sticky; top: var(--header-h); margin-bottom: 32px; padding: 10px var(--gutter); } /* 칩 줄이 배너 바로 아래 붙고, 스크롤하면 헤더 아래 고정 */
+  html:has(body.has-lnb) { scroll-padding-top: calc(var(--header-h) + 4.25rem); } /* 페이지 안 바로가기(#)가 칩 줄에 가리지 않게 */
   .board__no { display: none; }
   .board__item { flex-wrap: wrap; gap: 4px 12px; padding: 16px 4px; }
   .board__title { flex-basis: 100%; }
