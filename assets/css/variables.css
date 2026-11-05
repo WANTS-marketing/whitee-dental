@@ -3,29 +3,29 @@
    ========================================================================== */
 :root {
   /* ---------- 색 역할 규칙 (README '색 역할 규칙') ----------
-     네이비(--color-point) = 면(블록·버튼 배경·선택 행) + 고정된 강조 글자(섹션 라벨·선택 상태·번호·아이콘)
-     파랑(--color-accent) = 움직임이 있는 글자만(hover·링크·체크 표시)
-     지점 그라데이션(--color-point-gradient·-v) = 브랜드 강조(타이틀 강조 글자 .text-point·LNB 세로 막대·히어로 이벤트 가격·진행 바)
-     지점 색 단색(핑크·주황) = 창원·마산 구분용만 (지점 탭·지점 카드·지점 태그·지점 바로가기·의료진 진료과)
+     네이비(--color-point) = 면(블록·버튼 배경·선택 행) + 고정된 라벨·번호·아이콘
+     파랑(--color-accent) = 강조 글자(.text-point) + 진행 표시(페이지 점 현재 막대·히어로 진행 단계·치과소식 진행 바·LNB 현재 행 막대) + hover·링크·체크
+     지점 색(핑크·주황)·지점 그라데이션 = 창원·마산 구분용만 (지점 탭·지점 카드·의료진 진료과·지점 태그·병원소개 지점 탭)
+       — 사이트 강조에 쓰면 한 지점에 치우쳐 보이므로 강조는 파랑으로 통일
      어두운 배경 위에서는 둘 다 흰색(+밑줄)으로 대신한다 */
 
-  /* 지점 색 단색 — 창원·마산 구분용만 / 그라데이션 — 브랜드 강조 */
+  /* 지점 색·지점 그라데이션 — 창원·마산 구분용만 */
   --color-changwon: #fd5b9b;        /* 창원점 핑크 */
   --color-changwon-light: #f6bed4;  /* 창원점 카드 테두리 */
   --color-changwon-bg: #fff0f6;
   --color-masan: #fe6d33;           /* 마산점 오렌지 */
   --color-masan-light: #ffc2a8;
   --color-masan-bg: #fff3ed;
-  --color-point-gradient: linear-gradient(90deg, #fd5b9b, #fe6d33);    /* 브랜드 강조: 타이틀 강조 글자(.text-point)·히어로 이벤트 가격·치과소식 진행 바 */
-  --color-point-gradient-v: linear-gradient(180deg, #fd5b9b, #fe6d33); /* 세로: LNB 현재 행 막대·섹션 점 현재 막대·히어로 진행 단계 */
+  --color-point-gradient: linear-gradient(90deg, #fd5b9b, #fe6d33);    /* 두 지점을 함께 나타낼 때만 (지금 쓰는 곳 없음) */
+  --color-point-gradient-v: linear-gradient(180deg, #fd5b9b, #fe6d33); /* 같은 색, 세로 방향 (지금 쓰는 곳 없음) */
 
-  /* 네이비 = 면 (블록·버튼 배경·선택 행) + 고정된 강조 글자 (섹션 라벨·선택 상태·번호·아이콘) */
+  /* 네이비 = 면 (블록·버튼 배경·선택 행) + 고정된 라벨·번호·아이콘 */
   --color-point: #16233f;            /* 딥 네이비 */
   --color-point-hover: #2a3a5c;      /* 네이비 면 hover·눌림 (조금 밝게) */
   --color-point-soft: #eef1f6;       /* 옅은 네이비 면 — 선택 행·hover 배경 */
   --color-point-rgb: 22, 35, 63;     /* 반투명용 rgba(var(--color-point-rgb), a) */
 
-  /* 파랑 = 움직임이 있는 글자만 (hover·링크·체크 표시) */
+  /* 파랑 = 강조 글자·진행 표시·hover·링크·체크 */
   --color-accent: #194ebf;           /* 밝은 파랑 */
   --color-accent-hover: #1440a0;     /* 조금 진하게 */
 
