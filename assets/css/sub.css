@@ -252,7 +252,7 @@
   /* 모바일: 섹션은 예전처럼 위아래 여백으로 잇고, 배경 섹션은 화면 끝까지 (배경 띠 사이에 흰 틈이 생기지 않게) */
   .sub-body .sec { padding: var(--space-4xl) 0; }
   .sub-body .sec + .sec { margin-top: 0; }
-  .sub-body > .sec:first-child:not(.sec--soft, .sec--warm, .sec--dark) { padding-top: 0; }
+  .sub-body > .sub-head + .sec:not(.sec--soft, .sec--warm, .sec--dark) { padding-top: 0; } /* 본문 제목(.sub-head) 바로 다음 첫 섹션 */
   .sub-body > .sec:last-child:not(.sec--soft, .sec--warm, .sec--dark) { padding-bottom: 0; }
   .sub-layout:has(> .sub-body > .sec:last-child:is(.sec--soft, .sec--warm, .sec--dark)) { padding-bottom: 0; } /* 마지막이 배경 섹션이면 아래 흰 여백 없이 하단 띠로 */
   .sub-body :is(.sec--soft, .sec--warm, .sec--dark) { margin-left: calc(var(--gutter) * -1); margin-right: calc(var(--gutter) * -1); padding: var(--space-4xl) var(--gutter); border-radius: 0; }

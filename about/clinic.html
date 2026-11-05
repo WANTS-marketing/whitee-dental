@@ -34,13 +34,8 @@
     <section class="sub-visual sub-visual--image">
       <div class="sub-visual__bg" style="background-image:url('../assets/images/tour-changwon-01.jpg'), url('../assets/images/temp/tour-changwon-01.jpg')"></div>
       <div class="container">
-        <p class="sub-visual__copy">창원점 상남동 · 마산점 마산역 도보 3분</p>
-        <h1 class="sub-visual__title">병원소개</h1>
-        <ol class="breadcrumb" aria-label="현재 위치">
-          <li><a href="../index.html">홈</a></li>
-          <li>화이트e치과</li>
-          <li aria-current="page">병원소개</li>
-        </ol>
+        <p class="sub-visual__label">ABOUT</p>
+        <p class="sub-visual__slogan">since 2003 · 20년 이상 전통의 브랜드치과</p>
       </div>
     </section>
 
@@ -48,7 +43,7 @@
     <div class="sub-layout container">
       <aside class="lnb">
         <nav class="lnb__nav" aria-label="화이트e치과 하위 메뉴">
-          <p class="lnb__title">화이트e치과</p>
+          <div class="lnb__head"><p class="lnb__title">화이트e치과</p><p class="lnb__en">ABOUT</p></div>
           <ul class="lnb__list">
             <li><a href="intro.html">치과소개</a></li>
             <li><a href="doctors.html">의료진 소개</a></li>
@@ -57,6 +52,14 @@
         </nav>
       </aside>
       <div class="sub-body">
+        <div class="sub-head">
+          <ol class="breadcrumb" aria-label="현재 위치">
+            <li><a class="breadcrumb__home" href="../index.html" aria-label="홈"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5.5 9v11h13V9"/></svg></a></li>
+            <li>화이트e치과</li>
+            <li aria-current="page">병원소개</li>
+          </ol>
+          <h1 class="sub-head__title">병원소개</h1>
+        </div>
 
     <!-- 병원소개 = 예전 '병원 둘러보기'(about/tour.html) + '오시는길'(about/location.html) — 두 주소는 이 페이지로 자동 이동
          지점 탭: 선택한 지점 내용만 표시, 주소 #changwon / #masan 으로 바로 열 수 있다 (pages.js renderClinic)

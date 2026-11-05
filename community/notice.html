@@ -32,12 +32,8 @@
   <main id="main">
     <section class="sub-visual">
       <div class="container">
-        <h1 class="sub-visual__title">공지사항</h1>
-        <ol class="breadcrumb" aria-label="현재 위치">
-          <li><a href="../index.html">홈</a></li>
-          <li>커뮤니티</li>
-          <li aria-current="page">공지사항</li>
-        </ol>
+        <p class="sub-visual__label">COMMUNITY</p>
+        <p class="sub-visual__slogan">화이트e치과의 새로운 소식과 치료 이야기를 전해드립니다</p>
       </div>
     </section>
 
@@ -45,7 +41,7 @@
     <div class="sub-layout container">
       <aside class="lnb">
         <nav class="lnb__nav" aria-label="커뮤니티 하위 메뉴">
-          <p class="lnb__title">커뮤니티</p>
+          <div class="lnb__head"><p class="lnb__title">커뮤니티</p><p class="lnb__en">COMMUNITY</p></div>
           <ul class="lnb__list">
             <li><a href="notice.html" aria-current="page">공지사항</a></li>
             <li><a href="news.html">치과소식</a></li>
@@ -54,6 +50,14 @@
         </nav>
       </aside>
       <div class="sub-body">
+        <div class="sub-head">
+          <ol class="breadcrumb" aria-label="현재 위치">
+            <li><a class="breadcrumb__home" href="../index.html" aria-label="홈"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5.5 9v11h13V9"/></svg></a></li>
+            <li>커뮤니티</li>
+            <li aria-current="page">공지사항</li>
+          </ol>
+          <h1 class="sub-head__title">공지사항</h1>
+        </div>
 
     <section class="sub-content">
       <div class="container">
