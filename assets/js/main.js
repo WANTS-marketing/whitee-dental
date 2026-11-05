@@ -385,7 +385,7 @@ function initDoctors() {
       <li class="doc-person" data-pos="${p}" style="--z:${z}">
         <div class="doc-person__stage" data-doc-stage>
           ${SILHOUETTE}
-          <img class="doc-person__img" src="${cutOf(d)}" alt="${esc(d.name)} ${esc(d.title)}" loading="lazy" style="${fix}">
+          <img class="doc-person__img${d.photoBlend === false ? '' : ' is-blend'}" src="${cutOf(d)}" alt="${esc(d.name)} ${esc(d.title)}" loading="lazy" style="${fix}">
         </div>
         <div class="doc-person__bio" id="${bioId}" data-doc-stage>
           <div class="doc-person__bio-in">
@@ -559,7 +559,13 @@ function initDoctors() {
       cardsEl.classList.add('is-entering');
     }, 200);
   }
-  cardsEl.addEventListener('animationend', (e) => { if (e.target === cardsEl) cardsEl.classList.remove('is-entering'); });
+  // 나타남 애니메이션은 사진·이름마다(main.css) — 끝나면(0.5s) 클래스 정리
+  let enterTimer = 0;
+  new MutationObserver(() => {
+    if (!cardsEl.classList.contains('is-entering')) return;
+    clearTimeout(enterTimer);
+    enterTimer = setTimeout(() => cardsEl.classList.remove('is-entering'), 600);
+  }).observe(cardsEl, { attributes: true, attributeFilter: ['class'] });
   function selectTab(tab, animate = true) {
     if (target === tab.dataset.branch) return; // 이미 보고 있는(바꾸는 중인) 지점
     tabs.forEach((t) => {
@@ -760,9 +766,11 @@ async function initStory() {
    의료진 섹션부터 적용. 섹션 타이틀은 fade-up, 카드 묶음은 자식이 0.08s 간격으로 순차 등장 (간격은 main.css). 움직임 줄이기 설정이면 끔 */
 function initReveal() {
   if (!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  const singles = '.doctors__head, .doctors__main, .clinic__head, .cases__head, .faq-preview__head, .faq-preview__box, .story__head, .story__body';
+  const singles = '.doctors__head, .clinic__head, .cases__head, .faq-preview__head, .faq-preview__box, .story__head, .story__body';
   const groups = '.clinic__grid, .cases__list'; // 치과소식 카드는 탭으로 다시 그려지므로 묶음(.story__body)째로 등장
   const targets = [
+    // 의료진 인물 줄: 줄 전체가 아니라 사진·이름 하나하나 등장 (main.css .reveal-photos — 흰 배경 사진 multiply 가 끊기지 않게)
+    ...[...document.querySelectorAll('.doctors__main')].map((el) => { el.classList.add('reveal-photos'); return el; }),
     ...[...document.querySelectorAll(singles)].map((el) => { el.classList.add('reveal'); return el; }),
     ...[...document.querySelectorAll(groups)].map((el) => { el.classList.add('reveal-group'); return el; }),
   ];

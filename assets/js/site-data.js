@@ -77,6 +77,8 @@ window.SITE = {
        photoScale   사진 배율 (1 = 기본. 얼굴이 작아 보이면 키우고, 커 보이면 줄인다)
        photoOffsetY 위아래 이동, 사진 칸 높이 대비 % (+ 아래로 / - 위로) → 정수리 선을 맞춘다
        photoOffsetX 좌우 이동, 사진 칸 높이 대비 % (+ 오른쪽 / - 왼쪽), 없으면 0
+       photoBlend   흰 배경 사진의 흰색을 섹션 배경과 섞어 지우기(mix-blend-mode: multiply). 없으면 켜짐.
+                    지금 -cut.png 는 전원 흰 배경(투명 아님)이라 모두 켜 둔다 → 배경을 지운 투명 PNG 로 바꾼 원장만 photoBlend: false
      지금 값 = '정수리 ~ 턱' 높이가 모두 같고(사진 기준 225px) 정수리가 칸 위에서 7% 선에 오도록 계산한 값. 방법은 README '자주 하는 수정' */
   doctors: [
     // 창원점
