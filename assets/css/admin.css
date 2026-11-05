@@ -5,7 +5,7 @@
 .admin__logo em { font-style: normal; color: var(--color-point); }
 .admin__logo small { margin-left: 4px; font-size: 11px; font-weight: 500; opacity: 0.6; }
 .admin__menu { display: grid; gap: 4px; }
-.admin__menu button { width: 100%; padding: 10px 12px; border-radius: var(--radius-sm); text-align: left; color: rgba(255, 255, 255, 0.7); }
+.admin__menu button { width: 100%; padding: 10px 12px; border-radius: var(--radius-btn); text-align: left; color: rgba(255, 255, 255, 0.7); }
 .admin__menu button:hover { background: rgba(255, 255, 255, 0.06); color: #fff; }
 .admin__menu button.is-active { background: rgba(255, 255, 255, 0.12); color: #fff; font-weight: 600; }
 .admin__back { margin-top: auto; padding: 0 8px; font-size: var(--fs-xs); opacity: 0.6; }
@@ -26,7 +26,7 @@
 .admin__status--new { background: #e8f0fe; color: #1a73e8; }
 .admin__status--done { background: #e6f4ea; color: #188038; }
 .admin__actions { display: flex; gap: 6px; }
-.admin__actions button { padding: 4px 10px; border: 1px solid var(--color-line); border-radius: 6px; font-size: var(--fs-xxs); background: #fff; }
+.admin__actions button { padding: 4px 10px; border: 1px solid var(--color-line); border-radius: var(--radius-btn); font-size: var(--fs-xxs); background: #fff; }
 
 @media (max-width: 768px) {
   .admin { grid-template-columns: minmax(0, 1fr); }

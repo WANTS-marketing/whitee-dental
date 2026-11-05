@@ -48,7 +48,8 @@
   // 다른 화면이 위에 열려 있음: 그 화면이 키·휠을 그대로 쓴다(약력 팝업 안 스크롤 등)
   const overlayOpen = () => document.getElementById('header')?.classList.contains('is-mega') // 메가메뉴
     || root.classList.contains('is-modal-open') // 약력 팝업
-    || root.classList.contains('is-coach'); // 이용 안내(코치마크)
+    || root.classList.contains('is-coach') // 이용 안내(코치마크)
+    || root.classList.contains('is-select-open'); // 선택 목록(select) 펼침 — common.js enhanceSelect
   // 넘김만 잠금: 첫 진입 히어로 펼침 중
   // (의료진 사진 위 hover 는 잠그지 않는다 — 사진이 섹션 대부분을 차지해 휠이 먹히지 않았음.
   //  약력이 길어 안에서 스크롤되는 경우(.bio-scroll)만 아래 innerScrollable 이 약력 끝까지 먼저 스크롤)

@@ -2,23 +2,30 @@
    디자인 토큰 — 시안(1.png)에서 추출한 색상·간격·폰트 크기
    ========================================================================== */
 :root {
-  /* 지점 색 — 창원·마산 구분용으로만 (지점 탭·지점 카드·지점 바로가기 hover·의료진 진료과·지점 태그). 지점과 무관한 강조는 --color-point */
+  /* ---------- 색 역할 규칙 (README '색 역할 규칙') ----------
+     네이비(--color-point) = 면: 블록·버튼 배경·선택 행 / 파랑(--color-accent) = 글자: hover·링크·강조 글자
+     지점 색(핑크·주황) = 창원·마산 구분용만 (지점 탭·지점 카드·지점 태그·지점 바로가기·의료진 진료과)
+     어두운 배경 위에서는 둘 다 흰색(+밑줄)으로 대신한다 */
+
+  /* 지점 색 — 창원·마산 구분용만 */
   --color-changwon: #fd5b9b;        /* 창원점 핑크 */
   --color-changwon-light: #f6bed4;  /* 창원점 카드 테두리 */
   --color-changwon-bg: #fff0f6;
   --color-masan: #fe6d33;           /* 마산점 오렌지 */
   --color-masan-light: #ffc2a8;
   --color-masan-bg: #fff3ed;
+  --color-point-gradient: linear-gradient(90deg, #fd5b9b, #fe6d33);    /* 두 지점 색 가로 그라데이션 */
+  --color-point-gradient-v: linear-gradient(180deg, #fd5b9b, #fe6d33); /* 같은 색, 세로 방향 */
 
-  /* 사이트 공통 포인트 컬러(딥 네이비) — 라벨·강조 글자·선택 상태·주요 버튼. 어두운 배경 위에서는 흰색(+밑줄)으로 대신한다 */
-  --color-point: #16233f;
-  --color-point-hover: #2a3a5c;      /* hover·눌림 (조금 밝게) */
-  --color-point-soft: #eef1f6;       /* 선택 배경 등 옅은 면 */
+  /* 네이비 = 면 (블록·버튼 배경·선택 행) */
+  --color-point: #16233f;            /* 딥 네이비 */
+  --color-point-hover: #2a3a5c;      /* 네이비 면 hover·눌림 (조금 밝게) */
+  --color-point-soft: #eef1f6;       /* 옅은 네이비 면 — 선택 행·hover 배경 */
   --color-point-rgb: 22, 35, 63;     /* 반투명용 rgba(var(--color-point-rgb), a) */
-  --color-accent-hover: #1440a0;     /* 밝은 파랑 버튼 hover (조금 진하게) */
-  --color-accent: #194ebf;           /* 밝은 파랑 강조 — 검정 글자 옆에서 네이비가 눈에 잘 안 띄는 곳: 헤더 메뉴(대메뉴 화살표·현재/hover·메가메뉴 열 위 선·하위 메뉴 hover), 밝은 배경 위 타이틀 강조 글자(.text-point), 섹션 점 현재 막대 */
-  --color-point-gradient: linear-gradient(90deg, #fd5b9b, #fe6d33); /* 브랜드 강조(창원 핑크 → 마산 오렌지) — 히어로 이벤트 가격 */
-  --color-point-gradient-v: linear-gradient(180deg, #fd5b9b, #fe6d33); /* 같은 색, 세로 방향 — 서브 LNB 현재 페이지 행 왼쪽 막대 */
+
+  /* 파랑 = 글자 (hover·링크·강조 글자) */
+  --color-accent: #194ebf;           /* 밝은 파랑 */
+  --color-accent-hover: #1440a0;     /* 조금 진하게 */
 
   /* 텍스트 */
   --color-text: #222222;            /* 메인 텍스트: 거의 검정 */
@@ -75,6 +82,7 @@
   --radius-lg: 20px;
   --radius-xl: 24px;
   --radius-pill: 999px;
+  --radius-btn: 4px;      /* 버튼·탭·칩·지점 탭·서브 탭·입력칸·select·페이지 번호 — 한 곳에서 바꾸기 (카드·팝업·박스는 위 sm~lg, 원형·플로팅 퀵메뉴는 제외) */
   --shadow-card: 0 10px 30px rgba(0, 0, 0, 0.08);
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
   --dur: 0.3s;

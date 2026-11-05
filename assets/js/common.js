@@ -149,7 +149,133 @@
     });
   }
 
-  window.UI = { esc, telHref, img, bg, formatDate, branchBadge, accordion, faqItem, rollText, inquiryForm };
+  /* ---------- 선택 목록(select) 커스텀 드롭다운 (스타일 common.css '선택 목록') ----------
+     닫힌 상태 = 원래 select 그대로(입력칸과 같은 높이·테두리·모서리·포커스, 사이트 화살표 아이콘) — 전송·라벨·필수 입력 안내·reset 이 그대로 동작
+     PC(마우스): 기본 펼침 목록 대신 직접 만든 목록(.select-list)을 연다 — 항목 44px, hover 옅은 네이비, 선택 항목 굵게+체크, 지점 항목 앞 지점 색 점
+       키보드: 닫힌 상태에서 Enter·Space·↑↓·Alt+↓ = 열기 / 목록에서 ↑↓·Home·End 이동, Enter·Space 선택, Esc 닫기, Tab 닫기, 글자 입력 = 그 글자로 시작하는 항목
+       바깥 클릭·창 크기 변경 시 닫힘, 열려 있는 동안 메인 풀스크린 섹션 넘김 잠금(html.is-select-open — fullpage.js)
+     모바일·태블릿(터치): 기기 기본 선택창
+     필수(required) select 의 빈 값 항목('지점 선택' 등 안내 문구)은 목록에서 뺀다. 빈 값이 의미 있는 select(관리자 '전체 지점')는 그대로 */
+  const pcPointer = window.matchMedia('(hover: hover) and (pointer: fine)');
+  const CHECK_ICON = '<svg class="select-list__check" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg>';
+  const BRANCH_OF = (opt) => (opt.value === 'changwon' || opt.text.trim() === '창원점' ? 'changwon' : opt.value === 'masan' || opt.text.trim() === '마산점' ? 'masan' : '');
+  let openSelect = null; // { select, list, close }
+  let selectSeq = 0;
+  function enhanceSelect(select) {
+    if (select.dataset.enhanced || select.multiple || select.size > 1) return;
+    select.dataset.enhanced = '1';
+    select.classList.add('form__select');
+    const listId = `select-list-${++selectSeq}`;
+
+    function open() {
+      if (openSelect) openSelect.close(false);
+      const opts = [...select.options].filter((o) => !(select.required && o.value === '') && !o.hidden);
+      const list = document.createElement('ul');
+      list.className = 'select-list';
+      list.id = listId;
+      list.setAttribute('role', 'listbox');
+      list.tabIndex = -1;
+      const label = select.labels?.[0]?.textContent.replace('*', '').trim() || select.getAttribute('aria-label') || '';
+      if (label) list.setAttribute('aria-label', label);
+      list.innerHTML = opts.map((o, i) => {
+        const branch = BRANCH_OF(o);
+        return `<li class="select-list__opt" role="option" id="${listId}-${i}" data-i="${i}" aria-selected="${o.selected}"${o.disabled ? ' aria-disabled="true"' : ''}>${branch ? `<span class="select-list__dot select-list__dot--${branch}" aria-hidden="true"></span>` : ''}<span class="select-list__text">${esc(o.text)}</span>${CHECK_ICON}</li>`;
+      }).join('');
+      document.body.appendChild(list);
+      const items = [...list.children];
+
+      // 위치: select 바로 아래(아래 공간이 모자라면 위), 폭 = select 폭
+      const r = select.getBoundingClientRect();
+      list.style.minWidth = `${r.width}px`;
+      list.style.left = `${r.left + window.scrollX}px`;
+      const below = window.innerHeight - r.bottom, h = list.offsetHeight;
+      if (below < h + 12 && r.top > below) { list.style.top = `${r.top + window.scrollY - h - 4}px`; list.classList.add('is-up'); }
+      else list.style.top = `${r.bottom + window.scrollY + 4}px`;
+
+      let active = Math.max(0, opts.findIndex((o) => o.selected));
+      const setActive = (i, scroll = true) => {
+        if (i < 0 || i >= items.length) return;
+        items[active]?.classList.remove('is-active');
+        active = i;
+        items[i].classList.add('is-active');
+        list.setAttribute('aria-activedescendant', items[i].id);
+        if (scroll) items[i].scrollIntoView({ block: 'nearest' });
+      };
+      const choose = (i) => {
+        const o = opts[i];
+        if (!o || o.disabled) return;
+        const changed = select.value !== o.value || !o.selected;
+        o.selected = true;
+        close(true);
+        if (changed) {
+          select.dispatchEvent(new Event('input', { bubbles: true }));
+          select.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+      };
+      function close(refocus) {
+        if (openSelect?.select !== select) return;
+        openSelect = null;
+        list.remove();
+        select.setAttribute('aria-expanded', 'false');
+        select.removeAttribute('aria-controls');
+        document.documentElement.classList.remove('is-select-open');
+        document.removeEventListener('pointerdown', onOutside, true);
+        window.removeEventListener('resize', onResize);
+        if (refocus) select.focus({ preventScroll: true });
+      }
+      const onOutside = (e) => { if (!list.contains(e.target) && e.target !== select) close(false); };
+      const onResize = () => close(false);
+      let typed = '', typedAt = 0;
+      list.addEventListener('keydown', (e) => {
+        const k = e.key;
+        if (k === 'ArrowDown') { e.preventDefault(); setActive(Math.min(items.length - 1, active + 1)); }
+        else if (k === 'ArrowUp') { e.preventDefault(); if (e.altKey) choose(active); else setActive(Math.max(0, active - 1)); }
+        else if (k === 'Home' || k === 'PageUp') { e.preventDefault(); setActive(0); }
+        else if (k === 'End' || k === 'PageDown') { e.preventDefault(); setActive(items.length - 1); }
+        else if (k === 'Enter' || k === ' ') { e.preventDefault(); choose(active); }
+        else if (k === 'Escape') { e.preventDefault(); e.stopPropagation(); close(true); }
+        else if (k === 'Tab') { close(false); select.focus({ preventScroll: true }); } // 기본 Tab 이동은 select 기준으로 다음 칸
+        else if (k.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) { // 글자 입력: 그 글자로 시작하는 항목
+          const now = performance.now();
+          typed = now - typedAt > 700 ? k : typed + k;
+          typedAt = now;
+          const start = typed.length === 1 ? active + 1 : active;
+          const order = [...opts.keys()].map((n) => (n + start) % opts.length);
+          const hit = order.find((n) => opts[n].text.trim().startsWith(typed));
+          if (hit !== undefined) setActive(hit);
+        }
+      });
+      list.addEventListener('mousemove', (e) => { const li = e.target.closest('.select-list__opt'); if (li) setActive(Number(li.dataset.i), false); });
+      list.addEventListener('mousedown', (e) => e.preventDefault()); // 누르는 동안 포커스가 목록 밖으로 나가지 않게
+      list.addEventListener('click', (e) => { const li = e.target.closest('.select-list__opt'); if (li) choose(Number(li.dataset.i)); });
+
+      select.setAttribute('aria-expanded', 'true');
+      select.setAttribute('aria-controls', listId);
+      document.documentElement.classList.add('is-select-open');
+      document.addEventListener('pointerdown', onOutside, true);
+      window.addEventListener('resize', onResize);
+      openSelect = { select, list, close };
+      setActive(active);
+      list.focus({ preventScroll: true });
+    }
+
+    select.setAttribute('aria-expanded', 'false');
+    select.addEventListener('mousedown', (e) => {
+      if (!pcPointer.matches || e.button !== 0 || select.disabled) return; // 터치 기기 = 기본 선택창
+      e.preventDefault(); // 기본 펼침 목록 대신
+      if (openSelect?.select === select) { openSelect.close(true); return; }
+      select.focus({ preventScroll: true });
+      open();
+    });
+    select.addEventListener('keydown', (e) => {
+      if (!pcPointer.matches || select.disabled) return;
+      if (['Enter', ' ', 'ArrowDown', 'ArrowUp'].includes(e.key) || (e.altKey && e.key === 'ArrowDown')) { e.preventDefault(); open(); }
+    });
+  }
+  function initSelects(scope = document) { scope.querySelectorAll('select').forEach(enhanceSelect); }
+  initSelects();
+
+  window.UI = { esc, telHref, img, bg, formatDate, branchBadge, accordion, faqItem, rollText, inquiryForm, initSelects };
 
   /* ---------- 이미지 대체 ----------
      1) assets/images/파일명 이 없으면 → assets/images/temp/파일명 (임시 스톡 이미지)
