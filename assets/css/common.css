@@ -456,8 +456,8 @@ body.is-locked { overflow: hidden; }
 
 /* ---------- 서브 LNB (body.has-lnb — 치과소개·의료진·병원소개 / 진료과목 5 / 공지·소식·사례) ----------
    배너(.sub-visual)에는 대메뉴 단위 문구만(영문 라벨 + 슬로건), 페이지 제목·경로는 본문 맨 위(.sub-head).
-   [LNB 260px | 64px | 본문] — 각진 블록형: 네이비 타이틀 블록(배너 아래쪽에 100px 걸쳐 올라옴) + 흰 메뉴 행(60px, 아래 구분선)
-   현재 페이지 행 = 네이비 면 + 흰 글자, 그 아래 옅은 회색 영역에 페이지 안 섹션 목록(common.js initLnb — 섹션 목록·펼침·현재 섹션 굵게)
+   [LNB 260px | 64px | 본문] — 각진 블록형: 네이비 타이틀 블록(140px) + 흰 메뉴 행(60px, 이름만, 아래 구분선)
+   현재 페이지 행 = 옅은 네이비 면 + 네이비 굵은 글자 + 왼쪽 세로 막대. 하위 항목(섹션 바로가기)은 없음
    LNB 는 스크롤해도 따라오지 않는다(제자리). 1024px 이하 = 타이틀 블록 숨김, 본문 위 가로 탭(밑줄형)
    본문(.sub-body)은 컨테이너 쿼리 기준(sub) — LNB 만큼 좁아진 실제 폭으로 열 수를 줄인다(sub.css · 아래 '좁은 본문') */
 .has-lnb .sub-visual { display: flex; flex-direction: column; justify-content: center; min-height: 400px; padding: var(--header-h) 0 0; } /* 배너는 화면 맨 위(투명 헤더 뒤)부터 — 헤더 포함 400px, 글은 헤더 아래 공간의 세로 가운데 */
@@ -494,25 +494,11 @@ body.is-locked { overflow: hidden; }
 .lnb__en { margin-top: 6px; font-size: 0.875rem; letter-spacing: 0.12em; color: rgba(255, 255, 255, 0.6); }
 /* 메뉴 행: 60px · 왼쪽 28px · 17px · 아래 구분선, hover = 글자만 강조색(헤더 메뉴 hover 와 같은 파랑 — 검정 글자 옆에서 네이비는 잘 안 보여서) */
 .lnb__list > li { position: relative; border-bottom: 1px solid #eaeaea; }
-.lnb__list > li > a { position: relative; display: flex; align-items: center; min-height: 60px; padding: 10px 56px 10px 28px; background: #fff; font-size: 1.0625rem; line-height: 1.4; color: #333; word-break: keep-all; transition: color 0.2s; }
+.lnb__list > li > a { position: relative; display: flex; align-items: center; min-height: 60px; padding: 10px 28px; background: #fff; font-size: 1.0625rem; line-height: 1.4; color: #333; word-break: keep-all; transition: color 0.2s; }
 .lnb__list > li > a:hover { color: var(--color-accent); }
-/* 현재 페이지 행: 옅은 네이비 면 + 네이비 굵은 글자·화살표 + 왼쪽 4px 세로 막대(브랜드 그라데이션, 행 높이 꽉) — 네이비 타이틀 블록과 구분 */
+/* 현재 페이지 행: 옅은 네이비 면 + 네이비 굵은 글자 + 왼쪽 4px 세로 막대(브랜드 그라데이션, 행 높이 꽉) — 네이비 타이틀 블록과 구분 */
 .lnb__list > li > a[aria-current="page"] { background: var(--color-point-soft); color: var(--color-point); font-weight: 700; }
 .lnb__list > li > a[aria-current="page"]::before { content: ""; position: absolute; top: 0; bottom: 0; left: 0; width: 4px; background: var(--color-point-gradient-v); }
-/* 펼침 화살표(하위 항목이 있는 행만 — initLnb 가 넣음): ∨ 접힘 / ∧ 펼침 */
-.lnb__toggle { position: absolute; top: 0; right: 0; display: grid; place-items: center; width: 56px; height: 60px; color: #999; transition: color 0.2s; }
-.lnb__toggle svg { width: 16px; height: 16px; transition: transform 0.25s var(--ease); }
-.lnb__toggle[aria-expanded="true"] svg { transform: rotate(180deg); }
-.lnb__toggle:hover { color: var(--color-accent); }
-.lnb__list > li:has(> a[aria-current="page"]) > .lnb__toggle { color: var(--color-point); }
-/* 하위 항목(페이지 안 섹션): 옅은 회색 영역 · 점 목록 15px · 36px — 현재 페이지 행 아래는 행과 같은 옅은 네이비로 이어짐, 현재 섹션 = 네이비 굵게 + 앞 점 포인트 색 */
-.lnb__sub { padding: 12px 28px 14px; background: #f6f6f6; }
-.lnb__list > li:has(> a[aria-current="page"]) > .lnb__sub { background: var(--color-point-soft); }
-.lnb__sub a { display: flex; align-items: center; gap: 8px; min-height: 36px; font-size: 0.9375rem; line-height: 1.4; color: #666; word-break: keep-all; transition: color 0.2s; }
-.lnb__sub a::before { content: "•"; flex: none; }
-.lnb__sub a:hover { color: var(--color-accent); }
-.lnb__sub a.is-active { color: var(--color-point); font-weight: 700; }
-.lnb__sub a.is-active::before { color: var(--color-point); }
 /* 본문 맨 위: 경로(홈 아이콘 › 대메뉴 › 페이지) + 페이지 제목 + 얇은 구분선 — 경로 줄이 LNB 맨 위와 같은 높이 */
 .sub-head { margin-bottom: 56px; padding: 0 0 24px; border-bottom: 1px solid var(--color-line); }
 .sub-head .breadcrumb { justify-content: flex-start; align-items: center; margin: 0 0 10px; font-size: 0.875rem; color: #888; }
@@ -522,7 +508,7 @@ body.is-locked { overflow: hidden; }
 .breadcrumb__home svg { width: 16px; height: 16px; }
 .breadcrumb__home:hover, .sub-head .breadcrumb a:hover { color: var(--color-accent); }
 .sub-head__title { font-size: var(--fs-h1); font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; word-break: keep-all; }
-@media (min-width: 1025px) { html:has(body.has-lnb) { scroll-padding-top: calc(var(--header-h) + 32px); } } /* 하위 항목으로 이동할 때 헤더에 가리지 않게 */
+@media (min-width: 1025px) { html:has(body.has-lnb) { scroll-padding-top: calc(var(--header-h) + 32px); } } /* 페이지 안 바로가기(#)로 이동할 때 헤더에 가리지 않게 */
 .sub-body { container: sub / inline-size; }
 .sub-body .container { max-width: none; padding: 0; } /* 본문 안 섹션의 .container 는 폭·좌우 여백을 바깥 .sub-layout 에 맡긴다 */
 .sub-body .sub-content { padding: 0; min-height: 40vh; }
@@ -778,13 +764,13 @@ a.article-nav__item:hover .article-nav__title { color: var(--color-accent); }
    반응형
    ========================================================================== */
 @media (max-width: 1024px) {
-  /* 서브 LNB → 배너 바로 아래 가로 탭 줄 (각진 밑줄형 — 현재 페이지 = 네이비 굵게 + 3px 밑줄). 타이틀 블록·하위 항목 숨김 */
+  /* 서브 LNB → 배너 바로 아래 가로 탭 줄 (각진 밑줄형 — 현재 페이지 = 네이비 굵게 + 3px 밑줄). 타이틀 블록 숨김 */
   .has-lnb .sub-visual { min-height: calc(var(--header-h) + 260px); padding-bottom: 0; }
   .sub-layout { display: block; padding-top: 0; }
   .lnb { position: relative; top: auto; z-index: 5; margin: 0 calc(var(--gutter) * -1); padding: 0 var(--gutter); border-bottom: 1px solid var(--color-line); background: #fff; overflow-x: auto; scrollbar-width: none; }
   .lnb::-webkit-scrollbar { display: none; }
   .lnb__nav { background: none; box-shadow: none; }
-  .lnb__head, .lnb__toggle, .lnb__sub { display: none !important; }
+  .lnb__head { display: none; }
   .lnb__list { display: flex; gap: 28px; width: max-content; padding-right: var(--gutter); } /* 마지막 탭도 화면 끝에 붙지 않게 */
   .lnb__list > li { border-bottom: 0; }
   .lnb__list > li > a { min-height: 0; padding: 15px 0 12px; border-bottom: 3px solid transparent; background: none; font-size: var(--fs-sm); color: #666; white-space: nowrap; }
