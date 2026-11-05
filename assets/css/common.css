@@ -735,3 +735,10 @@ body.is-locked { overflow: hidden; }
 
 /* 어두운 배경 위 키보드 초점: 네이비 테두리가 묻히므로 흰색 (히어로·지점 바로가기 바·푸터·모바일 하단 바) */
 :is(.hero, .branch-bar, .footer, .bottom-bar) :focus-visible { outline-color: #fff; }
+
+/* ---------- 의료진 소개 (about/doctors.html — 이 페이지는 sub.css 를 읽지 않아 여기에) — 배경 사진(유리 원형 오브제) 불투명도 20% ----------
+   페이지가 길어 사진을 전체 높이로 늘리면 크게 확대돼 흐려지므로, 화면에 고정(position: fixed)해 뒤에 깔아 둔다
+   상단 제목 영역(.sub-visual)의 연베이지 배경은 이 페이지에서만 투명 — 사진이 위아래로 이어져 보이게. 푸터(어두운 배경)는 그 위를 덮는다 */
+/* main 에 position·isolation 을 주지 않는다 — 주면 배경 층이 푸터 위로 올라와 푸터가 뿌옇게 비친다. z-index:-1 = 페이지 맨 뒤(배경 있는 블록·푸터 아래) */
+.page-doctors::before { content: ""; position: fixed; inset: 0; z-index: -1; background: url("../images/doctors-page-bg.jpg") center / cover no-repeat; opacity: 0.2; pointer-events: none; }
+.page-doctors .sub-visual { background: transparent; }
