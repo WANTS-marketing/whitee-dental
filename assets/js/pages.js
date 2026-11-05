@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     faq: renderFaqList,
   }[page];
   run?.();
-  document.querySelectorAll('[data-inquiry-form]').forEach(initInquiryForm);
+  document.querySelectorAll('[data-inquiry-form]').forEach((f) => window.UI.inquiryForm(f)); // common.js
   document.querySelectorAll('[data-kakao-login]').forEach((btn) => btn.addEventListener('click', () => window.API.signInWithKakao()));
 });
 
@@ -326,57 +326,3 @@ async function renderFaqList() {
   }
 }
 
-/* ---------- 상담문의 폼 (상담문의하기 · 빠른상담 공용) ---------- */
-function initInquiryForm(form) {
-  const msg = form.querySelector('.form__msg');
-  const submitBtn = form.querySelector('[type="submit"]');
-  const setMsg = (text, type) => {
-    msg.textContent = text;
-    msg.className = `form__msg${type ? ` is-${type}` : ''}`;
-  };
-
-  // 연락처: 숫자만 받아 하이픈 자동 입력
-  const phone = form.elements.phone;
-  phone?.addEventListener('input', () => {
-    const d = phone.value.replace(/\D/g, '').slice(0, 11);
-    phone.value = d.length < 4 ? d : d.length < 8 ? `${d.slice(0, 3)}-${d.slice(3)}` : `${d.slice(0, 3)}-${d.slice(3, d.length - 4)}-${d.slice(-4)}`;
-  });
-
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const f = form.elements;
-
-    // 허니팟: 사람에게는 보이지 않는 칸 — 값이 있으면 봇으로 보고 조용히 종료
-    if (f.website.value) {
-      setMsg('상담 신청이 접수되었습니다.', 'success');
-      form.reset();
-      return;
-    }
-    if (!form.reportValidity()) return;
-    if (!/^01[016789]-?\d{3,4}-?\d{4}$/.test(f.phone.value)) {
-      setMsg('연락처를 정확히 입력해 주세요. (예: 010-1234-5678)', 'error');
-      f.phone.focus();
-      return;
-    }
-
-    submitBtn.disabled = true;
-    setMsg('전송 중입니다…');
-    try {
-      const result = await window.API.submitInquiry({
-        branch: f.branch.value,
-        treatment: f.treatment.value,
-        name: f.name.value.trim(),
-        phone: f.phone.value,
-        message: f.message?.value.trim(),
-        source: form.dataset.inquiryForm || '상담문의',
-      });
-      setMsg(result.message, result.ok ? 'success' : 'error');
-      if (result.ok) form.reset();
-    } catch (err) {
-      console.error(err);
-      setMsg('전송에 실패했습니다. 잠시 후 다시 시도하거나 전화로 문의해 주세요.', 'error');
-    } finally {
-      submitBtn.disabled = false;
-    }
-  });
-}

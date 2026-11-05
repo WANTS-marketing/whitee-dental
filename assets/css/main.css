@@ -443,9 +443,57 @@ html[data-fs="xl"] .doc-modal { width: min(680px, 100% - 48px); }
 
 /* ---------- ⑦ FAQ 미리보기 ---------- */
 .faq-preview { padding: 40px 0 var(--space-4xl); }
-.faq-preview__inner { display: grid; grid-template-columns: 380px minmax(0, 1fr); gap: 60px; align-items: center; }
-.faq-preview__title { font-size: var(--fs-h1); line-height: 1.45; letter-spacing: -0.02em; }
-.faq-preview__box { padding: 28px 52px; background: var(--color-bg-warm); }
+/* PC 3단: 타이틀 22 : FAQ 목록 46 : 빠른 질문 박스 28 (나머지 = 간격), 세 영역 세로 가운데
+   좌우 여백 = 진료안내·의료진과 같은 규칙(왼쪽 로고 시작선, 오른쪽 퀵메뉴 피함) — 아래 @media (min-width: 1025px) */
+.faq-preview__inner { display: grid; grid-template-columns: minmax(0, 22fr) minmax(0, 46fr) minmax(0, 28fr); gap: clamp(24px, 2vw, 40px); align-items: center; }
+.faq-preview__title { font-size: var(--fs-h1); line-height: 1.45; letter-spacing: -0.02em; word-break: keep-all; }
+/* 목록: 배경 없음(섹션과 같게), 행 사이 옅은 선 + 맨 위·맨 아래만 진한 선(#222) */
+.faq-preview__box { border-top: 1px solid #222; border-bottom: 1px solid #222; }
+.faq-preview__box .accordion__item:first-child { border-top: 0; }
+.faq-preview__box .accordion__item:last-child { border-bottom: 0; }
+/* 빠른 질문 박스: 흰 카드 */
+.faq-quick { padding: 32px; border-radius: 12px; background: #fff; box-shadow: 0 8px 28px rgba(0, 0, 0, 0.08); }
+.faq-quick__form { gap: 12px; }
+.faq-quick__form[hidden] { display: none; } /* 접수 완료 후 숨김 (.form 의 display: grid 보다 우선) */
+.faq-quick__title { font-size: var(--fs-h3); letter-spacing: -0.02em; }
+.faq-quick__desc { margin-top: -6px; font-size: var(--fs-xs); color: var(--color-text-sub); word-break: keep-all; }
+.faq-quick__branch { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 4px 0 0; padding: 0; border: 0; }
+.faq-quick__toggle { --tg: var(--color-changwon); position: relative; }
+.faq-quick__toggle--masan { --tg: var(--color-masan); }
+.faq-quick__toggle input { position: absolute; opacity: 0; }
+.faq-quick__toggle span { display: flex; align-items: center; justify-content: center; height: 42px; border: 1px solid var(--color-line); border-radius: var(--radius-pill); font-size: var(--fs-sm); font-weight: 600; color: #555; cursor: pointer; transition: background var(--dur), color var(--dur), border-color var(--dur); }
+.faq-quick__toggle:hover span { border-color: var(--tg); color: var(--tg); }
+.faq-quick__toggle input:checked + span { border-color: var(--tg); background: var(--tg); color: #fff; } /* 선택 = 지점 색 */
+.faq-quick__toggle input:focus-visible + span { outline: 2px solid var(--tg); outline-offset: 2px; }
+.faq-quick__row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.faq-quick .form__input { height: 44px; padding: 0 14px; font-size: var(--fs-sm); }
+.faq-quick__msg { position: relative; }
+.faq-quick .form__textarea { height: auto; min-height: 0; padding: 12px 14px 26px; font-size: var(--fs-sm); line-height: 1.5; resize: none; overscroll-behavior: contain; }
+.faq-quick__count { position: absolute; right: 12px; bottom: 8px; font-size: var(--fs-xxs); color: var(--color-text-muted); pointer-events: none; }
+.faq-quick__count b { font-weight: 600; }
+.faq-quick__agree { font-size: var(--fs-xs); }
+.faq-quick__agree a { margin-left: 2px; color: var(--color-text); }
+.faq-quick__submit { height: 48px; font-size: var(--fs-sm); font-weight: 700; }
+.faq-quick .form__msg { min-height: 0; margin-top: -4px; font-size: var(--fs-xs); }
+.faq-quick .form__msg:empty { display: none; }
+.faq-quick__tel { font-size: var(--fs-xxs); line-height: 1.6; color: var(--color-text-muted); word-break: keep-all; }
+.faq-quick__tel span { white-space: nowrap; } /* 지점 이름과 번호가 따로 줄바꿈되지 않게 */
+.faq-quick__tel a { font-weight: 600; color: var(--color-text-sub); }
+.faq-quick__tel a:hover { color: var(--color-point); text-decoration: underline; }
+/* 접수 완료 */
+.faq-quick__done { display: grid; justify-items: center; gap: 10px; padding: 24px 0; text-align: center; outline: none; }
+.faq-quick__done[hidden] { display: none; }
+.faq-quick__done svg { width: 52px; height: 52px; color: var(--color-point); }
+.faq-quick__done-title { font-size: var(--fs-h4); font-weight: 700; }
+.faq-quick__done-desc { margin-bottom: 8px; font-size: var(--fs-xs); color: var(--color-text-sub); }
+/* 낮은 화면: 박스 안쪽 여백·간격을 조금 줄여 한 화면에 */
+@media (min-width: 1025px) and (max-height: 820px) {
+  .faq-quick { padding: 24px 26px; }
+  .faq-quick__form { gap: 10px; }
+}
+@media (min-width: 1025px) {
+  .faq-preview .faq-preview__inner.container { max-width: none; padding-left: max(40px, (100% - 1600px) / 2); padding-right: max(var(--quick-edge), (100% - 1600px) / 2); }
+}
 
 /* ---------- ⑧ 치과소식 ---------- */
 /* ---------- ⑧ 치과소식(STORY) — 왼쪽 라벨·타이틀·카테고리 탭·VIEW MORE / 오른쪽 카드 캐러셀 (main.js initStory) ----------
@@ -610,7 +658,7 @@ html[data-fs="xl"] .doc-modal { width: min(680px, 100% - 48px); }
   .case-card__lock { font-size: 0.875rem; padding: 3px 8px; }
   .case-card__arrow { right: 10px; bottom: 10px; width: 18px; height: 18px; }
 
-  .faq-preview__box { padding: 12px 16px; margin: 0 calc(var(--gutter) * -1); }
+  .faq-quick { padding: 24px 20px; }
 
   /* 소식 카드 가로 스크롤 */
   /* 치과소식 모바일: 1.3장씩 손가락 스와이프, ‹ › 버튼 숨기고 진행 바만 */
@@ -874,6 +922,7 @@ html.is-fullpage .screen {
 }
 /* FAQ: 열린 답변이 길면 목록 칸 안에서만 스크롤 (끝에 닿은 뒤 한 번 더 휠하면 다음 섹션) */
 html.is-fullpage .faq-preview__box { max-height: calc(100vh - var(--header-h) - 48px); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; }
+html.is-fullpage .faq-quick { max-height: calc(100vh - var(--header-h) - 48px); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; } /* 글자 크게·낮은 화면에서 넘치면 박스 안에서만 스크롤 */
 /* 섹션 점: 오른쪽 플로팅 퀵메뉴 묶음 맨 위 (fullpage.js 가 .quick__sns 앞에 넣음) — 점 7개 → 얇은 구분선 → 인스타·블로그·상담문의·TOP
    흰 반투명 바탕이라 히어로(어두운 사진) 위에서도 잘 보인다. 지금 섹션 점은 포인트 컬러로 길게, 마우스를 올리면 왼쪽에 섹션 이름
    서브페이지·모바일·태블릿(풀스크린 넘김이 아닐 때)은 점 없이 버튼만 */

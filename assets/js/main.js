@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initDoctors();
   initCases();
   renderFaqPreview();
+  initQuickQuestion();
   initStory();
   initReveal();
   initQuickReveal();
@@ -612,6 +613,24 @@ function initCases() {
   });
 }
 
+/* ---------- ⑦ FAQ 빠른 질문 박스 ----------
+   전송·검증은 common.js UI.inquiryForm (상담문의와 같은 Web3Forms·허니팟·하이픈 자동). 질문 글자 수 표시, 성공하면 박스 안 '접수되었습니다'로 바꿈 */
+function initQuickQuestion() {
+  const box = document.querySelector('.faq-quick');
+  const form = box?.querySelector('form');
+  if (!form || !window.UI?.inquiryForm) return;
+  const done = box.querySelector('.faq-quick__done');
+  const count = form.querySelector('[data-fq-count]');
+  const msg = form.elements.message;
+  const sync = () => { count.textContent = msg.value.length; };
+  msg.addEventListener('input', sync);
+  form.addEventListener('input', sync);
+  window.UI.inquiryForm(form, {
+    onSuccess: () => { form.hidden = true; done.hidden = false; done.focus({ preventScroll: true }); },
+  });
+  box.querySelector('[data-fq-again]').addEventListener('click', () => { done.hidden = true; form.hidden = false; form.elements.branch[0].focus({ preventScroll: true }); });
+}
+
 /* ---------- ⑦ FAQ 미리보기 ---------- */
 async function renderFaqPreview() {
   const box = document.querySelector('[data-faq-preview]');
@@ -777,7 +796,7 @@ async function initStory() {
    의료진 섹션부터 적용. 섹션 타이틀은 fade-up, 카드 묶음은 자식이 0.08s 간격으로 순차 등장 (간격은 main.css). 움직임 줄이기 설정이면 끔 */
 function initReveal() {
   if (!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  const singles = '.doctors__head, .clinic__head, .cases__head, .faq-preview__head, .faq-preview__box, .story__head, .story__body';
+  const singles = '.doctors__head, .clinic__head, .cases__head, .faq-preview__head, .faq-preview__box, .faq-quick, .story__head, .story__body';
   const groups = '.clinic__grid, .cases__list'; // 치과소식 카드는 탭으로 다시 그려지므로 묶음(.story__body)째로 등장
   const targets = [
     // 의료진 인물 줄: 줄 전체가 아니라 사진·이름 하나하나 등장 (main.css .reveal-photos — 흰 배경 사진 multiply 가 끊기지 않게)

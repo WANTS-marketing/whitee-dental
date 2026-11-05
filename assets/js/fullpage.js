@@ -49,7 +49,9 @@
   // 넘김만 잠금: 첫 진입 히어로 펼침 중
   // (의료진 사진 위 hover 는 잠그지 않는다 — 사진이 섹션 대부분을 차지해 휠이 먹히지 않았음.
   //  약력이 길어 안에서 스크롤되는 경우(.bio-scroll)만 아래 innerScrollable 이 약력 끝까지 먼저 스크롤)
-  const holdOnly = () => document.body.classList.contains('is-intro');
+  // + 글자 입력 칸에 포커스가 있는 동안(FAQ 빠른 질문 등) — 입력 중 휠로 섹션이 넘어가지 않게. 칸 밖을 누르면 풀림
+  const typing = () => !!document.activeElement?.matches?.('input:not([type=checkbox]):not([type=radio]):not([type=button]):not([type=submit]), textarea, select');
+  const holdOnly = () => document.body.classList.contains('is-intro') || typing();
   const blocked = () => overlayOpen() || holdOnly();
 
   function scrollTo(y, instant) {

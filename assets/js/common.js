@@ -77,7 +77,67 @@
   }
   initRollText();
 
-  window.UI = { esc, telHref, img, bg, formatDate, branchBadge, accordion, faqItem, rollText };
+  /* ---------- 상담문의 폼 (상담문의하기 · 진료과목 빠른상담 · 메인 빠른 질문 공용) — 전송: api.js submitInquiry(Web3Forms) ----------
+     form[data-inquiry-form="구분"]: 메일 제목의 구분. 진료과목 칸이 없으면 data-treatment 값(예: FAQ 빠른 질문)
+     허니팟(name="website") · 연락처 숫자만 + 하이픈 자동 · 키가 없으면 '전화로 문의해 주세요' 안내
+     onSuccess(result): 접수 성공 시 (없으면 폼 아래 안내 문구 + 폼 비우기) */
+  function inquiryForm(form, { onSuccess } = {}) {
+    const msg = form.querySelector('.form__msg');
+    const submitBtn = form.querySelector('[type="submit"]');
+    const setMsg = (text, type) => {
+      msg.textContent = text;
+      msg.className = `form__msg${type ? ` is-${type}` : ''}`;
+    };
+
+    // 연락처: 숫자만 받아 하이픈 자동 입력
+    const phone = form.elements.phone;
+    phone?.addEventListener('input', () => {
+      const d = phone.value.replace(/\D/g, '').slice(0, 11);
+      phone.value = d.length < 4 ? d : d.length < 8 ? `${d.slice(0, 3)}-${d.slice(3)}` : `${d.slice(0, 3)}-${d.slice(3, d.length - 4)}-${d.slice(-4)}`;
+    });
+
+    const done = (result) => {
+      if (onSuccess) onSuccess(result);
+      else setMsg(result.message, 'success');
+      form.reset();
+      form.dispatchEvent(new Event('input')); // 글자 수 표시 등 초기화
+    };
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const f = form.elements;
+
+      // 허니팟: 사람에게는 보이지 않는 칸 — 값이 있으면 봇으로 보고 조용히 종료(성공처럼 보이게)
+      if (f.website?.value) { done({ ok: true, message: '접수되었습니다.' }); return; }
+      if (!form.reportValidity()) return;
+      if (!/^01[016789]-?\d{3,4}-?\d{4}$/.test(f.phone.value)) {
+        setMsg('연락처를 정확히 입력해 주세요. (예: 010-1234-5678)', 'error');
+        f.phone.focus();
+        return;
+      }
+
+      submitBtn.disabled = true;
+      setMsg('전송 중입니다…');
+      try {
+        const result = await window.API.submitInquiry({
+          branch: f.branch.value,
+          treatment: f.treatment?.value || form.dataset.treatment || '',
+          name: f.name.value.trim(),
+          phone: f.phone.value,
+          message: f.message?.value.trim(),
+          source: form.dataset.inquiryForm || '상담문의',
+        });
+        if (result.ok) { setMsg(''); done(result); } else setMsg(result.message, 'error');
+      } catch (err) {
+        console.error(err);
+        setMsg('전송에 실패했습니다. 잠시 후 다시 시도하거나 전화로 문의해 주세요.', 'error');
+      } finally {
+        submitBtn.disabled = false;
+      }
+    });
+  }
+
+  window.UI = { esc, telHref, img, bg, formatDate, branchBadge, accordion, faqItem, rollText, inquiryForm };
 
   /* ---------- 이미지 대체 ----------
      1) assets/images/파일명 이 없으면 → assets/images/temp/파일명 (임시 스톡 이미지)
