@@ -422,10 +422,10 @@ html[data-fs="xl"] .doc-modal { width: min(680px, 100% - 48px); }
 .clinic-card--implant .clinic-card__title { font-size: clamp(1.6875rem, 0.5625rem + 1.40625vw, 2.25rem); } /* 36 (= 40 × 0.9) */
 .clinic-card__sub { margin-right: calc(var(--cl-arrow) + 12px); font-size: clamp(0.875rem, 0.45rem + 0.421875vw, 0.95625rem); line-height: 1.5; color: var(--color-text-sub); word-break: keep-all; text-wrap: balance; } /* 15.3 (= 17 × 0.9, 최소 14px) — 오른쪽은 화살표 자리 */
 .clinic-card__sub > span { display: block; }
-.clinic-card__arrow { position: absolute; z-index: 2; right: var(--cl-pad); bottom: var(--cl-pad); display: grid; place-items: center; width: var(--cl-arrow); height: var(--cl-arrow); border: 1.5px solid var(--color-point); border-radius: 50%; color: var(--color-point); transition: background var(--dur), color var(--dur); } /* 흰 그라데이션 위 = 네이비 테두리·화살표 */
+.clinic-card__arrow { position: absolute; z-index: 2; right: var(--cl-pad); bottom: var(--cl-pad); display: grid; place-items: center; width: var(--cl-arrow); height: var(--cl-arrow); color: var(--color-point); transition: color var(--dur); } /* 원형 테두리 없이 화살표만 (네이비) */
 .clinic :focus-visible { outline-color: #fff; } /* 네이비 배경 위 키보드 초점 */
-.clinic-card__arrow svg { width: 32%; height: 32%; }
-.clinic-card:is(:hover, :focus-visible) .clinic-card__arrow { background: var(--color-point); color: #fff; }
+.clinic-card__arrow svg { width: 35.2%; height: 35.2%; } /* 32% × 1.1 */
+.clinic-card:is(:hover, :focus-visible) .clinic-card__arrow { color: var(--color-accent); } /* #194ebf */
 /* PC: 좌우 여백 = 의료진 섹션과 같은 규칙 (왼쪽 = 헤더 로고 시작선, 오른쪽 = 플로팅 퀵메뉴를 피하는 --quick-edge) */
 @media (min-width: 1025px) {
   .clinic .clinic__inner.container { max-width: none; padding-left: max(40px, (100% - 1600px) / 2); padding-right: max(var(--quick-edge), (100% - 1600px) / 2); }
