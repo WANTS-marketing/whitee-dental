@@ -124,7 +124,7 @@
 .slogan__text { max-width: 640px; margin: 20px auto 0; color: var(--color-text-sub); line-height: 1.8; word-break: keep-all; }
 .strength-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
 .strength { position: relative; padding: 40px 28px 32px; border-radius: var(--radius-lg); background: #fff; text-align: center; box-shadow: 0 6px 24px rgba(0, 0, 0, 0.05); }
-.strength__icon { display: grid; place-items: center; width: 64px; height: 64px; margin: 0 auto 18px; border-radius: 50%; background: var(--color-masan-bg); color: var(--color-point); }
+.strength__icon { display: grid; place-items: center; width: 64px; height: 64px; margin: 0 auto 18px; border-radius: 50%; background: var(--color-point-soft); color: var(--color-point); }
 .strength__icon svg { width: 30px; height: 30px; }
 .strength__title { font-size: var(--fs-h4); word-break: keep-all; }
 .strength__text { margin-top: 10px; font-size: var(--fs-sm); color: var(--color-text-sub); word-break: keep-all; }

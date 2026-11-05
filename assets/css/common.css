@@ -46,6 +46,8 @@ h1, h2, h3, h4, h5 { line-height: 1.3; font-weight: 700; }
 .btn svg { width: 14px; height: 14px; flex: none; }
 .btn--dark { background: var(--color-btn-dark); color: #fff; }
 .btn--dark:hover { background: #000; }
+.btn--point { background: var(--color-point); color: #fff; } /* 주요 버튼(폼 제출·퀵바 전체보기) */
+.btn--point:is(:hover, :focus-visible) { background: var(--color-point-hover); }
 .btn--white { background: #fff; color: var(--color-text); }
 .btn--white:hover { background: var(--color-text); color: #fff; }
 .btn--line { border: 1px solid var(--color-line); background: #fff; }
@@ -85,7 +87,7 @@ html[data-fs="xl"] { font-size: 125%; }
 .fs-ctrl { display: flex; align-items: center; gap: 2px; }
 .fs-ctrl__btn { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 6px; font-weight: 600; line-height: 1; color: var(--color-text-sub); transition: color 0.2s; }
 .fs-ctrl__btn:hover { color: var(--color-text); }
-.fs-ctrl__btn[aria-pressed="true"] { color: var(--color-point); }
+.fs-ctrl__btn[aria-pressed="true"] { color: var(--color-point); text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 5px; } /* 네이비 글자만으로는 옆 '가'와 구분이 약해 밑줄 */
 /* 선택된 단계는 배경 없이 포인트 컬러 글자로만 (다른 유틸 글자와 높이·톤을 맞춤) */
 .fs-ctrl__btn[aria-pressed="true"] { font-weight: 700; }
 /* 버튼 자체 글자는 단계와 상관없이 고정 크기 (작게·보통·크게 모양) */
@@ -234,7 +236,7 @@ body.is-locked { overflow: hidden; }
 .quick__sns { display: grid; gap: 8px; } /* 두 버튼 폭 = 더 긴 글자(인스타그램)에 맞춰 같게 */
 .quick__item { position: relative; }
 .quick__sns-btn {
-  --qb-shine: rgba(254, 109, 51, 0.12);
+  --qb-shine: rgba(var(--color-point-rgb), 0.1);
   position: relative; overflow: hidden;
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
   width: 100%; min-width: 76px; min-height: 76px; padding: 10px 8px;
@@ -280,6 +282,7 @@ body.is-locked { overflow: hidden; }
 /* 상담문의 → faq/contact.html (포인트 컬러로 강조) · TOP(맨 위로) — 칩 없이 바로 동작, hover 때 링·빛 지나가기 */
 .quick__sns-btn--consult { --qb-shine: rgba(255, 255, 255, 0.25); border-color: var(--color-point); background: var(--color-point); color: #fff; }
 .quick__sns-btn--consult:focus-visible { outline-color: var(--color-point); }
+.quick__sns-btn--consult:hover { border-color: var(--color-point-hover); background: var(--color-point-hover); }
 @media (hover: hover) {
   .quick__item:not([data-quick-item]) .quick__sns-btn:hover::after { transform: translateX(-140px) rotate(12deg); }
   .quick__item:not([data-quick-item]) .quick__sns-btn:hover svg { transform: scale(1.1); }
@@ -437,7 +440,7 @@ body.is-locked { overflow: hidden; }
 .breadcrumb [aria-current] { color: var(--color-text); }
 .sub-tabs { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin-top: 28px; }
 .sub-tabs a { padding: 8px 18px; border: 1px solid var(--color-line); border-radius: var(--radius-pill); font-size: var(--fs-sm); background: #fff; }
-.sub-tabs a.is-current { background: var(--color-btn-dark); border-color: var(--color-btn-dark); color: #fff; }
+.sub-tabs a.is-current { background: var(--color-point); border-color: var(--color-point); color: #fff; }
 .sub-content { padding: var(--space-4xl) 0; min-height: 40vh; }
 .preparing { padding: 80px 24px; border: 1px dashed var(--color-line); border-radius: var(--radius-lg); text-align: center; color: var(--color-text-sub); }
 .preparing strong { display: block; margin-bottom: 8px; font-size: var(--fs-h4); color: var(--color-text); }
@@ -487,7 +490,7 @@ body.is-locked { overflow: hidden; }
 .form__radio { position: relative; }
 .form__radio input { position: absolute; opacity: 0; }
 .form__radio span { display: inline-flex; align-items: center; height: 44px; padding: 0 18px; border: 1px solid var(--color-line); border-radius: var(--radius-pill); font-size: var(--fs-sm); cursor: pointer; }
-.form__radio input:checked + span { background: var(--color-btn-dark); border-color: var(--color-btn-dark); color: #fff; }
+.form__radio input:checked + span { background: var(--color-point); border-color: var(--color-point); color: #fff; }
 .form__radio input:focus-visible + span { outline: 2px solid var(--color-point); outline-offset: 2px; }
 .form__agree { position: relative; display: block; padding-left: 28px; font-size: var(--fs-sm); color: var(--color-text-sub); }
 .form__agree input { position: absolute; top: 2px; left: 0; width: 18px; height: 18px; accent-color: var(--color-point); }
@@ -577,8 +580,8 @@ body.is-locked { overflow: hidden; }
 .faq-board__cta { grid-column: 2; display: flex; flex-direction: column; align-items: center; gap: 16px; margin-top: 56px; text-align: center; }
 .faq-cats { grid-row: span 2; } /* 카테고리 메뉴가 길어도 목록 ↔ 안내 간격은 그대로 */
 .faq-board__cta-text { font-size: 1rem; color: #444; word-break: keep-all; }
-.faq-board__contact { height: 48px; padding: 0 24px; background: var(--color-point); color: #fff; font-size: var(--fs-sm); font-weight: 600; transition: filter var(--dur); }
-.faq-board__contact:hover { filter: brightness(0.94); }
+.faq-board__contact { height: 48px; padding: 0 24px; background: var(--color-point); color: #fff; font-size: var(--fs-sm); font-weight: 600; transition: background var(--dur); }
+.faq-board__contact:hover { background: var(--color-point-hover); }
 .faq-board__top { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; margin-bottom: 40px; }
 .faq-board__title { font-size: 2rem; font-weight: 700; letter-spacing: -0.01em; }
 .faq-search { position: relative; width: 300px; }
@@ -591,9 +594,9 @@ body.is-locked { overflow: hidden; }
 
 /* 왼쪽 카테고리: 세로 텍스트 목록, 선택 = 검정 굵게 */
 .faq-cats__list { display: flex; flex-direction: column; gap: 4px; }
-.faq-cats__btn { padding: 6px 0; font-size: var(--fs-md); color: #666; text-align: left; transition: color 0.2s, background-color 0.2s, border-color 0.2s; }
+.faq-cats__btn { margin-left: -12px; padding: 6px 12px; border-radius: var(--radius-sm, 6px); font-size: var(--fs-md); color: #666; text-align: left; transition: color 0.2s, background-color 0.2s, border-color 0.2s; }
 .faq-cats__btn:hover { color: #333; }
-.faq-cats__btn[aria-pressed="true"] { color: var(--color-point); font-weight: 700; } /* 선택 = 포인트 컬러 굵게 */
+.faq-cats__btn[aria-pressed="true"] { background: var(--color-point-soft); color: var(--color-point); font-weight: 700; } /* 선택 = 옅은 네이비 면 + 네이비 굵게 (네이비 글자만으로는 검정 글자와 구분이 약해서) */
 
 /* 질문 행: Q | 카테고리(고정 너비) | 질문 | 화살표 — 행 높이 약 70px, 얇은 회색 구분선 */
 .faq-list { border-top: 1px solid #e5e5e5; }
@@ -625,7 +628,7 @@ body.is-locked { overflow: hidden; }
   .faq-cats { grid-row: auto; margin: 0 calc(var(--gutter) * -1); padding: 0 var(--gutter); overflow-x: auto; scrollbar-width: none; }
   .faq-cats::-webkit-scrollbar { display: none; }
   .faq-cats__list { flex-direction: row; gap: 8px; width: max-content; }
-  .faq-cats__btn { padding: 8px 16px; border: 1px solid #ddd; border-radius: var(--radius-pill); background: #fff; font-size: var(--fs-sm); color: #666; white-space: nowrap; }
+  .faq-cats__btn { margin-left: 0; padding: 8px 16px; border: 1px solid #ddd; border-radius: var(--radius-pill); background: #fff; font-size: var(--fs-sm); color: #666; white-space: nowrap; }
   .faq-cats__btn:hover { color: #333; }
   .faq-cats__btn[aria-pressed="true"] { border-color: var(--color-point); background: var(--color-point); color: #fff; }
   .gnb, .util, .mega, .mega-dim { display: none; }
@@ -681,7 +684,7 @@ body.is-locked { overflow: hidden; }
   .quick__blog-ico, .quick--float .quick__blog-ico { height: 19px; }
   .quick__insta-ico { width: 20px; height: 20px; }
 
-  .bottom-bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: var(--z-bottom-bar); display: grid; grid-template-columns: repeat(3, 1fr); height: calc(var(--bottom-bar-h) + env(safe-area-inset-bottom)); padding-bottom: env(safe-area-inset-bottom); background: var(--color-btn-dark); color: #fff; }
+  .bottom-bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: var(--z-bottom-bar); display: grid; grid-template-columns: repeat(3, 1fr); height: calc(var(--bottom-bar-h) + env(safe-area-inset-bottom)); padding-bottom: env(safe-area-inset-bottom); background: var(--color-point); color: #fff; } /* 강조 = 포인트 컬러(네이비) */
   .bottom-bar a, .bottom-bar button { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: var(--fs-xxs); }
   .bottom-bar > * + * { border-left: 1px solid rgba(255, 255, 255, 0.12); }
   .bottom-bar svg { width: 20px; height: 20px; }
@@ -728,4 +731,7 @@ body.is-locked { overflow: hidden; }
 
 /* 메인 치과소식 카드로 들어온 글(#notice-nt7, #news-n6 등) 잠깐 강조 (pages.js scrollToHashItem) */
 .is-target { animation: target-flash 2s ease-out; }
-@keyframes target-flash { 0%, 30% { background-color: rgba(254, 109, 51, 0.12); } 100% { background-color: transparent; } }
+@keyframes target-flash { 0%, 30% { background-color: var(--color-point-soft); } 100% { background-color: transparent; } }
+
+/* 어두운 배경 위 키보드 초점: 네이비 테두리가 묻히므로 흰색 (히어로·지점 바로가기 바·푸터·모바일 하단 바) */
+:is(.hero, .branch-bar, .footer, .bottom-bar) :focus-visible { outline-color: #fff; }
