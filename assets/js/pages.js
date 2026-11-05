@@ -300,9 +300,11 @@ async function renderNewsList() {
       pagerEl.innerHTML = h;
     }
     if (animate) { fadeIn(list); fadeIn(pagerEl); } // 분류·페이지를 바꿀 때 카드가 서서히
+    // 페이지 번호(목록 아래)를 눌렀을 때만, 목록 위쪽이 화면 위로 지나가 있으면 목록 처음으로 올린다.
+    // 분류 칩은 이미 보이는 곳에서 누르므로 스크롤을 건드리지 않음 (예전엔 칩을 눌러도 목록 쪽으로 당겨졌음)
     if (focusList) {
       const top = document.querySelector('.sub-body');
-      top?.scrollIntoView({ behavior: 'instant', block: 'start' });
+      if (top && top.getBoundingClientRect().top < 0) top.scrollIntoView({ behavior: 'instant', block: 'start' });
     }
   }
 
@@ -312,7 +314,7 @@ async function renderNewsList() {
     if (!a || e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return;
     e.preventDefault();
     history.pushState(null, '', a.getAttribute('href'));
-    draw({ focusList: true, animate: true });
+    draw({ focusList: a.hasAttribute('data-page'), animate: true });
   };
   catsEl.addEventListener('click', go);
   pagerEl.addEventListener('click', go);

@@ -33,12 +33,8 @@
   <main id="main" class="page-doctors"><!-- 배경: assets/images/doctors-page-bg.jpg 불투명도 50% (common.css .page-doctors) -->
     <section class="sub-visual sub-visual--image">
       <div class="container">
-        <h1 class="sub-visual__title">의료진 소개</h1>
-        <ol class="breadcrumb" aria-label="현재 위치">
-          <li><a href="../index.html">홈</a></li>
-          <li>화이트e치과</li>
-          <li aria-current="page">의료진 소개</li>
-        </ol>
+        <p class="sub-visual__label">ABOUT</p>
+        <p class="sub-visual__slogan">since 2003 · 20년 이상 전통의 브랜드치과</p>
       </div>
     </section>
 
@@ -46,7 +42,7 @@
     <div class="sub-layout container">
       <aside class="lnb">
         <nav class="lnb__nav" aria-label="화이트e치과 하위 메뉴">
-          <p class="lnb__title">화이트e치과</p>
+          <div class="lnb__head"><p class="lnb__title">화이트e치과</p><p class="lnb__en">ABOUT</p></div>
           <ul class="lnb__list">
             <li><a href="intro.html">치과소개</a></li>
             <li><a href="doctors.html" aria-current="page">의료진 소개</a></li>
@@ -55,6 +51,14 @@
         </nav>
       </aside>
       <div class="sub-body">
+        <div class="sub-head">
+          <ol class="breadcrumb" aria-label="현재 위치">
+            <li><a class="breadcrumb__home" href="../index.html" aria-label="홈"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5.5 9v11h13V9"/></svg></a></li>
+            <li>화이트e치과</li>
+            <li aria-current="page">의료진 소개</li>
+          </ol>
+          <h1 class="sub-head__title">의료진 소개</h1>
+        </div>
 
     <section class="sub-content">
       <div class="container">
