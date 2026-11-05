@@ -137,7 +137,7 @@ window.SITE = {
       ],
     },
     {
-      name: '조용정', title: '원장', dept: '치과보철과', branches: ['masan'], photo: 'doctor-cho-yongjeong.jpg',
+      name: '조용정', title: '원장', dept: '치과보철과', branches: ['masan'], photo: 'doctor-cho-yongjeong.jpg', photoScale: 1.16, photoOffsetY: 16.5, photoOffsetX: 3, photoBlend: true, photoBacker: true,
       career: [
         '보건복지부 인증 치과보철과 전문의', '서울대학교 치과대학 졸업', '강남성모병원 인턴, 치과보철과 레지던트 수료',
         '대한치과보철학회 인정의·정회원', '국군수도병원 보철과장 역임', '전) 서울에스바른치과 대표원장',
