@@ -38,7 +38,7 @@ function renderDoctorsPage() {
       <div class="doctor-profiles">
         ${window.SITE.getDoctorsByBranch(b.id).map((d) => `
           <article class="doctor-profile" id="${b.id}-${window.SITE.doctorSlug(d)}">
-            <div class="doctor-profile__photo img-ph"><img src="${img(d.photo)}" alt="${esc(d.name)} ${esc(d.title)} 사진" loading="lazy"></div>
+            <div class="doctor-profile__photo img-ph"><img class="doctor-profile__img${d.photoBlend === false ? '' : ' is-blend'}" src="${img(String(d.photo || '').replace(/\.[a-z]+$/i, '-cut.png'))}" alt="${esc(d.name)} ${esc(d.title)} 사진" loading="lazy" style="--ps:${Number(d.photoScale) || 1};--py:${Number(d.photoOffsetY) || 0};--px:${Number(d.photoOffsetX) || 0}"></div>
             <div class="doctor-profile__body">
               <p class="doctor-profile__tag">${branchBadge(d.branches.length > 1 ? 'both' : d.branches[0])}<span class="doctor-profile__dept">${esc(d.dept)}</span></p>
               <h3 class="doctor-profile__name">${esc(d.name)} <small>${esc(d.title)}</small></h3>

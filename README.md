@@ -67,7 +67,7 @@ docs/                      배포·인수인계 문서
 | FAQ·공지 (1차) | `assets/data/*.json` |
 | 치과소식 글 | `scripts/import/build-story.js` 로 생성 (분류 규칙·본문 정리도 여기) — 새 글은 2차 Supabase 게시판에서 |
 | 메인 첫 방문 이용 안내(코치마크) 문구·단계 | `assets/js/onboarding.js` 의 `STEPS` (스타일: `main.css` 끝 '이용 안내') |
-| 메인 의료진 사진 크기·위치 맞추기 | `assets/js/site-data.js` 의 각 원장 `photoScale` · `photoOffsetY` · `photoOffsetX` (아래 '의료진 사진 보정') |
+| 의료진 사진 크기·위치 맞추기 (메인 의료진 + 의료진 소개 박스 공통) | `assets/js/site-data.js` 의 각 원장 `photoScale` · `photoOffsetY` · `photoOffsetX` (아래 '의료진 사진 보정') |
 
 ### 의료진 사진 보정 (메인 의료진 섹션)
 
