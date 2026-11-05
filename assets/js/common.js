@@ -198,8 +198,10 @@
   function initHeader() {
     const header = document.getElementById('header');
     if (!header) return;
-    // 메인: 최상단에서는 히어로 위 투명 헤더(main.css '투명 헤더'), 40px 이상 스크롤하면 흰 헤더 / 서브: 10px 부터 그림자만 진하게
-    const limit = document.body.classList.contains('is-main') ? 40 : 10;
+    // 메인·배너 있는 서브(has-lnb): 최상단에서는 배너 위 투명 헤더(main.css '투명 헤더' · common.css '서브 투명 헤더'), 40px 이상 스크롤하면 흰 헤더
+    // 그 밖의 서브(FAQ·상담·회원 등): 처음부터 흰 헤더, 10px 부터 그림자만 진하게
+    const transparent = document.body.classList.contains('is-main') || document.body.classList.contains('has-lnb');
+    const limit = transparent ? 40 : 10;
     const onScroll = () => header.classList.toggle('is-scrolled', window.scrollY > limit);
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });

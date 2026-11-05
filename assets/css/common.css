@@ -458,7 +458,28 @@ body.is-locked { overflow: hidden; }
    배너(.sub-visual)에는 라벨·타이틀·경로만, 하위 메뉴는 본문 왼쪽 세로 메뉴. 모양은 FAQ 왼쪽 카테고리(.faq-cats)와 같은 규칙
    [LNB 220px | 64px | 본문] — LNB 는 스크롤해도 헤더 아래 32px 에 따라온다(sticky). 1024px 이하 = 본문 위 가로 스크롤 칩, 768px 이하 = 칩 줄이 헤더 아래 고정
    본문(.sub-body)은 컨테이너 쿼리 기준(sub) — LNB 만큼 좁아진 실제 폭으로 열 수를 줄인다(sub.css · 아래 '좁은 본문') */
-.has-lnb .sub-visual { display: flex; flex-direction: column; justify-content: center; min-height: calc(var(--header-h) + 320px); padding: var(--header-h) 0 0; } /* 탭이 빠진 만큼 배너 낮춤: 헤더 아래 보이는 높이 320px, 글은 세로 가운데 */
+.has-lnb .sub-visual { display: flex; flex-direction: column; justify-content: center; min-height: 400px; padding: var(--header-h) 0 0; } /* 배너는 화면 맨 위(투명 헤더 뒤)부터 — 헤더 포함 400px, 글은 헤더 아래 공간의 세로 가운데 */
+
+/* ---------- 서브 투명 헤더 (배너가 있는 서브페이지 = body.has-lnb) ----------
+   페이지 최상단: 헤더 배경 투명·구분선·그림자 없음, 배너가 헤더 뒤로 이어진다
+     - 사진 배너(.sub-visual--image): 흰 글자·화살표·유틸·흰 로고 + 배너 위쪽 140px 어두운 그라데이션(메뉴 가독성)
+     - 밝은 배너(의료진 소개·커뮤니티): 배경만 투명, 글자·로고는 그대로(흰 글자는 밝은 배경에서 안 보여서)
+   흰 헤더(흰 배경·어두운 글자·컬러 로고·옅은 그림자, 0.3s)로 바뀌는 경우: 40px 이상 스크롤(.is-scrolled), 마우스(.is-hover),
+     메가메뉴 열림(.is-mega)·닫히는 중(.is-closing), 헤더 안 키보드 포커스, 모바일 메뉴 열림(.is-mnav) — common.js
+   배너 없는 서브페이지(FAQ·상담문의·로그인·회원가입·비급여·개인정보)는 has-lnb 가 없어 처음부터 흰 헤더. 메인 투명 헤더는 main.css */
+.has-lnb .header { transition: background-color 0.3s, box-shadow 0.3s, color 0.3s; }
+.has-lnb .header :is(.logo__img, .gnb__link, .gnb__link svg, .util a, .fs-ctrl__btn, .hamburger) { transition: color 0.3s, filter 0.3s, background-color 0.3s; }
+.has-lnb .header.is-scrolled, .has-lnb .header.is-hover:not(.is-mega):not(.is-closing), .has-lnb .header:has(:focus-visible):not(.is-mega):not(.is-closing) { box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08); } /* 흰 헤더 = 구분선 대신 옅은 그림자 */
+.has-lnb .header:not(.is-scrolled):not(.is-mega):not(.is-closing):not(.is-mnav):not(.is-hover):not(:has(:focus-visible)) { background-color: transparent; box-shadow: none; }
+.has-lnb:has(.sub-visual--image) .header:not(.is-scrolled):not(.is-mega):not(.is-closing):not(.is-mnav):not(.is-hover):not(:has(:focus-visible)) { color: #fff; }
+.has-lnb:has(.sub-visual--image) .header:not(.is-scrolled):not(.is-mega):not(.is-closing):not(.is-mnav):not(.is-hover):not(:has(:focus-visible)) .logo__img { filter: brightness(0) invert(1); }
+.has-lnb:has(.sub-visual--image) .header:not(.is-scrolled):not(.is-mega):not(.is-closing):not(.is-mnav):not(.is-hover):not(:has(:focus-visible)) :is(.gnb__link, .gnb__link svg, .util a, .fs-ctrl__btn, .hamburger) { color: #fff; }
+/* 어두운 배경 위에서는 네이비·파랑이 묻히므로 선택된 '가'·현재 대메뉴 = 흰색 + 밑줄 (메인 투명 헤더와 같은 규칙) */
+.has-lnb:has(.sub-visual--image) .header:not(.is-scrolled):not(.is-mega):not(.is-closing):not(.is-mnav):not(.is-hover):not(:has(:focus-visible)) :is(.fs-ctrl__btn[aria-pressed="true"], .gnb__link.is-current) { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 5px; }
+.has-lnb:has(.sub-visual--image) .header:not(.is-scrolled):not(.is-mega):not(.is-closing):not(.is-mnav):not(.is-hover):not(:has(:focus-visible)) .util__group--b a + a::before { background: rgba(255, 255, 255, 0.55); }
+/* 배너 위쪽 140px 어두운 그라데이션 — 배경 사진(.sub-visual__bg) 위, 글(.container) 아래 */
+.has-lnb .sub-visual--image::before { content: ""; position: absolute; z-index: 1; top: 0; left: 0; right: 0; height: 140px; background: linear-gradient(180deg, rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0)); pointer-events: none; }
+.has-lnb .sub-visual--image .container { z-index: 2; }
 .sub-layout { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 0 64px; align-items: start; padding-top: 80px; padding-bottom: var(--space-4xl); }
 .lnb { position: sticky; top: calc(var(--header-h) + 32px); }
 .lnb__title { margin-bottom: 16px; padding-bottom: 18px; border-bottom: 1px solid var(--color-line); font-size: 1.5rem; font-weight: 700; line-height: 1.3; word-break: keep-all; }
