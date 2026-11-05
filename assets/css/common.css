@@ -31,7 +31,9 @@ h1, h2, h3, h4, h5 { line-height: 1.3; font-weight: 700; }
 .sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 .skip-link { position: absolute; top: -100px; left: 16px; z-index: 999; padding: 8px 16px; background: var(--color-text); color: #fff; border-radius: var(--radius-sm); }
 .skip-link:focus { top: 16px; }
-.text-point { color: var(--color-accent); } /* 밝은 배경 위 타이틀 강조 글자 (히어로 위는 main.css 에서 그라데이션) */
+/* 타이틀 강조 글자 = 지점 그라데이션 글자(브랜드 강조). 얇으면 안 보여 700 이상, 줄이 바뀌면 줄마다 그라데이션 */
+.text-point { font-weight: 700; background: var(--color-point-gradient); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+.sec--dark .text-point { background: none; color: #fff; -webkit-text-fill-color: currentColor; } /* 어두운 배경 위 = 흰색 (히어로는 main.css 에서 그라데이션 그대로) */
 .text-changwon { color: var(--color-changwon); }
 .text-masan { color: var(--color-masan); }
 .only-mobile { display: none !important; }
@@ -134,7 +136,7 @@ html[data-fs="xl"] .gnb { --gnb-gap: clamp(20px, 12vw - 140px, 96px); }
 .gnb__item { position: relative; display: flex; align-items: center; }
 /* 대메뉴: 글자만 기준으로 가운데 — 화살표는 글자 오른쪽 6px 에 absolute 로 붙여 중심 계산에서 뺀다 → 하위 메뉴 열 중심 = 글자 중심 */
 .gnb__link { position: relative; display: inline-flex; align-items: center; font-size: var(--fs-lg); font-weight: 600; transition: color var(--dur); }
-.gnb__link svg { position: absolute; top: 50%; left: calc(100% + 6px); width: 14px; height: 14px; margin-top: -7px; color: var(--color-accent); transition: transform var(--dur); }
+.gnb__link svg { position: absolute; top: 50%; left: calc(100% + 6px); width: 14px; height: 14px; margin-top: -7px; color: var(--color-point); transition: transform var(--dur); } /* 흰 헤더 = 네이비 (투명 헤더 위는 아래 규칙으로 흰색) */
 .gnb__link.is-current { color: var(--color-accent); }
 
 .gnb__sub {
@@ -555,7 +557,7 @@ html.is-lnb-hold body { min-height: calc(100vh + 2000px); }
 .news-card__thumb { display: block; aspect-ratio: 1; border-radius: var(--radius-sm); }
 .news-card__thumb img { transition: transform 0.6s var(--ease); }
 .news-card a:is(:hover, :focus-visible) .news-card__thumb img { transform: scale(1.04); }
-.news-card__cat { display: block; margin-top: 16px; font-size: var(--fs-xs); font-weight: 600; color: var(--color-accent); }
+.news-card__cat { display: block; margin-top: 16px; font-size: var(--fs-xs); font-weight: 600; color: var(--color-point); }
 .news-card__title { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; margin-top: 4px; font-size: 1.125rem; line-height: 1.45; word-break: keep-all; transition: color var(--dur); }
 .news-card a:is(:hover, :focus-visible) .news-card__title { color: var(--color-accent); }
 .news-card__sum { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; margin-top: 8px; font-size: var(--fs-sm); line-height: 1.6; color: var(--color-text-sub); word-break: keep-all; }
@@ -571,7 +573,7 @@ html.is-lnb-hold body { min-height: calc(100vh + 2000px); }
 .pager__arrow svg { width: 18px; height: 18px; }
 /* 상세: 제목 영역 가운데 · 본문은 원래 글처럼 가운데 정렬(줄을 나눠 쓴 글이라) · 폭 760px */
 .article__head { padding-bottom: 32px; border-bottom: 1px solid var(--color-line); text-align: center; }
-.article__cat { display: inline-block; font-size: var(--fs-sm); font-weight: 600; color: var(--color-accent); }
+.article__cat { display: inline-block; font-size: var(--fs-sm); font-weight: 600; color: var(--color-point); }
 .article__cat:hover { text-decoration: underline; text-underline-offset: 3px; }
 .article__title { margin-top: 8px; font-size: var(--fs-h2); line-height: 1.4; letter-spacing: -0.02em; word-break: keep-all; }
 .article__meta { margin-top: 12px; font-size: var(--fs-sm); color: var(--color-text-muted); }
