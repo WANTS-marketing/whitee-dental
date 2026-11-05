@@ -36,7 +36,7 @@
 | `news-dummy-01~04.jpg` | 치과소식 더미 썸네일 (실데이터 연결 시 삭제) | 750×870 |
 | `branch-bar-bg.jpg` | 하단 지점 바로가기 배경 (데스크 전경) | 1920×640 |
 | `visual-intro.jpg`, `visual-implant.jpg`, `visual-orthodontics.jpg`, `visual-general.jpg`, `visual-wisdom-scaling.jpg`, `visual-aesthetic.jpg` | 서브페이지 상단 비주얼 | 1920×700 |
-| `tour-changwon-01~06.jpg`, `tour-masan-01~06.jpg` | 병원소개(about/clinic.html) ②내부 둘러보기 갤러리 (개수·캡션은 `assets/js/site-data.js` 의 `tour`). **실제 사진 적용(2026-11-05, 긴 변 최대 2000px)** — 창원점 5장(01~05), 마산점 6장 | 1400×1050 (4:3) 이상 |
+| `tour-changwon-01~06.jpg`, `tour-masan-01~06.jpg` | 병원소개(about/clinic.html) ②내부 둘러보기 갤러리 (개수·캡션은 `assets/js/site-data.js` 의 `tour`). **실제 사진 적용(2026-11-05, 긴 변 최대 2000px)** — 창원점·마산점 각 6장 | 1400×1050 (4:3) 이상 |
 | `icons/quick-implant.png`, `quick-orthodontics.png`, `quick-general.png`, `quick-wisdom-scaling.png`, `quick-aesthetic.png` | 홈 퀵바(빠른 진료 안내) 아이콘 — 투명 PNG. 바꿀 때 index.html 의 width·height·`--h`(원본 높이)도 함께 수정 | 원본 크기 그대로(현재 1배) · 2배 크기 또는 SVG 권장 |
 | `icons/naver-blog.png` | 퀵메뉴(오른쪽 플로팅 블로그 버튼·모바일 + 메뉴) 블로그 아이콘 — 네이버 블로그 말풍선, 투명 PNG 129×120 (제공 원본 "네이버 AI-06.png" 여백 잘라 축소). 표시 높이 19~24px | 바꿀 때 components/quick.html 의 width·height 도 함께 수정 |
 | `icons/instagram.png` | 퀵메뉴(오른쪽 플로팅 인스타그램 버튼·모바일 + 메뉴) 인스타그램 로고 — 공식 그라데이션 로고, 투명 PNG 96×96 (제공 원본 "img.png" 여백 잘라 축소). 표시 20~26px | 바꿀 때 components/quick.html 의 width·height 도 함께 수정 |
