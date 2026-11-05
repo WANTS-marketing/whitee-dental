@@ -150,6 +150,8 @@
 .gallery__item:hover img { transform: scale(1.05); }
 .gallery__cap { position: absolute; left: 0; right: 0; bottom: 0; padding: 28px 16px 12px; background: linear-gradient(0deg, rgba(0, 0, 0, 0.55), transparent); color: #fff; font-size: var(--fs-sm); text-align: left; }
 .gallery__item:first-child { grid-column: span 2; grid-row: span 2; aspect-ratio: auto; }
+.gallery__item:nth-child(5):last-child { grid-column: span 2; aspect-ratio: auto; } /* 사진이 5장(창원점)이면 마지막 줄 빈칸 없이 마지막 장을 두 칸으로 — 높이는 옆 칸(4:3)에 맞춤 */
+.gallery__item:nth-child(5):last-child img { position: absolute; inset: 0; }
 
 .lightbox { position: fixed; inset: 0; z-index: 200; display: none; align-items: center; justify-content: center; padding: 60px 80px; background: rgba(0, 0, 0, 0.92); }
 .lightbox.is-open { display: flex; }
@@ -275,6 +277,7 @@
   .table-hint { display: block; }
   .gallery { grid-template-columns: repeat(2, 1fr); gap: 8px; }
   .gallery__item:first-child { grid-column: span 2; grid-row: auto; aspect-ratio: 4 / 3; }
+  .gallery__item:nth-child(5):last-child { grid-column: auto; aspect-ratio: 4 / 3; } /* 모바일 2열: 큰 1장 + 2·2 로 딱 맞음 */
   .gallery__cap { padding: 20px 10px 8px; font-size: var(--fs-xs); }
   .branch-tabs button { flex: 1; min-width: 0; }
   .lightbox { padding: 56px 8px; }
