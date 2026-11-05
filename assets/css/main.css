@@ -445,7 +445,7 @@ html[data-fs="xl"] .doc-modal { width: min(680px, 100% - 48px); }
 .case-card:hover .case-card__arrow { transform: translate(3px, 3px); }
 
 /* ---------- ⑦ FAQ 미리보기 ---------- */
-.faq-preview { padding: 40px 0 var(--space-4xl); }
+.faq-preview { padding: 40px 0 var(--space-4xl); background: #f7faff; } /* 아주 옅은 파랑 — 상담 박스는 흰색 그대로 */
 /* PC 3단: [타이틀 = 글자 폭만큼] [FAQ 목록 = 남는 폭 전부] [빠른 질문 박스 320~440px], 세 영역 세로 가운데
    두 간격은 같은 값(1920 기준 80px, 좁아지면 48px까지). 묶음 전체는 좌우 여백 규칙(왼쪽 로고 시작선, 오른쪽 퀵메뉴 앞) 안에 꽉 차게 — 아래 @media (min-width: 1025px) */
 .faq-preview__inner { display: grid; grid-template-columns: auto minmax(0, 1fr) clamp(320px, 23vw, 440px); column-gap: clamp(48px, 4.1667vw, 80px); align-items: center; }
