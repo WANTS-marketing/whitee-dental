@@ -57,15 +57,16 @@ window.SITE = {
     },
   ],
 
-  /* 병원소개(about/clinic.html) 내부 둘러보기 — TODO: 실제 원내 사진·공간별 캡션 받으면 교체 (지금은 temp/ 임시 이미지) */
+  /* 병원소개(about/clinic.html) 내부 둘러보기 — 파일은 assets/images/tour-{지점}-NN.jpg, 순서 = 갤러리 순서 (사진 5장이면 PC 에서 마지막 장이 두 칸) */
   tour: {
-    // 창원점: 실제 원내 사진 (자료/서브/병원소개-창원, 파일 이름 = 공간) — 5장이라 PC 에서는 마지막 장이 두 칸 (sub.css .gallery)
+    // 창원점: 실제 원내 사진 (자료/서브/병원소개-창원, 파일 이름 = 공간) — 첫 장은 갤러리 큰 칸
     changwon: [
       { file: 'tour-changwon-01.jpg', caption: '대기실' },
       { file: 'tour-changwon-02.jpg', caption: '상담실' },
       { file: 'tour-changwon-03.jpg', caption: '통로' },
       { file: 'tour-changwon-04.jpg', caption: '병원 입구' },
       { file: 'tour-changwon-05.jpg', caption: '진료실' },
+      { file: 'tour-changwon-06.jpg', caption: '진료실 전경' },
     ],
     // 마산점: 실제 원내 사진 (자료/서브/병원소개-마산, 2024-03 촬영 240307_MED_*) — 첫 장은 갤러리 큰 칸
     masan: [
