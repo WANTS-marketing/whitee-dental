@@ -15,8 +15,8 @@
   --color-point-hover: #2a3a5c;      /* hover·눌림 (조금 밝게) */
   --color-point-soft: #eef1f6;       /* 선택 배경 등 옅은 면 */
   --color-point-rgb: 22, 35, 63;     /* 반투명용 rgba(var(--color-point-rgb), a) */
-  --color-accent: #194ebf;           /* 밝은 파랑 강조 — 검정 글자 옆에서 네이비가 눈에 잘 안 띄는 곳: 헤더 메뉴(대메뉴 화살표·현재/hover·메가메뉴 열 위 선·하위 메뉴 hover), 밝은 배경 위 타이틀 강조 글자(.text-point) */
-  --color-point-gradient: linear-gradient(90deg, #fd5b9b, #fe6d33); /* 브랜드 강조(창원 핑크 → 마산 오렌지) — 히어로 이벤트 가격·섹션 점 현재 막대 */
+  --color-accent: #194ebf;           /* 밝은 파랑 강조 — 검정 글자 옆에서 네이비가 눈에 잘 안 띄는 곳: 헤더 메뉴(대메뉴 화살표·현재/hover·메가메뉴 열 위 선·하위 메뉴 hover), 밝은 배경 위 타이틀 강조 글자(.text-point), 섹션 점 현재 막대 */
+  --color-point-gradient: linear-gradient(90deg, #fd5b9b, #fe6d33); /* 브랜드 강조(창원 핑크 → 마산 오렌지) — 히어로 이벤트 가격 */
 
   /* 텍스트 */
   --color-text: #222222;            /* 메인 텍스트: 거의 검정 */

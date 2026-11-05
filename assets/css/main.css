@@ -855,8 +855,8 @@ html.is-fullpage .fp-nav::after { content: ""; position: absolute; left: 25%; ri
 .fp-nav button::before { content: ""; width: 6px; height: 6px; border-radius: 3px; background: rgba(0, 0, 0, 0.28); transition: height 0.3s var(--ease), background 0.3s; }
 .fp-nav button:hover::before { background: rgba(0, 0, 0, 0.55); }
 .fp-nav button[aria-current=true] { height: 26px; }
-.fp-nav button[aria-current=true]::before { height: 20px; background: var(--color-point-gradient); }
-.fp-nav button:focus-visible { outline: 2px solid var(--color-point); outline-offset: 1px; border-radius: 4px; }
+.fp-nav button[aria-current=true]::before { height: 20px; background: var(--color-accent); } /* 현재 섹션 막대 = 밝은 파랑 강조색 */
+.fp-nav button:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 1px; border-radius: 4px; }
 .fp-nav__label { position: absolute; right: calc(100% + 14px); top: 50%; padding: 5px 10px; border-radius: 6px; background: #222; color: #fff; font-size: var(--fs-xxs); font-weight: 600; line-height: 1.3; white-space: nowrap; transform: translateY(-50%); opacity: 0; pointer-events: none; transition: opacity 0.2s; }
 .fp-nav button:is(:hover, :focus-visible) .fp-nav__label { opacity: 1; }
 /* 낮은 화면(높이 760px 이하): 점 간격을 줄여 묶음 전체가 화면 안에 */
