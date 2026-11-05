@@ -895,6 +895,8 @@ a.article-nav__item:hover .article-nav__title { color: var(--color-accent); }
 .page-doctors::after { background: url("../images/doctors-page-bg.jpg") center / cover no-repeat; mix-blend-mode: multiply; opacity: 0.7; }
 /* 네이비 위에 바로 놓이는 글자는 밝게: 지점별 제목, PC 왼쪽 LNB(1024px 이하 칩 줄은 흰 바탕이라 그대로) */
 .page-doctors .doctor-group__title { color: #fff; }
+/* 상단 배너: 사진 없이 투명 — 뒤의 네이비 + 원내 사진 배경이 배너까지 이어진다. 글자·투명 헤더는 사진 배너와 같은 흰색(.sub-visual--image 유지) */
+.page-doctors .sub-visual--image { background: transparent; }
 @media (min-width: 1025px) {
   .page-doctors .lnb__title { color: #fff; border-bottom-color: rgba(255, 255, 255, 0.2); }
   .page-doctors .lnb__list a { color: rgba(255, 255, 255, 0.72); }
