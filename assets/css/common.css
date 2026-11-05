@@ -31,7 +31,7 @@ h1, h2, h3, h4, h5 { line-height: 1.3; font-weight: 700; }
 .sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 .skip-link { position: absolute; top: -100px; left: 16px; z-index: 999; padding: 8px 16px; background: var(--color-text); color: #fff; border-radius: var(--radius-sm); }
 .skip-link:focus { top: 16px; }
-.text-point { color: var(--color-point); }
+.text-point { color: var(--color-accent); } /* 밝은 배경 위 타이틀 강조 글자 (히어로 위는 main.css 에서 그라데이션) */
 .text-changwon { color: var(--color-changwon); }
 .text-masan { color: var(--color-masan); }
 .only-mobile { display: none !important; }
@@ -134,8 +134,8 @@ html[data-fs="xl"] .gnb { --gnb-gap: clamp(20px, 12vw - 140px, 96px); }
 .gnb__item { position: relative; display: flex; align-items: center; }
 /* 대메뉴: 글자만 기준으로 가운데 — 화살표는 글자 오른쪽 6px 에 absolute 로 붙여 중심 계산에서 뺀다 → 하위 메뉴 열 중심 = 글자 중심 */
 .gnb__link { position: relative; display: inline-flex; align-items: center; font-size: var(--fs-lg); font-weight: 600; transition: color var(--dur); }
-.gnb__link svg { position: absolute; top: 50%; left: calc(100% + 6px); width: 14px; height: 14px; margin-top: -7px; color: var(--color-nav-accent); transition: transform var(--dur); }
-.gnb__link.is-current { color: var(--color-nav-accent); }
+.gnb__link svg { position: absolute; top: 50%; left: calc(100% + 6px); width: 14px; height: 14px; margin-top: -7px; color: var(--color-accent); transition: transform var(--dur); }
+.gnb__link.is-current { color: var(--color-accent); }
 
 .gnb__sub {
   position: absolute; z-index: 2; top: 100%; left: calc(var(--gnb-step) / -2); right: calc(var(--gnb-step) / -2);
@@ -149,7 +149,7 @@ html[data-fs="xl"] .gnb { --gnb-gap: clamp(20px, 12vw - 140px, 96px); }
 /* 하위 메뉴 글자: 단어 중간에서는 끊지 않음(keep-all) — 띄어쓰기·'·' 뒤에서만 줄바꿈. 두 줄이 되면 줄 간격 1.35 로 한 항목처럼,
    위아래 여백은 그만큼 늘려(9px + 0.075em) 한 줄 항목 높이·항목 사이 간격은 예전(줄 간격 1.5)과 같게 */
 .gnb__sub a { display: block; padding: calc(9px + 0.075em) 12px; font-size: var(--fs-md); line-height: 1.35; color: var(--color-text-sub); word-break: keep-all; overflow-wrap: normal; transition: color var(--dur); }
-.gnb__sub a:hover, .gnb__sub a:focus-visible, .gnb__sub a.is-current { color: var(--color-nav-accent); }
+.gnb__sub a:hover, .gnb__sub a:focus-visible, .gnb__sub a.is-current { color: var(--color-accent); }
 .gnb__sub a.is-current { font-weight: 600; }
 
 .mega {
@@ -171,11 +171,11 @@ html[data-fs="xl"] .gnb { --gnb-gap: clamp(20px, 12vw - 140px, 96px); }
 .header.is-instant, .header.is-instant *:not(.gnb__sub, .mega, .mega-dim) { transition: none !important; }
 .header.is-mega .mega-dim { opacity: 1; visibility: visible; transition: opacity 0.35s var(--ease), visibility 0s; }
 /* 지금 hover·focus 중인 대메뉴의 열만 포인트 컬러로 강조 */
-.header.is-mega .gnb__item:is(:hover, :focus-within) .gnb__link { color: var(--color-nav-accent); }
+.header.is-mega .gnb__item:is(:hover, :focus-within) .gnb__link { color: var(--color-accent); }
 .header.is-mega .gnb__item:is(:hover, :focus-within) .gnb__link svg { transform: rotate(180deg); }
-.header.is-mega .gnb__item:is(:hover, :focus-within) .gnb__sub { border-top-color: var(--color-nav-accent); } /* 열 배경은 다른 열과 같은 흰색 — 위쪽 선만 */
+.header.is-mega .gnb__item:is(:hover, :focus-within) .gnb__sub { border-top-color: var(--color-accent); } /* 열 배경은 다른 열과 같은 흰색 — 위쪽 선만 */
 .header.is-mega .gnb__item:is(:hover, :focus-within) .gnb__sub a { color: var(--color-text); }
-.header.is-mega .gnb__item:is(:hover, :focus-within) .gnb__sub a:hover, .header.is-mega .gnb__item .gnb__sub a:focus-visible { color: var(--color-nav-accent); }
+.header.is-mega .gnb__item:is(:hover, :focus-within) .gnb__sub a:hover, .header.is-mega .gnb__item .gnb__sub a:focus-visible { color: var(--color-accent); }
 
 .util { display: flex; align-items: center; gap: 40px; font-size: var(--fs-sm); font-weight: 500; white-space: nowrap; }
 .util__group { display: flex; align-items: center; }
