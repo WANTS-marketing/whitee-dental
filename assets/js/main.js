@@ -112,7 +112,7 @@ function initQuickbarOverlap() {
    자동재생 6초(4번 → 1번 반복), 마우스가 히어로 위에 있으면 잠시 멈춤, 전환 중 추가 입력 무시. 움직임 줄이기면 짧은 fade 만
    손으로(‹ › · ←→ · 스와이프 · 휠·키보드) 한 번이라도 넘기면 자동재생 정지 — ▶ 로 다시 켠다
    PC 풀스크린 넘김(fullpage.js)은 window.HeroSlider 로 휠·↓↑ 를 슬라이드 넘김에 쓴다 (1→4, 4 다음은 다음 섹션)
-   진행 표시: 재생바 '1 / 4' 옆 진행 바(--hero-progress) · 섹션 점의 히어로 4칸(fullpage.js, 'hero:change' 이벤트) · SCROLL 안내(마지막에서 .is-last)
+   진행 표시: 재생바 '1 / 4' 옆 진행 바(--hero-progress) · 섹션 점의 히어로 4칸(fullpage.js, 'hero:change' 이벤트)
    스타일: main.css '① 히어로' (.is-active / .is-shown / .is-moving / .is-leaving / .is-entering) */
 function initHero() {
   const slider = document.getElementById('hero-slider');
