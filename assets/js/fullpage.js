@@ -7,6 +7,9 @@
    - 잠금: 첫 진입 히어로 애니메이션 중, 메가메뉴·약력 팝업·코치마크 열림 (의료진 사진 hover 는 잠그지 않음)
    - 투명 헤더: 섹션마다 data-header-theme(dark|light) → html[data-header-theme] (넘김이 시작될 때 다음 섹션 값으로 미리), main.css '투명 헤더'
    - 섹션 안에서 스크롤되는 영역(FAQ 목록, 긴 의료진 약력 .bio-scroll)은 끝에 닿을 때까지 그 안에서 스크롤
+   - 히어로(첫 섹션): 휠·↓·PageDown·Space 는 먼저 슬라이드 1→4 (main.js window.HeroSlider), 4번 다음에 진료안내로
+     ↑·PageUp 은 이전 슬라이드, 1번에서 위로는 아무 동작 없음. 진료안내에서 위로 오면 히어로 4번으로 도착
+     Home·End·섹션 점·메뉴 링크는 슬라이드와 상관없이 바로 그 섹션
    - 모바일·태블릿·낮은 화면: 아무것도 하지 않음(일반 스크롤 + 등장 애니메이션)
    스타일: main.css '풀스크린 섹션 넘김' (html.is-fullpage 일 때만)
    ========================================================================== */
@@ -105,6 +108,17 @@
     return scrollTo(topOf(i), instant);
   }
 
+  /* 휠·키 한 번(d = +1 아래 / -1 위): 히어로에서는 슬라이드 먼저, 끝나면 섹션 */
+  function move(d) {
+    const hero = window.HeroSlider;
+    if (hero && index === 0) {
+      if (hero.step(d)) { lockedUntil = performance.now() + (reduce.matches ? 300 : LOCK_MS); return; }
+      if (d < 0) return; // 1번에서 위로: 아무 동작 없음
+    }
+    if (hero && d < 0 && index === 1) hero.jump(hero.count - 1); // 진료안내 → 위로 = 히어로 마지막 슬라이드로 도착
+    go(index + d);
+  }
+
   // 휠이 섹션 안의 스크롤 영역(FAQ 목록 등)에서 일어났고, 그 방향으로 더 스크롤할 수 있으면 그 영역에 맡긴다
   function innerScrollable(target, dy) {
     for (let el = target; el && el !== document.body; el = el.parentElement) {
@@ -136,7 +150,7 @@
     if (innerScrollable(e.target, dy) || lastSectionNative(dy)) return;
     e.preventDefault();
     if (blocked() || animating || now < lockedUntil || gap < GESTURE_GAP) return;
-    go(index + (dy > 0 ? 1 : -1));
+    move(dy > 0 ? 1 : -1);
   }
 
   function onKey(e) {
@@ -150,7 +164,8 @@
     if (typeof d === 'number' && (innerScrollable(t, d) || lastSectionNative(d))) return;
     e.preventDefault();
     if (holdOnly() || animating || performance.now() < lockedUntil) return;
-    go(d === 'first' ? 0 : d === 'last' ? els.length - 1 : index + d);
+    if (typeof d === 'number') move(d);
+    else go(d === 'first' ? 0 : els.length - 1);
   }
 
   function onHashLink(e) {
@@ -170,12 +185,25 @@
     nav = document.createElement('nav');
     nav.className = 'fp-nav';
     nav.setAttribute('aria-label', '섹션 바로가기');
-    nav.innerHTML = SECTIONS.map((s, i) => `<button type="button" data-fp="${i}" aria-label="${s.label}"><span class="fp-nav__label" aria-hidden="true">${s.label}</span></button>`).join('');
+    nav.innerHTML = SECTIONS.map((s, i) => `<button type="button" data-fp="${i}" aria-label="${s.label}"><span class="fp-nav__label" aria-hidden="true">${s.label}</span>${i === 0 ? '<span class="fp-nav__steps" aria-hidden="true"></span>' : ''}</button>`).join('');
+    heroSteps();
     nav.addEventListener('click', (e) => { const b = e.target.closest('[data-fp]'); if (b) go(Number(b.dataset.fp)); });
     const quick = document.querySelector('.quick--float .quick__sns');
     if (quick) quick.prepend(nav);
     else document.body.appendChild(nav);
   }
+
+  // 히어로 점 옆 슬라이드 진행 4칸: 지금 슬라이드까지 채움 (main.css .fp-nav__steps)
+  function heroSteps(detail) {
+    const box = nav?.querySelector('.fp-nav__steps');
+    const hero = window.HeroSlider;
+    if (!box || !hero) return;
+    const n = detail?.total ?? hero.count;
+    const cur = detail?.index ?? hero.index;
+    if (box.children.length !== n) box.innerHTML = '<i></i>'.repeat(n);
+    [...box.children].forEach((c, k) => c.classList.toggle('is-on', k <= cur));
+  }
+  document.addEventListener('hero:change', (e) => heroSteps(e.detail));
 
   // 현재 스크롤 위치에서 가장 가까운 섹션 (창 크기 변경·직접 스크롤 후 맞추기)
   const nearest = () => {
