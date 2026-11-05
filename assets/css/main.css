@@ -447,6 +447,7 @@ html[data-fs="xl"] .doc-modal { width: min(680px, 100% - 48px); }
    두 간격은 같은 값(1920 기준 80px, 좁아지면 48px까지). 묶음 전체는 좌우 여백 규칙(왼쪽 로고 시작선, 오른쪽 퀵메뉴 앞) 안에 꽉 차게 — 아래 @media (min-width: 1025px) */
 .faq-preview__inner { display: grid; grid-template-columns: auto minmax(0, 1fr) clamp(320px, 23vw, 440px); column-gap: clamp(48px, 4.1667vw, 80px); align-items: center; }
 .faq-preview__title { font-size: var(--fs-h1); line-height: 1.45; letter-spacing: -0.02em; word-break: keep-all; }
+.faq-preview__head .sec-label { font-size: var(--fs-h1); line-height: 1.45; letter-spacing: -0.02em; } /* FAQ 라벨 = 아래 타이틀과 같은 글자 크기 */
 /* 목록: 배경 없음(섹션과 같게), 행 사이 옅은 선 + 맨 위·맨 아래만 진한 선(#222) */
 .faq-preview__box { border-top: 1px solid #222; border-bottom: 1px solid #222; }
 .faq-preview__box .accordion__item:first-child { border-top: 0; }
