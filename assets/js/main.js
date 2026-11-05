@@ -109,7 +109,10 @@ function initQuickbarOverlap() {
    이동 0.9s cubic-bezier(0.65, 0, 0.35, 1), 들어오는 사진은 scale 1.06 → 1(1.2s)
    문구: 나가는 슬라이드는 0.3s fade-out, 들어오는 슬라이드는 이미지가 자리 잡은 뒤 라벨 → 타이틀 → 서브 → 버튼 fade-up(0.1s 간격)
    조작: ‹ › · 재생/정지 · 키보드 ←→(히어로에 포커스가 있을 때) · 터치 스와이프(손가락을 따라 움직이다 놓으면 넘김)
-   자동재생 6초, 마우스가 히어로 위에 있으면 잠시 멈춤, 전환 중 추가 입력 무시. 움직임 줄이기면 짧은 fade 만
+   자동재생 6초(4번 → 1번 반복), 마우스가 히어로 위에 있으면 잠시 멈춤, 전환 중 추가 입력 무시. 움직임 줄이기면 짧은 fade 만
+   손으로(‹ › · ←→ · 스와이프 · 휠·키보드) 한 번이라도 넘기면 자동재생 정지 — ▶ 로 다시 켠다
+   PC 풀스크린 넘김(fullpage.js)은 window.HeroSlider 로 휠·↓↑ 를 슬라이드 넘김에 쓴다 (1→4, 4 다음은 다음 섹션)
+   진행 표시: 재생바 '1 / 4' 옆 진행 바(--hero-progress) · 섹션 점의 히어로 4칸(fullpage.js, 'hero:change' 이벤트) · SCROLL 안내(마지막에서 .is-last)
    스타일: main.css '① 히어로' (.is-active / .is-shown / .is-moving / .is-leaving / .is-entering) */
 function initHero() {
   const slider = document.getElementById('hero-slider');
@@ -118,6 +121,7 @@ function initHero() {
   const current = slider.querySelector('[data-hero-current]');
   const playBtn = slider.querySelector('[data-hero-play]');
   const pauseBtn = slider.querySelector('[data-hero-pause]');
+  const progress = slider.querySelector('[data-hero-progress]');
   const DELAY = 6000;
   const MOVE = 900;
   const reduceMq = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -137,6 +141,9 @@ function initHero() {
       s.querySelectorAll('a, button').forEach((el) => (el.tabIndex = on ? 0 : -1));
     });
     current.textContent = i + 1;
+    if (progress) progress.style.width = `${((i + 1) / slides.length) * 100}%`;
+    slider.classList.toggle('is-last', i === slides.length - 1);
+    document.dispatchEvent(new CustomEvent('hero:change', { detail: { index: i, total: slides.length } }));
   }
   const setX = (el, x, animate) => {
     el.classList.toggle('is-moving', !!animate);
@@ -193,10 +200,11 @@ function initHero() {
     playBtn.setAttribute('aria-pressed', 'false');
     pauseBtn.setAttribute('aria-pressed', 'true');
   }
-  const restart = () => { if (timer) play(); }; // 손으로 넘기면 6초를 처음부터 다시
+  const restart = () => { if (timer) play(); }; // 마우스가 히어로를 떠나면 6초를 처음부터 다시
+  const userMoved = () => stop(); // 손으로 넘기면 자동재생 정지 (▶ 로 다시 켬)
 
-  slider.querySelector('[data-hero-prev]').addEventListener('click', () => { if (busy) return; go(index - 1, -1); restart(); });
-  slider.querySelector('[data-hero-next]').addEventListener('click', () => { if (busy) return; go(index + 1, 1); restart(); });
+  slider.querySelector('[data-hero-prev]').addEventListener('click', () => { if (busy) return; go(index - 1, -1); userMoved(); });
+  slider.querySelector('[data-hero-next]').addEventListener('click', () => { if (busy) return; go(index + 1, 1); userMoved(); });
   playBtn.addEventListener('click', play);
   pauseBtn.addEventListener('click', stop); // 첫 진입 중에 누르면 애니메이션이 끝나도 자동재생하지 않는다 (아래 aria-pressed 확인)
 
@@ -207,7 +215,7 @@ function initHero() {
     if (busy) return;
     const d = e.key === 'ArrowRight' ? 1 : -1;
     go(index + d, d);
-    restart();
+    userMoved();
   });
 
   // 마우스가 히어로 위에 있는 동안 자동재생 잠시 멈춤(재생/정지 상태는 그대로)
@@ -250,7 +258,7 @@ function initHero() {
     const near = slides[wrap(index + d.dir)];
     if (e.type !== 'pointercancel' && (Math.abs(d.dx) > w * 0.2 || fast)) {
       go(index + d.dir, d.dir, d.dx);
-      restart();
+      userMoved();
     } else { // 제자리로
       busy = true;
       setX(slides[index], '0px', true);
@@ -269,6 +277,28 @@ function initHero() {
 
   slides[0].classList.add('is-active', 'is-shown');
   mark(0);
+
+  /* PC 풀스크린 넘김(fullpage.js)이 쓰는 입구
+     step(d): 한 장 넘김(끝에서 돌지 않음). 넘겼거나 전환 중이면 true, 처음·끝이라 넘길 곳이 없으면 false → fullpage.js 가 섹션 이동
+     jump(i): 애니메이션 없이 바로 그 슬라이드로 (진료안내에서 위로 넘어올 때 4번으로 도착) */
+  window.HeroSlider = {
+    count: slides.length,
+    get index() { return index; },
+    step(d) {
+      const to = index + d;
+      if (to < 0 || to >= slides.length) return false;
+      if (!busy) { go(to, d); userMoved(); }
+      return true;
+    },
+    jump(i) {
+      if (busy || i === index) return;
+      slides[index].classList.remove('is-active', 'is-shown');
+      index = i;
+      mark(i);
+      slides[i].classList.add('is-active', 'is-shown');
+      userMoved();
+    },
+  };
   // 첫 진입 애니메이션이 끝났음을 알린다 → onboarding.js 가 이 신호 뒤에 이용 안내를 시작
   const introDone = () => {
     window.__heroIntroDone = true;
