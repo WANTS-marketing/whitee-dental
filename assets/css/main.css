@@ -418,10 +418,6 @@ html[data-fs="xl"] .doc-modal { width: min(680px, 100% - 48px); }
 .story__tab[aria-pressed="true"] { background: var(--color-point); color: #fff; }
 .story__tab[aria-pressed="true"] + .story__tab { border-top-color: transparent; }
 .story__tab[aria-pressed="true"] svg { color: #fff; }
-.story__more { display: inline-flex; align-items: center; gap: 8px; margin-top: clamp(20px, 3vh, 32px); font-size: var(--fs-xs); font-weight: 700; letter-spacing: 0.06em; color: var(--color-text); transition: color var(--dur); }
-.story__more svg { width: 16px; height: 16px; transition: transform var(--dur); }
-.story__more:hover { color: var(--color-point); }
-.story__more:hover svg { transform: translateX(4px); }
 
 /* 캐러셀 칸: 가로 스크롤 + 카드 단위 스냅, 스크롤바 숨김 (드래그 중에는 스냅 끔) */
 .story__body { min-width: 0; container-type: inline-size; }
@@ -444,8 +440,6 @@ html[data-fs="xl"] .doc-modal { width: min(680px, 100% - 48px); }
 .story-card__title { display: block; margin-top: 20px; overflow: hidden; font-size: 1.125rem; font-weight: 700; line-height: 1.4; white-space: nowrap; text-overflow: ellipsis; }
 .story-card__sum { display: -webkit-box; margin-top: 8px; overflow: hidden; font-size: 0.9375rem; line-height: 1.6; color: var(--color-text-sub); word-break: keep-all; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; }
 .story-card__meta { display: flex; align-items: center; gap: 8px; margin-top: 12px; font-size: var(--fs-xs); color: var(--color-text-muted); }
-.story-card__cat { font-weight: 600; }
-.story-card__cat::after { content: ""; display: inline-block; width: 1px; height: 10px; margin-left: 8px; background: currentColor; opacity: 0.5; vertical-align: 0; }
 /* 탭 전환: 0.2s 사라짐 → 0.5s 나타남 (main.js initStory) */
 .story__list { transition: opacity 0.2s ease; }
 .story__list.is-leaving { opacity: 0; }
@@ -493,7 +487,6 @@ html[data-fs="xl"] .doc-modal { width: min(680px, 100% - 48px); }
   .story__tab, .story__tab + .story__tab { min-height: 40px; padding: 8px 20px; border: 1px solid var(--color-line); border-radius: var(--radius-pill); }
   .story__tab[aria-pressed="true"] { border-color: var(--color-point); }
   .story__tab svg { display: none; }
-  .story__more { margin-top: 16px; }
 }
 
 @media (max-width: 768px) {

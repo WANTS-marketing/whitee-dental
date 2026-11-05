@@ -610,8 +610,7 @@ async function renderFaqPreview() {
 }
 
 /* ---------- ⑧ 치과소식(STORY) — 카테고리 탭 + 카드 캐러셀 ----------
-   탭: 전체(공지사항 + 치과소식 최신순 합치기) / 공지사항 / 치과소식 — 각 최신 6개, 누르면 카드가 바뀐다(0.2s 사라짐 → 0.5s 나타남)
-   VIEW MORE: 선택된 탭 게시판으로 (전체 = 치과소식 페이지)
+   탭: 공지사항(처음) / 치과소식 — 각 최신 6개, 누르면 카드가 바뀐다(0.2s 사라짐 → 0.5s 나타남)
    캐러셀: 가로 스크롤 칸(.story__viewport) + 카드 단위 스냅. 이동 방법:
      ‹ › 버튼(한 장씩, 끝에서 멈춤) · 좌우 방향키(칸에 포커스) · 마우스 드래그 · 트랙패드 가로 스와이프·터치(브라우저 기본 가로 스크롤)
    세로 휠은 그대로 섹션 넘김(fullpage.js 는 가로 성분이 큰 휠을 건드리지 않는다)
@@ -623,7 +622,6 @@ async function initStory() {
   if (!list || !track) return;
   const { esc, img, formatDate } = window.UI;
   const tabs = [...document.querySelectorAll('[data-story-tab]')];
-  const more = document.querySelector('[data-story-more]');
   const prev = document.querySelector('[data-story-prev]');
   const next = document.querySelector('[data-story-next]');
   const bar = document.querySelector('[data-story-bar]');
@@ -642,7 +640,6 @@ async function initStory() {
       notice: tag(notices, 'notice').sort(byDate).slice(0, STORY_LIMIT), // 메인은 고정 공지와 상관없이 최신순
       news: tag(news, 'news').sort(byDate).slice(0, STORY_LIMIT),
     };
-    data.all = [...tag(notices, 'notice'), ...tag(news, 'news')].sort(byDate).slice(0, STORY_LIMIT);
   } catch (err) {
     console.error(err);
     list.innerHTML = '<li class="empty">소식을 불러오지 못했습니다.</li>';
@@ -659,7 +656,7 @@ async function initStory() {
           <span class="story-card__thumb img-ph"><img src="${img(r.thumbnail || 'news-dummy-01.jpg')}" alt="" loading="lazy" draggable="false"><span class="story-card__hover">${ARROW}</span></span>
           <strong class="story-card__title">${esc(title)}</strong>
           <span class="story-card__sum">${esc(r.summary || '')}</span>
-          <span class="story-card__meta"><span class="story-card__cat">${b.name}</span><time datetime="${esc(r.date)}">${formatDate(r.date)}</time></span>
+          <span class="story-card__meta"><time datetime="${esc(r.date)}">${formatDate(r.date)}</time></span>
         </a>
       </li>`;
   };
@@ -731,7 +728,6 @@ async function initStory() {
     if (key === current) return;
     current = key;
     tabs.forEach((t) => t.setAttribute('aria-pressed', String(t.dataset.storyTab === key)));
-    more.href = (BOARD[key] || BOARD.news).page;
     const paint = () => {
       const rows = data[key];
       list.innerHTML = rows.length ? rows.map(card).join('') : '<li class="empty">등록된 글이 없습니다.</li>';
@@ -752,7 +748,7 @@ async function initStory() {
   }
   list.addEventListener('animationend', (e) => { if (e.target === list) list.classList.remove('is-entering'); });
   tabs.forEach((t) => t.addEventListener('click', () => show(t.dataset.storyTab, true)));
-  show('all', false);
+  show('notice', false);
 
   // 카드가 플로팅 퀵메뉴 뒤로 지나가는 동안 퀵메뉴 버튼에 옅은 그림자 (main.css .quick--float.is-over-cards) — 버튼과 카드 글자가 섞여 보이지 않게
   if ('IntersectionObserver' in window) {
