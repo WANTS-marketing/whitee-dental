@@ -26,7 +26,8 @@ html::-webkit-scrollbar { display: none; }
 .hero__media img { transform: scale(1); transition: transform 1.2s cubic-bezier(0.65, 0, 0.35, 1); }
 .hero__slide.is-entering .hero__media img { transform: scale(1.06); transition: none; }
 /* 세로 위치: 헤더에 가려지지 않는 부분(헤더 아래 ~ 히어로 끝)의 가운데 */
-.hero__content { position: absolute; z-index: 2; top: calc(50% + var(--header-h) / 2); left: var(--hero-x); right: calc(var(--hero-x) + 160px); transform: translateY(-50%); } /* 오른쪽 160px: 플로팅 퀵메뉴 자리 */
+.hero__content { --hero-shift: 100px; position: absolute; z-index: 2; top: calc(50% + var(--header-h) / 2); left: calc(var(--hero-x) + var(--hero-shift)); right: calc(var(--hero-x) + 160px); transform: translateY(-50%); } /* 왼쪽: 로고 시작선 + 100px(--hero-shift, PC) · 오른쪽 160px: 플로팅 퀵메뉴 자리 */
+@media (max-width: 1024px) { .hero__content { --hero-shift: 0px; } } /* 태블릿·모바일은 그대로 */
 .hero__label { font-size: var(--fs-h4); font-weight: 400; opacity: 0.95; }
 /* 묶음 라벨: 묶음 사이 구분점(·)은 각 묶음 앞에 붙이고, 줄 맨 앞에 오는 구분점은 바깥 칸(overflow)으로 밀어 숨긴다
    → 한 줄이면 'A · B', 두 줄이면 'A' / 'B' (줄 끝·줄 앞에 · 가 남지 않음) */
