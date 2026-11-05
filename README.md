@@ -30,6 +30,47 @@ node scripts/build-config.js
 npx serve .                  # 또는 VS Code "Live Server" 확장
 ```
 
+### 어떤 주소로 열어야 하나
+
+모든 CSS·JS·컴포넌트 경로가 **상대경로**(`./assets/…`, 컴포넌트는 `{{ROOT}}/…`)라서 아래 두 방식 모두 똑같이 동작합니다. (404 나는 파일 없음 — 2026-11-05 확인)
+
+| 서버 루트 | 여는 주소 |
+|---|---|
+| `whitee-dental` 폴더 (VS Code에서 이 폴더를 열고 Live Server, 또는 `npx serve .`) | `http://localhost:5500/` (serve 는 `:3000`) |
+| 상위 폴더 (`회사` 폴더를 열고 Live Server) | `http://localhost:5500/whitee-dental/` |
+
+※ 서버 루트와 주소가 안 맞으면(예: `whitee-dental` 폴더를 루트로 열고 `/whitee-dental/` 로 접속) 페이지 자체가 404 입니다.
+※ `hero-01.jpg`·`branch-bar-bg.jpg` 등 일부 원본 사진은 아직 없어서 404 가 뜨고 `temp/` 임시 사진으로 대체됩니다 — 배포본도 같습니다.
+
+### Live Server 로 볼 때 주의 (메가메뉴 배경이 빠지는 문제)
+
+VS Code Live Server 는 `fetch` 로 불러오는 컴포넌트(`components/*.html`)에도 자동 새로고침 스크립트를 끼워 넣는데, `</body>` 가 없는 파일이면 **모든 `</svg>` 앞에 넣으면서 응답 길이는 1번만큼만 계산해 파일 끝이 잘립니다.** 그러면 헤더 뒷부분(메가메뉴 흰 패널 `.mega`·유틸 메뉴)이 사라져 로컬에서만 메가메뉴 배경이 빠져 보입니다.
+
+그래서 각 컴포넌트 파일 맨 끝에 아래 한 줄이 있습니다. **지우지 말고, 새 컴포넌트를 만들 때도 끝에 넣어 주세요.** (`include.js` 가 삽입할 때 이 줄을 지우므로 화면·배포본에는 영향 없음)
+
+```html
+<template data-dev-trap></body></template>
+```
+
+### 배포 때만 하는 작업과 로컬에서 똑같이 만들기
+
+`.github/workflows/deploy.yml` 이 배포 때 하는 일은 두 가지뿐입니다. 파일 합치기·변환(번들·압축)은 없습니다.
+
+1. `node scripts/build-config.js` — GitHub Secrets 값으로 `assets/js/config.js` 생성 (로컬은 `.env` 에서 읽음)
+2. 배포 대상만 `_site/` 로 복사 — `index.html 404.html fee.html privacy.html favicon.svg robots.txt sitemap.xml .nojekyll about treatment community faq member admin components assets` (`docs/`·`scripts/`·`README.md` 등은 올라가지 않음)
+
+배포본과 똑같은 결과물로 확인하고 싶을 때 (Git Bash):
+
+```bash
+node scripts/build-config.js
+rm -rf _site && mkdir -p _site
+cp -r index.html 404.html fee.html privacy.html favicon.svg robots.txt sitemap.xml .nojekyll \
+      about treatment community faq member admin components assets _site/
+npx serve _site              # → http://localhost:3000/
+```
+
+(`_site/` 는 커밋되지 않습니다 — `.gitignore`)
+
 ## 폴더 구조
 
 ```

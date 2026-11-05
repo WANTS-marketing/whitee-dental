@@ -9,6 +9,7 @@ assets/js/config.js
 # 의존성·빌드
 node_modules/
 dist/
+_site/
 
 # OS·에디터
 .DS_Store
