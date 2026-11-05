@@ -309,17 +309,28 @@
     <!-- ⑦ 치과소식 -->
     <section class="story screen" id="screen-story" data-header-theme="light" aria-labelledby="story-title">
       <div class="container story__inner">
-        <!-- 왼쪽: 라벨·타이틀 → 카테고리 탭(공지사항·치과소식) (main.js initStory) -->
-        <div class="story__head">
-          <span class="sec-label">STORY</span>
-          <h2 class="story__title" id="story-title">화이트e치과의<br><span class="text-point">소식</span>을 둘러보세요.</h2>
-          <div class="story__tabs" role="group" aria-label="소식 분류">
-            <button type="button" class="story__tab" data-story-tab="notice" aria-pressed="true">공지사항<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4"/></svg></button>
-            <button type="button" class="story__tab" data-story-tab="news" aria-pressed="false">치과소식<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4"/></svg></button>
+        <!-- 왼쪽(약 36%): 공지사항 최신 4개 목록 (main.js initStory) / 오른쪽(약 64%): 치과소식 카드 캐러셀 — 두 헤더 줄 높이는 subgrid 로 같게 -->
+        <div class="story__col story-notice">
+          <div class="story__hd">
+            <div>
+              <span class="sec-label">NOTICE</span>
+              <h2 class="story__title" id="story-notice-title">공지사항</h2>
+              <p class="story__desc">중요한 소식 놓치지 않도록 안내드립니다.</p>
+            </div>
+            <a class="story__more" href="./community/notice.html">전체보기<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a>
           </div>
+          <ul class="notice-latest" data-notice-latest aria-labelledby="story-notice-title"></ul>
         </div>
-        <!-- 오른쪽: 카드 캐러셀 (PC 약 3.5장, 화면 오른쪽 끝까지 이어짐) + 아래 ‹ › 버튼·진행 바 -->
-        <div class="story__body">
+        <!-- 오른쪽: 카드 캐러셀 (PC 약 2.5장, 화면 오른쪽 끝까지 이어짐) + 아래 ‹ › 버튼·진행 바 -->
+        <div class="story__col story__body">
+          <div class="story__hd">
+            <div>
+              <span class="sec-label">STORY</span>
+              <h2 class="story__title" id="story-title">화이트e치과 소식</h2>
+            </div>
+            <a class="story__more" href="./community/news.html">전체보기<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a>
+          </div>
+          <div class="story__cards">
           <div class="story__viewport" data-story-track tabindex="0" role="region" aria-roledescription="carousel" aria-label="소식 목록 (좌우 방향키로 넘기기)">
             <ul class="story__list" data-news-latest></ul>
           </div>
@@ -327,6 +338,7 @@
             <button type="button" class="story__nav" data-story-prev aria-label="이전 소식"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M10 3L5 8l5 5"/></svg></button>
             <button type="button" class="story__nav" data-story-next aria-label="다음 소식"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg></button>
             <div class="story__bar" aria-hidden="true"><span class="story__bar-fill" data-story-bar></span></div>
+          </div>
           </div>
         </div>
       </div>
