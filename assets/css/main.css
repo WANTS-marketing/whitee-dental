@@ -536,7 +536,7 @@ html[data-fs="xl"] .doc-modal { width: min(680px, 100% - 48px); }
    PC: 공지사항 : 치과소식 = 36 : 64, 왼쪽 시작 = 헤더 로고 시작선, 캐러셀은 화면 오른쪽 끝(플로팅 퀵메뉴 뒤)까지 이어져 마지막 카드가 잘려 보인다
        카드 폭 = 캐러셀 칸 폭에 약 2.5장(--story-per, 칸 안 간격 수 --story-gaps), 간격 24px. 끝까지 넘기면 마지막 카드가 퀵메뉴 앞(--story-end)에서 멈춘다
    태블릿·모바일: 공지사항 위 → 치과소식 아래 · 2.3장 / 모바일: 공지 3개 · 1.3장 · ‹ › 버튼 숨김(손가락 스와이프), 진행 바는 유지 */
-.story { --story-gap: 24px; --story-per: 2.5; --story-gaps: 2; --story-end: var(--quick-edge, 0px); padding: var(--space-4xl) 0; background: var(--color-bg-soft); }
+.story { --story-gap: 24px; --story-per: 2.5; --story-gaps: 2; --story-end: var(--quick-edge, 0px); padding: var(--space-4xl) 0; background: #fff; } /* 공지사항 쪽 = 흰색 (치과소식 쪽 #f7faff 는 아래 PC·모바일 규칙) */
 /* PC 2단: 공지사항 36 : 치과소식 64. 두 칸 = [헤더 줄][내용] 두 줄을 subgrid 로 나눠 써서 헤더 줄 높이가 같다 */
 .story__inner { display: grid; grid-template-columns: minmax(0, 36fr) minmax(0, 64fr); grid-template-rows: auto auto; column-gap: clamp(40px, 3.125vw, 60px); row-gap: clamp(24px, 2.6vh, 32px); }
 .story__col { display: grid; grid-row: span 2; grid-template-rows: subgrid; min-width: 0; }
@@ -603,7 +603,7 @@ html[data-fs="xl"] .doc-modal { width: min(680px, 100% - 48px); }
     --story-col-gap: clamp(80px, 6.25vw, 120px);
     --story-pad-l: max(40px, (100% - 1600px) / 2);
     --story-split: calc(var(--story-pad-l) + (100% - var(--story-pad-l) - var(--story-col-gap)) * 0.36 + var(--story-col-gap) / 2);
-    background: linear-gradient(90deg, var(--color-bg-soft) var(--story-split), #f7faff var(--story-split));
+    background: linear-gradient(90deg, #fff var(--story-split), #f7faff var(--story-split)); /* 공지사항 #fff | 치과소식 #f7faff */
   }
   .story__inner { column-gap: var(--story-col-gap); }
   /* PC: 공지 카드 4개가 오른쪽 캐러셀(카드 + ‹ › 줄) 높이를 나눠 가져 두 영역 아래 끝이 맞는다 */
