@@ -720,7 +720,7 @@ async function initStory() {
     const title = String(r.title).replace(/\s*\n\s*/g, ' ');
     return `
       <li class="story-card">
-        <a href="${b.page}#${b.anchor}-${esc(r.id)}" draggable="false">
+        <a href="${r.board === 'news' ? `./community/news-view.html?id=${encodeURIComponent(r.id)}` : `${b.page}#${b.anchor}-${esc(r.id)}`}" draggable="false">
           <span class="story-card__thumb img-ph"><img src="${img(r.thumbnail || 'news-dummy-01.jpg')}" alt="" loading="lazy" draggable="false"><span class="story-card__hover">${ARROW}</span></span>
           <strong class="story-card__title">${esc(title)}</strong>
           <span class="story-card__sum">${esc(r.summary || '')}</span>

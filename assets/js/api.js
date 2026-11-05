@@ -29,11 +29,25 @@
     return limit ? rows.slice(0, limit) : rows;
   }
 
-  /** 치과소식 — [{ id, title, branch, date, thumbnail }] 최신순 */
+  /** 치과소식 — [{ id, wrId, legacyUrl, title, category, date, summary, thumbnail }] 최신순
+      (기존 사이트 치과스토리 게시판에서 가져온 글 — scripts/import/build-story.js 가 news.json 생성) */
   async function getNews({ limit } = {}) {
     // TODO(2차): supabase.from('news').select('*').order('date', {ascending:false}).limit(limit)
     const rows = (await fetchJson('news')).sort(byDateDesc);
     return limit ? rows.slice(0, limit) : rows;
+  }
+
+  /** 치과소식 글 하나 — { post, html, prev(이전에 쓴 글), next(나중에 쓴 글) }. 없는 글이면 null
+      본문: assets/data/news/{id}.html (이미지 경로는 사이트 루트 기준 'assets/...' → 현재 페이지 기준으로 바꿔 돌려준다) */
+  async function getNewsPost(id) {
+    // TODO(2차): supabase.from('news').select('*').eq('id', id).single() + 앞뒤 글 2개
+    const rows = await getNews();
+    const i = rows.findIndex((r) => r.id === id);
+    if (i < 0) return null;
+    const res = await fetch(`${root()}/assets/data/news/${encodeURIComponent(id)}.html`, { cache: 'no-cache' });
+    if (!res.ok) throw new Error(`본문을 불러오지 못했습니다 (${res.status})`);
+    const html = (await res.text()).replace(/(src|href)="assets\//g, `$1="${root()}/assets/`);
+    return { post: rows[i], html, prev: rows[i + 1] || null, next: rows[i - 1] || null };
   }
 
   /** 치료사례 — [{ id, category, title, branch, date, beforeImage, afterImage }] */
@@ -122,7 +136,7 @@
   }
 
   window.API = {
-    getNotices, getNews, getCases, getFaqs, getInquiries,
+    getNotices, getNews, getNewsPost, getCases, getFaqs, getInquiries,
     submitInquiry,
     isLoggedIn, getCurrentUser, isAdmin, signInWithKakao, signOut,
   };

@@ -24,6 +24,16 @@
     // GitHub Pages 하위 경로(/whitee-dental/)와 자체 도메인 모두 대응
     var base = location.pathname.indexOf('/whitee-dental/') === 0 ? '/whitee-dental/' : '/';
     document.getElementById('home').href = base;
+    // 기존 사이트(그누보드) 주소 → 새 주소 (도메인을 옮긴 뒤 예전 링크·검색 결과로 들어온 경우)
+    //   /bbs/board.php?bo_table=story&wr_id=89 → community/news-view.html?id=story-89 (치과스토리 = 치과소식, assets/data/news.json 의 wrId)
+    //   /bbs/board.php?bo_table=story          → community/news.html
+    if (/\/bbs\/board\.php$/.test(location.pathname)) {
+      var q = new URLSearchParams(location.search);
+      if (q.get('bo_table') === 'story') {
+        var id = parseInt(q.get('wr_id'), 10);
+        location.replace(base + (id ? 'community/news-view.html?id=story-' + id : 'community/news.html'));
+      }
+    }
   </script>
 </body>
 </html>
