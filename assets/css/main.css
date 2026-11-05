@@ -141,6 +141,12 @@ html::-webkit-scrollbar { display: none; }
   overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain;
 }
 .doc-cards::-webkit-scrollbar { display: none; }
+/* 지점 전환 (main.js switchTo): 지금 줄 0.2s 사라짐 → 새 지점 줄 0.5s 서서히 나타나며 살짝 올라옴 */
+.doc-cards { transition: opacity 0.2s ease; }
+.doc-cards.is-leaving { opacity: 0; pointer-events: none; }
+.doc-cards.is-entering { animation: doc-switch-in 0.5s var(--ease); }
+@keyframes doc-switch-in { from { opacity: 0; transform: translateY(12px); } }
+@media (prefers-reduced-motion: reduce) { .doc-cards { transition: none; } .doc-cards.is-entering { animation: none; } }
 /* --z: 사진이 겹칠 때 위아래 순서 (main.js: 가운데 원장이 가장 위). 마우스를 올린(탭한) 원장은 맨 위 */
 .doc-person { --z: 10; position: relative; flex: 0 0 calc((100% - var(--doc-gap) * (var(--doc-per) - 1)) / var(--doc-per)); min-width: 0; scroll-snap-align: start; }
 .doc-person.is-open { --z: 40 !important; } /* 인라인 --z(main.js)보다 우선 */

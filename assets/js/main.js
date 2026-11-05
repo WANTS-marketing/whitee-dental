@@ -539,15 +539,36 @@ function initDoctors() {
     btn.closest('.doc-person')?.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' });
   });
 
-  /* ---------- 지점 탭 ---------- */
-  function selectTab(tab) {
+  /* ---------- 지점 탭 ----------
+     전환: 지금 의료진 줄이 0.2s 사라짐 → 새 지점 의료진으로 바꿔 0.5s 서서히 나타남 (main.css '지점 전환')
+     줄 전체를 한 덩어리로 흐리게 한다 — 사진이 서로 겹치고 multiply 로 섞여서, 인물마다 따로 흐리면 겹친 곳에 흰 사각형이 비친다
+     빠르게 연달아 누르면 마지막으로 누른 지점만 그린다, 동작 줄이기 설정이면 바로 바꾼다 */
+  let switchId = 0;
+  let target = null; // 지금 보여 주는(또는 바꾸는 중인) 지점
+  function switchTo(branchId, animate) {
+    target = branchId;
+    const id = ++switchId;
+    if (!animate || reduceMotion.matches) { cardsEl.classList.remove('is-leaving', 'is-entering'); render(branchId); return; }
+    cardsEl.classList.remove('is-entering');
+    cardsEl.classList.add('is-leaving');
+    setTimeout(() => {
+      if (id !== switchId) return;
+      render(branchId);
+      cardsEl.classList.remove('is-leaving');
+      void cardsEl.offsetWidth; // 애니메이션 다시 시작
+      cardsEl.classList.add('is-entering');
+    }, 200);
+  }
+  cardsEl.addEventListener('animationend', (e) => { if (e.target === cardsEl) cardsEl.classList.remove('is-entering'); });
+  function selectTab(tab, animate = true) {
+    if (target === tab.dataset.branch) return; // 이미 보고 있는(바꾸는 중인) 지점
     tabs.forEach((t) => {
       const on = t === tab;
       t.setAttribute('aria-selected', String(on));
       t.tabIndex = on ? 0 : -1;
     });
     panel.setAttribute('aria-labelledby', tab.id);
-    render(tab.dataset.branch);
+    switchTo(tab.dataset.branch, animate);
   }
 
   tabs.forEach((tab, i) => {
@@ -563,7 +584,7 @@ function initDoctors() {
     });
   });
 
-  selectTab(tabs[0]);
+  selectTab(tabs[0], false);
 }
 
 /* ---------- ⑥ 치료사례 잠금 ---------- */
