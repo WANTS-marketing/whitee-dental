@@ -597,6 +597,15 @@ html[data-fs="xl"] .doc-modal { width: min(680px, 100% - 48px); }
 .story__bar-fill { position: absolute; top: 0; bottom: 0; left: 0; width: 30%; background: var(--color-point); }
 @media (min-width: 1025px) {
   .story .story__inner.container { max-width: none; padding-left: max(40px, (100% - 1600px) / 2); padding-right: 0; }
+  /* 공지사항 | 치과소식 영역 나눔: 섹션 배경을 두 칸 사이 가운데에서 세로로 나눠 오른쪽(치과소식)만 #f7faff — 위아래 끝·화면 오른쪽 끝까지
+     나눔 위치 = 왼쪽 여백 + 공지 칸 폭 + 간격/2 (공지 칸 = (전체 - 왼쪽 여백 - 간격) × 36%). 간격을 넓혀 양쪽 칸 안쪽에 여백이 생기게 */
+  .story {
+    --story-col-gap: clamp(80px, 6.25vw, 120px);
+    --story-pad-l: max(40px, (100% - 1600px) / 2);
+    --story-split: calc(var(--story-pad-l) + (100% - var(--story-pad-l) - var(--story-col-gap)) * 0.36 + var(--story-col-gap) / 2);
+    background: linear-gradient(90deg, var(--color-bg-soft) var(--story-split), #f7faff var(--story-split));
+  }
+  .story__inner { column-gap: var(--story-col-gap); }
   /* PC: 공지 카드 4개가 오른쪽 캐러셀(카드 + ‹ › 줄) 높이를 나눠 가져 두 영역 아래 끝이 맞는다 */
   .notice-latest { grid-auto-rows: 1fr; align-content: stretch; }
 }
@@ -635,7 +644,7 @@ html[data-fs="xl"] .doc-modal { width: min(680px, 100% - 48px); }
   .story { --story-per: 2.3; --story-gaps: 2; --story-gap: 20px; --story-end: var(--gutter); }
   .story__inner { grid-template-rows: none; row-gap: 56px; }
   .story__col { grid-row: auto; grid-template-rows: none; gap: 24px; }
-  .story__body { margin-right: calc(var(--gutter) * -1); }
+  .story__body { margin: 0 calc(var(--gutter) * -1) calc(var(--space-4xl) * -1); padding: 48px 0 var(--space-4xl) var(--gutter); background: #f7faff; } /* 치과소식 영역만 #f7faff — 화면 좌우 끝·섹션 아래 끝까지 */
 }
 
 @media (max-width: 768px) {
