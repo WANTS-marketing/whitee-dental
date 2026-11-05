@@ -78,9 +78,16 @@
   initRollText();
 
   /* ---------- 서브 LNB (body.has-lnb · 스타일 common.css '서브 LNB') ----------
+     LNB 메뉴로 다른 페이지를 열면 새 페이지가 본문 시작 위치에서 열리도록 표시를 남긴다 (읽는 쪽: assets/js/lnb-jump.js)
+       — 일반 왼쪽 클릭만. 새 탭·새 창(ctrl·cmd·shift·가운데 클릭)은 표시하지 않음. 저장 실패해도 그냥 이동
      1024px 이하 가로 탭 줄: 현재 페이지 탭이 화면 밖(오른쪽)에 있으면 보이게 가로로 당겨 둔다 */
   function initLnb() {
     const lnb = document.querySelector('.lnb');
+    lnb?.addEventListener('click', (e) => {
+      const a = e.target.closest('.lnb__list a[href]');
+      if (!a || e.defaultPrevented || e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey || (a.target && a.target !== '_self')) return;
+      try { sessionStorage.setItem('witee-lnb-jump', JSON.stringify({ to: new URL(a.href, location.href).pathname, t: Date.now() })); } catch (err) { /* 저장 불가 — 맨 위부터 열림 */ }
+    });
     const cur = lnb?.querySelector('.lnb__list a[aria-current="page"]');
     if (!cur || lnb.scrollWidth <= lnb.clientWidth) return;
     const { left, right } = cur.getBoundingClientRect();
