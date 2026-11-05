@@ -726,3 +726,6 @@ body.is-locked { overflow: hidden; }
 }
 
 
+/* 메인 치과소식 카드로 들어온 글(#notice-nt7, #news-n6 등) 잠깐 강조 (pages.js scrollToHashItem) */
+.is-target { animation: target-flash 2s ease-out; }
+@keyframes target-flash { 0%, 30% { background-color: rgba(254, 109, 51, 0.12); } 100% { background-color: transparent; } }

@@ -1,6 +1,9 @@
 [
-  { "id": "n3", "title": "[더미] 치과소식 게시물 제목이 들어갑니다", "branch": "both", "date": "2026-10-20T10:00:00+09:00", "thumbnail": "news-dummy-03.jpg", "_dummy": true },
-  { "id": "n2", "title": "[더미] 창원 화이트e치과\n약국에서 구매할 수 있는 진통제 성분", "branch": "changwon", "date": "2026-10-26T12:30:00+09:00", "thumbnail": "news-dummy-02.jpg", "_dummy": true },
-  { "id": "n1", "title": "[더미] 마산/창원 화이트e치과 11월\n임플란트 치아교정 진료안내", "branch": "both", "date": "2026-10-30T08:25:00+09:00", "thumbnail": "news-dummy-01.jpg", "_dummy": true },
-  { "id": "n0", "title": "[더미] 지난 소식 예시", "branch": "masan", "date": "2026-09-15T09:00:00+09:00", "thumbnail": "news-dummy-04.jpg", "_dummy": true }
+  { "id": "n6", "title": "[더미] 겨울철 시린 이, 왜 더 심해질까요?", "summary": "[더미] 찬 바람이 불면 더 시큰해지는 치아, 원인과 생활 속 관리 방법을 정리했습니다. 요약 문구가 들어가는 자리입니다.", "branch": "both", "date": "2026-11-03T10:00:00+09:00", "thumbnail": "visual-general.jpg", "_dummy": true },
+  { "id": "n5", "title": "[더미] 임플란트 수술 후 꼭 지켜야 할 5가지", "summary": "[더미] 수술 직후 식사·양치·음주·흡연 등 회복을 돕는 생활 수칙을 안내드립니다. 요약 문구가 들어가는 자리입니다.", "branch": "changwon", "date": "2026-11-01T09:30:00+09:00", "thumbnail": "visual-implant.jpg", "_dummy": true },
+  { "id": "n1", "title": "[더미] 마산/창원 화이트e치과 11월\n임플란트 치아교정 진료안내", "summary": "[더미] 11월 진료 일정과 임플란트·치아교정 상담 안내입니다. 요약 문구가 들어가는 자리입니다.", "branch": "both", "date": "2026-10-30T08:25:00+09:00", "thumbnail": "news-dummy-01.jpg", "_dummy": true },
+  { "id": "n2", "title": "[더미] 창원 화이트e치과\n약국에서 구매할 수 있는 진통제 성분", "summary": "[더미] 치통이 있을 때 약국에서 살 수 있는 진통제 성분과 복용 시 주의할 점을 알려드립니다.", "branch": "changwon", "date": "2026-10-26T12:30:00+09:00", "thumbnail": "news-dummy-02.jpg", "_dummy": true },
+  { "id": "n4", "title": "[더미] 투명교정, 이런 분께 추천합니다", "summary": "[더미] 장치가 잘 보이지 않아 직장인·학생에게 인기인 투명교정의 장단점을 소개합니다. 요약 문구가 들어가는 자리입니다.", "branch": "masan", "date": "2026-10-22T11:00:00+09:00", "thumbnail": "visual-orthodontics.jpg", "_dummy": true },
+  { "id": "n3", "title": "[더미] 치과소식 게시물 제목이 들어갑니다", "summary": "[더미] 게시물 요약 문구가 두 줄까지 들어가는 자리입니다. 두 줄을 넘으면 말줄임으로 표시됩니다.", "branch": "both", "date": "2026-10-20T10:00:00+09:00", "thumbnail": "news-dummy-03.jpg", "_dummy": true },
+  { "id": "n0", "title": "[더미] 지난 소식 예시", "summary": "[더미] 지난 소식 요약 문구입니다.", "branch": "masan", "date": "2026-09-15T09:00:00+09:00", "thumbnail": "news-dummy-04.jpg", "_dummy": true }
 ]

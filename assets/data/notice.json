@@ -1,5 +1,9 @@
 [
-  { "id": "nt3", "title": "[더미] 공지사항 예시 — 고정 공지", "branch": "both", "date": "2026-10-01T09:00:00+09:00", "pinned": true, "_dummy": true },
-  { "id": "nt2", "title": "[더미] 창원점 공지사항 예시", "branch": "changwon", "date": "2026-10-20T09:00:00+09:00", "pinned": false, "_dummy": true },
-  { "id": "nt1", "title": "[더미] 마산점 공지사항 예시", "branch": "masan", "date": "2026-10-10T09:00:00+09:00", "pinned": false, "_dummy": true }
+  { "id": "nt3", "title": "[더미] 공지사항 예시 — 고정 공지", "summary": "[더미] 고정 공지 요약 문구가 들어가는 자리입니다. 두 줄을 넘으면 말줄임으로 표시됩니다.", "branch": "both", "date": "2026-10-01T09:00:00+09:00", "pinned": true, "thumbnail": "visual-intro.jpg", "_dummy": true },
+  { "id": "nt7", "title": "[더미] 11월 휴진 안내", "summary": "[더미] 11월 지점별 휴진일과 진료 시간 변경 사항을 안내드립니다. 요약 문구가 들어가는 자리입니다.", "branch": "both", "date": "2026-11-02T09:00:00+09:00", "pinned": false, "thumbnail": "tour-changwon-01.jpg", "_dummy": true },
+  { "id": "nt6", "title": "[더미] 마산점 주차 안내 변경", "summary": "[더미] 마산점 건물 주차장 이용 방법이 바뀌었습니다. 요약 문구가 들어가는 자리입니다.", "branch": "masan", "date": "2026-10-28T09:00:00+09:00", "pinned": false, "thumbnail": "tour-masan-01.jpg", "_dummy": true },
+  { "id": "nt5", "title": "[더미] 창원점 야간 진료 시간 안내", "summary": "[더미] 창원점 평일 야간 진료 요일과 접수 마감 시간을 안내드립니다.", "branch": "changwon", "date": "2026-10-24T09:00:00+09:00", "pinned": false, "thumbnail": "tour-changwon-02.jpg", "_dummy": true },
+  { "id": "nt2", "title": "[더미] 창원점 공지사항 예시", "summary": "[더미] 창원점 공지 요약 문구가 들어가는 자리입니다.", "branch": "changwon", "date": "2026-10-20T09:00:00+09:00", "pinned": false, "thumbnail": "tour-changwon-03.jpg", "_dummy": true },
+  { "id": "nt4", "title": "[더미] 건강보험 스케일링 연 1회 안내", "summary": "[더미] 만 19세 이상 연 1회 건강보험 스케일링 적용 기준을 안내드립니다. 요약 문구가 들어가는 자리입니다.", "branch": "both", "date": "2026-10-15T09:00:00+09:00", "pinned": false, "thumbnail": "visual-wisdom-scaling.jpg", "_dummy": true },
+  { "id": "nt1", "title": "[더미] 마산점 공지사항 예시", "summary": "[더미] 마산점 공지 요약 문구가 들어가는 자리입니다.", "branch": "masan", "date": "2026-10-10T09:00:00+09:00", "pinned": false, "thumbnail": "tour-masan-02.jpg", "_dummy": true }
 ]

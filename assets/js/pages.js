@@ -190,6 +190,16 @@ function renderClinic() {
   });
 }
 
+/* 목록을 그린 뒤 주소 해시의 글로 이동 + 잠깐 강조 (내용이 늦게 그려져 브라우저 기본 이동이 안 되므로) */
+function scrollToHashItem() {
+  const el = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1)));
+  if (!el) return;
+  requestAnimationFrame(() => {
+    el.scrollIntoView({ behavior: 'instant', block: 'center' });
+    el.classList.add('is-target');
+  });
+}
+
 /* ---------- 공지사항 ---------- */
 async function renderNoticeList() {
   const list = document.querySelector('[data-notice-list]');
@@ -198,11 +208,12 @@ async function renderNoticeList() {
   try {
     const rows = await window.API.getNotices();
     list.innerHTML = rows.length ? rows.map((r, i) => `
-      <li class="board__item">
+      <li class="board__item" id="notice-${esc(r.id)}">
         <span class="board__no">${r.pinned ? '공지' : rows.length - i}</span>
         <span class="board__title">${branchBadge(r.branch)}${esc(r.title)}</span>
         <time class="board__date" datetime="${esc(r.date)}">${formatDate(r.date)}</time>
       </li>`).join('') : '<li class="empty">등록된 공지사항이 없습니다.</li>';
+    scrollToHashItem(); // 메인 치과소식 카드(#notice-nt7 등)로 들어오면 그 글로
   } catch (err) {
     console.error(err);
     list.innerHTML = '<li class="empty">목록을 불러오지 못했습니다.</li>';
@@ -222,6 +233,7 @@ async function renderNewsList() {
         <p class="post-card__title">${esc(n.title)}</p>
         <p class="post-card__date"><time datetime="${esc(n.date)}">${formatDate(n.date, true)}</time></p>
       </li>`).join('') : '<li class="empty">등록된 소식이 없습니다.</li>';
+    scrollToHashItem(); // 메인 치과소식 카드(#news-n6 등)로 들어오면 그 글로
   } catch (err) {
     console.error(err);
     list.innerHTML = '<li class="empty">목록을 불러오지 못했습니다.</li>';

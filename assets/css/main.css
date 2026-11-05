@@ -401,15 +401,68 @@ html[data-fs="xl"] .doc-modal { width: min(680px, 100% - 48px); }
 .faq-preview__box { padding: 28px 52px; background: var(--color-bg-warm); }
 
 /* ---------- ⑧ 치과소식 ---------- */
-.story { padding: var(--space-4xl) 0; background: var(--color-bg-soft); }
-.story__inner { display: grid; grid-template-columns: 380px minmax(0, 1fr); gap: 60px; align-items: start; }
-.story__title { font-size: var(--fs-h1); line-height: 1.45; letter-spacing: -0.02em; }
-.story__btn { margin-top: 36px; height: 60px; padding: 0 48px; font-size: var(--fs-h4); }
-.story__btn svg { width: 18px; height: 18px; }
-.story__list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-.story__list .post-card__thumb { transition: transform var(--dur); }
-.story__list a:hover .post-card__thumb { transform: translateY(-4px); }
-.story__list .post-card--empty .post-card__thumb { background: #f3f3f3; }
+/* ---------- ⑧ 치과소식(STORY) — 왼쪽 라벨·타이틀·카테고리 탭·VIEW MORE / 오른쪽 카드 캐러셀 (main.js initStory) ----------
+   PC: 왼쪽 : 캐러셀 = 1 : 3, 왼쪽 시작 = 헤더 로고 시작선, 캐러셀은 화면 오른쪽 끝(플로팅 퀵메뉴 뒤)까지 이어져 마지막 카드가 잘려 보인다
+       카드 폭 = 캐러셀 칸 폭에 약 3.5장(--story-per, 칸 안 간격 수 --story-gaps), 간격 24px. 끝까지 넘기면 마지막 카드가 퀵메뉴 앞(--story-end)에서 멈춘다
+   태블릿: 왼쪽 영역 위 · 탭은 가로 칩 · 2.3장 / 모바일: 1.3장 · ‹ › 버튼 숨김(손가락 스와이프), 진행 바는 유지 */
+.story { --story-gap: 24px; --story-per: 3.5; --story-gaps: 3; --story-end: var(--quick-edge, 0px); padding: var(--space-4xl) 0; background: var(--color-bg-soft); }
+.story__inner { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 3fr); gap: clamp(40px, 3.125vw, 60px); align-items: center; }
+.story__title { font-size: var(--fs-h1); line-height: 1.45; letter-spacing: -0.02em; word-break: keep-all; }
+/* 세로 카테고리 탭: 선택 = 포인트 컬러 배경 + 흰 글자·화살표, 나머지 = 흰 배경 + 회색 글자·화살표, 사이 얇은 구분선 */
+.story__tabs { display: flex; flex-direction: column; max-width: 320px; margin-top: clamp(24px, 3.7vh, 40px); }
+.story__tab { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 56px; padding: 12px 24px; background: #fff; color: #888; font-size: 1rem; font-weight: 600; text-align: left; transition: background var(--dur), color var(--dur); }
+.story__tab + .story__tab { border-top: 1px solid var(--color-line); }
+.story__tab svg { flex: none; width: 16px; height: 16px; color: #bbb; transition: color var(--dur), transform var(--dur); }
+.story__tab:hover { color: var(--color-text); }
+.story__tab:hover svg { transform: translateX(3px); }
+.story__tab[aria-pressed="true"] { background: var(--color-point); color: #fff; }
+.story__tab[aria-pressed="true"] + .story__tab { border-top-color: transparent; }
+.story__tab[aria-pressed="true"] svg { color: #fff; }
+.story__more { display: inline-flex; align-items: center; gap: 8px; margin-top: clamp(20px, 3vh, 32px); font-size: var(--fs-xs); font-weight: 700; letter-spacing: 0.06em; color: var(--color-text); transition: color var(--dur); }
+.story__more svg { width: 16px; height: 16px; transition: transform var(--dur); }
+.story__more:hover { color: var(--color-point); }
+.story__more:hover svg { transform: translateX(4px); }
+
+/* 캐러셀 칸: 가로 스크롤 + 카드 단위 스냅, 스크롤바 숨김 (드래그 중에는 스냅 끔) */
+.story__body { min-width: 0; container-type: inline-size; }
+.story__viewport { overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; cursor: grab; padding-block: 4px; } /* 위아래 4px: 포커스 테두리가 잘리지 않게 */
+.story__viewport::-webkit-scrollbar { display: none; }
+.story__viewport.is-dragging { scroll-snap-type: none; cursor: grabbing; user-select: none; }
+.story__viewport.is-dragging a { pointer-events: none; }
+.story__viewport:focus-visible { outline: 2px solid var(--color-point); outline-offset: 2px; }
+.story__list { display: flex; gap: var(--story-gap); width: max-content; padding-right: var(--story-end); }
+.story__list > .empty { width: 100cqw; }
+.story-card { flex: none; width: calc((100cqw - var(--story-gap) * var(--story-gaps)) / var(--story-per)); scroll-snap-align: start; }
+.story-card a { display: block; text-align: left; }
+.story-card__thumb { display: block; aspect-ratio: 1; border-radius: 8px; }
+.story-card__thumb img { transition: transform 0.6s var(--ease); -webkit-user-drag: none; }
+.story-card__hover { position: absolute; inset: 0; z-index: 1; display: grid; place-items: center; background: rgba(0, 0, 0, 0.35); opacity: 0; transition: opacity 0.4s var(--ease); }
+.story-card__hover svg { width: 56px; height: 56px; padding: 17px; border-radius: 50%; background: #fff; color: var(--color-text); transform: scale(0.85); transition: transform 0.4s var(--ease); }
+.story-card a:is(:hover, :focus-visible) .story-card__thumb img { transform: scale(1.05); }
+.story-card a:is(:hover, :focus-visible) .story-card__hover { opacity: 1; }
+.story-card a:is(:hover, :focus-visible) .story-card__hover svg { transform: none; }
+.story-card__title { display: block; margin-top: 20px; overflow: hidden; font-size: 1.125rem; font-weight: 700; line-height: 1.4; white-space: nowrap; text-overflow: ellipsis; }
+.story-card__sum { display: -webkit-box; margin-top: 8px; overflow: hidden; font-size: 0.9375rem; line-height: 1.6; color: var(--color-text-sub); word-break: keep-all; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; }
+.story-card__meta { display: flex; align-items: center; gap: 8px; margin-top: 12px; font-size: var(--fs-xs); color: var(--color-text-muted); }
+.story-card__cat { font-weight: 600; }
+.story-card__cat::after { content: ""; display: inline-block; width: 1px; height: 10px; margin-left: 8px; background: currentColor; opacity: 0.5; vertical-align: 0; }
+/* 탭 전환: 0.2s 사라짐 → 0.5s 나타남 (main.js initStory) */
+.story__list { transition: opacity 0.2s ease; }
+.story__list.is-leaving { opacity: 0; }
+.story__list.is-entering { animation: doc-switch-in 0.5s var(--ease); }
+
+/* 아래 조작: ‹ › 원형 버튼(넘길 수 있으면 진하게, 끝이면 흐리게) + 진행 바(포인트 컬러) — 오른쪽 끝은 퀵메뉴 앞 */
+.story__ctrl { display: flex; align-items: center; gap: 10px; margin-top: clamp(24px, 3.7vh, 40px); padding-right: var(--story-end); }
+.story__nav { display: grid; place-items: center; flex: none; width: 48px; height: 48px; border: 1px solid var(--color-text); border-radius: 50%; background: #fff; color: var(--color-text); transition: background var(--dur), color var(--dur), border-color var(--dur); }
+.story__nav svg { width: 16px; height: 16px; }
+.story__nav:not(:disabled):hover { background: var(--color-text); color: #fff; }
+.story__nav:disabled { border-color: #d6d6d6; color: #bbb; cursor: default; }
+.story__bar { position: relative; flex: 1; height: 2px; margin-left: 22px; overflow: hidden; background: #dcdcdc; }
+.story__bar-fill { position: absolute; top: 0; bottom: 0; left: 0; width: 30%; background: var(--color-point); }
+@media (prefers-reduced-motion: reduce) { .story__list { transition: none; } .story__list.is-entering { animation: none; } }
+@media (min-width: 1025px) {
+  .story .story__inner.container { max-width: none; padding-left: max(40px, (100% - 1600px) / 2); padding-right: 0; }
+}
 
 /* ==========================================================================
    반응형
@@ -432,7 +485,15 @@ html[data-fs="xl"] .doc-modal { width: min(680px, 100% - 48px); }
   .doc-cards { margin: 0 calc(var(--gutter) * -1); padding: 0 var(--gutter); scroll-padding-inline: var(--gutter); }
   .doctors__main { --doc-photo-h: 380px; }
   .clinic__grid { height: auto; grid-template-columns: 1fr 1fr; grid-template-rows: 260px 200px 200px; grid-template-areas: "imp aes" "ort wis" "gen gen"; }
-  .story__btn { margin-top: 24px; height: 52px; padding: 0 36px; font-size: var(--fs-md); }
+  /* 치과소식 태블릿: 탭 = 가로 칩, 캐러셀은 오른쪽 화면 끝까지 2.3장 */
+  .story { --story-per: 2.3; --story-gaps: 2; --story-gap: 20px; --story-end: var(--gutter); }
+  .story__inner { gap: 32px; }
+  .story__body { margin-right: calc(var(--gutter) * -1); }
+  .story__tabs { flex-direction: row; flex-wrap: wrap; gap: 8px; max-width: none; margin-top: 20px; }
+  .story__tab, .story__tab + .story__tab { min-height: 40px; padding: 8px 20px; border: 1px solid var(--color-line); border-radius: var(--radius-pill); }
+  .story__tab[aria-pressed="true"] { border-color: var(--color-point); }
+  .story__tab svg { display: none; }
+  .story__more { margin-top: 16px; }
 }
 
 @media (max-width: 768px) {
@@ -510,9 +571,13 @@ html[data-fs="xl"] .doc-modal { width: min(680px, 100% - 48px); }
   .faq-preview__box { padding: 12px 16px; margin: 0 calc(var(--gutter) * -1); }
 
   /* 소식 카드 가로 스크롤 */
-  .story__list { display: flex; gap: 12px; margin: 0 calc(var(--gutter) * -1); padding: 0 var(--gutter); overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
-  .story__list::-webkit-scrollbar { display: none; }
-  .story__list li { flex: none; width: 70vw; max-width: 280px; scroll-snap-align: start; }
+  /* 치과소식 모바일: 1.3장씩 손가락 스와이프, ‹ › 버튼 숨기고 진행 바만 */
+  .story { --story-per: 1.3; --story-gaps: 1; --story-gap: 16px; }
+  .story__viewport { scroll-padding-left: 0; }
+  .story__nav { display: none; }
+  .story__ctrl { margin-top: 20px; }
+  .story__bar { margin-left: 0; }
+  .story-card__title { margin-top: 14px; }
 }
 
 /* 좁은 모바일: 카드 1.2장(다음 카드가 살짝 보여 가로 스와이프를 알 수 있게) */
@@ -787,4 +852,9 @@ html.is-fullpage .fp-nav::after { content: ""; position: absolute; left: 25%; ri
   .fp-nav button[aria-current=true] { height: 22px; }
   .fp-nav button[aria-current=true]::before { height: 16px; }
   html.is-fullpage .fp-nav { padding: 6px 0; }
+}
+/* 치과소식 카드가 플로팅 퀵메뉴 뒤로 지나갈 때(main.js initStory): 버튼·섹션 점 묶음을 카드와 구분 */
+@media (min-width: 1025px) {
+  .quick--float.is-over-cards .quick__sns-btn { box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12); transition: outline-color 0.3s, box-shadow 0.3s; }
+  html.is-fullpage .quick--float.is-over-cards .fp-nav { background: rgba(255, 255, 255, 0.94); box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1); }
 }

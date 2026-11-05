@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initDoctors();
   initCases();
   renderFaqPreview();
-  renderLatestNews();
+  initStory();
   initReveal();
   initQuickReveal();
   initQuickbarOverlap();
@@ -609,24 +609,154 @@ async function renderFaqPreview() {
   }
 }
 
-/* ---------- ⑧ 치과소식 최신 3개 ---------- */
-async function renderLatestNews() {
+/* ---------- ⑧ 치과소식(STORY) — 카테고리 탭 + 카드 캐러셀 ----------
+   탭: 전체(공지사항 + 치과소식 최신순 합치기) / 공지사항 / 치과소식 — 각 최신 6개, 누르면 카드가 바뀐다(0.2s 사라짐 → 0.5s 나타남)
+   VIEW MORE: 선택된 탭 게시판으로 (전체 = 치과소식 페이지)
+   캐러셀: 가로 스크롤 칸(.story__viewport) + 카드 단위 스냅. 이동 방법:
+     ‹ › 버튼(한 장씩, 끝에서 멈춤) · 좌우 방향키(칸에 포커스) · 마우스 드래그 · 트랙패드 가로 스와이프·터치(브라우저 기본 가로 스크롤)
+   세로 휠은 그대로 섹션 넘김(fullpage.js 는 가로 성분이 큰 휠을 건드리지 않는다)
+   진행 바: 전체 길이 중 지금 보이는 구간의 위치·비율 (main.css '⑧ 치과소식') */
+const STORY_LIMIT = 6;
+async function initStory() {
   const list = document.querySelector('[data-news-latest]');
-  if (!list) return;
+  const track = document.querySelector('[data-story-track]');
+  if (!list || !track) return;
   const { esc, img, formatDate } = window.UI;
+  const tabs = [...document.querySelectorAll('[data-story-tab]')];
+  const more = document.querySelector('[data-story-more]');
+  const prev = document.querySelector('[data-story-prev]');
+  const next = document.querySelector('[data-story-next]');
+  const bar = document.querySelector('[data-story-bar]');
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const BOARD = {
+    notice: { name: '공지사항', page: './community/notice.html', anchor: 'notice' },
+    news: { name: '치과소식', page: './community/news.html', anchor: 'news' },
+  };
+  const byDate = (a, b) => new Date(b.date) - new Date(a.date);
+
+  let data = null;
   try {
-    const news = await window.API.getNews({ limit: 3 });
-    list.innerHTML = news.map((n) => `
-      <li>
-        <a href="./community/news.html#news-${esc(n.id)}">
-          <div class="post-card__thumb img-ph"><img src="${img(n.thumbnail)}" alt="${esc(n.title)} 썸네일" loading="lazy"></div>
-          <p class="post-card__title">${esc(n.title)}</p>
-          <p class="post-card__date"><time datetime="${esc(n.date)}">${formatDate(n.date, true)}</time></p>
-        </a>
-      </li>`).join('');
+    const [notices, news] = await Promise.all([window.API.getNotices(), window.API.getNews()]);
+    const tag = (rows, board) => rows.map((r) => ({ ...r, board }));
+    data = {
+      notice: tag(notices, 'notice').sort(byDate).slice(0, STORY_LIMIT), // 메인은 고정 공지와 상관없이 최신순
+      news: tag(news, 'news').sort(byDate).slice(0, STORY_LIMIT),
+    };
+    data.all = [...tag(notices, 'notice'), ...tag(news, 'news')].sort(byDate).slice(0, STORY_LIMIT);
   } catch (err) {
     console.error(err);
     list.innerHTML = '<li class="empty">소식을 불러오지 못했습니다.</li>';
+    return;
+  }
+
+  const ARROW = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg>';
+  const card = (r) => {
+    const b = BOARD[r.board];
+    const title = String(r.title).replace(/\s*\n\s*/g, ' ');
+    return `
+      <li class="story-card">
+        <a href="${b.page}#${b.anchor}-${esc(r.id)}" draggable="false">
+          <span class="story-card__thumb img-ph"><img src="${img(r.thumbnail || 'news-dummy-01.jpg')}" alt="" loading="lazy" draggable="false"><span class="story-card__hover">${ARROW}</span></span>
+          <strong class="story-card__title">${esc(title)}</strong>
+          <span class="story-card__sum">${esc(r.summary || '')}</span>
+          <span class="story-card__meta"><span class="story-card__cat">${b.name}</span><time datetime="${esc(r.date)}">${formatDate(r.date)}</time></span>
+        </a>
+      </li>`;
+  };
+
+  /* ---------- 진행 바·버튼 상태 ---------- */
+  const maxScroll = () => Math.max(0, track.scrollWidth - track.clientWidth);
+  function update() {
+    const sw = track.scrollWidth || 1;
+    const max = maxScroll();
+    // 채움 폭 = 보이는 폭 / 전체 폭, 위치 = 스크롤 위치 / 전체 폭 (translateX % 는 채움 자기 폭 기준이라 / 보이는 폭)
+    bar.style.width = `${Math.min(100, (track.clientWidth / sw) * 100)}%`;
+    bar.style.transform = `translateX(${max ? (track.scrollLeft / track.clientWidth) * 100 : 0}%)`;
+    prev.disabled = track.scrollLeft <= 1;
+    next.disabled = track.scrollLeft >= max - 1;
+  }
+  // 한 장 = 카드 폭 + 간격
+  const step = () => {
+    const items = list.children;
+    if (items.length < 2) return track.clientWidth;
+    return items[1].getBoundingClientRect().left - items[0].getBoundingClientRect().left;
+  };
+  // 지금 맨 왼쪽 카드 번호 (반올림) 기준으로 한 장씩
+  function go(dir) {
+    const s = step();
+    const i = Math.round(track.scrollLeft / s) + dir;
+    track.scrollTo({ left: Math.max(0, Math.min(maxScroll(), i * s)), behavior: reduce.matches ? 'auto' : 'smooth' });
+  }
+  prev.addEventListener('click', () => go(-1));
+  next.addEventListener('click', () => go(1));
+  track.addEventListener('scroll', update, { passive: true });
+  new ResizeObserver(update).observe(track);
+  track.addEventListener('keydown', (e) => {
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    e.preventDefault();
+    go(e.key === 'ArrowRight' ? 1 : -1);
+  });
+
+  /* ---------- 마우스 드래그 (터치·펜은 브라우저 기본 스와이프) ----------
+     5px 넘게 움직이면 드래그 — 끝난 뒤의 클릭(카드 이동)은 막고, 가장 가까운 카드에 맞춘다 */
+  let drag = null;
+  let dragged = false;
+  track.addEventListener('pointerdown', (e) => {
+    if (e.pointerType !== 'mouse' || e.button !== 0) return;
+    drag = { x: e.clientX, left: track.scrollLeft, id: e.pointerId };
+    dragged = false;
+  });
+  track.addEventListener('pointermove', (e) => {
+    if (!drag || e.pointerId !== drag.id) return;
+    const dx = e.clientX - drag.x;
+    if (!dragged && Math.abs(dx) < 5) return;
+    if (!dragged) { dragged = true; track.setPointerCapture(drag.id); track.classList.add('is-dragging'); }
+    track.scrollLeft = drag.left - dx;
+  });
+  const endDrag = (e) => {
+    if (!drag || (e && e.pointerId !== drag.id)) return;
+    drag = null;
+    if (!dragged) return;
+    track.classList.remove('is-dragging'); // 스냅이 다시 켜지며 가까운 카드로 맞춰진다
+  };
+  track.addEventListener('pointerup', endDrag);
+  track.addEventListener('pointercancel', endDrag);
+  track.addEventListener('click', (e) => { if (dragged) { e.preventDefault(); e.stopPropagation(); dragged = false; } }, true);
+  track.addEventListener('dragstart', (e) => e.preventDefault());
+
+  /* ---------- 탭 ---------- */
+  let current = null;
+  let switchId = 0;
+  function show(key, animate) {
+    if (key === current) return;
+    current = key;
+    tabs.forEach((t) => t.setAttribute('aria-pressed', String(t.dataset.storyTab === key)));
+    more.href = (BOARD[key] || BOARD.news).page;
+    const paint = () => {
+      const rows = data[key];
+      list.innerHTML = rows.length ? rows.map(card).join('') : '<li class="empty">등록된 글이 없습니다.</li>';
+      track.scrollLeft = 0;
+      update();
+    };
+    const id = ++switchId;
+    if (!animate || reduce.matches) { paint(); return; }
+    list.classList.remove('is-entering');
+    list.classList.add('is-leaving');
+    setTimeout(() => {
+      if (id !== switchId) return;
+      paint();
+      list.classList.remove('is-leaving');
+      void list.offsetWidth;
+      list.classList.add('is-entering');
+    }, 200);
+  }
+  list.addEventListener('animationend', (e) => { if (e.target === list) list.classList.remove('is-entering'); });
+  tabs.forEach((t) => t.addEventListener('click', () => show(t.dataset.storyTab, true)));
+  show('all', false);
+
+  // 카드가 플로팅 퀵메뉴 뒤로 지나가는 동안 퀵메뉴 버튼에 옅은 그림자 (main.css .quick--float.is-over-cards) — 버튼과 카드 글자가 섞여 보이지 않게
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(([e]) => document.querySelector('.quick--float')?.classList.toggle('is-over-cards', e.isIntersecting)).observe(track);
   }
 }
 
@@ -634,8 +764,8 @@ async function renderLatestNews() {
    의료진 섹션부터 적용. 섹션 타이틀은 fade-up, 카드 묶음은 자식이 0.08s 간격으로 순차 등장 (간격은 main.css). 움직임 줄이기 설정이면 끔 */
 function initReveal() {
   if (!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  const singles = '.doctors__head, .doctors__main, .clinic__head, .cases__head, .faq-preview__head, .faq-preview__box, .story__head';
-  const groups = '.clinic__grid, .cases__list, .story__list';
+  const singles = '.doctors__head, .doctors__main, .clinic__head, .cases__head, .faq-preview__head, .faq-preview__box, .story__head, .story__body';
+  const groups = '.clinic__grid, .cases__list'; // 치과소식 카드는 탭으로 다시 그려지므로 묶음(.story__body)째로 등장
   const targets = [
     ...[...document.querySelectorAll(singles)].map((el) => { el.classList.add('reveal'); return el; }),
     ...[...document.querySelectorAll(groups)].map((el) => { el.classList.add('reveal-group'); return el; }),
