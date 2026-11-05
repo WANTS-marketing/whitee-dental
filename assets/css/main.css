@@ -321,13 +321,24 @@ html[data-fs="xl"] .doc-modal { width: min(680px, 100% - 48px); }
 
 
 /* ---------- ⑤ 진료안내 ---------- */
-.clinic { padding: var(--space-4xl) 0; background: var(--color-bg-warm); } /* 연베이지 — 바로 아래 의료진(흰색)과 구분 */
-.clinic__inner { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 60px; align-items: center; }
-.clinic__title { font-size: var(--fs-h1); letter-spacing: -0.02em; }
+/* PC: 왼쪽 글 : 카드 그리드 = 1 : 3, 그리드 높이 = 헤더 아래 한 화면의 약 80%
+   글자·여백 = 1920px 기준 값, 1280px 까지 비례해서 줄어든다(clamp, rem 이라 글자 크게 보기도 따라 커짐)
+   카드: 사진 선명하게 + 아래 약 45%만 어두운 그라데이션, 글자·화살표 흰색 */
+.clinic {
+  --cl-pad: clamp(24px, 8px + 1.25vw, 32px);         /* 카드 안쪽 여백 32 */
+  --cl-arrow: clamp(40px, 16px + 1.875vw, 52px);     /* 화살표 버튼 52 */
+  padding: var(--space-4xl) 0; background: var(--color-bg-warm); /* 연베이지 — 바로 아래 의료진(흰색)과 구분 */
+}
+.clinic__inner { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 3fr); gap: clamp(40px, 3.125vw, 60px); align-items: center; }
+.clinic__head .sec-label { font-size: clamp(0.9375rem, 0.5625rem + 0.46875vw, 1.125rem); }   /* 18 */
+.clinic__title { font-size: clamp(2.5rem, 0.5rem + 2.5vw, 3.5rem); line-height: 1.25; letter-spacing: -0.02em; } /* 56 */
+.clinic__head .sec-desc { margin-top: 16px; font-size: clamp(1rem, 0.75rem + 0.3125vw, 1.125rem); word-break: keep-all; text-wrap: balance; } /* 18 */
+.clinic__head .sec-desc br { display: none; } /* 칸 폭이 화면마다 달라 고정 줄바꿈 대신 균형 줄바꿈 */
 .clinic__grid {
-  display: grid; gap: 14px;
+  display: grid; gap: 20px;
+  height: max(460px, (100vh - var(--header-h)) * 0.8);
   grid-template-columns: 1.25fr 1fr 0.95fr;
-  grid-template-rows: 230px 40px 150px;
+  grid-template-rows: 23fr 4fr 15fr;
   grid-template-areas:
     "imp aes wis"
     "imp gen gen"
@@ -338,18 +349,25 @@ html[data-fs="xl"] .doc-modal { width: min(680px, 100% - 48px); }
 .clinic-card--wisdom { grid-area: wis; }
 .clinic-card--ortho { grid-area: ort; }
 .clinic-card--general { grid-area: gen; }
-.clinic-card { position: relative; display: flex; align-items: flex-end; overflow: hidden; border-radius: 4px; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06); }
+.clinic-card { position: relative; display: flex; align-items: flex-end; min-height: 0; overflow: hidden; border-radius: 4px; color: #fff; }
 .clinic-card__img { position: absolute; inset: 0; }
 .clinic-card__img img { transition: transform 0.6s var(--ease); }
 .clinic-card:hover .clinic-card__img img { transform: scale(1.05); }
-.clinic-card__img::before { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(0deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.7) 40%, rgba(255, 255, 255, 0) 75%); }
-.clinic-card__body { position: relative; z-index: 2; display: flex; flex-direction: column; gap: 4px; padding: 0 76px 22px 28px; }
-.clinic-card__title { font-size: var(--fs-h3); letter-spacing: -0.02em; }
-.clinic-card__sub { font-size: var(--fs-xs); color: var(--color-text-sub); word-break: keep-all; text-wrap: balance; }
+/* 어두운 그라데이션: 기본 rgba(0,0,0,0.6) (= 0.75 × 투명도 0.8) → hover 0.75 */
+.clinic-card__img::before { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(0deg, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0) 45%); opacity: 0.8; transition: opacity 0.6s var(--ease); }
+.clinic-card:hover .clinic-card__img::before { opacity: 1; }
+.clinic-card__body { position: relative; z-index: 2; display: flex; flex-direction: column; gap: 6px; min-width: 0; padding: var(--cl-pad); }
+.clinic-card__title { font-size: clamp(1.5rem, 0.5rem + 1.25vw, 2rem); line-height: 1.3; letter-spacing: -0.02em; word-break: keep-all; } /* 32 */
+.clinic-card--implant .clinic-card__title { font-size: clamp(1.875rem, 0.625rem + 1.5625vw, 2.5rem); } /* 40 */
+.clinic-card__sub { margin-right: calc(var(--cl-arrow) + 12px); font-size: clamp(0.875rem, 0.5rem + 0.46875vw, 1.0625rem); line-height: 1.5; color: rgba(255, 255, 255, 0.88); word-break: keep-all; text-wrap: balance; } /* 17 — 오른쪽은 화살표 자리 */
 .clinic-card__sub > span { display: block; }
-.clinic-card__arrow { position: absolute; z-index: 2; right: 20px; bottom: 22px; display: grid; place-items: center; width: 40px; height: 40px; border: 1.5px solid var(--color-text-sub); border-radius: 50%; color: var(--color-text); transition: background var(--dur), color var(--dur), border-color var(--dur); }
-.clinic-card__arrow svg { width: 14px; height: 14px; }
-.clinic-card:hover .clinic-card__arrow { background: var(--color-point); border-color: var(--color-point); color: #fff; }
+.clinic-card__arrow { position: absolute; z-index: 2; right: var(--cl-pad); bottom: var(--cl-pad); display: grid; place-items: center; width: var(--cl-arrow); height: var(--cl-arrow); border: 1.5px solid #fff; border-radius: 50%; color: #fff; transition: background var(--dur), color var(--dur); }
+.clinic-card__arrow svg { width: 32%; height: 32%; }
+.clinic-card:is(:hover, :focus-visible) .clinic-card__arrow { background: #fff; color: var(--color-point); }
+/* PC: 좌우 여백 = 의료진 섹션과 같은 규칙 (왼쪽 = 헤더 로고 시작선, 오른쪽 = 플로팅 퀵메뉴를 피하는 --quick-edge) */
+@media (min-width: 1025px) {
+  .clinic .clinic__inner.container { max-width: none; padding-left: max(40px, (100% - 1600px) / 2); padding-right: max(var(--quick-edge), (100% - 1600px) / 2); }
+}
 
 /* ---------- ⑥ 치료사례 ---------- */
 .cases { padding: var(--space-4xl) 0 40px; }
@@ -407,7 +425,7 @@ html[data-fs="xl"] .doc-modal { width: min(680px, 100% - 48px); }
   .doctors__main { --doc-per: 3; --doc-gap: 20px; }
   .doc-cards { margin: 0 calc(var(--gutter) * -1); padding: 0 var(--gutter); scroll-padding-inline: var(--gutter); }
   .doctors__main { --doc-photo-h: 380px; }
-  .clinic__grid { grid-template-columns: 1fr 1fr; grid-template-rows: 260px 200px 200px; grid-template-areas: "imp aes" "ort wis" "gen gen"; }
+  .clinic__grid { height: auto; grid-template-columns: 1fr 1fr; grid-template-rows: 260px 200px 200px; grid-template-areas: "imp aes" "ort wis" "gen gen"; }
   .story__btn { margin-top: 24px; height: 52px; padding: 0 36px; font-size: var(--fs-md); }
 }
 
@@ -474,8 +492,8 @@ html[data-fs="xl"] .doc-modal { width: min(680px, 100% - 48px); }
 
   .clinic__grid { grid-template-columns: 1fr; grid-template-rows: none; grid-template-areas: none; grid-auto-rows: 180px; }
   .clinic-card { grid-area: auto !important; }
-  .clinic-card__body { padding: 0 64px 18px 20px; }
-  .clinic-card__title { font-size: var(--fs-h4); }
+  .clinic { --cl-pad: 20px; }
+  .clinic-card__title, .clinic-card--implant .clinic-card__title { font-size: var(--fs-h3); }
 
   .cases__list { grid-template-columns: repeat(3, 1fr); }
   .case-card__label { font-size: var(--fs-xs); gap: 6px; }
