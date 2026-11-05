@@ -18,6 +18,15 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('[data-kakao-login]').forEach((btn) => btn.addEventListener('click', () => window.API.signInWithKakao()));
 });
 
+/** 페이지 안에서 내용이 바뀔 때 서서히 나타나기 (common.css .is-fade-in — 서브페이지 열 때와 같은 효과) */
+function fadeIn(el) {
+  if (!el) return;
+  el.classList.remove('is-fade-in');
+  void el.offsetWidth; // 다시 붙여도 애니메이션이 처음부터 돌게
+  el.classList.add('is-fade-in');
+  el.addEventListener('animationend', () => el.classList.remove('is-fade-in'), { once: true });
+}
+
 /* ---------- 의료진 소개 ---------- */
 function renderDoctorsPage() {
   const box = document.querySelector('[data-doctors-page]');
@@ -105,6 +114,7 @@ function renderClinic() {
   }
   function select(branch, { focus = false, push = false } = {}) {
     if (!ids.includes(branch)) branch = ids[0];
+    const changed = !panels.find((p) => p.dataset.branch === branch)?.classList.contains('is-active');
     tabs.forEach((t) => {
       const on = t.dataset.branch === branch;
       t.setAttribute('aria-selected', String(on));
@@ -117,6 +127,7 @@ function renderClinic() {
       p.inert = !on;
       p.setAttribute('aria-hidden', String(!on));
       if (on) relayoutMaps(p);
+      if (on && changed) fadeIn(p); // 지점 탭을 바꿀 때 서서히
     });
     const hash = `#${branch}`;
     if (location.hash !== hash) history[push ? 'pushState' : 'replaceState'](null, '', hash);
@@ -251,7 +262,7 @@ async function renderNewsList() {
     return location.pathname + (s ? `?${s}` : '');
   };
 
-  function draw({ focusList = false } = {}) {
+  function draw({ focusList = false, animate = false } = {}) {
     const { cat, page: want } = readState();
     const shown = cat ? rows.filter((r) => r.category === cat) : rows;
     const pages = Math.max(1, Math.ceil(shown.length / NEWS_PER_PAGE));
@@ -290,6 +301,7 @@ async function renderNewsList() {
       h += page < pages ? btn(page + 1, ARROW_R, 'pager__arrow', ' aria-label="다음 페이지"') : off(ARROW_R, 'pager__arrow');
       pagerEl.innerHTML = h;
     }
+    if (animate) { fadeIn(list); fadeIn(pagerEl); } // 분류·페이지를 바꿀 때 카드가 서서히
     if (focusList) {
       const top = document.querySelector('.sub-body');
       top?.scrollIntoView({ behavior: 'instant', block: 'start' });
@@ -302,11 +314,11 @@ async function renderNewsList() {
     if (!a || e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return;
     e.preventDefault();
     history.pushState(null, '', a.getAttribute('href'));
-    draw({ focusList: true });
+    draw({ focusList: true, animate: true });
   };
   catsEl.addEventListener('click', go);
   pagerEl.addEventListener('click', go);
-  window.addEventListener('popstate', () => draw());
+  window.addEventListener('popstate', () => draw({ animate: true }));
 
   try {
     rows = await window.API.getNews();

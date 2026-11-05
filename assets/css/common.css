@@ -443,6 +443,16 @@ body.is-locked { overflow: hidden; }
 .sub-tabs a.is-current { background: var(--color-point); border-color: var(--color-point); color: #fff; }
 .sub-content { padding: var(--space-4xl) 0; min-height: 40vh; }
 
+/* ---------- 서브페이지 화면 전환: 서서히 나타나기 ----------
+   페이지를 열 때 본문(main 의 직계 블록: 배너·LNB+본문)이 0.6초 동안 투명 → 불투명.
+   main 자체가 아니라 자식에 거는 이유: main 에 opacity 가 남으면 쌓임 맥락이 생겨 의료진 소개 고정 배경(.page-doctors::before)이 푸터 위로 올라온다.
+   fill-mode backwards = 끝나면 효과가 사라짐(쌓임 맥락·sticky LNB 영향 없음). transform 은 쓰지 않음(고정·sticky 요소 기준이 바뀌어서)
+   페이지 안에서 내용이 바뀔 때(병원소개 지점 탭, 치과소식 분류·페이지)는 .is-fade-in 을 다시 붙여 같은 효과 (pages.js fadeIn)
+   움직임 줄이기 설정이면 아래 전역 규칙(prefers-reduced-motion)으로 사실상 바로 표시 */
+@keyframes sub-fade-in { from { opacity: 0; } to { opacity: 1; } }
+.is-sub main > * { animation: sub-fade-in 0.6s var(--ease) backwards; }
+.is-fade-in { animation: sub-fade-in 0.45s var(--ease) backwards; }
+
 /* ---------- 서브 LNB (body.has-lnb — 치과소개·의료진·병원소개 / 진료과목 5 / 공지·소식·사례) ----------
    배너(.sub-visual)에는 라벨·타이틀·경로만, 하위 메뉴는 본문 왼쪽 세로 메뉴. 모양은 FAQ 왼쪽 카테고리(.faq-cats)와 같은 규칙
    [LNB 220px | 64px | 본문] — LNB 는 스크롤해도 헤더 아래 32px 에 따라온다(sticky). 1024px 이하 = 본문 위 가로 스크롤 칩, 768px 이하 = 칩 줄이 헤더 아래 고정
