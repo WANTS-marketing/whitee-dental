@@ -652,12 +652,13 @@ async function renderFaqPreview() {
    세로 휠은 그대로 섹션 넘김(fullpage.js 는 가로 성분이 큰 휠을 건드리지 않는다)
    진행 바: 전체 길이 중 지금 보이는 구간의 위치·비율 (main.css '⑧ 치과소식') */
 const STORY_LIMIT = 6;
+const NOTICE_LIMIT = 4; // 공지사항 목록 (모바일은 main.css 에서 3개만)
 async function initStory() {
   const list = document.querySelector('[data-news-latest]');
   const track = document.querySelector('[data-story-track]');
   if (!list || !track) return;
   const { esc, img, formatDate } = window.UI;
-  const tabs = [...document.querySelectorAll('[data-story-tab]')];
+  const noticeEl = document.querySelector('[data-notice-latest]');
   const prev = document.querySelector('[data-story-prev]');
   const next = document.querySelector('[data-story-next]');
   const bar = document.querySelector('[data-story-bar]');
@@ -673,12 +674,13 @@ async function initStory() {
     const [notices, news] = await Promise.all([window.API.getNotices(), window.API.getNews()]);
     const tag = (rows, board) => rows.map((r) => ({ ...r, board }));
     data = {
-      notice: tag(notices, 'notice').sort(byDate).slice(0, STORY_LIMIT), // 메인은 고정 공지와 상관없이 최신순
+      notice: tag(notices, 'notice').sort(byDate).slice(0, NOTICE_LIMIT), // 메인은 고정 공지와 상관없이 최신순
       news: tag(news, 'news').sort(byDate).slice(0, STORY_LIMIT),
     };
   } catch (err) {
     console.error(err);
     list.innerHTML = '<li class="empty">소식을 불러오지 못했습니다.</li>';
+    if (noticeEl) noticeEl.innerHTML = '<li class="empty">공지사항을 불러오지 못했습니다.</li>';
     return;
   }
 
@@ -757,34 +759,23 @@ async function initStory() {
   track.addEventListener('click', (e) => { if (dragged) { e.preventDefault(); e.stopPropagation(); dragged = false; } }, true);
   track.addEventListener('dragstart', (e) => e.preventDefault());
 
-  /* ---------- 탭 ---------- */
-  let current = null;
-  let switchId = 0;
-  function show(key, animate) {
-    if (key === current) return;
-    current = key;
-    tabs.forEach((t) => t.setAttribute('aria-pressed', String(t.dataset.storyTab === key)));
-    const paint = () => {
-      const rows = data[key];
-      list.innerHTML = rows.length ? rows.map(card).join('') : '<li class="empty">등록된 글이 없습니다.</li>';
-      track.scrollLeft = 0;
-      update();
-    };
-    const id = ++switchId;
-    if (!animate || reduce.matches) { paint(); return; }
-    list.classList.remove('is-entering');
-    list.classList.add('is-leaving');
-    setTimeout(() => {
-      if (id !== switchId) return;
-      paint();
-      list.classList.remove('is-leaving');
-      void list.offsetWidth;
-      list.classList.add('is-entering');
-    }, 200);
+  /* ---------- 공지사항 목록 (왼쪽) ---------- */
+  const BRANCH_TAG = { changwon: '창원점', masan: '마산점' }; // 두 지점 공통(both)은 태그 없음
+  const dot = (iso) => { const d = new Date(iso); const p = (n) => String(n).padStart(2, '0'); return `${d.getFullYear()}. ${p(d.getMonth() + 1)}. ${p(d.getDate())}`; };
+  if (noticeEl) {
+    noticeEl.innerHTML = data.notice.length ? data.notice.map((r) => {
+      const t = BRANCH_TAG[r.branch];
+      return `
+      <li><a class="notice-item" href="${BOARD.notice.page}#${BOARD.notice.anchor}-${esc(r.id)}">
+        <span class="notice-item__title">${t ? `<span class="notice-item__tag notice-item__tag--${r.branch}">${t}</span>` : ''}<span class="notice-item__text">${esc(String(r.title).replace(/\s*\n\s*/g, ' '))}</span></span>
+        <time class="notice-item__date" datetime="${esc(r.date)}">${dot(r.date)}</time>
+      </a></li>`;
+    }).join('') : '<li class="empty">등록된 공지사항이 없습니다.</li>';
   }
-  list.addEventListener('animationend', (e) => { if (e.target === list) list.classList.remove('is-entering'); });
-  tabs.forEach((t) => t.addEventListener('click', () => show(t.dataset.storyTab, true)));
-  show('notice', false);
+
+  /* ---------- 치과소식 카드 (오른쪽) ---------- */
+  list.innerHTML = data.news.length ? data.news.map(card).join('') : '<li class="empty">등록된 소식이 없습니다.</li>';
+  update();
 
   // 카드가 플로팅 퀵메뉴 뒤로 지나가는 동안 퀵메뉴 버튼에 옅은 그림자 (main.css .quick--float.is-over-cards) — 버튼과 카드 글자가 섞여 보이지 않게
   if ('IntersectionObserver' in window) {
@@ -796,7 +787,7 @@ async function initStory() {
    의료진 섹션부터 적용. 섹션 타이틀은 fade-up, 카드 묶음은 자식이 0.08s 간격으로 순차 등장 (간격은 main.css). 움직임 줄이기 설정이면 끔 */
 function initReveal() {
   if (!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  const singles = '.doctors__head, .clinic__head, .cases__head, .faq-preview__head, .faq-preview__box, .faq-quick, .story__head, .story__body';
+  const singles = '.doctors__head, .clinic__head, .cases__head, .faq-preview__head, .faq-preview__box, .faq-quick, .story-notice, .story__body';
   const groups = '.clinic__grid, .cases__list'; // 치과소식 카드는 탭으로 다시 그려지므로 묶음(.story__body)째로 등장
   const targets = [
     // 의료진 인물 줄: 줄 전체가 아니라 사진·이름 하나하나 등장 (main.css .reveal-photos — 흰 배경 사진 multiply 가 끊기지 않게)
