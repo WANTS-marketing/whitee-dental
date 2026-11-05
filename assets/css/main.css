@@ -118,21 +118,20 @@ html.is-fullpage .header:is(.is-hover, :has(:focus-visible)):not(.is-mega):not(.
 
 /* ---------- ④ 의료진 ---------- */
 .doctors { position: relative; overflow: hidden; padding: 60px 0; }
-/* 섹션 배경: 아주 옅은 웜그레이 #f7f5f2 + 옅은 격자 선(80px) + 큰 원 테두리 3개 — 인물 사진 뒤로도 비친다
-   흰 배경 사진(doctor-*-cut.png 전원 흰 배경, 투명 아님)은 mix-blend-mode: multiply 로 흰색만 배경과 섞는다(.doc-person__img.is-blend)
+/* 섹션 배경: 기본 = 아주 옅은 웜그레이 #f7f5f2 단색
+   배경 사진 assets/images/doctors-bg.jpg 가 있으면(main.js initDoctorsBg 가 불러지는지 확인 후 .has-bg) cover·center + 위에 옅은 흰 막(--doctors-veil)
+   — 인물·글자가 사진에 묻히지 않게. 파일이 없으면 단색 그대로(흰 막도 깔지 않음)
+   흰 배경 사진(doctor-*-cut.png)은 mix-blend-mode: multiply 로 흰색만 배경과 섞는다(.doc-person__img.is-blend, site-data.js photoBlend)
    multiply 는 사진이 속한 묶음(쌓임 맥락) 안의 배경과만 섞이므로, 사진을 감싼 칸(.doctors__inner·__main·.doc-cards)에는
    배경색·opacity·transform 을 주지 않는다 — 주면 그 칸이 따로 그려지는 묶음이 되어 사진 흰 배경이 다시 사각형으로 보인다.
-   그래서 배경은 칸이 아니라 섹션 자체(background 여러 겹)에, 등장·지점 전환 애니메이션은 사진·이름 하나하나에 준다 */
+   그래서 배경은 칸이 아니라 섹션 자체에, 등장·지점 전환 애니메이션은 사진·이름 하나하나에 준다 */
 .doctors {
   --doctors-bg: #f7f5f2;
-  background:
-    radial-gradient(circle at 8% 78%, transparent 259px, rgba(120, 100, 80, 0.07) 260px, rgba(120, 100, 80, 0.07) 261px, transparent 262px),
-    radial-gradient(circle at 92% 30%, transparent 359px, rgba(120, 100, 80, 0.07) 360px, rgba(120, 100, 80, 0.07) 361px, transparent 362px),
-    radial-gradient(circle at 70% 105%, transparent 219px, rgba(120, 100, 80, 0.06) 220px, rgba(120, 100, 80, 0.06) 221px, transparent 222px),
-    linear-gradient(rgba(120, 100, 80, 0.045) 1px, transparent 1px) 0 0 / 80px 80px,
-    linear-gradient(90deg, rgba(120, 100, 80, 0.045) 1px, transparent 1px) 0 0 / 80px 80px,
-    var(--doctors-bg);
+  --doctors-veil: rgba(255, 255, 255, 0.4);   /* 배경 사진 위 흰 막 — 진하게/옅게는 이 값만 */
+  --doctors-bg-img: url("../images/doctors-bg.jpg");
+  background: var(--doctors-bg);
 }
+.doctors.has-bg { background: linear-gradient(var(--doctors-veil), var(--doctors-veil)), var(--doctors-bg-img) center / cover no-repeat, var(--doctors-bg); }
 /* 머리말(라벨 → 제목 → 설명 → 지점 탭, 모두 가운데) + 아래 인물 줄
    가운데 기준 = 인물 줄의 가운데 (같은 칸 안이라 좌우 여백이 달라도 인물과 제목 중심이 맞는다)
    배경 없음(투명): 섹션 배경이 인물 뒤로 보이게 (위 '섹션 배경' 설명) */
@@ -174,14 +173,14 @@ html.is-fullpage .header:is(.is-hover, :has(:focus-visible)):not(.is-mega):not(.
 /* 등장(initReveal .reveal-photos)·지점 전환(main.js switchTo: 0.2s 사라짐 → 0.5s 나타남)
    줄 전체가 아니라 사진·실루엣·이름 하나하나를 흐리게 — 줄에 opacity·transform 을 주면 multiply 가 끊겨 흰 사각형이 보인다
    사진은 위치 잡기에 transform 을 쓰므로 움직임은 translate 속성으로 (transform 과 겹쳐 적용) */
-.reveal-photos :is(.doc-person__img, .doc-person__ph, .doc-person__info) { opacity: 0; translate: 0 28px; transition: opacity 0.8s var(--ease), translate 0.8s var(--ease), filter 0.35s var(--ease); }
-.reveal-photos.is-in :is(.doc-person__img, .doc-person__ph, .doc-person__info) { opacity: 1; translate: none; }
+.reveal-photos :is(.doc-person__img, .doc-person__backer, .doc-person__ph, .doc-person__info) { opacity: 0; translate: 0 28px; transition: opacity 0.8s var(--ease), translate 0.8s var(--ease), filter 0.35s var(--ease); }
+.reveal-photos.is-in :is(.doc-person__img, .doc-person__backer, .doc-person__ph, .doc-person__info) { opacity: 1; translate: none; }
 .doc-cards.is-leaving { pointer-events: none; }
-.doc-cards.is-leaving :is(.doc-person__img, .doc-person__ph, .doc-person__info) { opacity: 0; transition: opacity 0.2s ease; }
-.doc-cards.is-entering :is(.doc-person__img, .doc-person__ph, .doc-person__info) { animation: doc-item-in 0.5s var(--ease); }
+.doc-cards.is-leaving :is(.doc-person__img, .doc-person__backer, .doc-person__ph, .doc-person__info) { opacity: 0; transition: opacity 0.2s ease; }
+.doc-cards.is-entering :is(.doc-person__img, .doc-person__backer, .doc-person__ph, .doc-person__info) { animation: doc-item-in 0.5s var(--ease); }
 @keyframes doc-item-in { from { opacity: 0; translate: 0 12px; } }
 @keyframes doc-switch-in { from { opacity: 0; transform: translateY(12px); } } /* 치과소식 탭 전환이 같이 씀 */
-@media (prefers-reduced-motion: reduce) { .doc-cards.is-entering :is(.doc-person__img, .doc-person__ph, .doc-person__info) { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .doc-cards.is-entering :is(.doc-person__img, .doc-person__backer, .doc-person__ph, .doc-person__info) { animation: none; } }
 /* --z: 사진이 겹칠 때 위아래 순서 (main.js: 가운데 원장이 가장 위). 마우스를 올린(탭한) 원장은 맨 위 */
 .doc-person { --z: 10; position: relative; flex: 0 0 calc((100% - var(--doc-gap) * (var(--doc-per) - 1)) / var(--doc-per)); min-width: 0; scroll-snap-align: start; }
 .doc-person.is-open { --z: 40 !important; } /* 인라인 --z(main.js)보다 우선 */
@@ -209,6 +208,17 @@ html.is-fullpage .header:is(.is-hover, :has(:focus-visible)):not(.is-mega):not(.
 }
 .doc-person__img.is-blend { mix-blend-mode: multiply; } /* 흰 배경 사진: 흰색을 섹션 배경과 섞어 지움 (site-data.js photoBlend: false 면 끔 — 배경 제거 PNG 로 바꾼 원장) */
 .doc-person__img.is-missing { display: none; }
+/* 사진 뒤 흰 둥근 그라데이션(site-data.js photoBacker: true 인 원장만): multiply 사진(흰 가운 등)으로 배경 사진 무늬가 비칠 때 가린다
+   크기 = 인물 실루엣(사진 폭 정도), 위치·배율은 사진과 같은 보정값(--ps·--py·--px), 아래 끝은 사진처럼 녹인다. 투명 PNG 로 바꾸면 필요 없음 */
+.doc-person__backer {
+  --ps: 1; --py: 0; --px: 0;
+  position: absolute; z-index: calc(var(--z) - 1); left: 50%; bottom: 0; height: calc(100% * var(--ps)); aspect-ratio: 400 / 664;
+  transform: translate(calc(-50% + var(--px) * var(--doc-photo-h, 420px) / 100), calc(var(--py) * var(--doc-photo-h, 420px) / 100));
+  background: radial-gradient(ellipse 46% 50% at 50% 58%, #fff 62%, rgba(255, 255, 255, 0) 100%);
+  -webkit-mask-image: linear-gradient(180deg, #000 70%, transparent); mask-image: linear-gradient(180deg, #000 70%, transparent);
+  pointer-events: none;
+}
+.doc-person__stage:has(.doc-person__img.is-missing) .doc-person__backer { display: none; }
 /* 실루엣: 사진이 없을 때만 (사진이 multiply 라 뒤에 비쳐 보이므로 사진이 있으면 숨김), 아래 끝은 사진처럼 녹임 */
 .doc-person__stage:has(.doc-person__img:not(.is-missing)) .doc-person__ph { display: none; }
 .doc-person__ph { -webkit-mask-image: linear-gradient(180deg, #000 70%, transparent); mask-image: linear-gradient(180deg, #000 70%, transparent); }
