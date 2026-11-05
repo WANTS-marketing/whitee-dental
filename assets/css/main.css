@@ -445,12 +445,14 @@ html[data-fs="xl"] .doc-modal { width: min(680px, 100% - 48px); }
 .story__list.is-leaving { opacity: 0; }
 .story__list.is-entering { animation: doc-switch-in 0.5s var(--ease); }
 
-/* 아래 조작: ‹ › 원형 버튼(넘길 수 있으면 진하게, 끝이면 흐리게) + 진행 바(포인트 컬러) — 오른쪽 끝은 퀵메뉴 앞 */
+/* 아래 조작: ‹ › 화살표 버튼(테두리 없음, 넘길 수 있으면 포인트 컬러, 끝이면 회색) + 진행 바(포인트 컬러) — 오른쪽 끝은 퀵메뉴 앞 */
 .story__ctrl { display: flex; align-items: center; gap: 10px; margin-top: clamp(24px, 3.7vh, 40px); padding-right: var(--story-end); }
-.story__nav { display: grid; place-items: center; flex: none; width: 48px; height: 48px; border: 1px solid var(--color-text); border-radius: 50%; background: #fff; color: var(--color-text); transition: background var(--dur), color var(--dur), border-color var(--dur); }
-.story__nav svg { width: 16px; height: 16px; }
-.story__nav:not(:disabled):hover { background: var(--color-text); color: #fff; }
-.story__nav:disabled { border-color: #d6d6d6; color: #bbb; cursor: default; }
+.story__nav { display: grid; place-items: center; flex: none; width: 53px; height: 53px; border: 0; background: none; color: var(--color-point); transition: color var(--dur); } /* 테두리 없이 화살표만, 크기 48 → 53px(+10%) · 넘길 수 있으면 포인트 컬러, 끝이면 회색 */
+.story__nav svg { width: 18px; height: 18px; transition: transform var(--dur); }
+.story__nav[data-story-prev] { margin-left: -20px; } /* 테두리가 없어져 ‹ 화살표가 카드 왼쪽 선에 맞게 (누르는 영역 53px 은 그대로) */
+.story__nav[data-story-prev]:not(:disabled):hover svg { transform: translateX(-3px); }
+.story__nav[data-story-next]:not(:disabled):hover svg { transform: translateX(3px); }
+.story__nav:disabled { color: #c4c4c4; cursor: default; }
 .story__bar { position: relative; flex: 1; height: 2px; margin-left: 22px; overflow: hidden; background: #dcdcdc; }
 .story__bar-fill { position: absolute; top: 0; bottom: 0; left: 0; width: 30%; background: var(--color-point); }
 @media (prefers-reduced-motion: reduce) { .story__list { transition: none; } .story__list.is-entering { animation: none; } }
