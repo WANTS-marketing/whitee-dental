@@ -60,7 +60,15 @@ window.SITE = {
   /* 병원소개(about/clinic.html) 내부 둘러보기 — TODO: 실제 원내 사진·공간별 캡션 받으면 교체 (지금은 temp/ 임시 이미지) */
   tour: {
     changwon: [1, 2, 3, 4, 5, 6].map((n) => ({ file: `tour-changwon-0${n}.jpg`, caption: `창원점 원내 0${n}` })),
-    masan: [1, 2, 3, 4, 5, 6].map((n) => ({ file: `tour-masan-0${n}.jpg`, caption: `마산점 원내 0${n}` })),
+    // 마산점: 실제 원내 사진 (자료/서브/병원소개-마산, 2024-03 촬영 240307_MED_*) — 첫 장은 갤러리 큰 칸
+    masan: [
+      { file: 'tour-masan-01.jpg', caption: '대기실' },
+      { file: 'tour-masan-02.jpg', caption: '병원 입구' },
+      { file: 'tour-masan-03.jpg', caption: '접수·안내 데스크' },
+      { file: 'tour-masan-04.jpg', caption: '진료실' },
+      { file: 'tour-masan-05.jpg', caption: '상담실' },
+      { file: 'tour-masan-06.jpg', caption: '대기 라운지' },
+    ],
   },
 
   /* 지점별 SNS (비어 있으면 링크가 비활성 처리됨) */
