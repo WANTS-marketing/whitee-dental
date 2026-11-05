@@ -85,7 +85,7 @@ window.SITE = {
   doctors: [
     // 창원점
     {
-      name: '이은주', title: '대표원장', dept: '치과교정과', branches: ['changwon'], photo: 'doctor-lee-eunju.jpg', photoScale: 1.06, photoOffsetY: 4.8, photoBlend: true,
+      name: '이은주', title: '대표원장', dept: '치과교정과', branches: ['changwon'], photo: 'doctor-lee-eunju.jpg', photoScale: 1.06, photoOffsetY: 4.8, photoBlend: true, photoBacker: true,
       career: [
         '보건복지부 인증 치과교정과 전문의', '보건복지부 인증 통합치의학과 전문의',
         '부산대학교 치과대학 수석졸업', '부산대학교 치과교정학 석사', '부산대학교병원 치과교정과 인턴·레지던트 수료',
@@ -95,7 +95,7 @@ window.SITE = {
       ],
     },
     {
-      name: '권진선', title: '원장', dept: '치과보철과', branches: ['changwon'], photo: 'doctor-kwon-jinseon.jpg', photoScale: 1.14, photoOffsetY: 12.1, photoBlend: true,
+      name: '권진선', title: '원장', dept: '치과보철과', branches: ['changwon'], photo: 'doctor-kwon-jinseon.jpg', photoScale: 1.14, photoOffsetY: 12.1, photoBlend: true, photoBacker: true,
       career: [
         '보건복지부 인증 치과보철과 전문의', '부산대학교 치과병원 치과보철과 외래교수', '부산대학교 대학원 치과보철학 박사',
         '부산대학교 치의학전문대학원 졸업', '부산대학교 치과병원 인턴, 치과보철과 레지던트 수료', '대한치과보철학회 인정의·정회원',
@@ -111,7 +111,7 @@ window.SITE = {
       ],
     },
     {
-      name: '이휘소', title: '원장', dept: '보철·보존', branches: ['changwon'], photo: 'doctor-lee-hwiso.jpg', photoScale: 1.21, photoOffsetY: 20.3, photoBlend: true,
+      name: '이휘소', title: '원장', dept: '보철·보존', branches: ['changwon'], photo: 'doctor-lee-hwiso.jpg', photoScale: 1.21, photoOffsetY: 20.3, photoBlend: true, photoBacker: true,
       career: [
         '연세대학교 치과대학 졸업', '대한치과의사협회지 2021.06 논문 저자', '오스템 엔도 세미나, 김평식 엔도 세미나 수료',
         '대한치과보존학회·대한심미치과학회 정회원', '경남교통방송(tbn) 라디오 출연', '대한치과의사협회 표창장 (2021)', '전) 김제시보건소 역학조사관',
@@ -120,7 +120,7 @@ window.SITE = {
     // 마산점
     {
       // TODO: 진료과 표기 병원 확인 — 현재 '통합치의학과', 기존 사이트 약력에는 '소아치과 전문의'로 표기됨
-      name: '정호석', title: '대표원장', dept: '통합치의학과', branches: ['masan'], photo: 'doctor-jeong-hoseok.jpg', photoScale: 1.07, photoOffsetY: 7.1, photoBlend: true,
+      name: '정호석', title: '대표원장', dept: '통합치의학과', branches: ['masan'], photo: 'doctor-jeong-hoseok.jpg', photoScale: 1.07, photoOffsetY: 7.1, photoBlend: true, photoBacker: true,
       career: [
         '보건복지부 인증 소아치과 전문의', '원광대학교 치과대학 졸업', '원광대학교병원 소아치과 인턴·레지던트 수료', '원광대학교 치과대학원 수료',
         '화성시치과의사회 회장 역임, (현) 고문', '대한치과보철학회 인증 우수보철치과의사과정 수료', '미국 펜실베니아대학교 근관치료과정 수료',
@@ -128,7 +128,7 @@ window.SITE = {
       ],
     },
     {
-      name: '송희태', title: '원장', dept: '치과교정과', branches: ['masan'], photo: 'doctor-song-heetae.jpg', photoScale: 0.99, photoOffsetY: -3.3, photoBlend: true,
+      name: '송희태', title: '원장', dept: '치과교정과', branches: ['masan'], photo: 'doctor-song-heetae.jpg', photoScale: 0.99, photoOffsetY: -3.3, photoBlend: true, photoBacker: true,
       career: [
         '보건복지부 인증 치과교정과 전문의', '보건복지부 인증 통합치의학과 전문의', '대한치과교정학회 인정의',
         '서울대학교 학사, 경희대학교 치의학석사', '경희대학교 치과병원 인턴 수석 수료, 교정과 레지던트', '대한치과교정학회 정회원',
@@ -144,7 +144,7 @@ window.SITE = {
       ],
     },
     {
-      name: '조혜진', title: '원장', dept: '치과보존과', branches: ['masan'], photo: 'doctor-cho-hyejin.jpg', photoScale: 1.08, photoOffsetY: 7, photoBlend: true,
+      name: '조혜진', title: '원장', dept: '치과보존과', branches: ['masan'], photo: 'doctor-cho-hyejin.jpg', photoScale: 1.08, photoOffsetY: 7, photoBlend: true, photoBacker: true,
       career: [
         '보건복지부 인증 치과보존과 전문의', '보건복지부 인증 통합치의학과 전문의', '원광대학교 치과대학 졸업',
         '조선대학교 치과병원 인턴, 치과보존과 레지던트 수료', '대한치과보존학회 인정의·정회원',
@@ -153,7 +153,7 @@ window.SITE = {
     },
     // 겸직
     {
-      name: '김영우', title: '원장', dept: '구강악안면외과', branches: ['changwon', 'masan'], photo: 'doctor-kim-youngwoo.jpg', photoScale: 0.83, photoOffsetY: -13.8, photoBlend: true,
+      name: '김영우', title: '원장', dept: '구강악안면외과', branches: ['changwon', 'masan'], photo: 'doctor-kim-youngwoo.jpg', photoScale: 0.83, photoOffsetY: -13.8, photoBlend: true, photoBacker: true,
       career: [
         '보건복지부 인증 구강악안면외과 전문의', '보건복지부 인증 통합치의학과 전문의', '서울대학교치과병원 구강악안면외과 인턴·레지던트 수료',
         '서울대학교 치의학대학원 구강악안면외과학 석사 수료', '대한구강악안면성형재건외과학회 인정의',
