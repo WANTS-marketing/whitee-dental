@@ -22,7 +22,6 @@ window.SITE = {
       hoursShort: '평일 10:00–21:00 · 토 10:00–16:00 · 일요일 휴진',
       naverMap: 'https://naver.me/FY3f3LdP',
       landmark: '상남동 다이소 앞 건물',
-      intro: '상남동 다이소 앞 밀레니엄타워 3층, 평일 저녁 9시까지 진료합니다.', // 병원소개 한 줄 소개 — TODO: 병원 확인
       parking: '건물 지하주차장 무료 · 상남동 공영주차빌딩 1시간 무료',
       amenities: ['예약', '주차', '무선인터넷', '남/녀 화장실 구분'],
       transit: [], // TODO: 창원점 대중교통 안내 병원 확인
@@ -45,7 +44,6 @@ window.SITE = {
       hoursShort: '평일 10:00–21:00 · 토 10:00–16:00 · 일요일 휴진',
       naverMap: 'https://naver.me/xWTYEspr',
       landmark: '마산역 도보 3분',
-      intro: '마산역에서 걸어서 3분, 석전동 365병원 9~10층에 있습니다.', // 병원소개 한 줄 소개 — TODO: 병원 확인
       parking: '', // TODO: 마산점 주차 안내 병원 확인
       amenities: ['예약', '주차', '무선인터넷', '남/녀 화장실 구분'],
       transit: [
