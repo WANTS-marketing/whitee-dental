@@ -53,7 +53,7 @@ function renderDoctorsPage() {
 
 /* ---------- 병원소개 (about/clinic.html) = 예전 병원 둘러보기 + 오시는길 ----------
    지점 탭(창원점·마산점): 선택한 지점 패널만 보이고 주소 해시가 #changwon / #masan 으로 바뀐다(직접 링크·뒤로가기 가능)
-   패널마다 ① 지점명·한 줄 소개 ② 내부 둘러보기(갤러리 + 라이트박스) ③ 오시는길(카카오맵 + 주소·전화·이메일·진료시간) ④ 교통·주차 안내
+   패널마다 ① 지점명 ② 내부 둘러보기(갤러리 + 라이트박스) ③ 오시는길(카카오맵 + 주소·전화·이메일·진료시간) ④ 교통·주차 안내
    지도: .loc__map 안의 카카오맵 '지도 퍼가기' 코드는 페이지를 읽는 동안 실행돼야 해서 HTML 에 그대로 둔다(API 키 불필요).
    숨긴 패널은 display:none 이 아니라 화면 밖에 같은 너비로 두므로(sub.css .clinic-panel) 지도가 처음부터 제 크기로 그려지고,
    탭이 열릴 때 relayout(지도 다시 맞추기)도 한 번 더 한다 */
@@ -63,10 +63,8 @@ function renderClinic() {
   const { esc, telHref, img } = window.UI;
   const DOT = '<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="4" fill="currentColor"/></svg>';
 
-  // ① 한 줄 소개 · ③ 지점 정보 · ④ 교통·주차
+  // ③ 지점 정보 · ④ 교통·주차
   window.SITE.branches.forEach((b) => {
-    const intro = document.querySelector(`[data-clinic-intro="${b.id}"]`);
-    if (intro) intro.textContent = b.intro || `${b.addressNote} · ${b.landmark}`;
     const info = document.querySelector(`[data-loc-info="${b.id}"]`);
     if (info) {
       info.innerHTML = `

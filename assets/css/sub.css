@@ -172,7 +172,6 @@
 .clinic-panel { position: absolute; top: 0; left: 0; right: 0; visibility: hidden; pointer-events: none; }
 .clinic-panel.is-active { position: static; visibility: visible; pointer-events: auto; }
 .clinic-panel__head .loc__head { margin-bottom: 8px; }
-.clinic-panel__intro { font-size: var(--fs-lg); color: var(--color-text-sub); word-break: keep-all; }
 .clinic-block { margin-top: var(--space-3xl, 56px); }
 .clinic-block__title { margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid var(--color-text); font-size: var(--fs-h3); }
 .clinic-amenities { margin-top: 16px; }
