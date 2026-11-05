@@ -77,122 +77,15 @@
   }
   initRollText();
 
-  /* ---------- 서브 LNB 하위 항목 (body.has-lnb · 스타일 common.css '서브 LNB') ----------
-     페이지 안 섹션이 있는 메뉴 행에 펼침 화살표(∨/∧)와 섹션 목록(옅은 회색 영역)을 넣는다. 현재 페이지 행은 처음부터 펼침.
-     현재 페이지 섹션: 누르면 부드럽게 이동 + 스크롤 위치에 따라 현재 섹션 굵게 / 다른 페이지 섹션: 그 페이지의 해당 위치로 이동
-     섹션 추가·이름 변경은 아래 LNB_SECTIONS — [본문 요소 id, 메뉴 이름], 본문 순서대로.
-     병원소개는 섹션 대신 지점 탭(#changwon·#masan — pages.js renderClinic)을 바꾸고, 선택된 지점이 굵게 */
-  const LNB_SECTIONS = {
-    'clinic.html': [['changwon', '창원점'], ['masan', '마산점']],
-    'implant.html': [['special', '화이트e치과의 특별함'], ['merits', '장점'], ['types', '임플란트 종류']],
-    'orthodontics.html': [['care', '1:1 맞춤 책임 진료'], ['symptoms', '증상별 교정'], ['devices', '교정장치']],
-    'general.html': [['caries', '충치치료'], ['endo', '신경치료'], ['prosth', '보철치료'], ['perio', '치주치료']],
-    'wisdom-scaling.html': [['wisdom', '사랑니'], ['scaling', '스케일링']],
-    'aesthetic.html': [['gum', '잇몸성형'], ['allceramic', '올세라믹'], ['laminate', '라미네이트'], ['whitening', '치아미백']],
-  };
+  /* ---------- 서브 LNB (body.has-lnb · 스타일 common.css '서브 LNB') ----------
+     1024px 이하 가로 탭 줄: 현재 페이지 탭이 화면 밖(오른쪽)에 있으면 보이게 가로로 당겨 둔다 */
   function initLnb() {
-    const list = document.querySelector('.lnb__list');
-    if (!list) return;
-    const CHEVRON = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3.5 6l4.5 4.5L12.5 6"/></svg>';
-    let currentSub = null;
-    list.querySelectorAll(':scope > li').forEach((li, n) => {
-      const a = li.querySelector(':scope > a');
-      const file = (a?.getAttribute('href') || '').split(/[?#]/)[0].split('/').pop();
-      const secs = LNB_SECTIONS[file];
-      if (!secs) return;
-      const isCurrent = a.getAttribute('aria-current') === 'page';
-      const sub = document.createElement('ul');
-      sub.className = 'lnb__sub';
-      sub.id = `lnb-sub-${n}`;
-      sub.innerHTML = secs.map(([id, label]) => `<li><a href="${isCurrent ? '' : esc(a.getAttribute('href'))}#${esc(id)}" data-sec="${esc(id)}">${esc(label)}</a></li>`).join('');
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'lnb__toggle';
-      btn.setAttribute('aria-controls', sub.id);
-      btn.innerHTML = CHEVRON;
-      const name = a.textContent.trim();
-      const setOpen = (open) => {
-        sub.hidden = !open;
-        btn.setAttribute('aria-expanded', String(open));
-        btn.setAttribute('aria-label', `${name} 하위 메뉴 ${open ? '접기' : '펼치기'}`);
-      };
-      setOpen(isCurrent);
-      btn.addEventListener('click', () => setOpen(sub.hidden));
-      li.append(btn, sub);
-      if (isCurrent) currentSub = sub;
-    });
-    if (currentSub) initLnbSpy(currentSub);
-    // 1024px 이하 가로 탭 줄: 현재 페이지 탭이 화면 밖(오른쪽)에 있으면 보이게 가로로 당겨 둔다
-    const lnb = list.closest('.lnb');
-    const cur = list.querySelector('a[aria-current="page"]');
-    if (lnb && cur && lnb.scrollWidth > lnb.clientWidth) {
-      const { left, right } = cur.getBoundingClientRect();
-      const box = lnb.getBoundingClientRect();
-      if (right > box.right - 16 || left < box.left) lnb.scrollLeft += left - box.left - (box.width - (right - left)) / 2;
-    }
-  }
-  function initLnbSpy(sub) {
-    const links = [...sub.querySelectorAll('a[data-sec]')];
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const behavior = () => (reduce.matches ? 'auto' : 'smooth');
-    const mark = (ids) => links.forEach((a) => {
-      const on = ids.includes(a.dataset.sec);
-      a.classList.toggle('is-active', on);
-      if (on) a.setAttribute('aria-current', 'location'); else a.removeAttribute('aria-current');
-    });
-
-    // 병원소개: 지점 탭 전환 (주소 해시가 바뀌면 pages.js 가 탭을 고른다) + 탭 위치로 이동
-    const tabs = document.querySelector('.branch-tabs');
-    if (tabs) {
-      const sync = () => mark([tabs.querySelector('[aria-selected="true"]')?.dataset.branch]);
-      new MutationObserver(sync).observe(tabs, { subtree: true, attributes: true, attributeFilter: ['aria-selected'] });
-      sync();
-      links.forEach((a) => a.addEventListener('click', (e) => {
-        e.preventDefault();
-        tabs.querySelector(`[data-branch="${a.dataset.sec}"]`)?.click();
-        tabs.scrollIntoView({ behavior: behavior(), block: 'start' });
-      }));
-      return;
-    }
-
-    // 섹션: 화면 위쪽 기준선(헤더 아래 120px)을 지난 섹션 중 가장 아래 것 = 현재. 2열 카드처럼 같은 줄이면 함께 굵게
-    const targets = links.map((a) => document.getElementById(a.dataset.sec));
-    let pinned = null; // 메뉴로 이동한 직후엔 누른 항목 유지 (페이지 끝 근처라 기준선까지 못 올라오는 섹션도 굵게 보이게) — 직접 스크롤하면 해제
-    const update = () => {
-      if (pinned) return;
-      const line = (parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-h')) || 90) + 120;
-      let best = -Infinity;
-      let ids = [];
-      targets.forEach((el, i) => {
-        if (!el) return;
-        const top = el.getBoundingClientRect().top;
-        if (top > line) return;
-        if (top > best + 2) { best = top; ids = [links[i].dataset.sec]; }
-        else if (Math.abs(top - best) <= 2) ids.push(links[i].dataset.sec);
-      });
-      const end = Math.max(...targets.filter(Boolean).map((el) => el.getBoundingClientRect().bottom));
-      if (end < line) ids = []; // 마지막 섹션까지 지나 아래(빠른상담 등)로 내려가면 표시 없음
-      mark(ids);
-    };
-    let ticking = false;
-    window.addEventListener('scroll', () => {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(() => { ticking = false; update(); });
-    }, { passive: true });
-    window.addEventListener('resize', update);
-    const unpin = () => { if (pinned) { pinned = null; update(); } };
-    ['wheel', 'touchstart', 'keydown'].forEach((type) => window.addEventListener(type, unpin, { passive: true }));
-    links.forEach((a, i) => a.addEventListener('click', (e) => {
-      const el = targets[i];
-      if (!el) return;
-      e.preventDefault();
-      pinned = a.dataset.sec;
-      mark([pinned]);
-      el.scrollIntoView({ behavior: behavior(), block: 'start' });
-      history.replaceState(null, '', `#${a.dataset.sec}`);
-    }));
-    update();
+    const lnb = document.querySelector('.lnb');
+    const cur = lnb?.querySelector('.lnb__list a[aria-current="page"]');
+    if (!cur || lnb.scrollWidth <= lnb.clientWidth) return;
+    const { left, right } = cur.getBoundingClientRect();
+    const box = lnb.getBoundingClientRect();
+    if (right > box.right - 16 || left < box.left) lnb.scrollLeft += left - box.left - (box.width - (right - left)) / 2;
   }
   initLnb();
 

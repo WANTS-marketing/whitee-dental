@@ -105,7 +105,6 @@ docs/                      배포·인수인계 문서
 | 색상·글자 크기 | `assets/css/variables.css` |
 | 메뉴 | `components/header.html` (데스크톱·모바일 두 군데) |
 | 서브페이지 왼쪽 하위 메뉴(LNB) 행·타이틀 블록(대메뉴 이름·영문) | 각 서브페이지 `<aside class="lnb">` (같은 메뉴 묶음 페이지 모두) · 스타일 `common.css` '서브 LNB' |
-| LNB 하위 항목(페이지 안 섹션 바로가기) | `assets/js/common.js` 의 `LNB_SECTIONS` — `[본문 요소 id, 메뉴 이름]`, 본문 순서대로 (id 는 해당 페이지 `<section id>` 와 같게) |
 | 서브 배너 문구(영문 라벨·슬로건) · 본문 맨 위 경로·페이지 제목 | 각 서브페이지 `.sub-visual` (대메뉴 묶음마다 같은 문구) · `.sub-head` |
 | FAQ·공지 (1차) | `assets/data/*.json` |
 | 치과소식 글 | `scripts/import/build-story.js` 로 생성 (분류 규칙·본문 정리도 여기) — 새 글은 2차 Supabase 게시판에서 |
