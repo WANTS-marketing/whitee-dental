@@ -31,9 +31,9 @@ h1, h2, h3, h4, h5 { line-height: 1.3; font-weight: 700; }
 .sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 .skip-link { position: absolute; top: -100px; left: 16px; z-index: 999; padding: 8px 16px; background: var(--color-text); color: #fff; border-radius: var(--radius-sm); }
 .skip-link:focus { top: 16px; }
-/* 타이틀 강조 글자 = 지점 그라데이션 글자(브랜드 강조). 얇으면 안 보여 700 이상, 줄이 바뀌면 줄마다 그라데이션 */
-.text-point { font-weight: 700; background: var(--color-point-gradient); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
-.sec--dark .text-point { background: none; color: #fff; -webkit-text-fill-color: currentColor; } /* 어두운 배경 위 = 흰색 (히어로는 main.css 에서 그라데이션 그대로) */
+/* 타이틀 강조 글자 = 파랑(사이트 강조색 — 지점 색은 한 지점에 치우쳐 보여서 쓰지 않음). 어두운 배경 위는 흰색 + 밑줄 (히어로는 main.css) */
+.text-point { font-weight: 700; color: var(--color-accent); }
+.sec--dark .text-point { color: #fff; text-decoration: underline; text-decoration-thickness: 0.08em; text-underline-offset: 0.18em; }
 .text-changwon { color: var(--color-changwon); }
 .text-masan { color: var(--color-masan); }
 .only-mobile { display: none !important; }
@@ -501,9 +501,9 @@ html[data-header-theme="dark"] .quick__sns-btn--consult { border-color: rgba(255
 .lnb__list > li { position: relative; border-bottom: 1px solid #eaeaea; }
 .lnb__list > li > a { position: relative; display: flex; align-items: center; min-height: 60px; padding: 10px 28px; background: #fff; font-size: 1.0625rem; line-height: 1.4; color: #333; word-break: keep-all; transition: color 0.2s; }
 .lnb__list > li > a:hover { color: var(--color-accent); }
-/* 현재 페이지 행: 옅은 네이비 면 + 네이비 굵은 글자 + 왼쪽 4px 세로 막대(브랜드 그라데이션, 행 높이 꽉) — 네이비 타이틀 블록과 구분 */
+/* 현재 페이지 행: 옅은 네이비 면 + 네이비 굵은 글자 + 왼쪽 4px 세로 막대(파랑, 행 높이 꽉) — 네이비 타이틀 블록과 구분 */
 .lnb__list > li > a[aria-current="page"] { background: var(--color-point-soft); color: var(--color-point); font-weight: 700; }
-.lnb__list > li > a[aria-current="page"]::before { content: ""; position: absolute; top: 0; bottom: 0; left: 0; width: 4px; background: var(--color-point-gradient-v); }
+.lnb__list > li > a[aria-current="page"]::before { content: ""; position: absolute; top: 0; bottom: 0; left: 0; width: 4px; background: var(--color-accent); }
 /* 본문 맨 위: 경로(홈 아이콘 › 대메뉴 › 페이지) + 페이지 제목 + 얇은 구분선 — 경로 줄이 LNB 맨 위와 같은 높이 */
 .sub-head { margin-bottom: 56px; padding: 0 0 24px; border-bottom: 1px solid var(--color-line); }
 .sub-head .breadcrumb { justify-content: flex-start; align-items: center; margin: 0 0 10px; font-size: 0.875rem; color: #888; }
