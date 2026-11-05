@@ -152,7 +152,7 @@
     if (!gnb) return;
     const CLOSE_DELAY = 200;
     let timer = null;
-    // 열고 닫을 때는 전환 효과 없이 바로 (헤더 배경·글자색 0.3s 전환은 스크롤할 때만) — 다음 화면 그리기 뒤에 .is-instant 해제
+    // 메가메뉴를 열 때는 헤더 배경·글자색을 전환 효과 없이 바로 (마우스 hover·키보드 포커스·닫힌 뒤 투명 복귀는 0.25s 전환, main.css) — 다음 화면 그리기 뒤에 .is-instant 해제
     const instant = () => { header.classList.add('is-instant'); requestAnimationFrame(() => requestAnimationFrame(() => header.classList.remove('is-instant'))); };
     const open = () => { clearTimeout(timer); clearTimeout(closingTimer); header.classList.remove('is-closing'); if (!header.classList.contains('is-mega')) instant(); header.classList.add('is-mega'); };
     // 닫힐 때는 하위 목록이 0.3초 동안 걷히므로, 그동안 메인 투명 헤더가 먼저 투명해지지 않게 .is-closing 으로 흰 헤더 유지
@@ -163,7 +163,7 @@
       header.classList.remove('is-mega');
       header.classList.add('is-closing');
       clearTimeout(closingTimer);
-      closingTimer = setTimeout(() => { instant(); header.classList.remove('is-closing'); }, 300);
+      closingTimer = setTimeout(() => header.classList.remove('is-closing'), 300); // 다 걷힌 뒤 투명 헤더로(0.25s 전환, main.css)
     };
     const closeLater = () => { clearTimeout(timer); timer = setTimeout(close, CLOSE_DELAY); };
 
@@ -215,12 +215,10 @@
     gnb.addEventListener('mouseleave', closeLater);
     mega?.addEventListener('mouseenter', () => { if (header.classList.contains('is-mega')) open(); }); // 패널 위로 내려오면 유지
     mega?.addEventListener('mouseleave', closeLater);
-    // 메인 투명 헤더: 헤더 박스에 마우스를 올리면 흰 배경 — 바뀔 때 전환 효과 없이 바로
+    // 메인 투명 헤더: 헤더 박스에 마우스를 올리면 흰 배경 — 0.25s 전환 (main.css '투명 헤더')
     // (터치로 누른 뒤 hover 가 남아 흰 헤더로 굳지 않게 마우스일 때만 .is-hover)
-    header.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') { instant(); header.classList.add('is-hover'); } });
-    header.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse') { instant(); header.classList.remove('is-hover'); } });
-    header.addEventListener('focusin', instant);  // 키보드 포커스로 흰 헤더가 될 때도 바로
-    header.addEventListener('focusout', instant);
+    header.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') header.classList.add('is-hover'); });
+    header.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse') header.classList.remove('is-hover'); });
     gnb.addEventListener('focusin', () => { if (!escaping) open(); });
     header.addEventListener('focusout', (e) => { if (!header.contains(e.relatedTarget)) closeLater(); });
     document.addEventListener('keydown', (e) => {

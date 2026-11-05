@@ -5,6 +5,7 @@
    - 이동 중·이동 후 약 1s 는 입력 무시 + 휠 입력이 200ms 이상 끊긴 뒤의 새 입력만 받음(트랙패드 관성으로 두 칸 넘어가지 않게)
    - 주소 해시(#treatment 등) 반영, 새로고침해도 그 섹션에서 시작
    - 잠금: 첫 진입 히어로 애니메이션 중, 메가메뉴·약력 팝업·코치마크 열림 (의료진 사진 hover 는 잠그지 않음)
+   - 투명 헤더: 섹션마다 data-header-theme(dark|light) → html[data-header-theme] (넘김이 시작될 때 다음 섹션 값으로 미리), main.css '투명 헤더'
    - 섹션 안에서 스크롤되는 영역(FAQ 목록, 긴 의료진 약력 .bio-scroll)은 끝에 닿을 때까지 그 안에서 스크롤
    - 모바일·태블릿·낮은 화면: 아무것도 하지 않음(일반 스크롤 + 등장 애니메이션)
    스타일: main.css '풀스크린 섹션 넘김' (html.is-fullpage 일 때만)
@@ -67,8 +68,29 @@
     });
   }
 
+  /* 마지막 섹션(지점 바로가기 + 푸터)이 늘 화면 맨 위까지 올라오게: 사진 높이 = 화면 - (지점 링크 + 푸터), 최소 260px (main.css --fp-tail)
+     → 투명 헤더 뒤가 늘 사진(+위쪽 어두운 그라데이션)이라 흰 글자로 맞출 수 있다. 짧으면 앞 섹션이 헤더 뒤로 반쯤 걸쳐 글자가 읽히지 않았음 */
+  function fitTail() {
+    const links = document.querySelector('.branch-bar__links');
+    const footer = document.querySelector('.footer');
+    if (!active || !links || !footer) return;
+    root.style.setProperty('--fp-tail', `${links.offsetHeight + footer.offsetHeight}px`);
+  }
+
+  // 투명 헤더 테마: 그 섹션의 data-header-theme. 단 마지막(푸터) 섹션이 페이지 끝에 걸려 섹션 윗부분까지 못 올라가면
+  // (사진 높이를 늘려 보통은 생기지 않음) 헤더 뒤에는 앞 섹션이 보이므로 앞 섹션 값
+  function themeOf(i) {
+    const el = els[i];
+    if (!el) return 'light';
+    const top = Math.round(el.getBoundingClientRect().top + window.scrollY);
+    const header = parseFloat(getComputedStyle(root).getPropertyValue('--header-h')) || 0;
+    if (i > 0 && topOf(i) < top - header / 2) return themeOf(i - 1);
+    return el.dataset.headerTheme || 'light';
+  }
+
   function setIndex(i) {
     index = i;
+    root.dataset.headerTheme = themeOf(i); // 투명 헤더 글자색 (넘김 시작 시점에 다음 섹션 값)
     const hash = i === 0 ? '' : `#${SECTIONS[i].hash}`;
     if (location.hash !== hash) history.replaceState(null, '', hash || location.pathname + location.search);
     nav?.querySelectorAll('button').forEach((b, k) => b.setAttribute('aria-current', String(k === i)));
@@ -168,6 +190,7 @@
     root.classList.add('is-fullpage');
     if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
     if (!nav) buildNav();
+    fitTail();
     nav.hidden = false;
     const start = SECTIONS.findIndex((s) => `#${s.hash}` === location.hash);
     window.dispatchEvent(new Event('resize')); // 섹션 높이가 100vh 로 바뀌었으니 의료진 사진 높이 등 다시 계산
@@ -177,16 +200,19 @@
     if (!active) return;
     active = false;
     root.classList.remove('is-fullpage');
+    delete root.dataset.headerTheme;
     if (nav) nav.hidden = true;
+    root.style.removeProperty('--fp-tail');
   }
   const sync = () => (mq.matches ? enable() : disable());
 
   window.addEventListener('wheel', onWheel, { passive: false });
   window.addEventListener('keydown', onKey);
   document.addEventListener('click', onHashLink);
-  window.addEventListener('resize', () => { if (active) { setIndex(nearest()); window.scrollTo(0, topOf(index)); } });
+  window.addEventListener('resize', () => { if (active) { fitTail(); setIndex(nearest()); window.scrollTo(0, topOf(index)); } });
   window.addEventListener('scroll', () => { if (active && !animating && performance.now() > lockedUntil) setIndex(nearest()); }, { passive: true });
   mq.addEventListener('change', sync);
+  new MutationObserver(() => { if (active) { fitTail(); window.scrollTo(0, topOf(index)); } }).observe(root, { attributes: true, attributeFilter: ['data-fs'] }); // 글자 크기 단계 → 푸터 높이
   // 주소창에서 해시만 바꿨을 때(#doctors 등)도 그 섹션으로
   window.addEventListener('hashchange', () => {
     if (!active) return;

@@ -162,7 +162,7 @@ html[data-fs="xl"] .gnb { --gnb-gap: clamp(20px, 12vw - 140px, 96px); }
 /* 펼침 중에는 헤더 아래 구분선·그림자를 없애 패널과 하나로 이어 보이게 한다 */
 .header.is-mega { box-shadow: none; }
 /* 하위 목록: 열 때 위에서 아래로 서서히(0.35s) 드러나고, 닫을 때도 아래에서 위로 서서히(0.3s) 걷힌다
-   헤더 배경·글자색(메인 투명 ↔ 흰 헤더)은 효과 없이 바로 — common.js initMegaMenu 의 .is-instant (하위 목록·패널·딤은 제외)
+   메가메뉴를 열 때 헤더 배경·글자색(메인 투명 ↔ 흰 헤더)은 효과 없이 바로 — common.js initMegaMenu 의 .is-instant (하위 목록·패널·딤은 제외)
    .mega 는 아래 그림자(24px)가 잘리지 않게 아래쪽을 40px 더 열어 둔다 */
 .header.is-mega .gnb__sub, .header.is-mega .mega { visibility: visible; clip-path: inset(0); transition: clip-path 0.35s var(--ease), visibility 0s; }
 .header.is-mega .mega { clip-path: inset(0 0 -40px 0); }

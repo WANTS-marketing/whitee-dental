@@ -70,17 +70,25 @@ html::-webkit-scrollbar { display: none; }
 .hero__slider::after { content: ""; position: absolute; z-index: 1; top: 0; left: 0; right: 0; height: 160px; background: linear-gradient(180deg, rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0)); pointer-events: none; }
 
 /* ---------- 투명 헤더 (메인 전용 — main.css 는 index.html 에서만 읽는다) ----------
-   최상단: 배경 투명·구분선/그림자 없음·흰 글자·흰 로고(원본 컬러 PNG 를 filter 로 흰색 — 흰색 로고 파일 받으면 교체, HANDOVER)
-   흰 헤더로 바뀌는 경우: 헤더 박스에 마우스를 올리거나(.is-hover) 키보드 포커스가 들어올 때(:focus-visible), 둘 다 바로 바뀜,
-   40px 이상 스크롤(.is-scrolled), 메가메뉴 열림(.is-mega), 모바일 메뉴 열림(.is-mnav) — common.js */
-.header { transition: background-color 0.3s, box-shadow 0.3s, color 0.3s; }
-.header .logo__img, .header .gnb__link, .header .gnb__link svg, .header .util a, .header .fs-ctrl__btn, .header .hamburger { transition: color 0.3s, filter 0.3s; }
-.header:not(.is-scrolled):not(.is-mega):not(.is-closing):not(.is-mnav):not(.is-hover):not(:has(:focus-visible)) { background-color: transparent; box-shadow: none; color: #fff; }
-.header:not(.is-scrolled):not(.is-mega):not(.is-closing):not(.is-mnav):not(.is-hover):not(:has(:focus-visible)) .logo__img { filter: brightness(0) invert(1); }
-.header:not(.is-scrolled):not(.is-mega):not(.is-closing):not(.is-mnav):not(.is-hover):not(:has(:focus-visible)) :is(.gnb__link, .gnb__link svg, .util a, .hamburger) { color: #fff; }
-.header:not(.is-scrolled):not(.is-mega):not(.is-closing):not(.is-mnav):not(.is-hover):not(:has(:focus-visible)) .fs-ctrl__btn:not([aria-pressed="true"]) { color: #fff; } /* 선택된 '가'는 포인트 컬러 그대로 */
-.header:not(.is-scrolled):not(.is-mega):not(.is-closing):not(.is-mnav):not(.is-hover):not(:has(:focus-visible)) :is(.util a, .fs-ctrl__btn:not([aria-pressed="true"])):hover { color: var(--color-point); }
-.header:not(.is-scrolled):not(.is-mega):not(.is-closing):not(.is-mnav):not(.is-hover):not(:has(:focus-visible)) :is(.util__group--b a + a, .util__guide)::before { background: rgba(255, 255, 255, 0.55); }
+   투명(배경 없음·구분선/그림자 없음)인 때
+     - 일반 스크롤(모바일·태블릿·낮은 화면): 최상단(히어로 위)에서만. 40px 이상 스크롤하면(.is-scrolled) 흰 헤더 — 내용이 헤더 아래로 지나가므로
+     - 풀스크린 넘김(html.is-fullpage, fullpage.js): 모든 섹션에서. 글자색은 지금 섹션의 data-header-theme(html[data-header-theme])
+       dark = 흰 글자·흰 로고(원본 컬러 PNG 를 filter 로 흰색 — 흰색 로고 파일 받으면 교체, HANDOVER) / light = 어두운 글자·컬러 로고. 0.3s 전환
+   흰 헤더(배경 흰색·어두운 글자·옅은 그림자, 0.25s)로 바뀌는 경우: 헤더에 마우스(.is-hover)·키보드 포커스(:focus-visible),
+     메가메뉴 열림(.is-mega)·닫히는 중(.is-closing, 하위 목록이 다 걷힐 때까지), 모바일 메뉴 열림(.is-mnav) — common.js */
+.header { transition: background-color 0.25s, box-shadow 0.25s, color 0.3s; }
+.header .logo__img, .header .gnb__link, .header .gnb__link svg, .header .util a, .header .fs-ctrl__btn, .header .hamburger, .header :is(.util__group--b a + a, .util__guide)::before { transition: color 0.3s, filter 0.3s, background-color 0.3s; }
+/* 투명 배경 */
+:is(html:not(.is-fullpage) .header:not(.is-scrolled), html.is-fullpage .header):not(.is-mega):not(.is-closing):not(.is-mnav):not(.is-hover):not(:has(:focus-visible)) { background-color: transparent; box-shadow: none; }
+/* 흰 글자 (어두운 배경 위) */
+:is(html:not(.is-fullpage) .header:not(.is-scrolled), html.is-fullpage[data-header-theme="dark"] .header):not(.is-mega):not(.is-closing):not(.is-mnav):not(.is-hover):not(:has(:focus-visible)) { color: #fff; }
+:is(html:not(.is-fullpage) .header:not(.is-scrolled), html.is-fullpage[data-header-theme="dark"] .header):not(.is-mega):not(.is-closing):not(.is-mnav):not(.is-hover):not(:has(:focus-visible)) .logo__img { filter: brightness(0) invert(1); }
+:is(html:not(.is-fullpage) .header:not(.is-scrolled), html.is-fullpage[data-header-theme="dark"] .header):not(.is-mega):not(.is-closing):not(.is-mnav):not(.is-hover):not(:has(:focus-visible)) :is(.gnb__link, .gnb__link svg, .util a, .hamburger) { color: #fff; }
+:is(html:not(.is-fullpage) .header:not(.is-scrolled), html.is-fullpage[data-header-theme="dark"] .header):not(.is-mega):not(.is-closing):not(.is-mnav):not(.is-hover):not(:has(:focus-visible)) .fs-ctrl__btn:not([aria-pressed="true"]) { color: #fff; } /* 선택된 '가'는 포인트 컬러 그대로 */
+:is(html:not(.is-fullpage) .header:not(.is-scrolled), html.is-fullpage[data-header-theme="dark"] .header):not(.is-mega):not(.is-closing):not(.is-mnav):not(.is-hover):not(:has(:focus-visible)) :is(.util a, .fs-ctrl__btn:not([aria-pressed="true"])):hover { color: var(--color-point); }
+:is(html:not(.is-fullpage) .header:not(.is-scrolled), html.is-fullpage[data-header-theme="dark"] .header):not(.is-mega):not(.is-closing):not(.is-mnav):not(.is-hover):not(:has(:focus-visible)) :is(.util__group--b a + a, .util__guide)::before { background: rgba(255, 255, 255, 0.55); }
+/* 풀스크린 넘김: 흰 헤더가 될 때(마우스·키보드 포커스) 구분선 대신 옅은 그림자 — 메가메뉴는 아래 패널이 그림자를 맡는다 */
+html.is-fullpage .header:is(.is-hover, :has(:focus-visible)):not(.is-mega):not(.is-closing) { box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08); }
 
 /* ---------- ② 빠른 진료 안내 ---------- */
 .clinic-bar { padding: 64px 0 0; }
@@ -859,3 +867,6 @@ html.is-fullpage .fp-nav::after { content: ""; position: absolute; left: 25%; ri
   .quick--float.is-over-cards .quick__sns-btn { box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12); transition: outline-color 0.3s, box-shadow 0.3s; }
   html.is-fullpage .quick--float.is-over-cards .fp-nav { background: rgba(255, 255, 255, 0.94); box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1); }
 }
+/* 풀스크린 넘김 마지막 섹션: 지점 바로가기 사진 위 투명 헤더(흰 글자)가 읽히게 위쪽 어두운 그라데이션 (히어로 위쪽과 같은 값) */
+html.is-fullpage .branch-bar__photo { position: relative; height: max(260px, 100vh - var(--fp-tail, 0px)); } /* 높이: fullpage.js fitTail — 마지막 섹션이 한 화면을 채워 늘 화면 맨 위까지 올라오게 */
+html.is-fullpage .branch-bar__photo::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 160px; background: linear-gradient(180deg, rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0)); pointer-events: none; }

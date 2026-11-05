@@ -39,7 +39,7 @@
     <!-- 홈 묶음(첫 화면): 히어로 + 빠른 진료 안내 퀵바 — 이어서 진료안내 → 의료진 → 치료사례 → FAQ → 치과소식 → (푸터) 지점 바로가기 바
          진료 철학 문구는 치과소개(about/intro.html)로, 지점 정보는 하단 지점 바로가기 바로 옮겼다 -->
     <div class="screen-home" id="screen-home">
-    <div class="screen-home__first">
+    <div class="screen-home__first" data-header-theme="dark"><!-- data-header-theme: 풀스크린 넘김에서 이 섹션일 때 투명 헤더 글자색 (dark = 어두운 배경 → 흰 글자, light = 밝은 배경 → 어두운 글자) -->
     <!-- ① 히어로 슬라이더 -->
     <section class="hero" aria-label="주요 안내">
       <div class="container hero__inner">
@@ -144,7 +144,7 @@
     </div>
 
     <!-- ③ 진료안내 -->
-    <section class="clinic screen" id="screen-clinic" aria-labelledby="clinic-title">
+    <section class="clinic screen" id="screen-clinic" data-header-theme="light" aria-labelledby="clinic-title">
       <div class="container clinic__inner">
         <div class="clinic__head">
           <span class="sec-label">CLINIC</span>
@@ -197,7 +197,7 @@
     </section>
 
     <!-- ④ 의료진 -->
-    <section class="doctors screen" id="screen-doctors" aria-labelledby="doctors-title">
+    <section class="doctors screen" id="screen-doctors" data-header-theme="light" aria-labelledby="doctors-title">
       <div class="container doctors__inner">
         <!-- 머리말: PC 왼쪽 제목·설명 / 오른쪽 지점 탭 (태블릿·모바일은 제목 아래 탭) — 아래 인물 줄이 컨테이너 전체 폭을 쓴다 -->
         <div class="doctors__head">
@@ -220,7 +220,7 @@
     </section>
 
     <!-- ⑤ 치료사례 -->
-    <section class="cases screen" id="screen-cases" aria-labelledby="cases-title">
+    <section class="cases screen" id="screen-cases" data-header-theme="light" aria-labelledby="cases-title">
       <div class="container cases__inner">
         <div class="cases__head">
           <span class="sec-label">CASE STORY</span>
@@ -257,7 +257,7 @@
     </section>
 
     <!-- ⑥ FAQ 미리보기 -->
-    <section class="faq-preview screen" id="screen-faq" aria-labelledby="faq-preview-title">
+    <section class="faq-preview screen" id="screen-faq" data-header-theme="light" aria-labelledby="faq-preview-title">
       <div class="container faq-preview__inner">
         <div class="faq-preview__head">
           <span class="sec-label">FAQ</span>
@@ -270,7 +270,7 @@
     </section>
 
     <!-- ⑦ 치과소식 -->
-    <section class="story screen" id="screen-story" aria-labelledby="story-title">
+    <section class="story screen" id="screen-story" data-header-theme="light" aria-labelledby="story-title">
       <div class="container story__inner">
         <!-- 왼쪽: 라벨·타이틀 → 카테고리 탭(공지사항·치과소식) (main.js initStory) -->
         <div class="story__head">
