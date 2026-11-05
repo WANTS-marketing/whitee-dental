@@ -587,14 +587,14 @@ html[data-fs="xl"] .doc-modal { width: min(680px, 100% - 48px); }
 
 /* 아래 조작: ‹ › 화살표 버튼(테두리 없음, 넘길 수 있으면 포인트 컬러, 끝이면 회색) + 진행 바(포인트 컬러) — 오른쪽 끝은 퀵메뉴 앞 */
 .story__ctrl { display: flex; align-items: center; gap: 10px; margin-top: clamp(24px, 3.7vh, 40px); padding-right: var(--story-end); }
-.story__nav { display: grid; place-items: center; flex: none; width: 53px; height: 53px; border: 0; background: none; color: var(--color-point); transition: color var(--dur); } /* 테두리 없이 화살표만, 크기 48 → 53px(+10%) · 넘길 수 있으면 포인트 컬러, 끝이면 회색 */
+.story__nav { display: grid; place-items: center; flex: none; width: 53px; height: 53px; border: 0; background: none; color: var(--color-accent); transition: color var(--dur); } /* 테두리 없이 화살표만, 크기 48 → 53px(+10%) · 넘길 수 있으면 밝은 파랑 #194ebf, 끝이면 회색 */
 .story__nav svg { width: 18px; height: 18px; transition: transform var(--dur); }
 .story__nav[data-story-prev] { margin-left: -20px; } /* 테두리가 없어져 ‹ 화살표가 카드 왼쪽 선에 맞게 (누르는 영역 53px 은 그대로) */
 .story__nav[data-story-prev]:not(:disabled):hover svg { transform: translateX(-3px); }
 .story__nav[data-story-next]:not(:disabled):hover svg { transform: translateX(3px); }
 .story__nav:disabled { color: #c4c4c4; cursor: default; }
 .story__bar { position: relative; flex: 1; height: 2px; margin-left: 22px; overflow: hidden; background: #dcdcdc; }
-.story__bar-fill { position: absolute; top: 0; bottom: 0; left: 0; width: 30%; background: var(--color-point); }
+.story__bar-fill { position: absolute; top: 0; bottom: 0; left: 0; width: 30%; background: var(--color-accent); } /* #194ebf */
 @media (min-width: 1025px) {
   .story .story__inner.container { max-width: none; padding-left: max(40px, (100% - 1600px) / 2); padding-right: 0; }
   /* 공지사항 | 치과소식 영역 나눔: 섹션 배경을 두 칸 사이 가운데에서 세로로 나눠 오른쪽(치과소식)만 #f7faff — 위아래 끝·화면 오른쪽 끝까지
