@@ -4,8 +4,8 @@
    - 마우스 휠·트랙패드 한 번, 키보드(↓↑ · PageDown/PageUp · Space · Home/End) 한 번에 한 섹션, 0.8s ease-in-out
    - 이동 중·이동 후 약 1s 는 입력 무시 + 휠 입력이 200ms 이상 끊긴 뒤의 새 입력만 받음(트랙패드 관성으로 두 칸 넘어가지 않게)
    - 주소 해시(#treatment 등) 반영, 새로고침해도 그 섹션에서 시작
-   - 잠금: 첫 진입 히어로 애니메이션 중, 메가메뉴·약력 팝업·코치마크·의료진 약력(hover) 열림
-   - 섹션 안에서 스크롤되는 영역(FAQ 목록)은 끝에 닿을 때까지 그 안에서 스크롤
+   - 잠금: 첫 진입 히어로 애니메이션 중, 메가메뉴·약력 팝업·코치마크 열림 (의료진 사진 hover 는 잠그지 않음)
+   - 섹션 안에서 스크롤되는 영역(FAQ 목록, 긴 의료진 약력 .bio-scroll)은 끝에 닿을 때까지 그 안에서 스크롤
    - 모바일·태블릿·낮은 화면: 아무것도 하지 않음(일반 스크롤 + 등장 애니메이션)
    스타일: main.css '풀스크린 섹션 넘김' (html.is-fullpage 일 때만)
    ========================================================================== */
@@ -45,9 +45,10 @@
   const overlayOpen = () => document.getElementById('header')?.classList.contains('is-mega') // 메가메뉴
     || root.classList.contains('is-modal-open') // 약력 팝업
     || root.classList.contains('is-coach'); // 이용 안내(코치마크)
-  // 넘김만 잠금: 첫 진입 히어로 펼침 중, 의료진 약력(hover·탭) 표시 중
-  const holdOnly = () => document.body.classList.contains('is-intro')
-    || !!document.querySelector('.doc-person__stage:hover, .doc-person__bio:hover, .doc-person.is-open');
+  // 넘김만 잠금: 첫 진입 히어로 펼침 중
+  // (의료진 사진 위 hover 는 잠그지 않는다 — 사진이 섹션 대부분을 차지해 휠이 먹히지 않았음.
+  //  약력이 길어 안에서 스크롤되는 경우(.bio-scroll)만 아래 innerScrollable 이 약력 끝까지 먼저 스크롤)
+  const holdOnly = () => document.body.classList.contains('is-intro');
   const blocked = () => overlayOpen() || holdOnly();
 
   function scrollTo(y, instant) {
