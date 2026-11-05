@@ -280,9 +280,9 @@ body.is-locked { overflow: hidden; }
 .quick__chips-label { display: none; align-items: center; height: 44px; padding: 0 14px; border-radius: var(--radius-pill); background: #222; color: #fff; font-size: var(--fs-xs); font-weight: 600; white-space: nowrap; }
 
 /* 상담문의 → faq/contact.html (포인트 컬러로 강조) · TOP(맨 위로) — 칩 없이 바로 동작, hover 때 링·빛 지나가기 */
-.quick__sns-btn--consult { --qb-shine: rgba(255, 255, 255, 0.25); border-color: rgba(255, 255, 255, 0.45); background: var(--color-point); color: #fff; } /* 흰 반투명 테두리: 네이비 섹션(진료안내) 위에서도 버튼 윤곽이 보이게 */
-.quick__sns-btn--consult:focus-visible { outline-color: var(--color-point); }
-.quick__sns-btn--consult:hover { background: var(--color-point-hover); }
+.quick__sns-btn--consult { --qb-shine: rgba(255, 255, 255, 0.25); border-color: var(--color-accent); background: var(--color-accent); color: #fff; } /* 상담문의 = 밝은 파랑(#194ebf) — 네이비 섹션(진료안내) 위에서도 잘 구분됨 */
+.quick__sns-btn--consult:focus-visible { outline-color: var(--color-accent); }
+.quick__sns-btn--consult:hover { border-color: var(--color-accent-hover); background: var(--color-accent-hover); }
 @media (hover: hover) {
   .quick__item:not([data-quick-item]) .quick__sns-btn:hover::after { transform: translateX(-140px) rotate(12deg); }
   .quick__item:not([data-quick-item]) .quick__sns-btn:hover svg { transform: scale(1.1); }
