@@ -284,10 +284,10 @@ body.is-locked { overflow: hidden; }
 .quick__chips-label { display: none; align-items: center; height: 44px; padding: 0 14px; border-radius: var(--radius-pill); background: #222; color: #fff; font-size: var(--fs-xs); font-weight: 600; white-space: nowrap; }
 
 /* 상담문의 → faq/contact.html (포인트 컬러로 강조) · TOP(맨 위로) — 칩 없이 바로 동작, hover 때 링·빛 지나가기 */
-.quick__sns-btn--consult { --qb-shine: rgba(255, 255, 255, 0.25); border-color: var(--color-point); background: var(--color-point); color: #fff; } /* 상담문의 = 네이비 면·테두리 (어두운 화면 위에서는 아래 규칙으로 흰 반투명 테두리) */
-.quick__sns-btn--consult:focus-visible { outline-color: var(--color-point); }
-.quick__sns-btn--consult:hover { border-color: var(--color-point-hover); background: var(--color-point-hover); }
-html[data-header-theme="dark"] .quick__sns-btn--consult { border-color: rgba(255, 255, 255, 0.45); } /* 어두운 화면(히어로·네이비 진료안내)일 때만 흰 반투명 테두리 — 네이비 면이 배경에 묻히지 않게 */
+.quick__sns-btn--consult { --qb-shine: rgba(255, 255, 255, 0.25); border-color: var(--color-accent); background: var(--color-accent); color: #fff; } /* 상담문의 = 파랑 면·테두리(페이지 점 현재 막대와 같은 색) + 흰 아이콘·글자 — 색 규칙 예외(README '색 역할 규칙'). 슬림형도 같은 규칙 */
+.quick__sns-btn--consult:focus-visible { outline-color: var(--color-accent); }
+.quick__sns-btn--consult:hover { border-color: var(--color-accent-hover); background: var(--color-accent-hover); } /* 한 단계 진한 파랑 */
+/* 어두운 화면(히어로·네이비 진료안내)에서도 파랑 면이 배경과 구분돼 흰 반투명 테두리는 쓰지 않음 */
 @media (hover: hover) {
   .quick__item:not([data-quick-item]) .quick__sns-btn:hover::after { transform: translateX(-140px) rotate(12deg); }
   .quick__item:not([data-quick-item]) .quick__sns-btn:hover svg { transform: scale(1.1); }
