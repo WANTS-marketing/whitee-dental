@@ -25,7 +25,7 @@
 | `doctor-{영문 이름}-cut.png` (예: `doctor-lee-eunju-cut.png`, 위 원장별 사진 파일명 + `-cut.png`) | 메인 의료진 섹션 인물 나열용 **배경 제거된 상반신 사진** — 투명 PNG, 세로 1200px 이상, 모든 원장 같은 크롭 기준(머리 위 여백·어깨선 높이 동일). 사진 칸 아래 끝 기준으로 놓여 머리·어깨선이 한 줄로 맞는다. 없으면 인물 실루엣 플레이스홀더가 보인다(임시 인물 사진 쓰지 않음) | 세로 1200px 이상 |
 | `clinic-implant.jpg` | 진료안내 카드 — 임플란트 (지금: 3D 그림 1600×904, 카드에서 왼쪽 32% 기준 — main.css `.clinic-card--implant`) | 900×560 이상 |
 | `clinic-orthodontics.jpg` | 진료안내 카드 — 치아교정 (지금: 3D 그림 1600×1333, PC 아래쪽 90% · 모바일 40% 기준 — main.css `.clinic-card--ortho`) | 900×320 이상 |
-| `clinic-aesthetic.jpg` | 진료안내 카드 — 심미치료 | 740×460 |
+| `clinic-aesthetic.jpg` | 진료안내 카드 — 심미치료 (지금: 앞니 클로즈업 3D 그림, 위쪽 30% 잘라 1600×844 — 앞니가 카드 위쪽에 오게) | 740×460 이상 |
 | `clinic-wisdom-scaling.jpg` | 진료안내 카드 — 사랑니·스케일링 (지금: 정사각 3D 그림 1600×1600, 위쪽 25% 기준 — main.css `.clinic-card--wisdom`) | 700×460 이상 |
 | `clinic-general.jpg` | 진료안내 카드 — 일반치료 (넓은 카드, 지금: 4:3 3D 그림 1600×1200, 아래쪽 60% 기준 — main.css `.clinic-card--general`) | 1460×380 이상 |
 | `cases/case-{번호}-before.jpg` · `-after.jpg` · `-after-blur.jpg` | 치료사례 (기존 사이트 시술 전후 14건, 번호 = 기존 글 wr_id 5~18) — `scripts/import/build-gallery.js` 가 합본 이미지를 나눠 만든다. after-blur = 로그인 전 미리보기(작게 줄였다 흐리게 키운 그림). 새 사례는 서버 연결 후 관리자에서 | 430×254 |
