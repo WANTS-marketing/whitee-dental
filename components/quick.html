@@ -1,7 +1,7 @@
-<!-- 공통 퀵메뉴 — 지점별 인스타·블로그. 링크는 site-data.js 의 SOCIAL 에서 채움 (common.js initQuick)
-     769px 이상: 화면 오른쪽 플로팅 [인스타그램][블로그][상담문의][TOP] — 인스타·블로그는 마우스를 올리거나(터치는 탭) 포커스하면
+<!-- 공통 퀵메뉴 — 지점별 인스타·블로그·네이버 예약. 링크는 site-data.js 의 social · branches[].naverBooking 에서 채움 (common.js initQuick · fillSocialLinks · fillBookingLinks)
+     769px 이상: 화면 오른쪽 플로팅 [인스타그램][블로그][네이버예약][상담문의][TOP] — 인스타·블로그·네이버예약은 마우스를 올리거나(터치는 탭) 포커스하면
        왼쪽으로 '창원점 / 마산점' 칩이 펼쳐짐. 1560px 이하는 아이콘만 있는 슬림형(라벨은 툴팁)
-     768px 이하: 오른쪽 아래 '+' 플로팅 버튼 안에 지점별 인스타·블로그 4개 + 맨 위로 -->
+     768px 이하: 오른쪽 아래 '+' 플로팅 버튼 안에 지점별 인스타·블로그 4개 + 지점별 네이버예약 2개 + 맨 위로 -->
 <div class="quick__sns">
   <div class="quick__item" data-quick-item>
     <button class="quick__sns-btn" type="button" aria-expanded="false" aria-controls="quick-chips-insta">
@@ -25,6 +25,17 @@
       <a class="quick__chip quick__chip--masan" data-sns="masanBlog" href="#" target="_blank" rel="noopener">마산점</a>
     </div>
   </div>
+  <div class="quick__item" data-quick-item>
+    <button class="quick__sns-btn" type="button" aria-expanded="false" aria-controls="quick-chips-booking">
+      <svg class="quick__booking-ico" viewBox="0 0 26 26" aria-hidden="true"><rect width="26" height="26" rx="6" fill="#03C75A"/><g fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="7.5" width="14" height="12" rx="2"/><path d="M6 11.5h14M10 5.5v3.5M16 5.5v3.5"/><path d="M10.5 15.5l1.8 1.8 3.4-3.6"/></g></svg>
+      <span class="quick__label">네이버예약</span>
+    </button>
+    <div class="quick__chips" id="quick-chips-booking" role="group" aria-label="네이버 예약 지점 선택">
+      <span class="quick__chips-label" aria-hidden="true">네이버예약</span>
+      <a class="quick__chip quick__chip--changwon" data-booking="changwon" href="#" target="_blank" rel="noopener">창원점</a>
+      <a class="quick__chip quick__chip--masan" data-booking="masan" href="#" target="_blank" rel="noopener">마산점</a>
+    </div>
+  </div>
   <!-- 상담문의(포인트 컬러) · 맨 위로(첫 화면에서는 숨김, 스크롤하면 나타남 — common.js initQuickTop) -->
   <div class="quick__item">
     <a class="quick__sns-btn quick__sns-btn--consult" href="{{ROOT}}/faq/contact.html">
@@ -40,7 +51,7 @@
   </div>
 </div>
 
-<button class="quick__toggle" type="button" aria-expanded="false" aria-controls="quick-list" aria-label="지점 SNS 메뉴 열기">
+<button class="quick__toggle" type="button" aria-expanded="false" aria-controls="quick-list" aria-label="지점 SNS·예약 메뉴 열기">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
 </button>
 <ul class="quick__list" id="quick-list">
@@ -66,6 +77,18 @@
     <a class="quick__btn quick__btn--masan-line" data-sns="masanBlog" href="#" target="_blank" rel="noopener">
       <img class="quick__blog-ico" src="{{ROOT}}/assets/images/icons/naver-blog.png" alt="" width="129" height="120">
       <span>마산점 블로그</span>
+    </a>
+  </li>
+  <li>
+    <a class="quick__btn quick__btn--changwon-line" data-booking="changwon" href="#" target="_blank" rel="noopener">
+      <svg class="quick__booking-ico" viewBox="0 0 26 26" aria-hidden="true"><rect width="26" height="26" rx="6" fill="#03C75A"/><g fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="7.5" width="14" height="12" rx="2"/><path d="M6 11.5h14M10 5.5v3.5M16 5.5v3.5"/><path d="M10.5 15.5l1.8 1.8 3.4-3.6"/></g></svg>
+      <span>창원점 네이버예약</span>
+    </a>
+  </li>
+  <li>
+    <a class="quick__btn quick__btn--masan-line" data-booking="masan" href="#" target="_blank" rel="noopener">
+      <svg class="quick__booking-ico" viewBox="0 0 26 26" aria-hidden="true"><rect width="26" height="26" rx="6" fill="#03C75A"/><g fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="7.5" width="14" height="12" rx="2"/><path d="M6 11.5h14M10 5.5v3.5M16 5.5v3.5"/><path d="M10.5 15.5l1.8 1.8 3.4-3.6"/></g></svg>
+      <span>마산점 네이버예약</span>
     </a>
   </li>
   <!-- 상담문의는 하단 고정 바에 있어 생략 -->

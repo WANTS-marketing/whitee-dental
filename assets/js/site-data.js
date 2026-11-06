@@ -21,6 +21,7 @@ window.SITE = {
       ],
       hoursShort: '평일 10:00–21:00 · 토 10:00–16:00 · 일요일 휴진',
       naverMap: 'https://naver.me/FY3f3LdP',
+      naverBooking: '', // TODO: 창원점 네이버 예약 링크 병원 확인 — 비어 있으면 퀵메뉴 네이버예약이 네이버 지도(naverMap)로 연결
       landmark: '상남동 다이소 앞 건물',
       parking: '건물 지하주차장 무료 · 상남동 공영주차빌딩 1시간 무료',
       amenities: ['예약', '주차', '무선인터넷', '남/녀 화장실 구분'],
@@ -43,6 +44,7 @@ window.SITE = {
       ],
       hoursShort: '평일 10:00–21:00 · 토 10:00–16:00 · 일요일 휴진',
       naverMap: 'https://naver.me/xWTYEspr',
+      naverBooking: '', // TODO: 마산점 네이버 예약 링크 병원 확인 — 비어 있으면 퀵메뉴 네이버예약이 네이버 지도(naverMap)로 연결
       landmark: '마산역 도보 3분',
       parking: '', // TODO: 마산점 주차 안내 병원 확인
       amenities: ['예약', '주차', '무선인터넷', '남/녀 화장실 구분'],
