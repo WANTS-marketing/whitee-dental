@@ -657,11 +657,11 @@ html.is-lnb-hold body { min-height: calc(100vh + 2000px); }
 [data-view="card4"] .board-card__sum { -webkit-line-clamp: 1; }
 [data-view="card4"] .board-card__hover-btn { height: 40px; padding: 0 16px; font-size: var(--fs-xs); }
 
-/* ---------- 목록형: [썸네일 120px | 분류·제목·요약 1줄 | 날짜·조회] [펼쳐보기 ∨], 행 사이 구분선 ---------- */
+/* ---------- 목록형: [썸네일 120px | 분류·제목·요약 1줄 | 날짜·조회], 행 전체가 상세 링크, 행 사이 구분선 ---------- */
 .board-list[data-view="list"] { border-top: 0; }
-.board-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; column-gap: 16px; border-bottom: 1px solid var(--color-line); }
+.board-row { display: grid; grid-template-columns: minmax(0, 1fr); align-items: center; border-bottom: 1px solid var(--color-line); }
 .board-row.is-pinned { background: var(--color-point-soft); }
-.board-row__link { display: grid; grid-template-columns: 120px minmax(0, 1fr) auto; align-items: center; gap: 24px; min-width: 0; padding: 20px 0 20px 8px; }
+.board-row__link { display: grid; grid-template-columns: 120px minmax(0, 1fr) auto; align-items: center; gap: 24px; min-width: 0; padding: 20px 8px; }
 .board-row.is-plain .board-row__link { grid-template-columns: minmax(0, 1fr) auto; padding-top: 22px; padding-bottom: 22px; }
 .board-row__thumb { display: block; aspect-ratio: var(--b-ratio); max-height: 120px; border-radius: var(--radius-sm); }
 [data-board="cases"] .board-row__thumb { aspect-ratio: 1; } /* 세로 사진(3:4)은 목록형에서 정사각으로 */
@@ -676,21 +676,6 @@ html.is-lnb-hold body { min-height: calc(100vh + 2000px); }
 .board-row__link:is(:hover, :focus-visible) .board-row__title { color: var(--color-accent); }
 .board-row__sum { overflow: hidden; font-size: var(--fs-sm); line-height: 1.5; color: var(--color-text-sub); white-space: nowrap; text-overflow: ellipsis; }
 .board-row__meta { display: flex; align-items: center; font-size: var(--fs-xs); color: var(--color-text-muted); white-space: nowrap; }
-.board-row__toggle { display: inline-flex; align-items: center; gap: 4px; height: 36px; margin-right: 8px; padding: 0 12px; border: 1px solid var(--color-line); border-radius: var(--radius-btn); background: #fff; font-size: var(--fs-xs); font-weight: 600; color: #555; white-space: nowrap; transition: border-color 0.2s, color 0.2s; }
-.board-row__toggle:hover { border-color: var(--color-text); color: var(--color-text); }
-.board-row__toggle svg { width: 14px; height: 14px; transition: transform 0.3s var(--ease); }
-.board-row__toggle[aria-expanded="true"] svg { transform: rotate(180deg); }
-.board-row__panel { grid-column: 1 / -1; padding: 0 8px 24px; }
-.board-row__panel:not([hidden]) { animation: sub-fade-in 0.35s var(--ease) backwards; }
-.board-row__panel-in { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 28px; align-items: start; padding: 24px; border-radius: var(--radius-sm); background: #f7f8fa; }
-.board-row__panel-in:not(:has(.board-row__panel-img)) { grid-template-columns: minmax(0, 1fr); }
-.board-row__panel-img { display: block; aspect-ratio: 4 / 3; border-radius: var(--radius-sm); }
-.board-row__panel-img img { object-fit: cover; }
-.board-row__body { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 5; overflow: hidden; font-size: var(--fs-sm); line-height: 1.75; color: var(--color-text-sub); word-break: keep-all; }
-.board-row__more { display: inline-flex; align-items: center; gap: 8px; height: 40px; margin-top: 16px; padding: 0 18px; border: 1px solid var(--color-text); border-radius: var(--radius-btn); font-size: var(--fs-sm); font-weight: 600; transition: background-color 0.2s, color 0.2s; }
-.board-row__more svg { width: 16px; height: 16px; }
-.board-row__more:hover { background: var(--color-text); color: #fff; }
-.board-row__loading { padding: 16px 0; font-size: var(--fs-sm); color: var(--color-text-muted); }
 
 /* ---------- 상세: 분류·태그 줄, 치료사례 전·후 사진 ---------- */
 .article__cats { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px; }
@@ -706,7 +691,6 @@ html.is-lnb-hold body { min-height: calc(100vh + 2000px); }
 /* 좁은 본문(LNB 옆 실제 폭) — rem 기준이라 글자 크게·아주 크게에서는 더 일찍 줄어든다 */
 @container sub (max-width: 55rem) { /* 880px */
   .board-list[data-view="card4"] { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .board-row__panel-in { grid-template-columns: 180px minmax(0, 1fr); gap: 20px; }
 }
 @container sub (max-width: 48rem) { /* 768px — 도구 줄 2줄: [건수][정렬·보기] / [검색 전체 너비] */
   .board-search { flex: 1 1 100%; width: auto; }
@@ -730,15 +714,10 @@ html.is-lnb-hold body { min-height: calc(100vh + 2000px); }
   [data-view="card4"] .board-card__sum { -webkit-line-clamp: 2; }
   [data-view="card4"] .board-card__title { font-size: 1.125rem; }
   .board-card__hover { display: none; } /* 터치 화면은 hover 없음 */
-  .board-row { grid-template-columns: minmax(0, 1fr); }
-  .board-row__link { grid-template-columns: 88px minmax(0, 1fr); gap: 14px; padding: 16px 0 10px; }
-  .board-row.is-plain .board-row__link { padding: 16px 0 10px; }
+  .board-row__link { grid-template-columns: 88px minmax(0, 1fr); gap: 14px; padding: 16px 0; }
+  .board-row.is-plain .board-row__link { padding: 16px 0; }
   .board-row__title { white-space: normal; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; font-size: 1rem; }
   .board-row__sum { display: none; }
-  .board-row__toggle { justify-self: end; height: 32px; margin: 0 0 12px; }
-  .board-row__panel { padding: 0 0 20px; }
-  .board-row__panel-in { grid-template-columns: minmax(0, 1fr); gap: 16px; padding: 16px; }
-  .board-row__panel-img { aspect-ratio: 16 / 9; } /* 한 줄 전체 폭이라 낮게 */
   .case-view { gap: 10px; }
 }
 /* 상세: 제목 영역 가운데 · 본문은 원래 글처럼 가운데 정렬(줄을 나눠 쓴 글이라) · 폭 760px */

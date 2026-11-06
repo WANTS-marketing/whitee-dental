@@ -9,7 +9,6 @@
    - 보기 방식은 localStorage(witee-board-view-{게시판}) — 저장 못 해도 기본 보기로 동작
    - 한 페이지 12개, 카드 4개 보기는 16개. 보기를 바꾸면 보던 첫 글이 들어 있는 페이지로
    - 페이지를 바꾸면 분류 칩 줄이 헤더 아래 24px 에 오게 스크롤
-   - 목록형 '펼쳐보기': 그 자리에서 본문 앞부분(약 5줄) + 대표 이미지 + '자세히 보기 →' — 한 번에 하나만
    - 공지사항: 기본 보기 = 목록형(썸네일·요약 없이 제목·날짜), 고정 공지(pinned)는 어느 페이지든 맨 위 + '공지' 태그
    - 조회수: 1차 데이터에는 없음(api.js 가 0 으로 채움) → 모두 0 이면 조회수 칸을 숨김
    - 검색: 제목 + 요약(치과소식 본문은 글마다 파일이 따로라 요약 문구까지) + 분류 이름
@@ -24,9 +23,6 @@
   const isMobile = () => window.matchMedia('(max-width: 768px)').matches;
 
   const fullDate = (iso) => { const d = new Date(iso); const p = (n) => String(n).padStart(2, '0'); return `${d.getFullYear()}.${p(d.getMonth() + 1)}.${p(d.getDate())}`; };
-  // 본문 HTML → 펼쳐보기용 글자 (줄바꿈 <br> 은 띄어쓰기로)
-  const textOf = (html) => { const d = new DOMParser().parseFromString(html.replace(/<br\s*\/?>/gi, ' '), 'text/html'); return [...d.querySelectorAll('p, li, h2, h3, h4')].map((e) => e.textContent.trim()).filter(Boolean).join(' ').replace(/\s+/g, ' ').trim(); };
-  const firstImg = (html) => new DOMParser().parseFromString(html, 'text/html').querySelector('img')?.getAttribute('src') || '';
 
   /* ---------- 게시판별 설정 ---------- */
   const BOARDS = {
@@ -42,10 +38,6 @@
       summary: (r) => r.summary || '',
       search: (r) => `${r.title} ${r.summary || ''} ${r.category}`,
       empty: '등록된 소식이 없습니다.',
-      async expand(r) {
-        const data = await window.API.getNewsPost(r.id);
-        return { text: textOf(data?.html || '') || r.summary || '', image: firstImg(data?.html || '') || window.UI.img(r.thumbnail) };
-      },
     },
     notice: {
       name: '공지사항', list: 'notice.html', view: 'notice-view.html', idPrefix: 'notice',
@@ -61,7 +53,6 @@
       summary: (r) => r.summary || '',
       search: (r) => `${r.title} ${r.summary || ''} ${r.body || ''}`,
       empty: '등록된 공지사항이 없습니다.',
-      async expand(r) { return { text: r.body || r.summary || '', image: r.thumbnail ? window.UI.img(r.thumbnail) : '' }; },
     },
     cases: {
       name: '치료사례', list: 'cases.html', view: 'case-view.html', idPrefix: 'case',
@@ -76,7 +67,6 @@
       summary: (r) => `${r.categoryName} 치료 전·후 사진`,
       search: (r) => `${r.title} ${r.categoryName}`,
       empty: '등록된 사례가 없습니다.',
-      async expand(r) { return { text: `${r.categoryName} 치료 전·후 사진입니다. 치료 결과는 개인에 따라 다를 수 있습니다.`, image: window.UI.img(r.beforeImage) }; },
     },
   };
   const listKey = (b) => `witee-board-list-${b}`;
@@ -181,7 +171,6 @@
         </a>
       </li>`;
     const rowHtml = (r) => {
-      const pid = `${cfg.idPrefix}-panel-${esc(r.id)}`;
       return `
       <li class="board-row${r.pinned && cfg.pinned ? ' is-pinned' : ''}${cfg.listPlain ? ' is-plain' : ''}" id="${cfg.idPrefix}-${esc(r.id)}">
         <a class="board-row__link" href="${href(r)}">
@@ -193,8 +182,6 @@
           </span>
           <span class="board-row__meta">${metaOf(r)}</span>
         </a>
-        <button class="board-row__toggle" type="button" aria-expanded="false" aria-controls="${pid}" data-b-expand="${esc(r.id)}"><span class="board-row__toggle-text">펼쳐보기</span>${ICON.chevron}</button>
-        <div class="board-row__panel" id="${pid}" hidden></div>
       </li>`;
     };
 
@@ -297,8 +284,6 @@
         draw({ animate: true });
         return;
       }
-      const tg = e.target.closest('[data-b-expand]');
-      if (tg) toggleRow(tg);
     });
     sortEl?.addEventListener('click', (e) => { const s = e.target.closest('[data-b-sort-val]'); if (s && s.dataset.bSortVal !== readState().sort) push({ ...readState(), sort: s.dataset.bSortVal, page: 1 }); });
     searchEl.addEventListener('submit', (e) => {
@@ -310,36 +295,6 @@
     window.addEventListener('popstate', () => draw({ animate: true }));
     // 화면 폭이 모바일 경계를 넘으면(카드 4개 16개 ↔ 12개) 다시 그림
     window.matchMedia('(max-width: 768px)').addEventListener('change', () => draw());
-
-    // 목록형 펼쳐보기 — 한 번에 하나만
-    async function toggleRow(btn) {
-      const li = btn.closest('.board-row');
-      const panel = li.querySelector('.board-row__panel');
-      const open = btn.getAttribute('aria-expanded') !== 'true';
-      listEl.querySelectorAll('.board-row__toggle[aria-expanded="true"]').forEach((b) => { if (b !== btn) setRow(b, false); });
-      setRow(btn, open);
-      if (!open || panel.dataset.loaded) return;
-      panel.dataset.loaded = '1';
-      const r = rows.find((x) => x.id === btn.dataset.bExpand);
-      panel.innerHTML = '<p class="board-row__loading">불러오는 중입니다.</p>';
-      let body = { text: '', image: '' };
-      try { body = await cfg.expand(r); } catch (err) { console.error(err); body = { text: r.summary || '', image: '' }; }
-      panel.innerHTML = `
-        <div class="board-row__panel-in">
-          ${body.image ? `<span class="board-row__panel-img img-ph${locked ? ' is-locked' : ''}"><img src="${esc(body.image)}" alt="" loading="lazy" decoding="async">${locked ? '<span class="board-lock">로그인 후 확인</span>' : ''}</span>` : ''}
-          <div class="board-row__panel-text">
-            <p class="board-row__body">${esc(body.text)}</p>
-            <a class="board-row__more" href="${href(r)}">자세히 보기${ICON.arrow}</a>
-          </div>
-        </div>`;
-    }
-    function setRow(btn, open) {
-      const li = btn.closest('.board-row');
-      btn.setAttribute('aria-expanded', String(open));
-      btn.querySelector('.board-row__toggle-text').textContent = open ? '접기' : '펼쳐보기';
-      li.classList.toggle('is-open', open);
-      li.querySelector('.board-row__panel').hidden = !open;
-    }
 
     try {
       rows = await cfg.load();
