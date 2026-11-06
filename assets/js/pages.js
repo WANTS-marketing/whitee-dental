@@ -18,8 +18,25 @@ document.addEventListener('DOMContentLoaded', () => {
   }[page];
   run?.();
   document.querySelectorAll('[data-inquiry-form]').forEach((f) => window.UI.inquiryForm(f)); // common.js
-  document.querySelectorAll('[data-kakao-login]').forEach((btn) => btn.addEventListener('click', () => window.API.signInWithKakao()));
+  initLoginReturn();
+  document.querySelectorAll('[data-kakao-login]').forEach((btn) => btn.addEventListener('click', () => window.API.signInWithKakao(loginReturnUrl())));
 });
+
+/* ---------- 로그인 후 돌아갈 곳 (member/login.html?return=community/case-view.html?id=case-18) ----------
+   치료사례 상세의 '로그인하고 치료 후 사진 보기'가 return 을 붙여 보낸다. 사이트 안 주소(폴더/파일.html?…)만 받는다(다른 사이트로 보내기 방지)
+   로그인 성공 후 이동은 서버 연결 때 — api.js signInWithKakao(returnUrl) · 이메일 로그인에서 이 주소로 보낼 것
+   시안: 안내 문구 + '시안 확인용: 로그인한 것처럼 보기' 링크(그 글 + ?login=1 — api.js isLoggedIn) */
+function loginReturnUrl() {
+  const r = new URLSearchParams(location.search).get('return') || '';
+  return /^(community|about|treatment|faq)\/[a-z-]+\.html(\?[\w=&%.-]*)?$/.test(r) ? `${document.documentElement.dataset.root || '.'}/${r}` : null;
+}
+function initLoginReturn() {
+  const box = document.querySelector('[data-login-return]');
+  const url = loginReturnUrl();
+  if (!box || !url) return;
+  box.innerHTML = `로그인하면 보시던 치료사례로 돌아갑니다. <a class="member__return-demo" href="${url}${url.includes('?') ? '&' : '?'}login=1">시안 확인용: 로그인한 것처럼 보기 →</a>`;
+  box.hidden = false;
+}
 
 /** 페이지 안에서 내용이 바뀔 때 서서히 나타나기 (common.css .is-fade-in — 서브페이지 열 때와 같은 효과) */
 function fadeIn(el) {

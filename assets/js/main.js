@@ -638,12 +638,31 @@ function initDoctors() {
   selectTab(tabs[0], false);
 }
 
-/* ---------- ⑥ 치료사례 잠금 ---------- */
-function initCases() {
-  const loggedIn = window.API?.isLoggedIn();
-  document.querySelectorAll('[data-cases] .case-card').forEach((card) => {
-    card.classList.toggle('is-unlocked', !!loggedIn);
-  });
+/* ---------- ⑥ 치료사례 (최신 3건) ----------
+   카드: 위 BEFORE(선명) / 아래 AFTER(로그인 전 = 미리 흐리게 만든 미리보기 + 자물쇠 '로그인 후 확인', 로그인 후 = 원본) + 분류·제목 → 상세
+   AFTER 원본 주소는 로그인일 때만 데이터에 들어온다(api.js getCases) */
+async function initCases() {
+  const list = document.querySelector('[data-cases]');
+  if (!list || !window.API) return;
+  const { esc, img } = window.UI;
+  const lock = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg>';
+  const arrow = '<svg class="case-card__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6l12 12M18 9v9H9"/></svg>';
+  try {
+    const rows = await window.API.getCases({ limit: 3 });
+    list.innerHTML = rows.map((r) => {
+      const open = !!r.afterImage;
+      return `
+        <li><a class="case-card${open ? ' is-unlocked' : ''}" href="./community/case-view.html?id=${encodeURIComponent(r.id)}">
+          <span class="case-card__half img-ph"><img src="${img(r.beforeImage)}" alt="${esc(r.title)} 치료 전 사진" loading="lazy" decoding="async"><span class="case-card__tag">BEFORE</span></span>
+          <span class="case-card__half img-ph${open ? '' : ' is-locked'}"><img src="${img(open ? r.afterImage : r.afterBlur)}" alt="${open ? `${esc(r.title)} 치료 후 사진` : ''}" loading="lazy" decoding="async"><span class="case-card__tag">AFTER</span>${open ? '' : `<span class="case-card__lock">${lock}로그인 후 확인</span>`}</span>
+          <span class="case-card__info"><span class="case-card__cat">${esc(r.categoryName)}</span><strong class="case-card__title">${esc(r.title)}</strong>${arrow}</span>
+        </a></li>`;
+    }).join('');
+    list.querySelectorAll('img').forEach((im) => im.addEventListener('error', () => im.classList.add('is-missing'), { once: true }));
+  } catch (err) {
+    console.error(err);
+    list.innerHTML = '';
+  }
 }
 
 /* ---------- ⑦ FAQ 빠른 질문 박스 ----------
