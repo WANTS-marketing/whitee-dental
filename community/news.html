@@ -24,6 +24,7 @@
   <script src="../assets/js/api.js" defer></script>
   <script src="../assets/js/include.js" defer></script>
   <script src="../assets/js/common.js" defer></script>
+  <script src="../assets/js/board.js" defer></script>
   <script src="../assets/js/pages.js" defer></script>
 </head>
 <body class="is-sub has-lnb" data-page="news">
@@ -54,13 +55,8 @@
 
     <section class="sub-content">
       <div class="container">
-        <!-- 기존 사이트 치과스토리 글 (assets/data/news.json) — 분류 필터 · 최신순 12개씩 (pages.js renderNewsList) -->
-        <nav class="news-cats" aria-label="치과소식 분류">
-          <ul class="news-cats__list" data-news-cats></ul>
-        </nav>
-        <p class="sr-only" aria-live="polite" data-news-count></p>
-        <ul class="news-grid" data-news-list></ul>
-        <nav class="pager" aria-label="페이지" data-news-pager></nav>
+        <!-- 기존 사이트 치과스토리 글 (assets/data/news.json) — 분류 칩 · 도구 줄(건수·정렬·보기 방식·검색) · 목록 · 페이지 번호 (board.js) -->
+        <div class="board-ui" data-board="news"><p class="board-list__empty">불러오는 중입니다.</p></div>
       </div>
     </section>
       </div>

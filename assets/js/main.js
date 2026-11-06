@@ -720,7 +720,7 @@ async function initStory() {
     const title = String(r.title).replace(/\s*\n\s*/g, ' ');
     return `
       <li class="story-card">
-        <a href="${r.board === 'news' ? `./community/news-view.html?id=${encodeURIComponent(r.id)}` : `${b.page}#${b.anchor}-${esc(r.id)}`}" draggable="false">
+        <a href="${`./community/${r.board === 'news' ? 'news-view' : 'notice-view'}.html?id=${encodeURIComponent(r.id)}`}" draggable="false">
           <span class="story-card__thumb img-ph"><img src="${img(r.thumbnail || 'news-dummy-01.jpg')}" alt="" loading="lazy" draggable="false"><span class="story-card__hover">${ARROW}</span></span>
           <strong class="story-card__title">${esc(title)}</strong>
           <span class="story-card__sum">${esc(r.summary || '')}</span>
@@ -796,7 +796,7 @@ async function initStory() {
     noticeEl.innerHTML = data.notice.length ? data.notice.map((r) => {
       const t = BRANCH_TAG[r.branch];
       return `
-      <li><a class="notice-item" href="${BOARD.notice.page}#${BOARD.notice.anchor}-${esc(r.id)}">
+      <li><a class="notice-item" href="./community/notice-view.html?id=${encodeURIComponent(r.id)}">
         <span class="notice-item__title">${t ? `<span class="notice-item__tag notice-item__tag--${r.branch}">${t}</span>` : ''}<span class="notice-item__text">${esc(String(r.title).replace(/\s*\n\s*/g, ' '))}</span></span>
         <time class="notice-item__date" datetime="${esc(r.date)}">${dot(r.date)}</time>
       </a></li>`;

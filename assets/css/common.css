@@ -284,10 +284,10 @@ body.is-locked { overflow: hidden; }
 .quick__chips-label { display: none; align-items: center; height: 44px; padding: 0 14px; border-radius: var(--radius-pill); background: #222; color: #fff; font-size: var(--fs-xs); font-weight: 600; white-space: nowrap; }
 
 /* 상담문의 → faq/contact.html (포인트 컬러로 강조) · TOP(맨 위로) — 칩 없이 바로 동작, hover 때 링·빛 지나가기 */
-.quick__sns-btn--consult { --qb-shine: rgba(255, 255, 255, 0.25); border-color: var(--color-point); background: var(--color-point); color: #fff; } /* 상담문의 = 네이비 면·테두리 (어두운 화면 위에서는 아래 규칙으로 흰 반투명 테두리) */
-.quick__sns-btn--consult:focus-visible { outline-color: var(--color-point); }
-.quick__sns-btn--consult:hover { border-color: var(--color-point-hover); background: var(--color-point-hover); }
-html[data-header-theme="dark"] .quick__sns-btn--consult { border-color: rgba(255, 255, 255, 0.45); } /* 어두운 화면(히어로·네이비 진료안내)일 때만 흰 반투명 테두리 — 네이비 면이 배경에 묻히지 않게 */
+.quick__sns-btn--consult { --qb-shine: rgba(255, 255, 255, 0.25); border-color: var(--color-accent); background: var(--color-accent); color: #fff; } /* 상담문의 = 파랑 면·테두리(페이지 점 현재 막대와 같은 색) + 흰 아이콘·글자 — 색 규칙 예외(README '색 역할 규칙'). 슬림형도 같은 규칙 */
+.quick__sns-btn--consult:focus-visible { outline-color: var(--color-accent); }
+.quick__sns-btn--consult:hover { border-color: var(--color-accent-hover); background: var(--color-accent-hover); } /* 한 단계 진한 파랑 */
+/* 어두운 화면(히어로·네이비 진료안내)에서도 파랑 면이 배경과 구분돼 흰 반투명 테두리는 쓰지 않음 */
 @media (hover: hover) {
   .quick__item:not([data-quick-item]) .quick__sns-btn:hover::after { transform: translateX(-140px) rotate(12deg); }
   .quick__item:not([data-quick-item]) .quick__sns-btn:hover svg { transform: scale(1.1); }
@@ -561,33 +561,8 @@ html.is-lnb-hold body { min-height: calc(100vh + 2000px); }
 .badge--both { background: #f1f1f1; color: var(--color-text-sub); }
 .empty { padding: 60px 0; text-align: center; color: var(--color-text-muted); }
 
-/* 카드 그리드 (치과소식·치료사례 목록) */
-.card-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px 24px; }
-.post-card__thumb { aspect-ratio: 375 / 435; border-radius: var(--radius-lg); }
-.post-card__title { white-space: pre-line; margin-top: 16px; font-size: var(--fs-md); font-weight: 500; text-align: center; line-height: 1.5; }
-.post-card__date { margin-top: 4px; font-size: var(--fs-sm); color: var(--color-text-muted); text-align: center; }
 
-/* ---------- 치과소식 (기존 치과스토리 글) — 목록: 분류 칩 · 카드 3열 · 페이지 번호 / 상세: 글 · 이전글·다음글 (pages.js renderNewsList · renderNewsView) ---------- */
-/* 분류 칩: FAQ 모바일 칩과 같은 모양 (현재 = 포인트 배경). 넘치면 가로 스크롤 */
-.news-cats { margin-bottom: 40px; overflow-x: auto; scrollbar-width: none; }
-.news-cats::-webkit-scrollbar { display: none; }
-.news-cats__list { display: flex; flex-wrap: wrap; gap: 8px; }
-.news-cats__btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border: 1px solid #ddd; border-radius: var(--radius-btn); background: #fff; font-size: var(--fs-sm); line-height: 1.4; color: #666; white-space: nowrap; transition: color 0.2s, border-color 0.2s, background-color 0.2s; }
-.news-cats__btn:hover { border-color: #999; color: #333; }
-.news-cats__btn[aria-current] { border-color: var(--color-point); background: var(--color-point); color: #fff; font-weight: 600; }
-.news-cats__n { font-size: var(--fs-xs); opacity: 0.7; }
-/* 카드: 정사각 썸네일(메인 치과소식 카드와 같은 비율) · 분류 · 제목 2줄 · 요약 2줄 · 날짜 */
-.news-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 48px 24px; }
-.news-card a { display: block; }
-.news-card__thumb { display: block; aspect-ratio: 1; border-radius: var(--radius-sm); }
-.news-card__thumb img { transition: transform 0.6s var(--ease); }
-.news-card a:is(:hover, :focus-visible) .news-card__thumb img { transform: scale(1.04); }
-.news-card__cat { display: block; margin-top: 16px; font-size: var(--fs-xs); font-weight: 600; color: var(--color-point); }
-.news-card__title { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; margin-top: 4px; font-size: 1.125rem; line-height: 1.45; word-break: keep-all; transition: color var(--dur); }
-.news-card a:is(:hover, :focus-visible) .news-card__title { color: var(--color-accent); }
-.news-card__sum { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; margin-top: 8px; font-size: var(--fs-sm); line-height: 1.6; color: var(--color-text-sub); word-break: keep-all; }
-.news-card__date { display: block; margin-top: 12px; font-size: var(--fs-xs); color: var(--color-text-muted); }
-.news-grid > .empty { grid-column: 1 / -1; }
+/* ---------- 페이지 번호 (게시판 공통) · 글 상세(치과소식·공지사항·치료사례 — board.js view) ---------- */
 /* 페이지 번호 */
 .pager { display: flex; justify-content: center; gap: 6px; margin-top: 64px; }
 .pager:empty { display: none; }
@@ -596,6 +571,171 @@ html.is-lnb-hold body { min-height: calc(100vh + 2000px); }
 .pager__btn.is-current { background: var(--color-point); color: #fff; font-weight: 700; }
 .pager__btn.is-disabled { color: #ccc; pointer-events: none; }
 .pager__arrow svg { width: 18px; height: 18px; }
+.pager__gap { display: grid; place-items: center; min-width: 28px; height: 40px; color: #999; font-size: var(--fs-sm); }
+
+/* ==========================================================================
+   게시판 목록 (치과소식·공지사항·치료사례 — board.js list)
+   [분류 칩 줄] → [도구 줄: 총 N건 | 정렬 · 보기 방식 · 검색] → [목록: 카드 3개 / 카드 4개 / 목록형] → [페이지 번호]
+   목록 폭 = LNB 옆 본문(.sub-body, 컨테이너 쿼리 sub) 기준. 썸네일 비율은 게시판마다(--b-ratio)
+   ========================================================================== */
+.board-ui { --b-ratio: 1; }
+[data-board="notice"] { --b-ratio: 4 / 3; }
+[data-board="cases"] { --b-ratio: 3 / 4; }
+.board-list__empty { padding: 72px 0; text-align: center; color: var(--color-text-muted); }
+
+/* 분류 칩: 현재 = 네이비 면. 넘치면 가로 스크롤 */
+.board-cats { margin-bottom: 20px; overflow-x: auto; scrollbar-width: none; }
+.board-cats::-webkit-scrollbar { display: none; }
+.board-cats__list { display: flex; flex-wrap: wrap; gap: 8px; }
+.board-cats__btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border: 1px solid #ddd; border-radius: var(--radius-btn); background: #fff; font-size: var(--fs-sm); line-height: 1.4; color: #666; white-space: nowrap; transition: color 0.2s, border-color 0.2s, background-color 0.2s; }
+.board-cats__btn:hover { border-color: #999; color: #333; }
+.board-cats__btn[aria-current] { border-color: var(--color-point); background: var(--color-point); color: #fff; font-weight: 600; }
+.board-cats__n { font-size: var(--fs-xs); opacity: 0.7; }
+
+/* 도구 줄: 왼쪽 건수, 오른쪽 [정렬][보기 방식][검색] — 높이 40px, 모서리 4px */
+.board-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; margin-bottom: 28px; padding: 14px 0; border-top: 2px solid var(--color-text); border-bottom: 1px solid var(--color-line); }
+.board-tools__count { flex: 1 1 auto; min-width: 0; font-size: var(--fs-sm); color: var(--color-text-sub); }
+.board-tools__count b { font-weight: 700; color: var(--color-text); }
+.board-tools__q { margin-left: 6px; color: var(--color-text); }
+.board-tools__clear { margin-left: 8px; font-size: var(--fs-xs); color: var(--color-text-muted); text-decoration: underline; text-underline-offset: 3px; }
+.board-tools__clear:hover { color: var(--color-accent); }
+.board-tools__right { display: flex; align-items: center; gap: 10px; }
+.board-tools .form__select { width: 112px; height: 40px; padding: 0 36px 0 14px; background-position: right 12px center; font-size: var(--fs-sm); }
+.board-tools__views { display: flex; border: 1px solid var(--color-line); border-radius: var(--radius-btn); overflow: hidden; }
+.board-tools__view { display: grid; place-items: center; width: 40px; height: 38px; color: #aaa; background: #fff; transition: color 0.2s, background-color 0.2s; }
+.board-tools__view + .board-tools__view { border-left: 1px solid var(--color-line); }
+.board-tools__view svg { width: 18px; height: 18px; fill: currentColor; }
+.board-tools__view:hover { color: var(--color-text); }
+.board-tools__view[aria-pressed="true"] { background: var(--color-point); color: #fff; }
+.board-tools__view:focus-visible { outline: 2px solid var(--color-accent); outline-offset: -2px; }
+.board-tools__view--card { display: none; } /* 모바일 전용 (카드 1열) */
+.board-tools__view--card + .board-tools__view { border-left: 1px solid var(--color-line); }
+.board-search { position: relative; display: flex; width: 240px; }
+.board-search__input { width: 100%; height: 40px; padding: 0 44px 0 14px; border: 1px solid var(--color-line); border-radius: var(--radius-btn); background: #fff; font-size: var(--fs-sm); transition: border-color var(--dur); }
+.board-search__input:focus { border-color: var(--color-text); outline: none; }
+.board-search__input::-webkit-search-cancel-button { cursor: pointer; }
+.board-search__btn { position: absolute; top: 0; right: 0; display: grid; place-items: center; width: 40px; height: 40px; color: #666; }
+.board-search__btn:hover { color: var(--color-accent); }
+.board-search__btn svg { width: 18px; height: 18px; }
+
+/* 공통 태그: '공지'(고정 공지) */
+.board-tag { display: inline-flex; align-items: center; height: 22px; padding: 0 8px; border-radius: var(--radius-btn); background: var(--color-point); color: #fff; font-size: var(--fs-xxs); font-weight: 700; line-height: 1; }
+.board-views::before { content: "·"; margin: 0 6px; }
+/* 로그인 전 사진 흐림 (치료사례) */
+.is-locked > img { filter: blur(10px); transform: scale(1.15); }
+.board-lock { position: absolute; inset: 0; z-index: 1; display: flex; align-items: center; justify-content: center; padding: 12px; background: rgba(0, 0, 0, 0.35); color: #fff; font-size: var(--fs-sm); font-weight: 600; text-align: center; }
+
+/* ---------- 카드 (카드 3개 · 카드 4개) — 카드 전체가 상세 링크, hover 시 사진 위 '자세히 보기 →' (메인 치과소식 카드 오버레이와 같은 어두운 막·흰 버튼) ---------- */
+.board-list[data-view="card3"], .board-list[data-view="card4"] { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 48px 24px; }
+.board-list[data-view="card4"] { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 40px 20px; }
+.board-list[data-view^="card"] > .board-list__empty { grid-column: 1 / -1; }
+.board-card__link { display: block; }
+.board-card__media { position: relative; display: block; overflow: hidden; border-radius: var(--radius-sm); }
+.board-card__thumb { display: block; aspect-ratio: var(--b-ratio); }
+.board-card__thumb img { transition: transform 0.6s var(--ease); }
+.board-card__link:is(:hover, :focus-visible) .board-card__thumb:not(.is-locked) img { transform: scale(1.05); }
+.board-card__hover { position: absolute; inset: 0; z-index: 2; display: grid; place-items: center; background: rgba(0, 0, 0, 0.35); opacity: 0; transition: opacity 0.4s var(--ease); }
+.board-card__hover-btn { display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 20px; border-radius: var(--radius-pill); background: #fff; color: var(--color-text); font-size: var(--fs-sm); font-weight: 700; transform: scale(0.85); transition: transform 0.4s var(--ease); }
+.board-card__hover-btn svg { width: 16px; height: 16px; }
+.board-card__link:is(:hover, :focus-visible) .board-card__hover { opacity: 1; }
+.board-card__link:is(:hover, :focus-visible) .board-card__hover-btn { transform: none; }
+.board-card__top { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 16px; min-height: 22px; }
+.board-card__top .badge { margin: 0; }
+.board-card__cat { font-size: var(--fs-xs); font-weight: 600; color: var(--color-point); }
+.board-card__title { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; margin-top: 4px; font-size: 1.125rem; line-height: 1.45; word-break: keep-all; transition: color var(--dur); }
+.board-card__link:is(:hover, :focus-visible) .board-card__title { color: var(--color-accent); }
+.board-card__sum { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; margin-top: 8px; font-size: var(--fs-sm); line-height: 1.6; color: var(--color-text-sub); word-break: keep-all; }
+.board-card__meta { display: block; margin-top: 12px; font-size: var(--fs-xs); color: var(--color-text-muted); }
+/* 카드 4개: 사진 비율 그대로, 제목 조금 작게, 요약 1줄 */
+[data-view="card4"] .board-card__title { font-size: 1.0625rem; }
+[data-view="card4"] .board-card__sum { -webkit-line-clamp: 1; }
+[data-view="card4"] .board-card__hover-btn { height: 40px; padding: 0 16px; font-size: var(--fs-xs); }
+
+/* ---------- 목록형: [썸네일 120px | 분류·제목·요약 1줄 | 날짜·조회] [펼쳐보기 ∨], 행 사이 구분선 ---------- */
+.board-list[data-view="list"] { border-top: 0; }
+.board-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; column-gap: 16px; border-bottom: 1px solid var(--color-line); }
+.board-row.is-pinned { background: var(--color-point-soft); }
+.board-row__link { display: grid; grid-template-columns: 120px minmax(0, 1fr) auto; align-items: center; gap: 24px; min-width: 0; padding: 20px 0 20px 8px; }
+.board-row.is-plain .board-row__link { grid-template-columns: minmax(0, 1fr) auto; padding-top: 22px; padding-bottom: 22px; }
+.board-row__thumb { display: block; aspect-ratio: var(--b-ratio); max-height: 120px; border-radius: var(--radius-sm); }
+[data-board="cases"] .board-row__thumb { aspect-ratio: 1; } /* 세로 사진(3:4)은 목록형에서 정사각으로 */
+.board-row__thumb img { transition: transform 0.6s var(--ease); }
+.board-row__link:is(:hover, :focus-visible) .board-row__thumb:not(.is-locked) img { transform: scale(1.05); }
+.board-row__text { display: grid; gap: 6px; min-width: 0; }
+.board-row__top { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.board-row__top:empty { display: none; }
+.board-row__top .badge { margin: 0; }
+.board-row__cat { font-size: var(--fs-xs); font-weight: 600; color: var(--color-point); }
+.board-row__title { overflow: hidden; font-size: 1.0625rem; font-weight: 600; line-height: 1.45; white-space: nowrap; text-overflow: ellipsis; transition: color var(--dur); }
+.board-row__link:is(:hover, :focus-visible) .board-row__title { color: var(--color-accent); }
+.board-row__sum { overflow: hidden; font-size: var(--fs-sm); line-height: 1.5; color: var(--color-text-sub); white-space: nowrap; text-overflow: ellipsis; }
+.board-row__meta { display: flex; align-items: center; font-size: var(--fs-xs); color: var(--color-text-muted); white-space: nowrap; }
+.board-row__toggle { display: inline-flex; align-items: center; gap: 4px; height: 36px; margin-right: 8px; padding: 0 12px; border: 1px solid var(--color-line); border-radius: var(--radius-btn); background: #fff; font-size: var(--fs-xs); font-weight: 600; color: #555; white-space: nowrap; transition: border-color 0.2s, color 0.2s; }
+.board-row__toggle:hover { border-color: var(--color-text); color: var(--color-text); }
+.board-row__toggle svg { width: 14px; height: 14px; transition: transform 0.3s var(--ease); }
+.board-row__toggle[aria-expanded="true"] svg { transform: rotate(180deg); }
+.board-row__panel { grid-column: 1 / -1; padding: 0 8px 24px; }
+.board-row__panel:not([hidden]) { animation: sub-fade-in 0.35s var(--ease) backwards; }
+.board-row__panel-in { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 28px; align-items: start; padding: 24px; border-radius: var(--radius-sm); background: #f7f8fa; }
+.board-row__panel-in:not(:has(.board-row__panel-img)) { grid-template-columns: minmax(0, 1fr); }
+.board-row__panel-img { display: block; aspect-ratio: 4 / 3; border-radius: var(--radius-sm); }
+.board-row__panel-img img { object-fit: cover; }
+.board-row__body { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 5; overflow: hidden; font-size: var(--fs-sm); line-height: 1.75; color: var(--color-text-sub); word-break: keep-all; }
+.board-row__more { display: inline-flex; align-items: center; gap: 8px; height: 40px; margin-top: 16px; padding: 0 18px; border: 1px solid var(--color-text); border-radius: var(--radius-btn); font-size: var(--fs-sm); font-weight: 600; transition: background-color 0.2s, color 0.2s; }
+.board-row__more svg { width: 16px; height: 16px; }
+.board-row__more:hover { background: var(--color-text); color: #fff; }
+.board-row__loading { padding: 16px 0; font-size: var(--fs-sm); color: var(--color-text-muted); }
+
+/* ---------- 상세: 분류·태그 줄, 치료사례 전·후 사진 ---------- */
+.article__cats { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px; }
+.article__cats .badge { margin: 0; }
+.article__cat-sep { color: var(--color-text-muted); }
+.case-view { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.case-view__fig { margin: 0 !important; }
+.case-view__img { position: relative; display: block; overflow: hidden; aspect-ratio: 3 / 4; border-radius: var(--radius-md); }
+.case-view__fig.is-locked img { filter: blur(10px); transform: scale(1.15); }
+.case-view__fig figcaption { margin-top: 10px; text-align: center; font-size: var(--fs-sm); font-weight: 600; }
+.case-view__note { font-size: var(--fs-sm); color: var(--color-text-muted); text-align: center; }
+
+/* 좁은 본문(LNB 옆 실제 폭) — rem 기준이라 글자 크게·아주 크게에서는 더 일찍 줄어든다 */
+@container sub (max-width: 55rem) { /* 880px */
+  .board-list[data-view="card4"] { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .board-row__panel-in { grid-template-columns: 180px minmax(0, 1fr); gap: 20px; }
+}
+@container sub (max-width: 48rem) { /* 768px — 도구 줄 2줄: [건수][정렬·보기] / [검색 전체 너비] */
+  .board-search { flex: 1 1 100%; width: auto; }
+}
+@container sub (max-width: 40rem) { /* 640px */
+  .board-list[data-view="card3"], .board-list[data-view="card4"] { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 36px 16px; }
+  .board-row__link { grid-template-columns: 96px minmax(0, 1fr); gap: 16px; }
+  .board-row.is-plain .board-row__link { grid-template-columns: minmax(0, 1fr); }
+  .board-row__meta { grid-column: 2; margin-top: -4px; }
+  .board-row.is-plain .board-row__meta { grid-column: 1; }
+}
+/* 모바일: 보기 = 카드 1열 / 목록형 두 가지, 검색칸은 도구 줄 아래 전체 너비 */
+@media (max-width: 768px) {
+  .board-cats { margin: 0 calc(var(--gutter) * -1) 16px; padding: 0 var(--gutter); }
+  .board-cats__list { flex-wrap: nowrap; width: max-content; }
+  .board-tools { gap: 10px 12px; margin-bottom: 20px; padding: 12px 0; }
+  .board-tools .form__select { width: 100px; }
+  .board-tools__view--card3, .board-tools__view--card4 { display: none; }
+  .board-tools__view--card { display: grid; border-left: 0 !important; }
+  .board-search { flex: 1 1 100%; width: auto; }
+  .board-list[data-view="card3"], .board-list[data-view="card4"] { grid-template-columns: minmax(0, 1fr); gap: 36px; }
+  [data-view="card4"] .board-card__sum { -webkit-line-clamp: 2; }
+  [data-view="card4"] .board-card__title { font-size: 1.125rem; }
+  .board-card__hover { display: none; } /* 터치 화면은 hover 없음 */
+  .board-row { grid-template-columns: minmax(0, 1fr); }
+  .board-row__link { grid-template-columns: 88px minmax(0, 1fr); gap: 14px; padding: 16px 0 10px; }
+  .board-row.is-plain .board-row__link { padding: 16px 0 10px; }
+  .board-row__title { white-space: normal; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; font-size: 1rem; }
+  .board-row__sum { display: none; }
+  .board-row__toggle { justify-self: end; height: 32px; margin: 0 0 12px; }
+  .board-row__panel { padding: 0 0 20px; }
+  .board-row__panel-in { grid-template-columns: minmax(0, 1fr); gap: 16px; padding: 16px; }
+  .board-row__panel-img { aspect-ratio: 16 / 9; } /* 한 줄 전체 폭이라 낮게 */
+  .case-view { gap: 10px; }
+}
 /* 상세: 제목 영역 가운데 · 본문은 원래 글처럼 가운데 정렬(줄을 나눠 쓴 글이라) · 폭 760px */
 .article__head { padding-bottom: 32px; border-bottom: 1px solid var(--color-line); text-align: center; }
 .article__cat { display: inline-block; font-size: var(--fs-sm); font-weight: 600; color: var(--color-point); }
@@ -620,7 +760,6 @@ a.article-nav__item:hover .article-nav__title { color: var(--color-accent); }
 .article__foot { display: flex; justify-content: center; margin-top: 40px; }
 .article__list { height: 48px; padding: 0 32px; border: 1px solid var(--color-text); background: #fff; font-weight: 600; }
 .article__list:hover { background: var(--color-text); color: #fff; }
-.news-view > .empty { padding: 80px 0 0; }
 
 /* 아코디언 (FAQ) */
 .accordion__item { border-bottom: 1px solid #ddd; }
@@ -733,11 +872,6 @@ a.article-nav__item:hover .article-nav__title { color: var(--color-accent); }
 .doctor-profile__career li { position: relative; break-inside: avoid; margin-bottom: 8px; padding-left: 12px; font-size: var(--fs-sm); color: var(--color-text-sub); line-height: 1.6; word-break: keep-all; }
 .doctor-profile__career li::before { content: ""; position: absolute; left: 0; top: 0.7em; width: 4px; height: 4px; border-radius: 50%; background: var(--color-point); }
 
-/* 치료사례 목록 */
-.case-item__img { aspect-ratio: 3 / 4; border-radius: var(--radius-md); }
-.case-item__img img { filter: blur(10px); transform: scale(1.15); }
-.case-item.is-unlocked .case-item__img img { filter: none; transform: none; }
-.case-item__lock { position: absolute; inset: 0; z-index: 1; display: flex; align-items: center; justify-content: center; padding: 16px; background: rgba(0, 0, 0, 0.35); color: #fff; font-size: var(--fs-sm); text-align: center; }
 
 /* 빠른상담 박스 (진료과목 페이지 하단) */
 .quick-consult { margin-top: var(--space-3xl); padding: 40px; border-radius: var(--radius-lg); background: var(--color-bg-warm); }
@@ -807,10 +941,6 @@ a.article-nav__item:hover .article-nav__title { color: var(--color-accent); }
   .quick-consult .form { grid-template-columns: 1fr 1fr; }
   .quick-consult .btn { grid-column: 1 / -1; }
 }
-@container sub (max-width: 40rem) { /* 640px */
-  .card-grid { grid-template-columns: repeat(2, 1fr); }
-  .news-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
 
 /* ==========================================================================
    반응형
@@ -848,7 +978,6 @@ a.article-nav__item:hover .article-nav__title { color: var(--color-accent); }
   .branch-bar__tel { font-size: 1.875rem; }
   .branch-card { padding: 24px; }
   .branch-card__tel { font-size: 1.75rem; }
-  .card-grid { grid-template-columns: repeat(2, 1fr); }
   .quick-consult .form { grid-template-columns: 1fr 1fr; }
   .quick-consult .btn { grid-column: 1 / -1; }
   .contact-layout { grid-template-columns: 1fr; }
@@ -916,16 +1045,7 @@ a.article-nav__item:hover .article-nav__title { color: var(--color-accent); }
   .board__no { display: none; }
   .board__item { flex-wrap: wrap; gap: 4px 12px; padding: 16px 4px; }
   .board__title { flex-basis: 100%; }
-  .card-grid { grid-template-columns: 1fr 1fr; gap: 24px 12px; }
-  .card-grid .post-card__title .badge { display: block; width: fit-content; margin: 0 auto 6px; }
   /* 치과소식: 칩은 한 줄 가로 스크롤, 카드 2열(요약 숨김), 글 본문 한 단계 작게 */
-  .news-cats { margin: 0 calc(var(--gutter) * -1) 28px; padding: 0 var(--gutter); }
-  .news-cats__list { flex-wrap: nowrap; width: max-content; }
-  .news-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px 12px; }
-  .news-card__cat { margin-top: 12px; }
-  .news-card__title { font-size: var(--fs-md); }
-  .news-card__sum { display: none; }
-  .news-card__date { margin-top: 6px; }
   .pager { margin-top: 48px; gap: 2px; }
   .pager__btn { min-width: 36px; height: 36px; }
   .article__title { font-size: var(--fs-h3); }
@@ -956,9 +1076,6 @@ a.article-nav__item:hover .article-nav__title { color: var(--color-accent); }
 }
 
 
-/* 메인 치과소식 카드로 들어온 글(#notice-nt7, #news-n6 등) 잠깐 강조 (pages.js scrollToHashItem) */
-.is-target { animation: target-flash 2s ease-out; }
-@keyframes target-flash { 0%, 30% { background-color: var(--color-point-soft); } 100% { background-color: transparent; } }
 
 /* 어두운 배경 위 키보드 초점: 네이비 테두리가 묻히므로 흰색 (히어로·지점 바로가기 바·푸터·모바일 하단 바) */
 :is(.hero, .branch-bar, .footer, .bottom-bar) :focus-visible { outline-color: #fff; }

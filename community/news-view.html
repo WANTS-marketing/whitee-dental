@@ -22,6 +22,7 @@
   <script src="../assets/js/api.js" defer></script>
   <script src="../assets/js/include.js" defer></script>
   <script src="../assets/js/common.js" defer></script>
+  <script src="../assets/js/board.js" defer></script>
   <script src="../assets/js/pages.js" defer></script>
 </head>
 <body class="is-sub has-lnb" data-page="news-view">
@@ -53,8 +54,8 @@
 
     <section class="sub-content">
       <div class="container">
-        <!-- 글 상세 (?id=story-89) — 본문 assets/data/news/{id}.html, 이전글·다음글·목록 (pages.js renderNewsView) -->
-        <div class="news-view" data-news-view aria-live="polite"><p class="empty">글을 불러오는 중입니다.</p></div>
+        <!-- 글 상세 (?id=story-89) — 본문 assets/data/news/{id}.html, 이전글·다음글·목록으로 (board.js view) -->
+        <div class="board-view" data-board-view aria-live="polite"><p class="board-list__empty">글을 불러오는 중입니다.</p></div>
       </div>
     </section>
       </div>

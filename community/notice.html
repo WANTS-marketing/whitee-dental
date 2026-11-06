@@ -24,6 +24,7 @@
   <script src="../assets/js/api.js" defer></script>
   <script src="../assets/js/include.js" defer></script>
   <script src="../assets/js/common.js" defer></script>
+  <script src="../assets/js/board.js" defer></script>
   <script src="../assets/js/pages.js" defer></script>
 </head>
 <body class="is-sub has-lnb" data-page="notice">
@@ -54,7 +55,8 @@
 
     <section class="sub-content">
       <div class="container">
-        <ul class="board" data-notice-list></ul>
+        <!-- 공지사항 (assets/data/notice.json) — 지점 칩 · 도구 줄 · 목록(기본 목록형, 고정 공지 맨 위) · 페이지 번호 (board.js) -->
+        <div class="board-ui" data-board="notice"><p class="board-list__empty">불러오는 중입니다.</p></div>
       </div>
     </section>
       </div>
