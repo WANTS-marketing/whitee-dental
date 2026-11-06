@@ -1,5 +1,5 @@
 /* ==========================================================================
-   상담문의 목록 (FAQ > 상담문의하기 = faq/contact.html) — pages.js 가 InquiryBoard.init() 을 부른다. 스타일: common.css '상담 현황'
+   상담문의 목록 (FAQ > 상담문의 = faq/contact.html) — pages.js 가 InquiryBoard.init() 을 부른다. 스타일: common.css '상담 현황'
    데이터는 api.js 함수만 쓴다: listInquiries({ branch, page }) · getInquiry(id, password)  (저장 방식은 몰라도 됨 — docs/API-SPEC.md)
    글쓰기는 따로: faq/contact-write.html (전송 성공 → 이 목록으로 돌아와 방금 쓴 글 강조)
 

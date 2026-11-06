@@ -75,7 +75,7 @@ assets/js/api.js   ← 서버 연결 때 바꾸는 곳은 여기 하나 (함수 
 | 상담문의 작성 폼 (전송 성공 → 목록으로, 방금 쓴 글 맨 위 '내 문의') | `faq/contact-write.html` | `createInquiry` |
 | 진료과목 5페이지 빠른상담 (내용 칸 없음) | `treatment/*.html` | `createInquiry` |
 | 메인 FAQ 옆 빠른 상담문의 | `index.html` | `createInquiry` |
-| 상담문의 목록 (FAQ > 상담문의하기) · 비밀번호 열람 | `faq/contact.html` (`assets/js/inquiry.js`) — 예전 주소 `faq/status.html` 은 쿼리를 유지한 채 여기로 자동 이동 | `listInquiries` · `getInquiry` |
+| 상담문의 목록 (FAQ > 상담문의) · 비밀번호 열람 | `faq/contact.html` (`assets/js/inquiry.js`) — 예전 주소 `faq/status.html` 은 쿼리를 유지한 채 여기로 자동 이동 | `listInquiries` · `getInquiry` |
 | 모든 상담 폼·완료 문구의 시안 안내 | common.js `inquiryForm` · main.js · inquiry.js | `isDeliveryReady` |
 | 관리자 | `admin/index.html` (`assets/js/admin.js`) | `adminListInquiries` · `adminGetInquiry` · `answerInquiry` · `updateInquiryStatus` · `deleteInquiry` |
 

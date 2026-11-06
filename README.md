@@ -12,7 +12,7 @@
 - 순수 HTML / CSS / JavaScript (프레임워크·빌드 도구 없음)
 - 폰트: Pretendard (jsDelivr CDN)
 - 호스팅: GitHub Pages (GitHub Actions로 배포)
-- 상담문의: 게시판형 — FAQ > 상담문의하기 = 목록(`faq/contact.html`) · 작성(`faq/contact-write.html`). 지금은 **서버 없는 시안**(더미 JSON + 브라우저 탭 저장). 병원 메일 알림은 Web3Forms
+- 상담문의: 게시판형 — FAQ > 상담문의 = 목록(`faq/contact.html`) · 작성(`faq/contact-write.html`). 지금은 **서버 없는 시안**(더미 JSON + 브라우저 탭 저장). 병원 메일 알림은 Web3Forms
 - 서버 연결: `docs/API-SPEC.md` 참고, `assets/js/api.js` 함수 안쪽만 교체 (특정 서비스에 묶이지 않음)
 
 ### 시안 확인용 더미 비밀번호
@@ -120,7 +120,7 @@ docs/                      배포·인수인계 문서
 | 서브페이지 시작 위치 (같은 대메뉴 안 이동 = 본문부터, 그 밖 = 배너 맨 위부터) | `assets/js/lnb-jump.js` (맨 위 설명에 규칙 정리) |
 | FAQ·공지 (시안) | `assets/data/*.json` |
 | 상담문의 폼 칸·검사(비밀번호 4자리·내용 5자·링크 막기) | 각 폼 HTML (`faq/contact-write.html` · `treatment/*.html` 빠른상담 · `index.html` 빠른 상담문의) + `common.js` `inquiryForm` |
-| 상담문의 목록(15개·지점 칩·모바일 카드형·내 문의) · 비밀번호 팝업 — 연결: 메뉴·LNB 상담문의하기 = 목록, 퀵메뉴·하단 바·FAQ 하단 상담문의 = 작성 | `assets/js/inquiry.js` · 스타일 `common.css` '상담 현황' · 팝업 `common.js` `UI.dialog` |
+| 상담문의 목록(15개·지점 칩·모바일 카드형·내 문의) · 비밀번호 팝업 — 연결: 메뉴·LNB 상담문의 = 목록, 퀵메뉴·하단 바·FAQ 하단 상담문의 = 작성 | `assets/js/inquiry.js` · 스타일 `common.css` '상담 현황' · 팝업 `common.js` `UI.dialog` |
 | 상담 데이터 저장 방식 (지금 더미 → 서버) | `assets/js/api.js` 상담문의 함수 8개 + `docs/API-SPEC.md` |
 | 메인 의료진 나열 순서 | `assets/js/site-data.js` 의 `mainDoctorOrder` |
 | 의료진 소개 지점 이동 버튼(화면 아래 [창원점 N][마산점 N]) · 지점별 묶음 | `assets/js/pages.js` `renderDoctorsPage` · `initDoctorBranchNav` (원장 수는 site-data.js 에서 자동) · 스타일 `common.css` '의료진 소개 카드' · '지점 이동 버튼' |
