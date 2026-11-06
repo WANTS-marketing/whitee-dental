@@ -115,13 +115,14 @@ docs/                      배포·인수인계 문서
 | 메뉴 | `components/header.html` (데스크톱·모바일 두 군데) |
 | 서브페이지 왼쪽 하위 메뉴(LNB) 행·타이틀 블록(대메뉴 이름·영문) | 각 서브페이지 `<aside class="lnb">` (같은 메뉴 묶음 페이지 모두) · 스타일 `common.css` '서브 LNB' |
 | 서브 배너 문구(영문 라벨·슬로건) · 본문 맨 위 경로·페이지 제목 | 각 서브페이지 `.sub-visual` (대메뉴 묶음마다 같은 문구) · `.sub-head` |
-| 서브 배너 사진 (모든 서브페이지 공통 1장) | `assets/images/banner-sub.jpg` 를 같은 이름으로 교체 (지정: `sub.css` `.sub-visual__bg`) · 어두운 막·위쪽 그라데이션도 한 값 |
+| 서브 배너 사진 (공통 1장 + 병원소개·의료진 소개 예외) | `assets/images/banner-sub.jpg` 를 같은 이름으로 교체 (지정: `sub.css` `.sub-visual__bg`) · 어두운 막·위쪽 그라데이션도 한 값 · **병원소개** `assets/images/banner-clinic.jpg` · **의료진 소개** `banner-doctors.jpg` 만 예외 (`sub.css` `.sub-visual__bg--clinic` · `--doctors`) |
 | 서브 배너 높이 (PC 화면 높이 60%·520~680px, 모바일 45%·최소 320px) | `common.css` '.has-lnb .sub-visual' (모바일은 768px 이하 반응형 쪽) |
 | 서브페이지 시작 위치 (같은 대메뉴 안 이동 = 본문부터, 그 밖 = 배너 맨 위부터) | `assets/js/lnb-jump.js` (맨 위 설명에 규칙 정리) |
 | FAQ·공지 (시안) | `assets/data/*.json` |
 | 상담문의 폼 칸·검사(비밀번호 4자리·내용 5자·링크 막기) | 각 폼 HTML (`faq/contact-write.html` · `treatment/*.html` 빠른상담 · `index.html` 빠른 상담문의) + `common.js` `inquiryForm` |
 | 상담문의 목록(15개·지점 칩·모바일 카드형·내 문의) · 비밀번호 팝업 — 연결: 메뉴·LNB 상담문의 = 목록, 퀵메뉴·하단 바·FAQ 하단 상담문의 = 작성 | `assets/js/inquiry.js` · 스타일 `common.css` '상담 현황' · 팝업 `common.js` `UI.dialog` |
 | 상담 데이터 저장 방식 (지금 더미 → 서버) | `assets/js/api.js` 상담문의 함수 8개 + `docs/API-SPEC.md` |
+| 치료사례 (기존 사이트 시술 전후 14건) | `assets/data/cases.json` — 다시 만들기: `scripts/import` 의 `fetch-gallery.js` → `build-gallery.js` (BEFORE·AFTER 나누기·흐림 미리보기). AFTER 는 로그인 회원만 — 시안 확인은 주소에 `?login=1` (`?login=0` 해제) |
 | 메인 의료진 나열 순서 | `assets/js/site-data.js` 의 `mainDoctorOrder` |
 | 의료진 소개 지점 이동 버튼(화면 아래 [창원점 N][마산점 N]) · 지점별 묶음 | `assets/js/pages.js` `renderDoctorsPage` · `initDoctorBranchNav` (원장 수는 site-data.js 에서 자동) · 스타일 `common.css` '의료진 소개 카드' · '지점 이동 버튼' |
 | 커뮤니티 게시판 목록·상세 (분류 칩·정렬·보기 방식·검색·페이지 번호·이전/다음글) | `assets/js/board.js` 맨 위 `BOARDS` (게시판별 분류·기본 보기·검색 대상) · 스타일 `common.css` '게시판 목록' — 한 페이지 12개(카드 4개 16개) |

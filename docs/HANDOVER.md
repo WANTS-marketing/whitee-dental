@@ -33,6 +33,38 @@
 - 본문 정리: 글꼴·크기·색 인라인 스타일과 빈 문단 삭제, 굵게·색 강조 → `<strong>`, 밑줄 → `<mark>`(형광펜), 이미지 링크(view_image) 제거. 원래 글처럼 가운데 정렬
 - 본문 문구는 기존 사이트 그대로 — 의료광고 심의 기준 검토는 별도
 
+## 기존 사이트에서 옮긴 자료
+
+### 치료사례 (시술 전후) 14건 — 2026-11-06
+
+- 원본 게시판: https://whiteedental.co.kr/bbs/board.php?bo_table=gallery (wr_id 5~18)
+- 다시 가져오기: `cd scripts/import && npm install` → `node fetch-gallery.js` (목록·원본 이미지 → `raw/gallery/`, 1초 간격) → `node build-gallery.js` (BEFORE·AFTER 나누기·흐림 미리보기 + `assets/data/cases.json`)
+- ⚠️ **기존 사이트는 이 게시판 글 상세를 회원만 볼 수 있게 막아 두어**("글을 읽을 권한이 없습니다") 로그인 없이 가져올 수 있는 것만 옮겼다
+  - 가져온 것: 목록의 제목·작성일(MM-DD)·썸네일 → 썸네일 이름으로 찾은 **원본 이미지 1장**(1000×600)
+  - 작성 연도: 이미지 폴더 연월(`/data/editor/2610/` → 2026년 10월) + 목록 MM-DD
+  - **못 가져온 것: 본문 텍스트**, 글 안에 이미지가 더 있었다면 두 번째 이후 이미지 → 본문은 이미지 위 안내 띠(교정 기간·내용)를 옮겨 적었다(`build-gallery.js` `CAPTIONS`, 환자 이니셜은 뺌). 원래 본문이 따로 있었다면 병원 관리자 계정으로 확인 필요
+- 이미지 14장 모두 [안내 띠 / BEFORE | AFTER / 로고] 한 장 양식 → 흰 사진 테두리를 찾아 **자동으로 나눔(수동 확인 필요 0건)**
+- 원본 합본 이미지(AFTER 가 그대로 보이고 환자 이니셜이 있음)는 사이트에도 저장소에도 올리지 않는다 — **이 저장소는 공개(Public)라 커밋하면 누구나 볼 수 있음**. 원본 14장 + 목록(`list.json`)은 프로젝트 밖 `자료/기존사이트-치료사례/` 에 보관 (오픈 후 기존 서버가 사라지므로 병원 자료와 함께 따로 백업할 것). 다시 만들 때는 `scripts/import/raw/gallery/` 에 넣고 build-gallery.js 실행 (`.gitignore`)
+- 진료 분류: 제목에 '교정' → 치아교정, wr_id 5(교정·보철·임플란트) → 치아교정·보철·임플란트. wr_id 18 은 제목에 '교정'이 없지만 안내 띠가 '교정기간'이라 치아교정
+- [ ] 병원 확인: 사진 게시 동의(환자 동의서) 유효 여부, 의료광고 심의 필요 여부, 지점(창원·마산) 정보(기존 글에 없음)
+
+| 자료 | 원래 제목 | 작성일 | 원본 글 | 원본 이미지 | 새 파일 |
+|---|---|---|---|---|---|
+| 치료사례 18 | 화이트e치과 시술 전후(덧니, 개방교합 해소) | 2026-10-27 (목록 10-27 + 이미지 폴더 2026-10) | https://whiteedental.co.kr/bbs/board.php?bo_table=gallery&wr_id=18 | https://whiteedental.co.kr/data/editor/2610/30df551de57490d6124bf12064bbc658_1793054095_2954.jpg | `assets/images/cases/case-18-before.jpg` · `-after.jpg` · `-after-blur.jpg` |
+| 치료사례 17 | 화이트e치과 시술 전후(부정교합 개선 교정) | 2026-10-07 (목록 10-07 + 이미지 폴더 2026-10) | https://whiteedental.co.kr/bbs/board.php?bo_table=gallery&wr_id=17 | https://whiteedental.co.kr/data/editor/2610/d10eb5052ca7e3a3cd1e1c19508fa9cc_1791332886_2322.jpg | `assets/images/cases/case-17-before.jpg` · `-after.jpg` · `-after-blur.jpg` |
+| 치료사례 16 | 화이트e치과 시술 전후(치아배열 교정) | 2026-08-31 (목록 08-31 + 이미지 폴더 2026-08) | https://whiteedental.co.kr/bbs/board.php?bo_table=gallery&wr_id=16 | https://whiteedental.co.kr/data/editor/2608/cf69db3595d73a5aece148c47ea7a314_1788149606_8551.jpg | `assets/images/cases/case-16-before.jpg` · `-after.jpg` · `-after-blur.jpg` |
+| 치료사례 15 | 화이트e치과 시술 전후(덧니 개선 교정) | 2026-05-27 (목록 05-27 + 이미지 폴더 2026-05) | https://whiteedental.co.kr/bbs/board.php?bo_table=gallery&wr_id=15 | https://whiteedental.co.kr/data/editor/2605/454ed50e19393ef4c90805adde0ef862_1779868330_5295.jpg | `assets/images/cases/case-15-before.jpg` · `-after.jpg` · `-after-blur.jpg` |
+| 치료사례 14 | 화이트e치과 시술 전후(덧니 개선 교정) | 2026-05-11 (목록 05-11 + 이미지 폴더 2026-05) | https://whiteedental.co.kr/bbs/board.php?bo_table=gallery&wr_id=14 | https://whiteedental.co.kr/data/editor/2605/0ce7bb52f5f93a1122f8224652c15c68_1778460248_1964.jpg | `assets/images/cases/case-14-before.jpg` · `-after.jpg` · `-after-blur.jpg` |
+| 치료사례 13 | 화이트e치과 시술 전후(치아돌출 및 치열개선 목적 교정) | 2026-04-27 (목록 04-27 + 이미지 폴더 2026-04) | https://whiteedental.co.kr/bbs/board.php?bo_table=gallery&wr_id=13 | https://whiteedental.co.kr/data/editor/2604/e1ad33083ab315fdd27835dd9b34b1bf_1777253454_3635.jpg | `assets/images/cases/case-13-before.jpg` · `-after.jpg` · `-after-blur.jpg` |
+| 치료사례 12 | 화이트e치과 시술 전후(전치부 총생 및 교합 개선 목적 교정) | 2026-03-20 (목록 03-20 + 이미지 폴더 2026-03) | https://whiteedental.co.kr/bbs/board.php?bo_table=gallery&wr_id=12 | https://whiteedental.co.kr/data/editor/2603/94449997946be0968ddd203b3ef0e3bf_1773971582_719.jpg | `assets/images/cases/case-12-before.jpg` · `-after.jpg` · `-after-blur.jpg` |
+| 치료사례 11 | 화이트e치과 시술 전후(전치부 반대교합 개선 및 치아 사이 공간 개선 교정) | 2026-03-12 (목록 03-12 + 이미지 폴더 2026-03) | https://whiteedental.co.kr/bbs/board.php?bo_table=gallery&wr_id=11 | https://whiteedental.co.kr/data/editor/2603/9f4a90d115f29e136e4ee22842a17e83_1773279008_8676.jpg | `assets/images/cases/case-11-before.jpg` · `-after.jpg` · `-after-blur.jpg` |
+| 치료사례 10 | 화이트e치과 시술 전후(삐뚤한 치아교정) | 2025-09-23 (목록 09-23 + 이미지 폴더 2025-09) | https://whiteedental.co.kr/bbs/board.php?bo_table=gallery&wr_id=10 | https://whiteedental.co.kr/data/editor/2509/2990960d34258c58a405f8a4f1c1eef1_1758590397_8362.jpg | `assets/images/cases/case-10-before.jpg` · `-after.jpg` · `-after-blur.jpg` |
+| 치료사례 9 | 화이트e치과 시술 전후(삐뚤한 치아교정) | 2025-09-12 (목록 09-12 + 이미지 폴더 2025-09) | https://whiteedental.co.kr/bbs/board.php?bo_table=gallery&wr_id=9 | https://whiteedental.co.kr/data/editor/2509/767135d9815ac5b173548011e73787c1_1757651489_4745.jpg | `assets/images/cases/case-9-before.jpg` · `-after.jpg` · `-after-blur.jpg` |
+| 치료사례 8 | 화이트e치과 시술 전후(덧니 해소 교정) | 2025-05-28 (목록 05-28 + 이미지 폴더 2025-05) | https://whiteedental.co.kr/bbs/board.php?bo_table=gallery&wr_id=8 | https://whiteedental.co.kr/data/editor/2505/4cb4ad7c54ae787735b23f38af6485f4_1748387561_2623.jpg | `assets/images/cases/case-8-before.jpg` · `-after.jpg` · `-after-blur.jpg` |
+| 치료사례 7 | 화이트e치과 시술 전후(성장기 교정) | 2025-04-29 (목록 04-29 + 이미지 폴더 2025-04) | https://whiteedental.co.kr/bbs/board.php?bo_table=gallery&wr_id=7 | https://whiteedental.co.kr/data/editor/2504/8d61bc47d977034cf485f0cb1db358ad_1745900245_1948.jpg | `assets/images/cases/case-7-before.jpg` · `-after.jpg` · `-after-blur.jpg` |
+| 치료사례 6 | 화이트e치과 시술 전후(덧니 교정) | 2025-04-07 (목록 04-07 + 이미지 폴더 2025-04) | https://whiteedental.co.kr/bbs/board.php?bo_table=gallery&wr_id=6 | https://whiteedental.co.kr/data/editor/2504/1c122374826fe7d954ac194596487cee_1743988190_6898.jpg | `assets/images/cases/case-6-before.jpg` · `-after.jpg` · `-after-blur.jpg` |
+| 치료사례 5 | 화이트e치과 시술 전후(교정, 보철, 임플란트) | 2025-03-07 (목록 03-07 + 이미지 폴더 2025-03) | https://whiteedental.co.kr/bbs/board.php?bo_table=gallery&wr_id=5 | https://whiteedental.co.kr/data/editor/2503/e8a1936e1cf073499027ad1c1d2aa8a7_1741306019_9898.jpg | `assets/images/cases/case-5-before.jpg` · `-after.jpg` · `-after-blur.jpg` |
+
 ## 사용한 외부 서비스·라이브러리
 
 | 이름 | 용도 | 라이선스·조건 | 계정 |
@@ -57,7 +89,7 @@
 - 라이선스: [Pexels License](https://www.pexels.com/license/) — 상업적 사용 무료, 출처 표기 의무 없음, 수정 가능.
   금지: 이미지 자체를 그대로 판매, 사진 속 인물이 병원·제품을 보증하는 것처럼 표현, 상표·로고로 사용
 - ⚠️ 의료진·환자·원내 사진처럼 **실제 병원을 대표하는 것처럼 보일 수 있는 사진은 오픈 전 반드시 실제 사진으로 교체** (의료광고·소비자 오인 방지)
-- 치료사례 BEFORE 자리의 사진은 실제 치료 사진이 아닌 스톡 사진입니다 (흐림 처리). 오픈 전 실제 동의받은 사진으로 교체하거나 비공개
+- 치료사례는 기존 사이트 '시술 전후' 14건의 실제 사진으로 바꿨습니다 (2026-11-06, 위 '기존 사이트에서 옮긴 자료'). 예전 스톡 더미 사진은 지웠습니다
 
 | 파일 (assets/images/temp/) | Pexels 사진 ID | 촬영자 | 라이선스 |
 |---|---|---|---|
@@ -67,9 +99,9 @@
 | hero-bg.jpg, og-image.jpg, tour-*-01/05 | [6812453](https://www.pexels.com/photo/6812453/) | Pavel Danilyuk | Pexels License |
 | doctors-bg.jpg, tour-*-04/01 | [8459996](https://www.pexels.com/photo/8459996/) | Pexels 페이지에서 확인 | Pexels License |
 | branch-bar-bg.jpg, tour-*-05/03 | [305568](https://www.pexels.com/photo/305568/) | Pexels 페이지에서 확인 | Pexels License |
-| clinic-implant.jpg, case-implant-before.jpg | [6502340](https://www.pexels.com/photo/6502340/) | cottonbro studio | Pexels License |
-| clinic-aesthetic.jpg, case-prosthetics-before.jpg | [12474261](https://www.pexels.com/photo/12474261/) | Pexels 페이지에서 확인 | Pexels License |
-| clinic-orthodontics.jpg, case-orthodontics-before.jpg | [5524021](https://www.pexels.com/photo/5524021/) | Anna Avilova | Pexels License |
+| clinic-implant.jpg | [6502340](https://www.pexels.com/photo/6502340/) | cottonbro studio | Pexels License |
+| clinic-aesthetic.jpg | [12474261](https://www.pexels.com/photo/12474261/) | Pexels 페이지에서 확인 | Pexels License |
+| clinic-orthodontics.jpg | [5524021](https://www.pexels.com/photo/5524021/) | Anna Avilova | Pexels License |
 | clinic-wisdom-scaling.jpg, visual-wisdom-scaling.jpg(본문·공지 더미), tour-*-06 | [6812456](https://www.pexels.com/photo/6812456/) | Pavel Danilyuk | Pexels License |
 | visual-general.jpg(치과소개 본문) | [5355715](https://www.pexels.com/photo/5355715/) | Tima Miroshnichenko | Pexels License |
 | clinic-general.jpg | [33359445](https://www.pexels.com/photo/33359445/) | Marta Branco | Pexels License |
