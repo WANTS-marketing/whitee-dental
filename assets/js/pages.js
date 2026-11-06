@@ -29,28 +29,134 @@ function fadeIn(el) {
   el.addEventListener('animationend', () => el.classList.remove('is-fade-in'), { once: true });
 }
 
-/* ---------- 의료진 소개 ---------- */
+/* ---------- 의료진 소개 (about/doctors.html) ----------
+   지점별 묶음: [지점 색 작은 라벨 + '창원점 의료진'(28px)] 아래 원장 카드 — 겸직 원장(김영우)은 두 지점 모두, 카드 태그 '창원·마산'
+   카드: [사진 칸 300px | 지점 태그·진료과 / 이름·직함 / 약력(1열)] — 사진은 칸 아래 맞춤 + 원장별 보정값(site-data.js photoScale·photoOffsetY·photoOffsetX → --ps·--py·--px)
+     스타일: common.css '의료진 소개 카드'
+   지점 이동 버튼(.doc-branch-nav): 화면 아래 고정 [창원점 N][마산점 N] — 누르면 그 지점 제목이 헤더 + 24px 아래에 오게 스크롤, 스크롤 위치로 현재 지점 표시(aria-current),
+     배너 구간에서는 숨기고 의료진 목록에 들어오면 나타나며 푸터에 닿으면 사라짐. 주소 해시 #changwon / #masan 반영(이 주소로 들어오면 그 지점으로 바로) */
 function renderDoctorsPage() {
   const box = document.querySelector('[data-doctors-page]');
   if (!box) return;
   const { esc, img, branchBadge } = window.UI;
-  box.innerHTML = window.SITE.branches.map((b) => `
+  const EN = { changwon: 'CHANGWON', masan: 'MASAN' };
+  const groups = window.SITE.branches.map((b) => ({ b, docs: window.SITE.getDoctorsByBranch(b.id) }));
+  box.innerHTML = groups.map(({ b, docs }) => `
     <section class="doctor-group" id="${b.id}" data-branch="${b.id}" aria-labelledby="doctor-group-${b.id}">
-      <h2 class="doctor-group__title" id="doctor-group-${b.id}">화이트e치과 <span class="text-${b.id}">${esc(b.name)}</span> 의료진</h2>
+      <div class="doctor-group__head">
+        <p class="doctor-group__label" aria-hidden="true">${EN[b.id] || ''}</p>
+        <h2 class="doctor-group__title" id="doctor-group-${b.id}"><span class="text-${b.id}">${esc(b.name)}</span> 의료진</h2>
+      </div>
       <div class="doctor-profiles">
-        ${window.SITE.getDoctorsByBranch(b.id).map((d) => `
+        ${docs.map((d) => {
+          const fix = `--ps:${Number(d.photoScale) || 1};--py:${Number(d.photoOffsetY) || 0};--px:${Number(d.photoOffsetX) || 0}`;
+          const career = d.career || [];
+          return `
           <article class="doctor-profile" id="${b.id}-${window.SITE.doctorSlug(d)}">
-            <div class="doctor-profile__photo img-ph"><img class="doctor-profile__img" src="${img(String(d.photo || '').replace(/\.[a-z]+$/i, '-cut.png'))}" alt="${esc(d.name)} ${esc(d.title)} 사진" loading="lazy"></div>
+            <div class="doctor-profile__photo img-ph"><img class="doctor-profile__img" style="${fix}" src="${img(String(d.photo || '').replace(/\.[a-z]+$/i, '-cut.png'))}" alt="${esc(d.name)} ${esc(d.title)} 사진" loading="lazy"></div>
             <div class="doctor-profile__body">
               <p class="doctor-profile__tag">${branchBadge(d.branches.length > 1 ? 'both' : d.branches[0])}<span class="doctor-profile__dept">${esc(d.dept)}</span></p>
               <h3 class="doctor-profile__name">${esc(d.name)} <small>${esc(d.title)}</small></h3>
-              ${d.career?.length ? `<ul class="doctor-profile__career">${d.career.map((c) => `<li>${esc(c)}</li>`).join('')}</ul>` : ''}
+              ${career.length ? `<ul class="doctor-profile__career">${career.map((c) => `<li>${esc(c)}</li>`).join('')}</ul>` : ''}
             </div>
-          </article>`).join('')}
+          </article>`;
+        }).join('')}
       </div>
     </section>`).join('');
-  // 메인 '의료진 자세히 보기'(#changwon-lee-eunju 등)로 들어오면 내용을 그린 뒤 해당 원장으로 이동
-  if (location.hash) requestAnimationFrame(() => document.getElementById(decodeURIComponent(location.hash.slice(1)))?.scrollIntoView({ behavior: 'instant', block: 'start' }));
+  box.querySelectorAll('.doctor-profile__img').forEach((im) => im.addEventListener('error', () => im.classList.add('is-missing'), { once: true }));
+  initDoctorBranchNav(groups);
+}
+
+function initDoctorBranchNav(groups) {
+  const sections = groups.map(({ b }) => document.getElementById(b.id)).filter(Boolean);
+  if (!sections.length) return;
+  const { esc } = window.UI;
+  const nav = document.createElement('nav');
+  nav.className = 'doc-branch-nav';
+  nav.setAttribute('aria-label', '지점별 의료진 바로가기');
+  nav.innerHTML = groups.map(({ b, docs }) => `<a class="doc-branch-nav__btn" href="#${b.id}" data-branch="${b.id}">${esc(b.name)} <span class="doc-branch-nav__n">${docs.length}</span></a>`).join('');
+  document.body.appendChild(nav); // main 안에 두면 서브페이지 등장 효과(opacity) 동안 쌓임 순서가 흔들릴 수 있어 body 바로 아래
+  const btns = [...nav.querySelectorAll('[data-branch]')];
+  const root = document.documentElement;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const headerH = () => parseFloat(getComputedStyle(root).getPropertyValue('--header-h')) || 0;
+  const topOf = (sec) => sec.getBoundingClientRect().top + window.scrollY - headerH() - 24; // 지점 제목이 헤더 + 24px 아래
+  let lockUntil = 0; // 버튼으로 부드럽게 스크롤하는 동안은 누른 지점을 현재로 고정 (지나가는 지점으로 깜빡이지 않게)
+  let current = '';
+
+  const setCurrent = (id) => {
+    if (id === current) return;
+    current = id;
+    btns.forEach((a) => { if (a.dataset.branch === id) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current'); });
+  };
+  // 가로 위치: 본문(.sub-body) 가운데. 모바일에서 오른쪽 아래 '+' 버튼과 겹치면 왼쪽으로 비킨다
+  function place() {
+    const body = document.querySelector('.sub-body')?.getBoundingClientRect();
+    if (!body) return;
+    let x = body.left + body.width / 2;
+    const plus = document.querySelector('.quick__toggle');
+    const pr = plus && getComputedStyle(plus).display !== 'none' ? plus.getBoundingClientRect() : null;
+    const half = nav.offsetWidth / 2;
+    if (pr && pr.width && x + half > pr.left - 12) x = Math.max(half + 8, pr.left - 12 - half);
+    nav.style.setProperty('--nav-x', `${Math.round(x)}px`);
+  }
+  function update() {
+    const y = window.scrollY;
+    // 현재 지점: 지점 묶음 위 끝이 (헤더 아래) 화면 40% 선을 지났는지
+    const line = y + headerH() + window.innerHeight * 0.4;
+    let id = sections[0].id;
+    sections.forEach((s) => { if (s.getBoundingClientRect().top + y <= line) id = s.id; });
+    if (Date.now() > lockUntil) setCurrent(id);
+    // 보이기: 의료진 목록 위 끝이 화면 가운데(50%) 선 위로 올라왔고 (배너 구간·첫 화면에서는 숨김), 푸터 위 끝이 버튼 아래 끝 + 16px 보다 아래일 때
+    const listTop = sections[0].getBoundingClientRect().top;
+    const footer = document.querySelector('.footer');
+    const navBottom = window.innerHeight - (parseFloat(getComputedStyle(nav).bottom) || 32);
+    const footerHit = footer && footer.getBoundingClientRect().top < navBottom + 16;
+    nav.classList.toggle('is-visible', listTop < window.innerHeight * 0.5 && !footerHit);
+  }
+  function go(id, { smooth = true } = {}) {
+    const sec = document.getElementById(id);
+    if (!sec) return;
+    setCurrent(id);
+    const anim = smooth && !reduce.matches;
+    lockUntil = anim ? Date.now() + 1000 : 0;
+    window.scrollTo({ top: Math.max(0, topOf(sec)), behavior: anim ? 'smooth' : 'instant' });
+  }
+  nav.addEventListener('click', (e) => {
+    const a = e.target.closest('[data-branch]');
+    if (!a || e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return;
+    e.preventDefault();
+    history.replaceState(null, '', `#${a.dataset.branch}`);
+    go(a.dataset.branch);
+  });
+  // 스크롤로 지점이 바뀌면 주소 해시도 맞춘다 (뒤로가기 기록은 남기지 않음, 원장 카드 해시 #changwon-lee-eunju 는 건드리지 않음)
+  let hashTimer = 0;
+  const syncHash = () => {
+    clearTimeout(hashTimer);
+    hashTimer = setTimeout(() => {
+      if (!nav.classList.contains('is-visible') || !current || location.hash === `#${current}` || /^#(changwon|masan)-/.test(location.hash)) return;
+      history.replaceState(null, '', `#${current}`);
+    }, 250);
+  };
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => { ticking = false; update(); syncHash(); });
+  }, { passive: true });
+  window.addEventListener('resize', () => { place(); update(); });
+  document.addEventListener('components:loaded', () => { place(); update(); });
+  // 처음 위치: #changwon / #masan → 그 지점 바로, #changwon-lee-eunju(메인 '의료진 자세히 보기') → 그 원장 카드
+  const hash = decodeURIComponent(location.hash.slice(1));
+  requestAnimationFrame(() => {
+    place();
+    if (groups.some(({ b }) => b.id === hash)) go(hash, { smooth: false });
+    else if (hash) {
+      const el = document.getElementById(hash);
+      if (el) window.scrollTo({ top: Math.max(0, el.getBoundingClientRect().top + window.scrollY - headerH() - 24), behavior: 'instant' });
+    }
+    update();
+  });
 }
 
 /* ---------- 병원소개 (about/clinic.html) = 예전 병원 둘러보기 + 오시는길 ----------
