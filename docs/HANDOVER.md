@@ -116,6 +116,7 @@
 | 파일 | 출처 | 촬영자 | 라이선스 |
 |---|---|---|---|
 | clinic-implant.jpg (메인 진료안내 임플란트 카드 — 2026-11-06 교체, 7200×4066 → 1600×904) | 제공 자료 `자료/메인페이지/pc0040716569.jpg` — **출처·라이선스 확인 필요** (구매한 스톡 이미지인지, 웹 사용 범위) | 확인 필요 | 확인 필요 |
+| clinic-wisdom-scaling.jpg (메인 진료안내 사랑니·스케일링 카드 — 2026-11-06 교체, 4200×4200 PNG → 1600×1600 JPG) | 제공 자료 `자료/메인페이지/스케일링.png` — **출처·라이선스 확인 필요** | 확인 필요 | 확인 필요 |
 | banner-sub.jpg (서브페이지 공통 배너 — 임시, 실제 원내 사진으로 교체 대상) | [Pexels 8459996](https://www.pexels.com/photo/8459996/) (temp/doctors-bg.jpg 와 같은 사진) | Pexels 페이지에서 확인 | Pexels License |
 | hero-03-night.jpg (메인 히어로 3번, 좌우 반전·축소) | [Unsplash J39gT2aIgOM](https://unsplash.com/photos/J39gT2aIgOM) | Klarin Steffens | Unsplash License (상업 사용·수정 가능, 출처 표기 의무 없음) |
 
