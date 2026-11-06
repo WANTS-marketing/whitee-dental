@@ -303,11 +303,33 @@ api.js 안에서 HTTP 상태 코드를 위 오류 코드로 바꿔 주면 됩니
 - 필드: `id`(예 `story-90`), `wrId`·`legacyUrl`(기존 사이트 글 번호·주소 — 404.html 이 옛 주소를 새 주소로 넘김), `title`, `category`(진료안내·치료정보·임플란트·틀니·치아교정·병원소식), `date`, `summary`, `thumbnail`, `imageCount`, `branch`, `views`(선택)
 - `getNewsPost(id)` 반환: `{ post, html, prev, next }` 또는 `null`. `html` 안의 이미지 경로는 현재 페이지 기준으로 바꿔서 돌려줍니다(서버가 전체 URL 을 주면 변환 불필요)
 
-### 4-3. 치료사례 — `getCases({ limit })`, `getCase(id)` (로그인 후 사진 공개)
+### 4-3. 치료사례 — `getCases({ limit })`, `getCase(id)` (BEFORE 공개 · AFTER 로그인 회원만)
 
-- 더미: `assets/data/cases.json` · 화면: 메인 치료사례, `community/cases.html`, `case-view.html?id=`
-- 필드: `id`, `category`(영문 키), `categoryName`(분류 이름), `title`, `branch`, `date`, `beforeImage`, `afterImage`, `views`(선택)
-- 지금은 화면이 `isLoggedIn()` 이 false 면 사진을 흐리게 하고 '로그인 후 확인'을 덮습니다. **이건 가림일 뿐이라 서버는 비로그인 요청에 사진 주소 자체를 주지 않아야 합니다** (비공개 저장소 + 기한 있는 서명 주소 등). 비로그인이면 `beforeImage`·`afterImage` 를 빈 값으로 주고 화면은 자리만 보여 주게 맞추면 됩니다
+- 데이터: `assets/data/cases.json` (기존 사이트 시술 전후 14건 — `scripts/import/build-gallery.js` 가 생성) · 화면: 메인 최신 3건 카드, `community/cases.html`, `case-view.html?id=case-18`
+
+| 필드 | 타입 | 필수 | 설명 |
+|---|---|---|---|
+| `id` | string | 필수 | `case-{번호}` |
+| `no` | number | 필수 | 번호 (기존 글 wr_id) |
+| `title` | string | 필수 | 목록 제목 — 원래 제목의 괄호 안 ('덧니 교정') |
+| `originalTitle` | string | 선택 | 원래 제목 ('화이트e치과 시술 전후(덧니 교정)') — 상세 제목 |
+| `categories` | string[] | 필수 | 진료 분류 (복수 가능: '치아교정' · '보철' · '임플란트') |
+| `categoryName` | string | — | api.js 가 `categories.join('·')` 로 채움 |
+| `date` | 날짜 | 필수 | 작성일 |
+| `branch` | string \| null | 선택 | 지점 (기존 글에는 없음) |
+| `beforeImage` | string | 필수 | BEFORE 사진 — 누구나 |
+| `afterBlur` | string | 필수 | AFTER 흐림 미리보기(작게 줄였다 흐리게 키운 그림) — 누구나 |
+| `afterImage` | string \| null | 로그인 시 | **AFTER 원본 — 로그인 상태일 때만 값, 아니면 null** |
+| `images` | [{ role: 'before'\|'after', file, w, h, loginOnly? }] | 선택 | 이미지 목록 (비로그인이면 loginOnly 항목 빠짐) |
+| `body` | string | 선택 | 본문 (줄바꿈 \n) |
+| `legacy` | { wrId, url, image } | 선택 | 기존 사이트 원본 글·이미지 주소 |
+
+- 화면 동작
+  - 목록·메인 카드: BEFORE 선명 + AFTER 자리 = `afterBlur` + 자물쇠 '로그인 후 확인' (로그인이면 `afterImage`)
+  - 상세: BEFORE | AFTER 나란히(모바일 위아래). 비로그인 AFTER = `afterBlur` + '로그인하고 치료 후 사진 보기' → `member/login.html?return=community/case-view.html?id=…` (로그인 후 그 글로 돌아오기 — 서버 연결 때 구현, `pages.js loginReturnUrl`)
+  - 모든 상세 하단 고지: '치료 결과는 개인에 따라 다를 수 있으며, 부작용이 발생할 수 있습니다.'
+- 시안 확인용 로그인: 주소에 `?login=1` 을 붙이면 그 탭에서 로그인 상태(`isLoggedIn()` = true, sessionStorage `witee-demo-login`), `?login=0` 해제 — **서버 연결 때 지울 것**
+- ⚠️ **AFTER 원본은 로그인 확인 후에만 서버에서 주소를 내려주는 방식으로 바꿀 것.** 지금은 정적 파일이라 api.js 가 비로그인일 때 `afterImage` 를 빼 주기만 한다 — 파일 주소(`assets/images/cases/case-{번호}-after.jpg`)를 알면 누구나 열 수 있다. 서버는 AFTER 원본을 비공개 저장소에 두고, 로그인 세션을 확인한 요청에만 기한 있는 주소(signed URL)를 응답에 담을 것. 흐림 미리보기·BEFORE 는 공개 저장소로 충분
 - 치료 전·후 사진은 환자 동의서가 있는 사진만 (의료광고 심의 기준도 확인)
 
 ### 4-4. FAQ — `getFaqs({ featured })`

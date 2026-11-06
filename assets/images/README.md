@@ -28,9 +28,7 @@
 | `clinic-aesthetic.jpg` | 진료안내 카드 — 심미치료 | 740×460 |
 | `clinic-wisdom-scaling.jpg` | 진료안내 카드 — 사랑니·스케일링 | 700×460 |
 | `clinic-general.jpg` | 진료안내 카드 — 일반치료 (넓은 카드) | 1460×380 |
-| `case-orthodontics-before.jpg` / `-after.jpg` | 치료사례 — 치아교정 | 600×800 |
-| `case-prosthetics-before.jpg` / `-after.jpg` | 치료사례 — 보철치료 | 600×800 |
-| `case-implant-before.jpg` / `-after.jpg` | 치료사례 — 임플란트 | 600×800 |
+| `cases/case-{번호}-before.jpg` · `-after.jpg` · `-after-blur.jpg` | 치료사례 (기존 사이트 시술 전후 14건, 번호 = 기존 글 wr_id 5~18) — `scripts/import/build-gallery.js` 가 합본 이미지를 나눠 만든다. after-blur = 로그인 전 미리보기(작게 줄였다 흐리게 키운 그림). 새 사례는 서버 연결 후 관리자에서 | 430×254 |
 | `news-dummy-01~04.jpg` | 치과소식 더미 썸네일 (실데이터 연결 시 삭제) | 750×870 |
 | `branch-bar-bg.jpg` | 하단 지점 바로가기 배경 (데스크 전경) | 1920×640 |
 | `banner-sub.jpg` | **서브페이지 상단 배너 공통 1장** (치과소개·의료진 소개·병원소개·진료과목 5) — 같은 이름으로 실제 원내 사진을 넣으면 전체 교체. 지금은 임시 스톡(Pexels 8459996, 대기실·복도, 1920×1280) — 가로 2400px 이상 원내 전경으로 교체 권장 (docs/HANDOVER.md) | 2400×1600 이상 |

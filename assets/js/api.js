@@ -62,14 +62,24 @@
     return { post: rows[i], html, prev: rows[i + 1] || null, next: rows[i - 1] || null };
   }
 
-  /** 치료사례 — [{ id, category, title, branch, date, beforeImage, afterImage }] */
+  /** 치료사례 (기존 사이트 '시술 전후' 14건 — scripts/import/build-gallery.js 가 cases.json 생성)
+      [{ id, no, title(목록 제목), originalTitle(원래 제목, 상세), categories[], categoryName('치아교정·보철'), date, branch,
+         beforeImage(공개), afterBlur(흐림 미리보기, 공개), afterImage(로그인일 때만 — 아니면 null), images[], body }] 최신순
+      AFTER 원본 주소는 로그인 상태에서만 돌려준다(화면이 원본을 아예 모르게). 다만 지금은 정적 파일이라 주소를 알면 열 수 있다
+      TODO(서버): AFTER 원본은 로그인 확인 후에만 서버가 주소를 내려줄 것 (비공개 저장소 + 기한 있는 주소, API-SPEC '치료사례') */
   async function getCases({ limit } = {}) {
-    // TODO(서버): 사진 주소는 로그인 사용자에게만 내준다 (비공개 저장소 + 기한 있는 주소, API-SPEC '치료사례')
-    const rows = withViews(await fetchJson('cases')).sort(byDateDesc);
+    const login = isLoggedIn();
+    const rows = withViews(await fetchJson('cases')).sort(byDateDesc).map((r) => ({
+      ...r,
+      categories: r.categories || (r.categoryName ? [r.categoryName] : []),
+      categoryName: (r.categories || [r.categoryName]).filter(Boolean).join('·'),
+      afterImage: login ? r.afterImage : null,
+      images: (r.images || []).filter((im) => login || !im.loginOnly),
+    }));
     return limit ? rows.slice(0, limit) : rows;
   }
 
-  /** 치료사례 하나 — { post, prev, next }. 사진 잠금(로그인)은 화면에서 처리 — TODO(서버): 비로그인이면 이미지 URL 자체를 내주지 않기 */
+  /** 치료사례 하나 — { post, prev, next } (getCases 와 같은 규칙: 비로그인이면 afterImage = null) */
   async function getCase(id) {
     return pick(await getCases(), id);
   }
@@ -333,10 +343,19 @@
   // 지금은 정적 화면만: 항상 비로그인. 서버 연결 시 카카오 로그인 등으로 교체 (API-SPEC '로그인·회원가입')
   // 주의: isLoggedIn·getCurrentUser·isAdmin 은 화면에서 동기로 부른다 → 페이지 시작 때 세션을 한 번 읽어 두고 그 값을 돌려줄 것
 
-  /** 로그인 여부 */
+  /** 로그인 여부 (동기)
+      지금은 항상 비로그인. 시안 확인용: 주소에 ?login=1 을 붙이면 그 탭에서는 로그인 상태로 보인다(sessionStorage witee-demo-login), ?login=0 이면 해제
+      TODO(서버): 저장해 둔 로그인 세션이 있으면 true — 시안용 ?login=1 처리는 지울 것 */
+  const DEMO_LOGIN_KEY = 'witee-demo-login';
   function isLoggedIn() {
-    // TODO(서버): 저장해 둔 로그인 세션이 있으면 true
-    return false;
+    try {
+      const q = new URLSearchParams(location.search).get('login');
+      if (q === '1') sessionStorage.setItem(DEMO_LOGIN_KEY, '1');
+      if (q === '0') sessionStorage.removeItem(DEMO_LOGIN_KEY);
+      return sessionStorage.getItem(DEMO_LOGIN_KEY) === '1';
+    } catch (e) {
+      return new URLSearchParams(location.search).get('login') === '1';
+    }
   }
 
   /** 현재 사용자 { id, name, role } 또는 null */
@@ -350,8 +369,8 @@
     return false;
   }
 
-  /** 카카오 로그인 시작 */
-  async function signInWithKakao() {
+  /** 카카오 로그인 시작 — returnUrl: 로그인 후 돌아갈 사이트 안 주소(없으면 지금 페이지) */
+  async function signInWithKakao(returnUrl) { // eslint-disable-line no-unused-vars
     // TODO(서버): 카카오 OAuth 로그인 시작 → 로그인 후 원래 페이지로 돌아오기
     if (window.UI?.alert) window.UI.alert('카카오 로그인은 준비 중입니다.'); else alert('카카오 로그인은 준비 중입니다.');
   }

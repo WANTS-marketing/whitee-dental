@@ -438,18 +438,24 @@ html[data-fs="xl"] .doc-modal { width: min(680px, 100% - 48px); }
 .cases__title-light { display: block; margin-bottom: 8px; font-size: var(--fs-h3); font-weight: 400; color: var(--color-text-sub); }
 .cases__notes { margin-top: 24px; font-size: var(--fs-xxs); color: var(--color-text-sub); line-height: 1.9; }
 .cases__list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-.case-card { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; aspect-ratio: 3 / 4; overflow: hidden; border-radius: 8px; color: #fff; background: #5a2a2a; }
-.case-card__img { position: absolute; inset: 0; background: linear-gradient(160deg, #8a4b48, #3e1c1c); transition: transform 0.6s var(--ease); }
-.case-card:is(:hover, :focus-visible) .case-card__img { transform: scale(1.04); }
-.case-card__img img { filter: blur(10px) brightness(0.85); transform: scale(1.15); }
-.case-card.is-unlocked .case-card__img img { filter: brightness(0.75); transform: none; }
-.case-card__label { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 10px; font-size: var(--fs-h4); letter-spacing: 0.02em; }
-.case-card__label strong { padding: 6px 22px; border: 1.5px solid #fff; background: rgba(0, 0, 0, 0.15); font-weight: 500; }
-.case-card__lock { position: relative; z-index: 1; display: inline-flex; align-items: center; gap: 4px; margin-top: 16px; padding: 4px 12px; border-radius: var(--radius-pill); background: rgba(0, 0, 0, 0.35); font-size: var(--fs-xxs); }
-.case-card__lock svg { width: 14px; height: 14px; }
-.case-card.is-unlocked .case-card__lock { display: none; }
-.case-card__arrow { position: absolute; z-index: 1; right: 24px; bottom: 24px; width: 26px; height: 26px; transition: transform var(--dur); }
-.case-card:is(:hover, :focus-visible) .case-card__arrow { transform: translate(4px, 4px); }
+/* 치료사례 카드 (main.js initCases — 최신 3건): 위 BEFORE(선명) / 아래 AFTER(로그인 전: 미리 흐리게 만든 미리보기 + 자물쇠) / 분류·제목
+   카드 비율 3:4 (풀스크린 PC 는 목록 높이에 맞춤), 사진 두 칸은 같은 높이 */
+.case-card { position: relative; display: grid; grid-template-rows: minmax(0, 1fr) minmax(0, 1fr) auto; aspect-ratio: 3 / 4; overflow: hidden; border: 1px solid var(--color-line); border-radius: 8px; background: #fff; color: var(--color-text); }
+.case-card__half { position: relative; display: block; overflow: hidden; background: #f3e7e7; }
+.case-card__half + .case-card__half { border-top: 2px solid #fff; }
+.case-card__half img { transition: transform 0.6s var(--ease); }
+.case-card:is(:hover, :focus-visible) .case-card__half:not(.is-locked) img { transform: scale(1.04); }
+.case-card__half.is-locked img { filter: blur(6px) brightness(0.9); transform: scale(1.12); } /* 미리 흐리게 만든 그림 — CSS 흐림은 가장자리 정리용 */
+.case-card__tag { position: absolute; z-index: 1; left: 12px; top: 12px; padding: 3px 10px; border-radius: var(--radius-btn); background: rgba(0, 0, 0, 0.55); color: #fff; font-size: var(--fs-xxs); font-weight: 700; letter-spacing: 0.06em; line-height: 1.4; }
+.case-card__lock { position: absolute; z-index: 1; left: 50%; top: 50%; display: inline-flex; align-items: center; gap: 6px; width: max-content; padding: 6px 14px; border-radius: var(--radius-pill); background: rgba(0, 0, 0, 0.55); color: #fff; font-size: var(--fs-xxs); font-weight: 600; white-space: nowrap; transform: translate(-50%, -50%); }
+.case-card__lock svg { flex: none; width: 16px; height: 16px; } /* 좁은 카드에서 아이콘이 눌리지 않게 */
+.case-card__info { position: relative; display: grid; gap: 4px; padding: 16px 52px 18px 18px; }
+.case-card__cat { font-size: var(--fs-xs); font-weight: 600; color: var(--color-accent); }
+.case-card__title { overflow: hidden; font-size: 1.0625rem; font-weight: 700; line-height: 1.4; white-space: nowrap; text-overflow: ellipsis; transition: color var(--dur); }
+.case-card:is(:hover, :focus-visible) .case-card__title { color: var(--color-accent); }
+.case-card__arrow { position: absolute; right: 18px; top: 50%; width: 22px; height: 22px; margin-top: -11px; transition: transform var(--dur); }
+.case-card:is(:hover, :focus-visible) .case-card__arrow { transform: translate(3px, 3px); }
+html.is-fullpage .case-card { aspect-ratio: auto; height: 100%; }
 .cases__more { display: inline-flex; align-items: center; gap: 8px; margin-top: 28px; font-size: 1rem; font-weight: 600; transition: color var(--dur); }
 .cases__more svg { width: 16px; height: 16px; transition: transform var(--dur); }
 .cases__more:hover { color: var(--color-accent); }
@@ -462,15 +468,9 @@ html[data-fs="xl"] .doc-modal { width: min(680px, 100% - 48px); }
   .cases__title { font-size: min(clamp(2.6rem, 1.3rem + 1.625vw, 3.25rem), 4.8vh); line-height: 1.3; word-break: keep-all; } /* 52 */
   .cases__title-light { margin-bottom: 14px; font-size: min(clamp(1.4rem, 0.7rem + 0.875vw, 1.75rem), 2.6vh); line-height: 1.45; } /* 28 — 낮은 화면(글자 크게)에서 한 화면에 들어가게 vh 로 상한 */
   .cases__notes { margin-top: 28px; font-size: 0.9375rem; line-height: 1.8; } /* 15 */
-  .case-card__label { gap: 14px; font-size: clamp(1rem, 0.5rem + 0.625vw, 1.25rem); }          /* BEFORE 20 */
-  .case-card__label strong { padding: 10px 32px; font-size: clamp(1.1rem, 0.55rem + 0.6875vw, 1.375rem); } /* 진료명 22 */
-  .case-card__lock { gap: 6px; margin-top: 22px; padding: 6px 16px; font-size: 1rem; }          /* 16 */
-  .case-card__lock svg { width: 16px; height: 16px; }
-  .case-card__arrow { right: clamp(20px, 1.667vw, 32px); bottom: clamp(20px, 1.667vw, 32px); width: clamp(22px, 1.458vw, 28px); height: clamp(22px, 1.458vw, 28px); } /* 28 */
 }
 /* 풀스크린 넘김: 카드 묶음 높이 = 헤더 아래 공간의 84% (화면 세로의 약 75~80%), 카드는 그 높이에 맞춰 세로로 길게 */
 html.is-fullpage .cases__list { height: max(420px, (100vh - var(--header-h)) * 0.84); } /* 1080 → 832px ≈ 화면의 77% */
-html.is-fullpage .case-card { aspect-ratio: auto; height: 100%; }
 
 /* ---------- ⑦ FAQ 미리보기 ---------- */
 /* 배경 사진(옅은 회색 큐브, faq-bg.jpg 2400x1600) 불투명도 20% = 위에 흰 막 80%(--faq-veil) + 흰 바탕 */
@@ -750,12 +750,14 @@ html.is-fullpage .case-card { aspect-ratio: auto; height: 100%; }
   .clinic-card__body { --cl-fade: 28px; } /* 카드가 낮아(180px) 흰 그라데이션 녹는 구간을 짧게 — 사진이 더 보이게 */
   .clinic-card__title, .clinic-card--implant .clinic-card__title { font-size: calc(var(--fs-h3) * 0.9); }
 
-  .cases__list { grid-template-columns: repeat(3, 1fr); gap: 6px; } /* 모바일: 카드가 좁아 간격 6px — 로그인 배지가 한 줄에 들어가게 */
-  .case-card__lock { white-space: nowrap; }
-  .case-card__label { font-size: var(--fs-xs); gap: 6px; }
-  .case-card__label strong { padding: 4px 8px; }
-  .case-card__lock { font-size: 0.875rem; padding: 3px 8px; }
-  .case-card__arrow { right: 10px; bottom: 10px; width: 18px; height: 18px; }
+  .cases__list { grid-template-columns: minmax(0, 1fr); gap: 12px; } /* 모바일: 카드 한 줄에 하나 — 사진 두 칸은 좌우 [BEFORE | AFTER] */
+  .case-card { grid-template-columns: 1fr 1fr; grid-template-rows: auto auto; aspect-ratio: auto; }
+  .case-card__half { aspect-ratio: 4 / 3; }
+  .case-card__half + .case-card__half { border-top: 0; border-left: 2px solid #fff; }
+  .case-card__info { grid-column: 1 / -1; padding: 12px 44px 14px 14px; }
+  .case-card__tag { left: 8px; top: 8px; padding: 2px 8px; }
+  .case-card__lock { padding: 4px 10px; }
+  .case-card__arrow { right: 14px; width: 18px; height: 18px; margin-top: -9px; }
 
   .faq-quick { padding: 24px 20px; }
 
