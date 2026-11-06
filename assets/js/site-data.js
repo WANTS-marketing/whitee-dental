@@ -104,7 +104,7 @@ window.SITE = {
   doctors: [
     // 창원점
     {
-      name: '이은주', title: '대표원장', dept: '치과교정과', branches: ['changwon'], photo: 'doctor-lee-eunju.jpg', photoScale: 1, photoOffsetY: -10.1, photoBlend: false, photoBacker: false, // 배경 투명 PNG (2026-11-06 교체)
+      name: '이은주', title: '대표원장', dept: '치과교정과', branches: ['changwon'], photo: 'doctor-lee-eunju.jpg', photoScale: 1.12, photoOffsetY: 0.8, photoBlend: false, photoBacker: false, // 배경 투명 PNG (2026-11-06 교체)
       career: [
         '보건복지부 인증 치과교정과 전문의', '보건복지부 인증 통합치의학과 전문의',
         '부산대학교 치과대학 수석졸업', '부산대학교 치과교정학 석사', '부산대학교병원 치과교정과 인턴·레지던트 수료',
@@ -163,7 +163,7 @@ window.SITE = {
     },
     // 겸직
     {
-      name: '김영우', title: '원장', dept: '구강악안면외과', branches: ['changwon', 'masan'], photo: 'doctor-kim-youngwoo.jpg', photoScale: 0.83, photoOffsetY: -13.8, photoBlend: true, photoBacker: true,
+      name: '김영우', title: '원장', dept: '구강악안면외과', branches: ['changwon', 'masan'], photo: 'doctor-kim-youngwoo.jpg', photoScale: 0.93, photoOffsetY: -4.3, photoBlend: true, photoBacker: true,
       career: [
         '보건복지부 인증 구강악안면외과 전문의', '보건복지부 인증 통합치의학과 전문의', '서울대학교치과병원 구강악안면외과 인턴·레지던트 수료',
         '서울대학교 치의학대학원 구강악안면외과학 석사 수료', '대한구강악안면성형재건외과학회 인정의',
