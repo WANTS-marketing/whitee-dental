@@ -441,7 +441,8 @@
 
   /** 현재 페이지 메뉴 강조 */
   function initCurrentMenu() {
-    const here = location.pathname.replace(/\/$/, '/index.html');
+    // 게시판 상세(news-view · notice-view · case-view)는 메뉴에 없어서 그 목록 페이지(news · notice · cases)로 본다
+    const here = location.pathname.replace(/\/$/, '/index.html').replace(/\/(news|notice)-view\.html$/, '/$1.html').replace(/\/case-view\.html$/, '/cases.html');
     document.querySelectorAll('.gnb__sub a, .mnav__sub a').forEach((a) => {
       if (a.pathname === here) {
         a.classList.add('is-current');

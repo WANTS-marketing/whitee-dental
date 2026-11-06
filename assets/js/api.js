@@ -19,21 +19,33 @@
   }
 
   const byDateDesc = (a, b) => new Date(b.date) - new Date(a.date);
+  /* 조회수(views) — 1차 데이터에는 없어서 0 으로 채운다 (게시판 '조회순' 정렬·조회수 표시 자리, 모두 0 이면 화면에서 조회수 칸을 숨김)
+     TODO(2차): Supabase 각 게시판 테이블의 views 컬럼 + 상세를 열 때 +1 (rpc) */
+  const withViews = (rows) => rows.map((r) => ({ ...r, views: Number(r.views) || 0 }));
+  /** 목록 rows 에서 글 하나 + 앞뒤 글 (rows = 최신순) — prev = 먼저 쓴 글, next = 나중에 쓴 글 */
+  const pick = (rows, id) => { const i = rows.findIndex((r) => r.id === id); return i < 0 ? null : { post: rows[i], prev: rows[i + 1] || null, next: rows[i - 1] || null }; };
 
   /* ---------- 게시판 ---------- */
 
   /** 공지사항 — [{ id, title, branch, date, pinned }] */
   async function getNotices({ limit } = {}) {
     // TODO(2차): supabase.from('notices').select('*').order('pinned', {ascending:false}).order('date', {ascending:false})
-    const rows = (await fetchJson('notice')).sort((a, b) => (b.pinned - a.pinned) || byDateDesc(a, b));
+    const rows = withViews(await fetchJson('notice')).sort((a, b) => (b.pinned - a.pinned) || byDateDesc(a, b));
     return limit ? rows.slice(0, limit) : rows;
+  }
+
+  /** 공지사항 글 하나 — { post, prev, next } (앞뒤 = 고정 여부와 상관없이 날짜순). 없는 글이면 null
+      본문: 1차는 body(없으면 summary) 문구 — TODO(2차): 게시판 본문(HTML) */
+  async function getNotice(id) {
+    const rows = (await getNotices()).slice().sort(byDateDesc);
+    return pick(rows, id);
   }
 
   /** 치과소식 — [{ id, wrId, legacyUrl, title, category, date, summary, thumbnail }] 최신순
       (기존 사이트 치과스토리 게시판에서 가져온 글 — scripts/import/build-story.js 가 news.json 생성) */
   async function getNews({ limit } = {}) {
     // TODO(2차): supabase.from('news').select('*').order('date', {ascending:false}).limit(limit)
-    const rows = (await fetchJson('news')).sort(byDateDesc);
+    const rows = withViews(await fetchJson('news')).sort(byDateDesc);
     return limit ? rows.slice(0, limit) : rows;
   }
 
@@ -53,8 +65,13 @@
   /** 치료사례 — [{ id, category, title, branch, date, beforeImage, afterImage }] */
   async function getCases({ limit } = {}) {
     // TODO(2차): 이미지 URL은 Supabase Storage 비공개 버킷 + 로그인 사용자에게만 signed URL
-    const rows = (await fetchJson('cases')).sort(byDateDesc);
+    const rows = withViews(await fetchJson('cases')).sort(byDateDesc);
     return limit ? rows.slice(0, limit) : rows;
+  }
+
+  /** 치료사례 하나 — { post, prev, next }. 사진 잠금(로그인)은 화면에서 처리 — TODO(2차): 비로그인이면 이미지 URL 자체를 내주지 않기 */
+  async function getCase(id) {
+    return pick(await getCases(), id);
   }
 
   /** FAQ — [{ id, category, question, answer, featured, order }] */
@@ -136,7 +153,7 @@
   }
 
   window.API = {
-    getNotices, getNews, getNewsPost, getCases, getFaqs, getInquiries,
+    getNotices, getNotice, getNews, getNewsPost, getCases, getCase, getFaqs, getInquiries,
     submitInquiry,
     isLoggedIn, getCurrentUser, isAdmin, signInWithKakao, signOut,
   };

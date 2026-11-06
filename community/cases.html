@@ -24,6 +24,7 @@
   <script src="../assets/js/api.js" defer></script>
   <script src="../assets/js/include.js" defer></script>
   <script src="../assets/js/common.js" defer></script>
+  <script src="../assets/js/board.js" defer></script>
   <script src="../assets/js/pages.js" defer></script>
 </head>
 <body class="is-sub has-lnb" data-page="cases">
@@ -55,7 +56,8 @@
     <section class="sub-content">
       <div class="container">
         <p class="notice-box" data-cases-login>사례 사진은 <a href="../member/login.html"><strong>로그인</strong></a> 후 확인하실 수 있습니다. 치료 결과는 개인에 따라 다를 수 있습니다.</p>
-        <ul class="card-grid" data-cases-list></ul>
+        <!-- 치료사례 (assets/data/cases.json) — 진료 칩 · 도구 줄 · 목록 · 페이지 번호, 로그인 전 사진 흐림 (board.js) -->
+        <div class="board-ui" data-board="cases"><p class="board-list__empty">불러오는 중입니다.</p></div>
       </div>
     </section>
       </div>
