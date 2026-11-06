@@ -360,27 +360,10 @@ function initDoctors() {
   const { esc, img } = window.UI;
   const docs = window.SITE.doctors;
   const BRANCH_NAME = { changwon: '창원점', masan: '마산점' };
-  /* 약력 분류 — 전문의 / 학력(졸업·석사·박사·학사) / 학회 활동(학회·연맹 회원·인정의·펠로우) / 그 외 경력.
-     분류가 애매한 항목은 경력으로 간다 → docs/HANDOVER.md '약력 분류 병원 확인' */
-  const classify = (c) => {
-    if (c.startsWith('보건복지부 인증')) return 'cert';
-    if (/졸업|석사|박사|학사/.test(c)) return 'edu';
-    if (/학회|연맹/.test(c) && /회원|인정의|펠로우|Fellow/.test(c) && !/수상|표창|수료|발표/.test(c)) return 'society';
-    return 'career';
-  };
+  /* 약력 분류·학회 항목 나누기 — site-data.js SITE.classifyCareer · SITE.splitSociety (의료진 소개와 공통) */
+  const classify = window.SITE.classifyCareer;
+  const splitSociety = window.SITE.splitSociety;
   const GROUP_TITLE = { edu: '학력', career: '경력', society: '학회 활동' };
-  /* 학회 활동 항목 나누기 (표시만, 데이터는 그대로)
-     "세계교정의사연맹 Fellow, 미국·유럽·일본 치과교정학회 국제회원" → ', ' 로 (각 부분이 학회·연맹일 때)
-     "대한치과보존학회·대한치주과학회 정회원" → '·' 로 나누고 끝의 공통 꼬리(정회원)를 각 학회에 붙인다 */
-  const splitSociety = (c) => {
-    const commaParts = c.split(', ');
-    if (commaParts.length > 1 && commaParts.every((p) => /학회|연맹/.test(p))) return commaParts.flatMap(splitSociety);
-    const parts = c.split('·');
-    if (parts.length < 2 || !parts.every((p) => /학회/.test(p))) return [c];
-    const tail = parts[parts.length - 1].match(/^(.*학회)(\s.+)$/);
-    if (!tail) return [c];
-    return parts.map((p, i) => (i === parts.length - 1 ? p : p + tail[2]));
-  };
   /* 인물 hover 약력 패널: 보건복지부 인증 전문의 항목(굵게) + 나머지 약력(데이터 순서) — 6줄까지만 보이고 넘치면 '전체 약력 보기' */
   const certsOf = (d) => (d.career || []).filter((c) => c.startsWith('보건복지부 인증'));
   const restOf = (d) => (d.career || []).filter((c) => !c.startsWith('보건복지부 인증'));

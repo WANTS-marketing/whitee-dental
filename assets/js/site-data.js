@@ -121,10 +121,15 @@ window.SITE = {
     masan: ['조혜진', '김영우', '정호석', '조용정', '송희태'], // 정호석 가운데, 김영우·조용정 양옆, 조혜진·송희태 바깥
   },
 
+  /* 의료진 — 의료진 소개(about/doctors.html)·메인 의료진 공통
+       focus  주요 진료 (의료진 소개 이름 아래 진료과 태그 옆) — 진료과 기준 임시 작성, 병원 확인 필요(HANDOVER)
+       logos  학회·학교 로고 [{ src: 'logo-xxx.png', alt: '대한치과교정학회' }] — 의료진 소개 이름 줄 오른쪽 끝 (assets/images/, 지금은 비어 있음)
+       photoHeadTop 사진(doctor-*-cut.png) 안 머리 위 끝 위치 (사진 높이 대비 0~1, 사진을 바꾸면 다시 잴 것) — 의료진 소개에서 머리가 약력 상자 위로 80px 나오게 맞추는 데 쓴다
+       career 약력 — 화면에서 자동 분류(SITE.classifyCareer): 전문의 / 학력 / 경력 / 학회 활동 */
   doctors: [
     // 창원점
     {
-      name: '이은주', title: '대표원장', dept: '치과교정과', branches: ['changwon'], photo: 'doctor-lee-eunju.jpg', photoScale: 1.15, photoOffsetY: 2.3, photoBlend: false, photoBacker: false, // 배경 투명 PNG (2026-11-06 교체: 이은주2-Photoroom.png)
+      name: '이은주', focus: '교정치료, 투명교정, 설측교정', logos: [], title: '대표원장', dept: '치과교정과', branches: ['changwon'], photo: 'doctor-lee-eunju.jpg', photoHeadTop: 0.167, photoScale: 1.15, photoOffsetY: 2.3, photoBlend: false, photoBacker: false, // 배경 투명 PNG (2026-11-06 교체: 이은주2-Photoroom.png)
       career: [
         '보건복지부 인증 치과교정과 전문의', '보건복지부 인증 통합치의학과 전문의',
         '부산대학교 치과대학 수석졸업', '부산대학교 치과교정학 석사', '부산대학교병원 치과교정과 인턴·레지던트 수료',
@@ -134,14 +139,14 @@ window.SITE = {
       ],
     },
     {
-      name: '권진선', title: '원장', dept: '치과보철과', branches: ['changwon'], photo: 'doctor-kwon-jinseon.jpg', photoScale: 1.14, photoOffsetY: 12.1, photoBlend: true, photoBacker: true,
+      name: '권진선', focus: '임플란트, 보철치료', logos: [], title: '원장', dept: '치과보철과', branches: ['changwon'], photo: 'doctor-kwon-jinseon.jpg', photoHeadTop: 0.08, photoScale: 1.14, photoOffsetY: 12.1, photoBlend: true, photoBacker: true,
       career: [
         '보건복지부 인증 치과보철과 전문의', '부산대학교 치과병원 치과보철과 외래교수', '부산대학교 대학원 치과보철학 박사',
         '부산대학교 치의학전문대학원 졸업', '부산대학교 치과병원 인턴, 치과보철과 레지던트 수료', '대한치과보철학회 인정의·정회원',
       ],
     },
     {
-      name: '이휘소', title: '원장', dept: '보철·보존', branches: ['changwon'], photo: 'doctor-lee-hwiso.jpg', photoScale: 1.21, photoOffsetY: 20.3, photoBlend: true, photoBacker: true,
+      name: '이휘소', focus: '충치치료, 신경치료, 보철치료', logos: [], title: '원장', dept: '보철·보존', branches: ['changwon'], photo: 'doctor-lee-hwiso.jpg', photoHeadTop: 0.063, photoScale: 1.21, photoOffsetY: 20.3, photoBlend: true, photoBacker: true,
       career: [
         '연세대학교 치과대학 졸업', '대한치과의사협회지 2021.06 논문 저자', '오스템 엔도 세미나, 김평식 엔도 세미나 수료',
         '대한치과보존학회·대한심미치과학회 정회원', '경남교통방송(tbn) 라디오 출연', '대한치과의사협회 표창장 (2021)', '전) 김제시보건소 역학조사관',
@@ -150,7 +155,7 @@ window.SITE = {
     // 마산점
     {
       // TODO: 진료과 표기 병원 확인 — 현재 '통합치의학과', 기존 사이트 약력에는 '소아치과 전문의'로 표기됨
-      name: '정호석', title: '대표원장', dept: '통합치의학과', branches: ['masan'], photo: 'doctor-jeong-hoseok.jpg', photoScale: 1.07, photoOffsetY: 7.1, photoBlend: true, photoBacker: true,
+      name: '정호석', focus: '임플란트, 보철치료, 소아치료', logos: [], title: '대표원장', dept: '통합치의학과', branches: ['masan'], photo: 'doctor-jeong-hoseok.jpg', photoHeadTop: 0.062, photoScale: 1.07, photoOffsetY: 7.1, photoBlend: true, photoBacker: true,
       career: [
         '보건복지부 인증 소아치과 전문의', '보건복지부 인증 통합치의학과 전문의', '원광대학교 치과대학 졸업', '원광대학교병원 소아치과 인턴·레지던트 수료', '원광대학교 치과대학원 수료',
         '화성시치과의사회 회장 역임, (현) 고문', '대한치과보철학회 인증 우수보철치과의사과정 수료', '미국 펜실베니아대학교 근관치료과정 수료',
@@ -158,7 +163,7 @@ window.SITE = {
       ],
     },
     {
-      name: '송희태', title: '원장', dept: '치과교정과', branches: ['masan'], photo: 'doctor-song-heetae.jpg', photoScale: 0.99, photoOffsetY: -3.3, photoBlend: true, photoBacker: true,
+      name: '송희태', focus: '교정치료, 투명교정', logos: [], title: '원장', dept: '치과교정과', branches: ['masan'], photo: 'doctor-song-heetae.jpg', photoHeadTop: 0.095, photoScale: 0.99, photoOffsetY: -3.3, photoBlend: true, photoBacker: true,
       career: [
         '보건복지부 인증 치과교정과 전문의', '보건복지부 인증 통합치의학과 전문의', '대한치과교정학회 인정의',
         '서울대학교 학사, 경희대학교 치의학석사', '경희대학교 치과병원 인턴 수석 수료, 교정과 레지던트', '대한치과교정학회 정회원',
@@ -167,14 +172,14 @@ window.SITE = {
       ],
     },
     {
-      name: '조용정', title: '원장', dept: '치과보철과', branches: ['masan'], photo: 'doctor-cho-yongjeong.jpg', photoScale: 1.16, photoOffsetY: 16.5, photoOffsetX: 3, photoBlend: true, photoBacker: true,
+      name: '조용정', focus: '임플란트, 보철치료', logos: [], title: '원장', dept: '치과보철과', branches: ['masan'], photo: 'doctor-cho-yongjeong.jpg', photoHeadTop: 0.054, photoScale: 1.16, photoOffsetY: 16.5, photoOffsetX: 3, photoBlend: true, photoBacker: true,
       career: [
         '보건복지부 인증 치과보철과 전문의', '서울대학교 치과대학 졸업', '강남성모병원 인턴, 치과보철과 레지던트 수료',
         '대한치과보철학회 인정의·정회원', '국군수도병원 보철과장 역임', '전) 서울에스바른치과 대표원장',
       ],
     },
     {
-      name: '조혜진', title: '원장', dept: '치과보존과', branches: ['masan'], photo: 'doctor-cho-hyejin.jpg', photoScale: 1.08, photoOffsetY: 7, photoBlend: true, photoBacker: true,
+      name: '조혜진', focus: '충치치료, 신경치료', logos: [], title: '원장', dept: '치과보존과', branches: ['masan'], photo: 'doctor-cho-hyejin.jpg', photoHeadTop: 0.059, photoScale: 1.08, photoOffsetY: 7, photoBlend: true, photoBacker: true,
       career: [
         '보건복지부 인증 치과보존과 전문의', '보건복지부 인증 통합치의학과 전문의', '원광대학교 치과대학 졸업',
         '조선대학교 치과병원 인턴, 치과보존과 레지던트 수료', '대한치과보존학회 인정의·정회원',
@@ -183,7 +188,7 @@ window.SITE = {
     },
     // 겸직
     {
-      name: '김영우', title: '원장', dept: '구강악안면외과', branches: ['changwon', 'masan'], photo: 'doctor-kim-youngwoo.jpg', photoScale: 0.93, photoOffsetY: -4.3, photoBlend: true, photoBacker: true,
+      name: '김영우', focus: '임플란트, 사랑니발치', logos: [], title: '원장', dept: '구강악안면외과', branches: ['changwon', 'masan'], photo: 'doctor-kim-youngwoo.jpg', photoHeadTop: 0.047, photoScale: 0.93, photoOffsetY: -4.3, photoBlend: true, photoBacker: true,
       career: [
         '보건복지부 인증 구강악안면외과 전문의', '보건복지부 인증 통합치의학과 전문의', '서울대학교치과병원 구강악안면외과 인턴·레지던트 수료',
         '서울대학교 치의학대학원 구강악안면외과학 석사 수료', '대한구강악안면성형재건외과학회 인정의',
@@ -191,6 +196,29 @@ window.SITE = {
       ],
     },
   ],
+};
+
+/** 약력 분류 (메인 의료진 팝업 · 의료진 소개 공통) — 'cert' 전문의 / 'edu' 학력(졸업·석사·박사·학사) / 'society' 학회 활동(학회·연맹 회원·인정의·펠로우) / 'career' 그 외 경력
+    분류가 애매한 항목은 경력으로 간다 → docs/HANDOVER.md '약력 분류 병원 확인' */
+window.SITE.classifyCareer = function (c) {
+  if (c.startsWith('보건복지부 인증')) return 'cert';
+  if (/졸업|석사|박사|학사/.test(c)) return 'edu';
+  if (/학회|연맹/.test(c) && /회원|인정의|펠로우|Fellow/.test(c) && !/수상|표창|수료|발표/.test(c)) return 'society';
+  return 'career';
+};
+/** 경력 중 연수·세미나·과정 수료 (의료진 소개에서 학회와 같은 기본 글자로) — 인턴·레지던트·대학원 수료는 경력 그대로 */
+window.SITE.isTraining = (c) => /세미나|연수|과정|코스|인증의/.test(c) && !/인턴|레지던트|대학원/.test(c);
+/** 학회 활동 항목 나누기 (표시만, 데이터는 그대로)
+    "세계교정의사연맹 Fellow, 미국·유럽·일본 치과교정학회 국제회원" → ', ' 로 (각 부분이 학회·연맹일 때)
+    "대한치과보존학회·대한치주과학회 정회원" → '·' 로 나누고 끝의 공통 꼬리(정회원)를 각 학회에 붙인다 */
+window.SITE.splitSociety = function splitSociety(c) {
+  const commaParts = c.split(', ');
+  if (commaParts.length > 1 && commaParts.every((p) => /학회|연맹/.test(p))) return commaParts.flatMap(splitSociety);
+  const parts = c.split('·');
+  if (parts.length < 2 || !parts.every((p) => /학회/.test(p))) return [c];
+  const tail = parts[parts.length - 1].match(/^(.*학회)(\s.+)$/);
+  if (!tail) return [c];
+  return parts.map((p, i) => (i === parts.length - 1 ? p : p + tail[2]));
 };
 
 /** 의료진 앵커 id 용 slug — 사진 파일명에서 (doctor-lee-eunju.jpg → lee-eunju)

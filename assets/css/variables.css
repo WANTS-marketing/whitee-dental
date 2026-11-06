@@ -28,7 +28,8 @@
   /* 파랑 = 강조 글자·진행 표시·hover·링크·체크 */
   --color-accent: #194ebf;           /* 밝은 파랑 */
   --color-accent-hover: #1440a0;     /* 조금 진하게 — 선택 UI 눌림 */
-  --color-accent-rgb: 25, 78, 191;   /* 반투명용 rgba(var(--color-accent-rgb), a) — 선택 UI hover 옅은 파랑 테두리 */
+  --color-accent-rgb: 25, 78, 191;
+  --color-accent-light: #8fb0f5;     /* 네이비 면 위 강조 글자 (의료진 소개 소개 블록) — 기본 파랑은 네이비 위 대비 부족 */   /* 반투명용 rgba(var(--color-accent-rgb), a) — 선택 UI hover 옅은 파랑 테두리 */
 
   /* 텍스트 */
   --color-text: #222222;            /* 메인 텍스트: 거의 검정 */
