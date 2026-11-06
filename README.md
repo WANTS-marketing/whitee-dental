@@ -127,6 +127,8 @@ docs/                      배포·인수인계 문서
 | 메인 히어로 슬라이드별 사진 위치·확대·인물 이름표 (PC) | `assets/js/site-data.js` 의 `heroSlides` (`pos` · `scale` · `origin` · `caption {name, role, x, y}`) — `main.js` `initHero` 가 적용. 모바일 사진 위치는 `main.css` 768px 이하 |
 | 의료진 소개 지점 이동 버튼(화면 아래 [창원점 N][마산점 N]) · 지점별 묶음 | `assets/js/pages.js` `renderDoctorsPage` · `initDoctorBranchNav` (원장 수는 site-data.js 에서 자동) · 스타일 `common.css` '의료진 소개 — 소개 블록' · '의료진 소개 — 원장' · '지점 이동 버튼' |
 | 의료진 소개 위 소개 블록(네이비 문구 · 원형 배지 · 하단 바 · 오른쪽 흑백 사진) | `about/doctors.html` `.doc-intro` — 사진은 임시 `tour-masan-04.jpg` (CSS 로 흑백) |
+| 의료진 소개 약력 상자 색 | `variables.css` `--color-doctor-box` (지금 #F3F6FB 아주 옅은 파랑) |
+| 의료진 소개 본문 폭 (이 페이지만 폭 제한 없음 — LNB 오른쪽 ~ 플로팅 퀵메뉴 앞 32px) | `common.css` `.page-doctors .sub-layout` + `pages.js` `renderDoctorsPage` 의 `setDocRight` (퀵메뉴 위치를 재서 `--doc-right`) |
 | 의료진 소개 주요 진료 · 학회·학교 로고 | `assets/js/site-data.js` 각 원장 `focus` · `logos: [{ src, alt }]` (로고 파일은 `assets/images/`, 이름 줄 오른쪽 끝) |
 | 약력 분류(학력·경력·학회 활동 — 메인 팝업 · 의료진 소개 공통) | `assets/js/site-data.js` `SITE.classifyCareer` · `isTraining`(연수·세미나) · `splitSociety` |
 | 커뮤니티 게시판 목록·상세 (분류 칩·정렬·보기 방식·검색·페이지 번호·이전/다음글) | `assets/js/board.js` 맨 위 `BOARDS` (게시판별 분류·기본 보기·검색 대상) · 스타일 `common.css` '게시판 목록' — 한 페이지 12개(카드 4개 16개) |
@@ -158,7 +160,7 @@ docs/                      배포·인수인계 문서
 | `photoScale` | 사진 배율. 1 = 기본. 얼굴이 작아 보이면 키우고 커 보이면 줄입니다 | `1.1` (10% 키움), `0.85` (15% 줄임) |
 | `photoOffsetY` | 위아래 이동, 사진 칸 높이 대비 %. `+` 아래로, `-` 위로. 정수리 선을 맞출 때 | `5` (칸 높이의 5% 아래로) |
 | `photoOffsetX` | 좌우 이동, 사진 칸 높이 대비 %. `+` 오른쪽, `-` 왼쪽. 없으면 0 | `-3` |
-| `photoHeadTop` | **의료진 소개만** — 사진 안 머리 위 끝 위치(사진 높이 대비 0~1). 이 값으로 머리가 약력 상자 위로 80px 나오게 맞추고 `photoOffsetY` 는 쓰지 않음. 사진을 바꾸면 다시 잴 것 | `0.08` |
+| `photoHeadTop` | **의료진 소개만** — 사진 안 머리 위 끝 위치(사진 높이 대비 0~1). 이 값으로 머리가 약력 상자 위로 100px 나오게 사진 높이를 정한다(사진 칸 너비도 사진 비율대로 자동). 사진을 자르지 않으려고 이 페이지에서는 `photoScale`·`photoOffsetY`·`photoOffsetX` 를 쓰지 않음(메인 의료진에서만, 값은 그대로 둠). 사진을 바꾸면 다시 잴 것 | `0.08` |
 
 ```js
 { name: '이은주', ..., photo: 'doctor-lee-eunju.jpg', photoScale: 1.06, photoOffsetY: 4.8, ... }

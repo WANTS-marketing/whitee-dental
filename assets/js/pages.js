@@ -84,13 +84,11 @@ function renderDoctorsPage() {
           /* 사진 칸 = 상자 위 80px ~ 상자 아래 끝. 머리 위 끝(photoHeadTop)이 칸 위 끝에 오게: 사진 높이 = 칸 × max(photoScale, 1/(1 - 머리 위치)),
              남는 만큼 아래로 내려 상자 아래 끝에서 자른다 (--dk 높이 배율, --dy 내림 = 칸 높이 대비 %) */
           const ht = Math.min(0.4, Math.max(0, Number(d.photoHeadTop) || 0));
-          const dk = Math.max(Number(d.photoScale) || 1, 1 / (1 - ht));
-          const dy = Math.max(0, (dk * (1 - ht) - 1) * 100);
-          const fix = `--dk:${dk.toFixed(4)};--dy:${dy.toFixed(3)};--px:${Number(d.photoOffsetX) || 0}`;
+          const fix = `--dk:${(1 / (1 - ht)).toFixed(4)}`; // 사진 높이 = 칸 높이 ÷ (1 - 머리 위치) → 머리 위 끝 = 칸 위 끝, 아래 끝 = 상자 아래 끝 (자르지 않음)
           const both = d.branches.length > 1;
           const logos = (d.logos || []).filter((l) => l && l.src);
           return `
-          <article class="doctor-profile" id="${b.id}-${S.doctorSlug(d)}">
+          <article class="doctor-profile" id="${b.id}-${S.doctorSlug(d)}" style="${fix}">
             <div class="doctor-profile__head">
               <div class="doctor-profile__id">
                 <h3 class="doctor-profile__name"><strong>${esc(d.name)}</strong> <span>${esc(d.title)}</span></h3>
@@ -99,7 +97,7 @@ function renderDoctorsPage() {
               ${logos.length ? `<ul class="doctor-profile__logos">${logos.map((l) => `<li><img src="${img(l.src)}" alt="${esc(l.alt || '')}" loading="lazy"></li>`).join('')}</ul>` : ''}
             </div>
             <div class="doctor-profile__box">
-              <div class="doctor-profile__photo" style="${fix}"><img class="doctor-profile__img${d.photoBlend === false ? '' : ' is-blend'}" src="${img(String(d.photo || '').replace(/\.[a-z]+$/i, '-cut.png'))}" alt="${esc(d.name)} ${esc(d.title)} 사진" loading="lazy"></div>
+              <div class="doctor-profile__photo"><img class="doctor-profile__img${d.photoBlend === false ? '' : ' is-blend'}" src="${img(String(d.photo || '').replace(/\.[a-z]+$/i, '-cut.png'))}" alt="${esc(d.name)} ${esc(d.title)} 사진" loading="lazy"></div>
               ${(d.career || []).length ? `<ul class="doctor-profile__career">${careerOf(d)}</ul>` : ''}
             </div>
           </article>`;
@@ -107,6 +105,42 @@ function renderDoctorsPage() {
       </div>
     </section>`).join('');
   box.querySelectorAll('.doctor-profile__img').forEach((im) => im.addEventListener('error', () => im.classList.add('is-missing'), { once: true }));
+  // 이 페이지만 본문 오른쪽 끝 = 플로팅 퀵메뉴 왼쪽 끝 - 32px (common.css '.page-doctors .sub-layout' 의 --doc-right). 1024px 이하는 쓰지 않음
+  const root = document.documentElement;
+  const setDocRight = () => {
+    const q = document.querySelector('.quick--float');
+    const qr = q && window.innerWidth > 1024 ? q.getBoundingClientRect() : null;
+    if (qr && qr.width) root.style.setProperty('--doc-right', `${Math.round(root.clientWidth - qr.left + 32)}px`);
+    else root.style.removeProperty('--doc-right');
+  };
+  /* 원장별 약력 상자 높이: 약력이 길어 상자가 최소 높이(--box-h)보다 커지면, 그 높이를 --box-h 로 넣어 사진도 같이 키운다
+     (머리가 늘 상자 위 --pop 만큼 나오고 아래 끝 = 상자 아래 끝). 사진이 커지면 약력 칸이 좁아져 다시 길어지므로 몇 번 반복, 최소 높이의 1.4배까지 */
+  const fitBoxes = () => {
+    box.querySelectorAll('.doctor-profile').forEach((a) => {
+      a.style.removeProperty('--box-h');
+      if (getComputedStyle(a).display === 'flex') return; // 사진 위 · 정보 아래 배치(1024px 이하 · 좁은 본문)는 상자가 따로라 맞출 것 없음
+      const bx = a.querySelector('.doctor-profile__box');
+      const ul = a.querySelector('.doctor-profile__career');
+      if (!bx || !ul) return;
+      const base = parseFloat(getComputedStyle(a).getPropertyValue('--box-h')) || 440;
+      let h = base;
+      for (let i = 0; i < 6; i++) {
+        const cs = getComputedStyle(bx);
+        const need = Math.ceil(ul.getBoundingClientRect().height + parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom));
+        if (need <= h + 1) break;
+        h = Math.min(need, base * 1.4);
+        a.style.setProperty('--box-h', `${h}px`);
+        if (h >= base * 1.4) break;
+      }
+    });
+  };
+  const layout = () => { setDocRight(); fitBoxes(); };
+  layout();
+  window.addEventListener('resize', layout);
+  new MutationObserver(layout).observe(root, { attributes: true, attributeFilter: ['data-fs'] }); // 글자 크기 단계 → 퀵메뉴 폭·약력 길이가 바뀜
+  document.addEventListener('components:loaded', layout); // 퀵메뉴(include)가 들어온 뒤
+  window.addEventListener('load', layout, { once: true });
+  document.fonts?.ready.then(layout); // 웹폰트가 늦게 적용되면 약력 줄 수가 바뀜
   initDoctorBranchNav(groups);
 }
 
