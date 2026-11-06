@@ -707,6 +707,9 @@ html.is-lnb-hold body { min-height: calc(100vh + 2000px); }
 .case-view__lock { position: absolute; inset: 0; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 16px; background: rgba(0, 0, 0, 0.35); color: #fff; text-align: center; font-size: var(--fs-sm); font-weight: 600; word-break: keep-all; }
 .case-view__lock > svg { width: 28px; height: 28px; }
 .case-view__login { height: 44px; padding: 0 20px; font-weight: 700; }
+.case-view__lock small { max-width: 26em; font-size: var(--fs-xs); font-weight: 400; line-height: 1.5; opacity: 0.9; } /* 시안 안내(로그인했지만 원본이 저장소 밖) */
+.nowrap { white-space: nowrap; } /* 줄이 바뀌어도 이 덩어리는 함께 */
+.case-pair__lock.is-demo { flex-direction: column; gap: 2px; width: max-content; max-width: calc(100% - 16px); padding: 6px 10px; border-radius: 8px; white-space: normal; word-break: keep-all; text-align: center; line-height: 1.35; }
 .case-view__body { margin-top: 28px; padding: 20px 24px; border-radius: var(--radius-btn); background: #f7f7f8; font-size: var(--fs-sm); line-height: 1.8; color: #333; white-space: pre-line; word-break: keep-all; }
 .case-view__fig figcaption { margin-top: 10px; text-align: center; font-size: var(--fs-sm); font-weight: 600; }
 .case-view__fig figcaption b { margin-right: 6px; color: var(--color-accent); letter-spacing: 0.05em; }
