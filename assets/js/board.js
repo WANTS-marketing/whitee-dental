@@ -3,15 +3,14 @@
    pages.js 가 <body data-page> 에 맞춰 Board.list('news') / Board.view('news') 를 부른다. 스타일: common.css '게시판'
 
    목록 [data-board="news|notice|cases"] 안을 통째로 그린다:
-     분류 칩 줄 → 도구 줄 [총 N건 | 정렬(최신순·조회순) · 보기 방식(카드 3개·카드 4개·목록형 / 모바일: 카드·목록형) · 검색]
+     분류 칩 줄 → 도구 줄 [총 N건 | 정렬(최신순 | 오래된순 글자 버튼 — 치료사례만, BOARDS.sortable) · 보기 방식(카드 3개·카드 4개·목록형 / 모바일: 카드·목록형) · 검색]
      → 목록(카드 또는 행) → 페이지 번호 ‹ 1 2 3 … ›
-   - 상태(분류 cat · 정렬 sort · 검색 q · 페이지 page)는 주소에 남긴다 → 뒤로가기·새로고침·공유 그대로 (?page=2&cat=치아교정&sort=views&q=교정)
+   - 상태(분류 cat · 정렬 sort · 검색 q · 페이지 page)는 주소에 남긴다 → 뒤로가기·새로고침·공유 그대로 (?page=2&cat=임플란트&sort=oldest&q=교정)
    - 보기 방식은 localStorage(witee-board-view-{게시판}) — 저장 못 해도 기본 보기로 동작
    - 한 페이지 12개, 카드 4개 보기는 16개. 보기를 바꾸면 보던 첫 글이 들어 있는 페이지로
    - 페이지를 바꾸면 분류 칩 줄이 헤더 아래 24px 에 오게 스크롤
-   - 목록형 '펼쳐보기': 그 자리에서 본문 앞부분(약 5줄) + 대표 이미지 + '자세히 보기 →' — 한 번에 하나만
    - 공지사항: 기본 보기 = 목록형(썸네일·요약 없이 제목·날짜), 고정 공지(pinned)는 어느 페이지든 맨 위 + '공지' 태그
-   - 조회수: 1차 데이터에는 없음(api.js 가 0 으로 채움) → 모두 0 이면 조회수 칸을 숨김. 조회순 정렬은 조회수 같으면 최신순
+   - 조회수: 1차 데이터에는 없음(api.js 가 0 으로 채움) → 모두 0 이면 조회수 칸을 숨김
    - 검색: 제목 + 요약(치과소식 본문은 글마다 파일이 따로라 요약 문구까지) + 분류 이름
    상세: 이전글 / 다음글(제목·날짜) + '목록으로'(보던 목록 주소 — sessionStorage witee-board-list-{게시판})
    ========================================================================== */
@@ -24,9 +23,6 @@
   const isMobile = () => window.matchMedia('(max-width: 768px)').matches;
 
   const fullDate = (iso) => { const d = new Date(iso); const p = (n) => String(n).padStart(2, '0'); return `${d.getFullYear()}.${p(d.getMonth() + 1)}.${p(d.getDate())}`; };
-  // 본문 HTML → 펼쳐보기용 글자 (줄바꿈 <br> 은 띄어쓰기로)
-  const textOf = (html) => { const d = new DOMParser().parseFromString(html.replace(/<br\s*\/?>/gi, ' '), 'text/html'); return [...d.querySelectorAll('p, li, h2, h3, h4')].map((e) => e.textContent.trim()).filter(Boolean).join(' ').replace(/\s+/g, ' ').trim(); };
-  const firstImg = (html) => new DOMParser().parseFromString(html, 'text/html').querySelector('img')?.getAttribute('src') || '';
 
   /* ---------- 게시판별 설정 ---------- */
   const BOARDS = {
@@ -36,15 +32,12 @@
       catsOf: (r) => [r.category],
       catOrder: NEWS_CATS,
       catLabel: '분류',
+      sortable: false, // 정렬 없음 — 항상 최신순
       defaultView: 'card3',
       thumb: (r) => r.thumbnail,
       summary: (r) => r.summary || '',
       search: (r) => `${r.title} ${r.summary || ''} ${r.category}`,
       empty: '등록된 소식이 없습니다.',
-      async expand(r) {
-        const data = await window.API.getNewsPost(r.id);
-        return { text: textOf(data?.html || '') || r.summary || '', image: firstImg(data?.html || '') || window.UI.img(r.thumbnail) };
-      },
     },
     notice: {
       name: '공지사항', list: 'notice.html', view: 'notice-view.html', idPrefix: 'notice',
@@ -52,6 +45,7 @@
       catsOf: (r) => BRANCH_CATS[r.branch] || [],
       catOrder: ['창원점', '마산점'],
       catLabel: '지점',
+      sortable: false, // 정렬 없음 — 고정 공지 맨 위 + 최신순
       defaultView: 'list',
       pinned: true,
       listPlain: true, // 목록형: 썸네일·요약 없이 제목·날짜
@@ -59,7 +53,6 @@
       summary: (r) => r.summary || '',
       search: (r) => `${r.title} ${r.summary || ''} ${r.body || ''}`,
       empty: '등록된 공지사항이 없습니다.',
-      async expand(r) { return { text: r.body || r.summary || '', image: r.thumbnail ? window.UI.img(r.thumbnail) : '' }; },
     },
     cases: {
       name: '치료사례', list: 'cases.html', view: 'case-view.html', idPrefix: 'case',
@@ -67,13 +60,13 @@
       catsOf: (r) => [r.categoryName],
       catOrder: null, // 글에 나온 순서
       catLabel: '진료',
+      sortable: true, // 정렬 = [최신순 | 오래된순] 글자 버튼 (헤더 로그인 | 회원가입처럼 나란히)
       defaultView: 'card3',
       locked: () => !window.API.isLoggedIn(), // 로그인 전에는 사진 흐림
       thumb: (r) => r.beforeImage,
       summary: (r) => `${r.categoryName} 치료 전·후 사진`,
       search: (r) => `${r.title} ${r.categoryName}`,
       empty: '등록된 사례가 없습니다.',
-      async expand(r) { return { text: `${r.categoryName} 치료 전·후 사진입니다. 치료 결과는 개인에 따라 다를 수 있습니다.`, image: window.UI.img(r.beforeImage) }; },
     },
   };
   const listKey = (b) => `witee-board-list-${b}`;
@@ -90,6 +83,7 @@
     left: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>',
     right: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>',
   };
+  const SORTS = [{ v: 'latest', label: '최신순' }, { v: 'oldest', label: '오래된순' }];
   const VIEW_LABEL = { card3: '카드 3개씩 보기', card4: '카드 4개씩 보기', card: '카드로 보기', list: '목록형으로 보기' };
 
   function fade(el) {
@@ -121,10 +115,7 @@
       <div class="board-tools">
         <p class="board-tools__count" data-b-count aria-live="polite"></p>
         <div class="board-tools__right">
-          <select class="board-tools__sort" data-b-sort aria-label="정렬">
-            <option value="latest">최신순</option>
-            <option value="views">조회순</option>
-          </select>
+          ${cfg.sortable ? `<div class="board-sort" role="group" aria-label="정렬" data-b-sort>${SORTS.map((s) => `<button type="button" class="board-sort__btn" data-b-sort-val="${s.v}">${s.label}</button>`).join('')}</div>` : ''}
           <div class="board-tools__views" role="group" aria-label="보기 방식">
             ${['card3', 'card4', 'card', 'list'].map((v) => `<button type="button" class="board-tools__view board-tools__view--${v}" data-b-view="${v}" aria-label="${VIEW_LABEL[v]}" title="${VIEW_LABEL[v]}">${ICON[v]}</button>`).join('')}
           </div>
@@ -151,13 +142,13 @@
       // 예전 주소: 치료사례 ?category=implant (메인 치료사례 카드) → 분류 이름
       if (!cat && board === 'cases' && p.get('category')) cat = rows.find((r) => r.category === p.get('category'))?.categoryName || '';
       if (!cats.includes(cat)) cat = '';
-      return { cat, sort: p.get('sort') === 'views' ? 'views' : 'latest', q: (p.get('q') || '').trim(), page: Math.max(1, parseInt(p.get('page'), 10) || 1) };
+      return { cat, sort: cfg.sortable && p.get('sort') === 'oldest' ? 'oldest' : 'latest', q: (p.get('q') || '').trim(), page: Math.max(1, parseInt(p.get('page'), 10) || 1) };
     };
     const urlOf = ({ cat, sort, q, page }) => {
       const p = new URLSearchParams();
       if (page > 1) p.set('page', page);
       if (cat) p.set('cat', cat);
-      if (sort === 'views') p.set('sort', 'views');
+      if (sort === 'oldest') p.set('sort', 'oldest');
       if (q) p.set('q', q);
       const s = p.toString();
       return location.pathname + (s ? `?${s}` : '');
@@ -180,7 +171,6 @@
         </a>
       </li>`;
     const rowHtml = (r) => {
-      const pid = `${cfg.idPrefix}-panel-${esc(r.id)}`;
       return `
       <li class="board-row${r.pinned && cfg.pinned ? ' is-pinned' : ''}${cfg.listPlain ? ' is-plain' : ''}" id="${cfg.idPrefix}-${esc(r.id)}">
         <a class="board-row__link" href="${href(r)}">
@@ -192,8 +182,6 @@
           </span>
           <span class="board-row__meta">${metaOf(r)}</span>
         </a>
-        <button class="board-row__toggle" type="button" aria-expanded="false" aria-controls="${pid}" data-b-expand="${esc(r.id)}"><span class="board-row__toggle-text">펼쳐보기</span>${ICON.chevron}</button>
-        <div class="board-row__panel" id="${pid}" hidden></div>
       </li>`;
     };
 
@@ -201,7 +189,7 @@
       const words = q.toLowerCase().split(/\s+/).filter(Boolean);
       let out = rows.filter((r) => (!cat || cfg.catsOf(r).includes(cat)) && words.every((w) => cfg.search(r).toLowerCase().includes(w)));
       const byDate = (a, b) => new Date(b.date) - new Date(a.date);
-      out = out.slice().sort(sort === 'views' ? (a, b) => (b.views - a.views) || byDate(a, b) : byDate);
+      out = out.slice().sort(sort === 'oldest' ? (a, b) => byDate(b, a) : byDate);
       if (cfg.pinned) return { pinned: out.filter((r) => r.pinned), rest: out.filter((r) => !r.pinned) };
       return { pinned: [], rest: out };
     }
@@ -241,7 +229,7 @@
         <li><a class="board-cats__btn" href="${esc(urlOf({ ...st, cat: c, page: 1 }))}" data-b-cat="${esc(c)}"${c === st.cat ? ' aria-current="true"' : ''}>${c ? esc(c) : '전체'} <span class="board-cats__n">${n(c)}</span></a></li>`).join('');
 
       countEl.innerHTML = `총 <b>${(pinned.length + rest.length).toLocaleString('ko-KR')}</b>건${st.q ? ` <span class="board-tools__q">‘${esc(st.q)}’ 검색 결과</span> <a class="board-tools__clear" href="${esc(urlOf({ ...st, q: '', page: 1 }))}" data-b-clear>검색 지우기</a>` : ''}`;
-      sortEl.value = st.sort;
+      sortEl?.querySelectorAll('[data-b-sort-val]').forEach((s) => s.setAttribute('aria-pressed', String(s.dataset.bSortVal === st.sort)));
       if (document.activeElement !== qInput) qInput.value = st.q;
 
       // 보기 방식 (모바일 = 카드 1열 / 목록형)
@@ -296,10 +284,8 @@
         draw({ animate: true });
         return;
       }
-      const tg = e.target.closest('[data-b-expand]');
-      if (tg) toggleRow(tg);
     });
-    sortEl.addEventListener('change', () => push({ ...readState(), sort: sortEl.value, page: 1 }));
+    sortEl?.addEventListener('click', (e) => { const s = e.target.closest('[data-b-sort-val]'); if (s && s.dataset.bSortVal !== readState().sort) push({ ...readState(), sort: s.dataset.bSortVal, page: 1 }); });
     searchEl.addEventListener('submit', (e) => {
       e.preventDefault();
       push({ ...readState(), q: qInput.value.trim(), page: 1 });
@@ -309,36 +295,6 @@
     window.addEventListener('popstate', () => draw({ animate: true }));
     // 화면 폭이 모바일 경계를 넘으면(카드 4개 16개 ↔ 12개) 다시 그림
     window.matchMedia('(max-width: 768px)').addEventListener('change', () => draw());
-
-    // 목록형 펼쳐보기 — 한 번에 하나만
-    async function toggleRow(btn) {
-      const li = btn.closest('.board-row');
-      const panel = li.querySelector('.board-row__panel');
-      const open = btn.getAttribute('aria-expanded') !== 'true';
-      listEl.querySelectorAll('.board-row__toggle[aria-expanded="true"]').forEach((b) => { if (b !== btn) setRow(b, false); });
-      setRow(btn, open);
-      if (!open || panel.dataset.loaded) return;
-      panel.dataset.loaded = '1';
-      const r = rows.find((x) => x.id === btn.dataset.bExpand);
-      panel.innerHTML = '<p class="board-row__loading">불러오는 중입니다.</p>';
-      let body = { text: '', image: '' };
-      try { body = await cfg.expand(r); } catch (err) { console.error(err); body = { text: r.summary || '', image: '' }; }
-      panel.innerHTML = `
-        <div class="board-row__panel-in">
-          ${body.image ? `<span class="board-row__panel-img img-ph${locked ? ' is-locked' : ''}"><img src="${esc(body.image)}" alt="" loading="lazy" decoding="async">${locked ? '<span class="board-lock">로그인 후 확인</span>' : ''}</span>` : ''}
-          <div class="board-row__panel-text">
-            <p class="board-row__body">${esc(body.text)}</p>
-            <a class="board-row__more" href="${href(r)}">자세히 보기${ICON.arrow}</a>
-          </div>
-        </div>`;
-    }
-    function setRow(btn, open) {
-      const li = btn.closest('.board-row');
-      btn.setAttribute('aria-expanded', String(open));
-      btn.querySelector('.board-row__toggle-text').textContent = open ? '접기' : '펼쳐보기';
-      li.classList.toggle('is-open', open);
-      li.querySelector('.board-row__panel').hidden = !open;
-    }
 
     try {
       rows = await cfg.load();
