@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* ---------- 로그인 후 돌아갈 곳 (member/login.html?return=community/case-view.html?id=case-18) ----------
-   치료사례 상세의 '로그인하고 치료 후 사진 보기'가 return 을 붙여 보낸다. 사이트 안 주소(폴더/파일.html?…)만 받는다(다른 사이트로 보내기 방지)
+   치료사례 상세의 '로그인 후 확인해보세요'가 return 을 붙여 보낸다. 사이트 안 주소(폴더/파일.html?…)만 받는다(다른 사이트로 보내기 방지)
    로그인 성공 후 이동은 서버 연결 때 — api.js signInWithKakao(returnUrl) · 이메일 로그인에서 이 주소로 보낼 것
    시안: 안내 문구 + '시안 확인용: 로그인한 것처럼 보기' 링크(그 글 + ?login=1 — api.js isLoggedIn) */
 function loginReturnUrl() {
