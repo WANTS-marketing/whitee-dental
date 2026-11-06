@@ -689,12 +689,28 @@ html.is-lnb-hold body { min-height: calc(100vh + 2000px); }
 .article__cats { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px; }
 .article__cats .badge { margin: 0; }
 .article__cat-sep { color: var(--color-text-muted); }
+/* 치료사례 목록 썸네일 = 두 칸 [BEFORE 선명 / AFTER 로그인 전 흐림 미리보기 + 자물쇠] (board.js casePair) — 카드 3:4 는 위아래, 목록형 정사각도 위아래 */
+.case-pair { display: grid; grid-template-rows: 1fr 1fr; gap: 2px; background: #fff; }
+.case-pair__half { position: relative; display: block; overflow: hidden; }
+.case-pair__half.is-locked img { filter: blur(6px); transform: scale(1.12); } /* 미리 흐리게 만든 그림 + 가장자리 정리 */
+.case-pair__tag { position: absolute; z-index: 1; left: 8px; top: 8px; padding: 2px 8px; border-radius: var(--radius-btn); background: rgba(0, 0, 0, 0.55); color: #fff; font-size: var(--fs-xxs); font-weight: 700; letter-spacing: 0.05em; line-height: 1.4; }
+.case-pair__lock { position: absolute; z-index: 1; left: 50%; top: 50%; display: inline-flex; align-items: center; gap: 4px; width: max-content; padding: 4px 10px; border-radius: var(--radius-pill); background: rgba(0, 0, 0, 0.55); color: #fff; font-size: var(--fs-xxs); font-weight: 600; white-space: nowrap; transform: translate(-50%, -50%); }
+.case-pair__lock svg { flex: none; width: 14px; height: 14px; }
+.board-row__thumb.case-pair .case-pair__tag { left: 4px; top: 4px; padding: 1px 5px; }
+.board-row__thumb.case-pair .case-pair__lock { padding: 3px; font-size: 0; gap: 0; } /* 작은 목록형 썸네일: 자물쇠만 */
+.board-row__thumb.case-pair .case-pair__lock svg { width: 16px; height: 16px; }
+/* 치료사례 상세: BEFORE | AFTER 나란히 (모바일 위아래). AFTER 는 로그인 전 흐림 미리보기 + 로그인 버튼 */
 .case-view { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 .case-view__fig { margin: 0 !important; }
-.case-view__img { position: relative; display: block; overflow: hidden; aspect-ratio: 3 / 4; border-radius: var(--radius-md); }
-.case-view__fig.is-locked img { filter: blur(10px); transform: scale(1.15); }
+.case-view__img { position: relative; display: block; overflow: hidden; aspect-ratio: 430 / 254; border-radius: var(--radius-md); } /* 기존 사진 비율 */
+.case-view__fig.is-locked img { filter: blur(8px); transform: scale(1.15); } /* 미리 흐리게 만든 그림(case-*-after-blur.jpg) — 원본은 로그인 전에는 불러오지 않음 */
+.case-view__lock { position: absolute; inset: 0; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 16px; background: rgba(0, 0, 0, 0.35); color: #fff; text-align: center; font-size: var(--fs-sm); font-weight: 600; word-break: keep-all; }
+.case-view__lock > svg { width: 28px; height: 28px; }
+.case-view__login { height: 44px; padding: 0 20px; font-weight: 700; }
+.case-view__body { margin-top: 28px; padding: 20px 24px; border-radius: var(--radius-btn); background: #f7f7f8; font-size: var(--fs-sm); line-height: 1.8; color: #333; white-space: pre-line; word-break: keep-all; }
 .case-view__fig figcaption { margin-top: 10px; text-align: center; font-size: var(--fs-sm); font-weight: 600; }
-.case-view__note { font-size: var(--fs-sm); color: var(--color-text-muted); text-align: center; }
+.case-view__fig figcaption b { margin-right: 6px; color: var(--color-accent); letter-spacing: 0.05em; }
+.case-view__note { margin-top: 20px; font-size: var(--fs-sm); color: var(--color-text-muted); text-align: center; word-break: keep-all; }
 
 /* 좁은 본문(LNB 옆 실제 폭) — rem 기준이라 글자 크게·아주 크게에서는 더 일찍 줄어든다 */
 @container sub (max-width: 55rem) { /* 880px */
@@ -726,7 +742,7 @@ html.is-lnb-hold body { min-height: calc(100vh + 2000px); }
   .board-row.is-plain .board-row__link { padding: 16px var(--b-pad); }
   .board-row__title { white-space: normal; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; font-size: 1rem; }
   .board-row__sum { display: none; }
-  .case-view { gap: 10px; }
+  .case-view { grid-template-columns: minmax(0, 1fr); gap: 20px; } /* 모바일: BEFORE 위 · AFTER 아래 */
 }
 /* 상세: 제목 영역 가운데 · 본문은 원래 글처럼 가운데 정렬(줄을 나눠 쓴 글이라) · 폭 760px */
 .article__head { padding-bottom: 32px; border-bottom: 1px solid var(--color-line); text-align: center; }
@@ -811,6 +827,8 @@ a.article-nav__item:hover .article-nav__title { color: var(--color-accent); }
 
 /* 회원 */
 .member { max-width: 440px; margin: 0 auto; }
+.member__return { margin-bottom: 16px; padding: 12px 16px; border-radius: var(--radius-btn); background: rgba(var(--color-accent-rgb), 0.06); font-size: var(--fs-sm); line-height: 1.6; color: var(--color-text); word-break: keep-all; } /* 로그인 후 돌아갈 글 안내 (pages.js initLoginReturn) */
+.member__return-demo { display: inline-block; margin-top: 4px; font-size: var(--fs-xs); color: var(--color-accent); text-decoration: underline; text-underline-offset: 2px; }
 .member__divider { display: flex; align-items: center; gap: 12px; margin: 24px 0; font-size: var(--fs-xs); color: var(--color-text-muted); }
 .member__divider::before, .member__divider::after { content: ""; flex: 1; height: 1px; background: var(--color-line); }
 .member__links { display: flex; justify-content: center; gap: 16px; margin-top: 20px; font-size: var(--fs-sm); color: var(--color-text-sub); }

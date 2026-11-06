@@ -1,5 +1,494 @@
 [
-  { "id": "c3", "category": "implant", "categoryName": "임플란트", "title": "[더미] 임플란트 치료사례", "branch": "masan", "date": "2026-10-15T09:00:00+09:00", "beforeImage": "case-implant-before.jpg", "afterImage": "case-implant-after.jpg", "_dummy": true },
-  { "id": "c2", "category": "prosthetics", "categoryName": "보철치료", "title": "[더미] 보철치료 사례", "branch": "changwon", "date": "2026-10-10T09:00:00+09:00", "beforeImage": "case-prosthetics-before.jpg", "afterImage": "case-prosthetics-after.jpg", "_dummy": true },
-  { "id": "c1", "category": "orthodontics", "categoryName": "치아교정", "title": "[더미] 치아교정 사례", "branch": "changwon", "date": "2026-10-01T09:00:00+09:00", "beforeImage": "case-orthodontics-before.jpg", "afterImage": "case-orthodontics-after.jpg", "_dummy": true }
+  {
+    "id": "case-18",
+    "no": 18,
+    "title": "덧니, 개방교합 해소",
+    "originalTitle": "화이트e치과 시술 전후(덧니, 개방교합 해소)",
+    "categories": [
+      "치아교정"
+    ],
+    "date": "2026-10-27T09:00:00+09:00",
+    "branch": null,
+    "beforeImage": "cases/case-18-before.jpg",
+    "afterImage": "cases/case-18-after.jpg",
+    "afterBlur": "cases/case-18-after-blur.jpg",
+    "images": [
+      {
+        "role": "before",
+        "file": "cases/case-18-before.jpg",
+        "w": 430,
+        "h": 254
+      },
+      {
+        "role": "after",
+        "file": "cases/case-18-after.jpg",
+        "w": 430,
+        "h": 254,
+        "loginOnly": true
+      }
+    ],
+    "body": "교정 기간: 1년 11개월 (2021.01 ~ 2022.11)\n치료 내용: 덧니, 개방교합 해소",
+    "legacy": {
+      "wrId": 18,
+      "url": "https://whiteedental.co.kr/bbs/board.php?bo_table=gallery&wr_id=18",
+      "image": "https://whiteedental.co.kr/data/editor/2610/30df551de57490d6124bf12064bbc658_1793054095_2954.jpg"
+    }
+  },
+  {
+    "id": "case-17",
+    "no": 17,
+    "title": "부정교합 개선 교정",
+    "originalTitle": "화이트e치과 시술 전후(부정교합 개선 교정)",
+    "categories": [
+      "치아교정"
+    ],
+    "date": "2026-10-07T09:00:00+09:00",
+    "branch": null,
+    "beforeImage": "cases/case-17-before.jpg",
+    "afterImage": "cases/case-17-after.jpg",
+    "afterBlur": "cases/case-17-after-blur.jpg",
+    "images": [
+      {
+        "role": "before",
+        "file": "cases/case-17-before.jpg",
+        "w": 430,
+        "h": 254
+      },
+      {
+        "role": "after",
+        "file": "cases/case-17-after.jpg",
+        "w": 430,
+        "h": 254,
+        "loginOnly": true
+      }
+    ],
+    "body": "교정 기간: 3년 5개월\n치료 내용: 부정교합 개선 교정",
+    "legacy": {
+      "wrId": 17,
+      "url": "https://whiteedental.co.kr/bbs/board.php?bo_table=gallery&wr_id=17",
+      "image": "https://whiteedental.co.kr/data/editor/2610/d10eb5052ca7e3a3cd1e1c19508fa9cc_1791332886_2322.jpg"
+    }
+  },
+  {
+    "id": "case-16",
+    "no": 16,
+    "title": "치아배열 교정",
+    "originalTitle": "화이트e치과 시술 전후(치아배열 교정)",
+    "categories": [
+      "치아교정"
+    ],
+    "date": "2026-08-31T09:00:00+09:00",
+    "branch": null,
+    "beforeImage": "cases/case-16-before.jpg",
+    "afterImage": "cases/case-16-after.jpg",
+    "afterBlur": "cases/case-16-after-blur.jpg",
+    "images": [
+      {
+        "role": "before",
+        "file": "cases/case-16-before.jpg",
+        "w": 430,
+        "h": 254
+      },
+      {
+        "role": "after",
+        "file": "cases/case-16-after.jpg",
+        "w": 430,
+        "h": 254,
+        "loginOnly": true
+      }
+    ],
+    "body": "교정 기간: 2년 5개월 (2024.01 ~ 2026.06)\n치료 내용: 치아배열 교정",
+    "legacy": {
+      "wrId": 16,
+      "url": "https://whiteedental.co.kr/bbs/board.php?bo_table=gallery&wr_id=16",
+      "image": "https://whiteedental.co.kr/data/editor/2608/cf69db3595d73a5aece148c47ea7a314_1788149606_8551.jpg"
+    }
+  },
+  {
+    "id": "case-15",
+    "no": 15,
+    "title": "덧니 개선 교정",
+    "originalTitle": "화이트e치과 시술 전후(덧니 개선 교정)",
+    "categories": [
+      "치아교정"
+    ],
+    "date": "2026-05-27T09:00:00+09:00",
+    "branch": null,
+    "beforeImage": "cases/case-15-before.jpg",
+    "afterImage": "cases/case-15-after.jpg",
+    "afterBlur": "cases/case-15-after-blur.jpg",
+    "images": [
+      {
+        "role": "before",
+        "file": "cases/case-15-before.jpg",
+        "w": 430,
+        "h": 254
+      },
+      {
+        "role": "after",
+        "file": "cases/case-15-after.jpg",
+        "w": 430,
+        "h": 254,
+        "loginOnly": true
+      }
+    ],
+    "body": "교정 기간: 1년 4개월 (2022.01 ~ 2023.05)\n치료 내용: 덧니 개선 교정",
+    "legacy": {
+      "wrId": 15,
+      "url": "https://whiteedental.co.kr/bbs/board.php?bo_table=gallery&wr_id=15",
+      "image": "https://whiteedental.co.kr/data/editor/2605/454ed50e19393ef4c90805adde0ef862_1779868330_5295.jpg"
+    }
+  },
+  {
+    "id": "case-14",
+    "no": 14,
+    "title": "덧니 개선 교정",
+    "originalTitle": "화이트e치과 시술 전후(덧니 개선 교정)",
+    "categories": [
+      "치아교정"
+    ],
+    "date": "2026-05-11T09:00:00+09:00",
+    "branch": null,
+    "beforeImage": "cases/case-14-before.jpg",
+    "afterImage": "cases/case-14-after.jpg",
+    "afterBlur": "cases/case-14-after-blur.jpg",
+    "images": [
+      {
+        "role": "before",
+        "file": "cases/case-14-before.jpg",
+        "w": 430,
+        "h": 254
+      },
+      {
+        "role": "after",
+        "file": "cases/case-14-after.jpg",
+        "w": 430,
+        "h": 254,
+        "loginOnly": true
+      }
+    ],
+    "body": "교정 기간: 2년 2개월 (2024.01 ~ 2026.03)\n치료 내용: 덧니 개선 교정",
+    "legacy": {
+      "wrId": 14,
+      "url": "https://whiteedental.co.kr/bbs/board.php?bo_table=gallery&wr_id=14",
+      "image": "https://whiteedental.co.kr/data/editor/2605/0ce7bb52f5f93a1122f8224652c15c68_1778460248_1964.jpg"
+    }
+  },
+  {
+    "id": "case-13",
+    "no": 13,
+    "title": "치아돌출 및 치열개선 목적 교정",
+    "originalTitle": "화이트e치과 시술 전후(치아돌출 및 치열개선 목적 교정)",
+    "categories": [
+      "치아교정"
+    ],
+    "date": "2026-04-27T09:00:00+09:00",
+    "branch": null,
+    "beforeImage": "cases/case-13-before.jpg",
+    "afterImage": "cases/case-13-after.jpg",
+    "afterBlur": "cases/case-13-after-blur.jpg",
+    "images": [
+      {
+        "role": "before",
+        "file": "cases/case-13-before.jpg",
+        "w": 430,
+        "h": 254
+      },
+      {
+        "role": "after",
+        "file": "cases/case-13-after.jpg",
+        "w": 430,
+        "h": 254,
+        "loginOnly": true
+      }
+    ],
+    "body": "교정 기간: 3년 11개월 (2022.04 ~ 2026.03)\n치료 내용: 치아돌출 및 치열개선 목적 교정",
+    "legacy": {
+      "wrId": 13,
+      "url": "https://whiteedental.co.kr/bbs/board.php?bo_table=gallery&wr_id=13",
+      "image": "https://whiteedental.co.kr/data/editor/2604/e1ad33083ab315fdd27835dd9b34b1bf_1777253454_3635.jpg"
+    }
+  },
+  {
+    "id": "case-12",
+    "no": 12,
+    "title": "전치부 총생 및 교합 개선 목적 교정",
+    "originalTitle": "화이트e치과 시술 전후(전치부 총생 및 교합 개선 목적 교정)",
+    "categories": [
+      "치아교정"
+    ],
+    "date": "2026-03-20T09:00:00+09:00",
+    "branch": null,
+    "beforeImage": "cases/case-12-before.jpg",
+    "afterImage": "cases/case-12-after.jpg",
+    "afterBlur": "cases/case-12-after-blur.jpg",
+    "images": [
+      {
+        "role": "before",
+        "file": "cases/case-12-before.jpg",
+        "w": 430,
+        "h": 254
+      },
+      {
+        "role": "after",
+        "file": "cases/case-12-after.jpg",
+        "w": 430,
+        "h": 254,
+        "loginOnly": true
+      }
+    ],
+    "body": "교정 기간: 4년 (2022.01 ~ 2026.01)\n치료 내용: 전치부 총생 및 교합 개선 목적 교정",
+    "legacy": {
+      "wrId": 12,
+      "url": "https://whiteedental.co.kr/bbs/board.php?bo_table=gallery&wr_id=12",
+      "image": "https://whiteedental.co.kr/data/editor/2603/94449997946be0968ddd203b3ef0e3bf_1773971582_719.jpg"
+    }
+  },
+  {
+    "id": "case-11",
+    "no": 11,
+    "title": "전치부 반대교합 개선 및 치아 사이 공간 개선 교정",
+    "originalTitle": "화이트e치과 시술 전후(전치부 반대교합 개선 및 치아 사이 공간 개선 교정)",
+    "categories": [
+      "치아교정"
+    ],
+    "date": "2026-03-12T09:00:00+09:00",
+    "branch": null,
+    "beforeImage": "cases/case-11-before.jpg",
+    "afterImage": "cases/case-11-after.jpg",
+    "afterBlur": "cases/case-11-after-blur.jpg",
+    "images": [
+      {
+        "role": "before",
+        "file": "cases/case-11-before.jpg",
+        "w": 430,
+        "h": 254
+      },
+      {
+        "role": "after",
+        "file": "cases/case-11-after.jpg",
+        "w": 430,
+        "h": 254,
+        "loginOnly": true
+      }
+    ],
+    "body": "교정 기간: 1년 6개월 (2022.07 ~ 2024.01)\n치료 내용: 전치부 반대교합 개선 및 치아 사이 공간 개선 교정",
+    "legacy": {
+      "wrId": 11,
+      "url": "https://whiteedental.co.kr/bbs/board.php?bo_table=gallery&wr_id=11",
+      "image": "https://whiteedental.co.kr/data/editor/2603/9f4a90d115f29e136e4ee22842a17e83_1773279008_8676.jpg"
+    }
+  },
+  {
+    "id": "case-10",
+    "no": 10,
+    "title": "삐뚤한 치아교정",
+    "originalTitle": "화이트e치과 시술 전후(삐뚤한 치아교정)",
+    "categories": [
+      "치아교정"
+    ],
+    "date": "2025-09-23T09:00:00+09:00",
+    "branch": null,
+    "beforeImage": "cases/case-10-before.jpg",
+    "afterImage": "cases/case-10-after.jpg",
+    "afterBlur": "cases/case-10-after-blur.jpg",
+    "images": [
+      {
+        "role": "before",
+        "file": "cases/case-10-before.jpg",
+        "w": 430,
+        "h": 254
+      },
+      {
+        "role": "after",
+        "file": "cases/case-10-after.jpg",
+        "w": 430,
+        "h": 254,
+        "loginOnly": true
+      }
+    ],
+    "body": "교정 기간: 1년 11개월 (2022.01 ~ 2024.08)\n치료 내용: 삐뚤한 치아교정",
+    "legacy": {
+      "wrId": 10,
+      "url": "https://whiteedental.co.kr/bbs/board.php?bo_table=gallery&wr_id=10",
+      "image": "https://whiteedental.co.kr/data/editor/2509/2990960d34258c58a405f8a4f1c1eef1_1758590397_8362.jpg"
+    }
+  },
+  {
+    "id": "case-9",
+    "no": 9,
+    "title": "삐뚤한 치아교정",
+    "originalTitle": "화이트e치과 시술 전후(삐뚤한 치아교정)",
+    "categories": [
+      "치아교정"
+    ],
+    "date": "2025-09-12T09:00:00+09:00",
+    "branch": null,
+    "beforeImage": "cases/case-9-before.jpg",
+    "afterImage": "cases/case-9-after.jpg",
+    "afterBlur": "cases/case-9-after-blur.jpg",
+    "images": [
+      {
+        "role": "before",
+        "file": "cases/case-9-before.jpg",
+        "w": 430,
+        "h": 254
+      },
+      {
+        "role": "after",
+        "file": "cases/case-9-after.jpg",
+        "w": 430,
+        "h": 254,
+        "loginOnly": true
+      }
+    ],
+    "body": "교정 기간: 2년 7개월 (2021.12 ~ 2024.07)\n치료 내용: 삐뚤한 치아교정",
+    "legacy": {
+      "wrId": 9,
+      "url": "https://whiteedental.co.kr/bbs/board.php?bo_table=gallery&wr_id=9",
+      "image": "https://whiteedental.co.kr/data/editor/2509/767135d9815ac5b173548011e73787c1_1757651489_4745.jpg"
+    }
+  },
+  {
+    "id": "case-8",
+    "no": 8,
+    "title": "덧니 해소 교정",
+    "originalTitle": "화이트e치과 시술 전후(덧니 해소 교정)",
+    "categories": [
+      "치아교정"
+    ],
+    "date": "2025-05-28T09:00:00+09:00",
+    "branch": null,
+    "beforeImage": "cases/case-8-before.jpg",
+    "afterImage": "cases/case-8-after.jpg",
+    "afterBlur": "cases/case-8-after-blur.jpg",
+    "images": [
+      {
+        "role": "before",
+        "file": "cases/case-8-before.jpg",
+        "w": 430,
+        "h": 254
+      },
+      {
+        "role": "after",
+        "file": "cases/case-8-after.jpg",
+        "w": 430,
+        "h": 254,
+        "loginOnly": true
+      }
+    ],
+    "body": "교정 기간: 2년 0개월 (2023.05 ~ 2025.05)\n치료 내용: 고등학생 때 덧니 해소를 위한 교정 진행",
+    "legacy": {
+      "wrId": 8,
+      "url": "https://whiteedental.co.kr/bbs/board.php?bo_table=gallery&wr_id=8",
+      "image": "https://whiteedental.co.kr/data/editor/2505/4cb4ad7c54ae787735b23f38af6485f4_1748387561_2623.jpg"
+    }
+  },
+  {
+    "id": "case-7",
+    "no": 7,
+    "title": "성장기 교정",
+    "originalTitle": "화이트e치과 시술 전후(성장기 교정)",
+    "categories": [
+      "치아교정"
+    ],
+    "date": "2025-04-29T09:00:00+09:00",
+    "branch": null,
+    "beforeImage": "cases/case-7-before.jpg",
+    "afterImage": "cases/case-7-after.jpg",
+    "afterBlur": "cases/case-7-after-blur.jpg",
+    "images": [
+      {
+        "role": "before",
+        "file": "cases/case-7-before.jpg",
+        "w": 430,
+        "h": 254
+      },
+      {
+        "role": "after",
+        "file": "cases/case-7-after.jpg",
+        "w": 430,
+        "h": 254,
+        "loginOnly": true
+      }
+    ],
+    "body": "교정 기간: 1년 1개월 (2024.02 ~ 2025.03)\n치료 내용: 과개교합 및 구강악습관 개선을 위한 프리올소 성장기 교정",
+    "legacy": {
+      "wrId": 7,
+      "url": "https://whiteedental.co.kr/bbs/board.php?bo_table=gallery&wr_id=7",
+      "image": "https://whiteedental.co.kr/data/editor/2504/8d61bc47d977034cf485f0cb1db358ad_1745900245_1948.jpg"
+    }
+  },
+  {
+    "id": "case-6",
+    "no": 6,
+    "title": "덧니 교정",
+    "originalTitle": "화이트e치과 시술 전후(덧니 교정)",
+    "categories": [
+      "치아교정"
+    ],
+    "date": "2025-04-07T09:00:00+09:00",
+    "branch": null,
+    "beforeImage": "cases/case-6-before.jpg",
+    "afterImage": "cases/case-6-after.jpg",
+    "afterBlur": "cases/case-6-after-blur.jpg",
+    "images": [
+      {
+        "role": "before",
+        "file": "cases/case-6-before.jpg",
+        "w": 430,
+        "h": 254
+      },
+      {
+        "role": "after",
+        "file": "cases/case-6-after.jpg",
+        "w": 430,
+        "h": 254,
+        "loginOnly": true
+      }
+    ],
+    "body": "교정 기간: 2년 11개월 (2021.10 ~ 2023.08)\n치료 내용: 덧니 교정",
+    "legacy": {
+      "wrId": 6,
+      "url": "https://whiteedental.co.kr/bbs/board.php?bo_table=gallery&wr_id=6",
+      "image": "https://whiteedental.co.kr/data/editor/2504/1c122374826fe7d954ac194596487cee_1743988190_6898.jpg"
+    }
+  },
+  {
+    "id": "case-5",
+    "no": 5,
+    "title": "교정, 보철, 임플란트",
+    "originalTitle": "화이트e치과 시술 전후(교정, 보철, 임플란트)",
+    "categories": [
+      "치아교정",
+      "보철",
+      "임플란트"
+    ],
+    "date": "2025-03-07T09:00:00+09:00",
+    "branch": null,
+    "beforeImage": "cases/case-5-before.jpg",
+    "afterImage": "cases/case-5-after.jpg",
+    "afterBlur": "cases/case-5-after-blur.jpg",
+    "images": [
+      {
+        "role": "before",
+        "file": "cases/case-5-before.jpg",
+        "w": 430,
+        "h": 254
+      },
+      {
+        "role": "after",
+        "file": "cases/case-5-after.jpg",
+        "w": 430,
+        "h": 254,
+        "loginOnly": true
+      }
+    ],
+    "body": "교정 기간: 2년 11개월 (2019.08 ~ 2022.07)\n치료 내용: 교정, 보철, 임플란트",
+    "legacy": {
+      "wrId": 5,
+      "url": "https://whiteedental.co.kr/bbs/board.php?bo_table=gallery&wr_id=5",
+      "image": "https://whiteedental.co.kr/data/editor/2503/e8a1936e1cf073499027ad1c1d2aa8a7_1741306019_9898.jpg"
+    }
+  }
 ]

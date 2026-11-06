@@ -57,15 +57,16 @@
     cases: {
       name: '치료사례', list: 'cases.html', view: 'case-view.html', idPrefix: 'case',
       load: () => window.API.getCases(),
-      catsOf: (r) => [r.categoryName],
-      catOrder: null, // 글에 나온 순서
+      catsOf: (r) => r.categories || [r.categoryName], // 복수 분류(교정·보철·임플란트) 가능
+      catOrder: ['치아교정', '보철', '임플란트'],
       catLabel: '진료',
       sortable: true, // 정렬 = [최신순 | 오래된순] 글자 버튼 (헤더 로그인 | 회원가입처럼 나란히)
       defaultView: 'card3',
-      locked: () => !window.API.isLoggedIn(), // 로그인 전에는 사진 흐림
+      locked: () => !window.API.isLoggedIn(), // 로그인 전에는 AFTER 자리에 흐림 미리보기 + 자물쇠
       thumb: (r) => r.beforeImage,
-      summary: (r) => `${r.categoryName} 치료 전·후 사진`,
-      search: (r) => `${r.title} ${r.categoryName}`,
+      pair: true, // 썸네일 = [BEFORE 선명 / AFTER 흐림·자물쇠] 두 칸 (casePair)
+      summary: (r) => (r.body || '').split('\n')[0] || `${r.categoryName} 치료 전·후 사진`,
+      search: (r) => `${r.title} ${r.originalTitle || ''} ${r.body || ''} ${r.categoryName}`,
       empty: '등록된 사례가 없습니다.',
     },
   };
@@ -92,6 +93,16 @@
     void el.offsetWidth;
     el.classList.add('is-fade-in');
     el.addEventListener('animationend', () => el.classList.remove('is-fade-in'), { once: true });
+  }
+
+  /** 치료사례 썸네일 두 칸 — BEFORE(선명) / AFTER(로그인 전: 미리 흐리게 만든 미리보기 + 자물쇠 '로그인 후 확인')
+      AFTER 원본 주소는 로그인일 때만 데이터에 있다(api.js getCases) — 없으면 흐림 미리보기 */
+  const LOCK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg>';
+  function casePair(r, locked) {
+    const { img, esc } = window.UI;
+    const open = !locked && r.afterImage;
+    return `<span class="case-pair__half img-ph"><img src="${img(r.beforeImage)}" alt="${esc(r.title)} 치료 전" loading="lazy" decoding="async"><span class="case-pair__tag">BEFORE</span></span>`
+      + `<span class="case-pair__half img-ph${open ? '' : ' is-locked'}"><img src="${img(open ? r.afterImage : r.afterBlur)}" alt="${open ? `${esc(r.title)} 치료 후` : ''}" loading="lazy" decoding="async"><span class="case-pair__tag">AFTER</span>${open ? '' : `<span class="case-pair__lock">${LOCK_SVG}로그인 후 확인</span>`}</span>`;
   }
 
   /* ======================================================================
@@ -140,7 +151,7 @@
       const p = new URLSearchParams(location.search);
       let cat = p.get('cat') || '';
       // 예전 주소: 치료사례 ?category=implant (메인 치료사례 카드) → 분류 이름
-      if (!cat && board === 'cases' && p.get('category')) cat = rows.find((r) => r.category === p.get('category'))?.categoryName || '';
+      if (!cat && board === 'cases' && p.get('category')) cat = { orthodontics: '치아교정', prosthetics: '보철', implant: '임플란트' }[p.get('category')] || '';
       if (!cats.includes(cat)) cat = '';
       return { cat, sort: cfg.sortable && p.get('sort') === 'oldest' ? 'oldest' : 'latest', q: (p.get('q') || '').trim(), page: Math.max(1, parseInt(p.get('page'), 10) || 1) };
     };
@@ -158,7 +169,8 @@
     const tagsOf = (r) => `${cfg.pinned && r.pinned ? '<span class="board-tag">공지</span>' : ''}${r.branch && board !== 'news' ? branchBadge(r.branch) : ''}`;
     const metaOf = (r) => `<time datetime="${esc(r.date)}">${fullDate(r.date)}</time>${hasViews ? `<span class="board-views">조회 ${r.views.toLocaleString('ko-KR')}</span>` : ''}`;
     const href = (r) => `${cfg.view}?id=${encodeURIComponent(r.id)}`;
-    const thumbHtml = (r, cls) => `<span class="${cls} img-ph${locked ? ' is-locked' : ''}"><img src="${img(cfg.thumb(r))}" alt="" loading="lazy" decoding="async">${locked ? '<span class="board-lock">로그인 후 확인</span>' : ''}</span>`;
+    const thumbHtml = (r, cls) => (cfg.pair ? `<span class="${cls} case-pair">${casePair(r, locked)}</span>`
+      : `<span class="${cls} img-ph${locked ? ' is-locked' : ''}"><img src="${img(cfg.thumb(r))}" alt="" loading="lazy" decoding="async">${locked ? '<span class="board-lock">로그인 후 확인</span>' : ''}</span>`);
 
     const cardHtml = (r) => `
       <li class="board-card${r.pinned && cfg.pinned ? ' is-pinned' : ''}" id="${cfg.idPrefix}-${esc(r.id)}">
@@ -341,11 +353,15 @@
       else if (board === 'notice') {
         body = `${post.thumbnail ? `<figure><img src="${img(post.thumbnail)}" alt="" loading="lazy"></figure>` : ''}<p>${esc(post.body || post.summary || '')}</p>`; // TODO(2차): 공지 본문(HTML)
       } else {
-        const locked = cfg.locked();
-        const fig = (src, cap) => `<figure class="case-view__fig${locked ? ' is-locked' : ''}"><span class="case-view__img img-ph"><img src="${img(src)}" alt="${esc(post.categoryName)} 치료 ${cap} 사진${locked ? ' (흐림 처리)' : ''}" loading="lazy">${locked ? '<span class="board-lock">로그인 후 확인</span>' : ''}</span><figcaption>${cap}</figcaption></figure>`;
-        body = `<div class="case-view">${fig(post.beforeImage, '치료 전')}${fig(post.afterImage, '치료 후')}</div>
-          ${locked ? `<p class="notice-box">사례 사진은 <a href="../member/login.html"><strong>로그인</strong></a> 후 확인하실 수 있습니다.</p>` : ''}
-          <p class="case-view__note">치료 결과는 개인에 따라 다를 수 있습니다.</p>`;
+        // 치료사례: BEFORE 공개 | AFTER 로그인 회원만 (비로그인 = 흐림 미리보기 + '로그인하고 치료 후 사진 보기' → 로그인 후 이 글로 돌아옴)
+        const open = !cfg.locked() && post.afterImage;
+        const back = encodeURIComponent(location.pathname.split('/').slice(-2).join('/') + location.search); // 'community/case-view.html?id=…'
+        body = `<div class="case-view">
+            <figure class="case-view__fig"><span class="case-view__img img-ph"><img src="${img(post.beforeImage)}" alt="${esc(post.title)} 치료 전 사진"></span><figcaption><b>BEFORE</b> 치료 전</figcaption></figure>
+            <figure class="case-view__fig${open ? '' : ' is-locked'}"><span class="case-view__img img-ph"><img src="${img(open ? post.afterImage : post.afterBlur)}" alt="${open ? `${esc(post.title)} 치료 후 사진` : '치료 후 사진 (로그인 후 공개)'}">${open ? '' : `<span class="case-view__lock">${LOCK_SVG}<span>치료 후 사진은 로그인 회원에게만 공개됩니다</span><a class="btn btn--point case-view__login" href="../member/login.html?return=${back}">로그인하고 치료 후 사진 보기</a></span>`}</span><figcaption><b>AFTER</b> 치료 후</figcaption></figure>
+          </div>
+          ${post.body ? `<p class="case-view__body">${esc(post.body)}</p>` : ''}
+          <p class="case-view__note">치료 결과는 개인에 따라 다를 수 있으며, 부작용이 발생할 수 있습니다.</p>`;
       }
       const navItem = (p, label, rel) => p
         ? `<a class="article-nav__item" href="${cfg.view}?id=${encodeURIComponent(p.id)}" rel="${rel}"><span class="article-nav__label">${label}</span><span class="article-nav__title">${esc(p.title)}</span><time class="article-nav__date" datetime="${esc(p.date)}">${fullDate(p.date)}</time></a>`
@@ -354,7 +370,7 @@
         <article class="article">
           <header class="article__head">
             <p class="article__cats">${tags}${catLinks}</p>
-            <h2 class="article__title">${esc(post.title)}</h2>
+            <h2 class="article__title">${esc(board === 'cases' && post.originalTitle ? post.originalTitle : post.title)}</h2>
             <p class="article__meta"><time datetime="${esc(post.date)}">${fullDate(post.date)}</time>${views}</p>
           </header>
           <div class="article__body">${body}</div>

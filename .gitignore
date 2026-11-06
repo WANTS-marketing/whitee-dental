@@ -21,3 +21,6 @@ desktop.ini
 
 # 치과스토리 가져오기: 내려받은 원본 이미지(용량 큼, 다시 돌릴 때 재사용)
 scripts/import/cache/
+
+# 기존 사이트 치료사례 원본 합본 이미지 — AFTER·환자 이니셜이 보여 공개 저장소에 올리지 않음 (보관: 자료/기존사이트-치료사례/, docs/HANDOVER.md)
+scripts/import/raw/gallery/*.jpg
