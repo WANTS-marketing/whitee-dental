@@ -82,12 +82,8 @@
        — 일반 왼쪽 클릭만. 새 탭·새 창(ctrl·cmd·shift·가운데 클릭)은 표시하지 않음. 저장 실패해도 그냥 이동
      1024px 이하 가로 탭 줄: 현재 페이지 탭이 화면 밖(오른쪽)에 있으면 보이게 가로로 당겨 둔다 */
   function initLnb() {
+    // 같은 대메뉴 안 이동 = 본문부터 열기 위한 기록은 lnb-jump.js 가 맡는다 (LNB·헤더·본문 링크)
     const lnb = document.querySelector('.lnb');
-    lnb?.addEventListener('click', (e) => {
-      const a = e.target.closest('.lnb__list a[href]');
-      if (!a || e.defaultPrevented || e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey || (a.target && a.target !== '_self')) return;
-      try { sessionStorage.setItem('witee-lnb-jump', JSON.stringify({ to: new URL(a.href, location.href).pathname, t: Date.now() })); } catch (err) { /* 저장 불가 — 맨 위부터 열림 */ }
-    });
     const cur = lnb?.querySelector('.lnb__list a[aria-current="page"]');
     if (!cur || lnb.scrollWidth <= lnb.clientWidth) return;
     const { left, right } = cur.getBoundingClientRect();
