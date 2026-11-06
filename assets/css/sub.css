@@ -4,19 +4,10 @@
 
 /* ---------- 이미지 상단 비주얼 ---------- */
 .sub-visual--image { position: relative; overflow: hidden; padding: calc(var(--header-h) + 110px) 0 80px; background: var(--color-bg-hero); border-bottom: 0; color: #fff; }
-.sub-visual__bg { position: absolute; inset: 0; background-position: center; background-size: cover; background-repeat: no-repeat; }
+/* 서브 배너 사진 = 모든 페이지 공통 1장 assets/images/banner-sub.jpg — 실제 사진을 같은 이름으로 넣으면 전체가 바뀐다 (페이지별 지정 없음)
+   페이지마다 다른 것은 영문 라벨·슬로건·본문 제목뿐. 어두운 막(::after)·위쪽 그라데이션(common.css .has-lnb .sub-visual--image::before)도 한 값 */
+.sub-visual__bg { position: absolute; inset: 0; background: url("../images/banner-sub.jpg") center / cover no-repeat; }
 .sub-visual__bg::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(10, 10, 10, 0.55), rgba(10, 10, 10, 0.75)); }
-/* 병원소개 배너(visual-clinic.jpg — 마산점 간판 사진 2400×1600): 간판이 배너 가운데(문구와 같은 중심 = 헤더 아래 공간의 세로 가운데)에 오게
-   간판 = 사진 가로 50%(앞면 가운데) · 세로 48% 지점이 가운데. 배너가 사진보다 가로로 길면(PC) 사진은 배너 폭에 맞춰 늘어나므로(cover, 사진 높이 = 폭 ÷ 1.5)
-   세로 위치 = 배너 높이/2 + 헤더 높이/2 − 폭 × 0.32, 사진이 배너를 벗어나 빈 곳이 생기지 않게 [배너 높이 − 사진 높이, 0] 안으로 제한.
-   배너가 덜 납작하면(모바일·세로 태블릿) 사진이 높이에 맞춰져 세로로 움직일 수 없어 간판이 위로 치우침 → 1.2배(세로 태블릿 1.15배)로 키우고 위 맞춤 = 간판이 가운데 */
-[data-page="clinic"] .sub-visual__bg { --bh: clamp(520px, 60vh, 680px); background-position: 50% min(0px, max(calc(var(--bh) - 66.667vw), calc(var(--bh) / 2 + var(--header-h) / 2 - 32vw))); }
-@media (min-width: 769px) and (max-width: 1024px) and (orientation: portrait) { [data-page="clinic"] .sub-visual__bg { background-size: auto 115%; background-position: 50% 0; } }
-@media (max-width: 768px) { [data-page="clinic"] .sub-visual__bg { background-size: auto 120%; background-position: 50% 0; } }
-/* 치과소개 배너(visual-intro.jpg — 마산점 원내 로고 간판 240307_MED_0180): 세로 사진에서 간판 부분만 잘라 양옆 벽면을 이어 붙인 3:1 배너 전용 이미지(2880×960)
-   간판 가운데 = 이미지 가로 50% · 세로 58%(= 배너 문구 중심 높이) → 기본 cover 만으로 간판이 배너 가운데에 크게 온다
-   세로 68%: 아주 넓은 화면(배너가 3:1 보다 납작, 2560 등)에서만 효과 — 간판 아래 영문 줄이 배너 아래로 잘리지 않게 살짝 위로 */
-[data-page="intro"] .sub-visual__bg { background-position: 50% 68%; }
 .sub-visual--image .container { position: relative; }
 .sub-visual__copy { margin-bottom: 12px; font-size: var(--fs-lg); opacity: 0.9; word-break: keep-all; }
 .sub-visual--image .breadcrumb { color: rgba(255, 255, 255, 0.6); }

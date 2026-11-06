@@ -14,7 +14,6 @@
 | `hero-03-night.jpg` | 히어로 슬라이드 3 (평일 야간진료) — 밤에 창마다 불이 켜진 건물 (Unsplash, 좌우 반전·가로 3600px 로 줄임, 2026-11-05) | 3600×1329 |
 | `hero-03-event-implant.jpg` | 히어로 슬라이드 4 (임플란트 이벤트) | 1500×750 |
 | `doctors-bg.jpg` | 메인 의료진 섹션 배경 (유리 원형 오브제, 위에 흰 막 90% = 사진 10%) | 2400×1500 |
-| `doctors-page-bg.jpg` | 서브 의료진 소개 페이지 상단 배너 배경 (본문은 흰색) — 마산점 진료실(원본 240307_MED_0162, 3278×4918 을 줄임). 네이비(--color-point) 위에 곱하기 70% (common.css .page-doctors) | 2000×3001 |
 | `doctor-lee-eunju.jpg` | 이은주 대표원장 (창원) | 600×750 (4:5) |
 | `doctor-kwon-jinseon.jpg` | 권진선 원장 (창원) | 600×750 |
 | `doctor-jeong-jeongwon.jpg` | 정정원 원장 (창원) | 600×750 |
@@ -35,9 +34,7 @@
 | `case-implant-before.jpg` / `-after.jpg` | 치료사례 — 임플란트 | 600×800 |
 | `news-dummy-01~04.jpg` | 치과소식 더미 썸네일 (실데이터 연결 시 삭제) | 750×870 |
 | `branch-bar-bg.jpg` | 하단 지점 바로가기 배경 (데스크 전경) | 1920×640 |
-| `visual-implant.jpg`, `visual-orthodontics.jpg`, `visual-general.jpg`, `visual-wisdom-scaling.jpg`, `visual-aesthetic.jpg` | 서브페이지 상단 비주얼 | 1920×700 |
-| `visual-intro.jpg` | 치과소개(about/intro.html) 상단 배너 — 마산점 원내 로고 간판(원본 240307_MED_0180, 세로 3284×4927). 위쪽 천장 반사를 뺀 간판 부분(세로 2473~4273)만 잘라 양옆을 같은 벽면 반전 반복으로 이어 붙인 3:1 합성(2880×960, 품질 84). 간판 가운데 = 가로 50% · 세로 58% → cover 만으로 배너 가운데 | 2880×960 |
-| `visual-clinic.jpg` | 병원소개(about/clinic.html) 상단 배너 — 마산점 간판 사진(원본 240307_MED_0090, 4953×3302 → 2400×1600 · 품질 82). 간판이 배너 가운데(문구와 같은 중심)에 오게 위치 계산(sub.css `[data-page="clinic"]`) | 2400×1600 |
+| `banner-sub.jpg` | **서브페이지 상단 배너 공통 1장** (치과소개·의료진 소개·병원소개·진료과목 5) — 같은 이름으로 실제 원내 사진을 넣으면 전체 교체. 지금은 임시 스톡(Pexels 8459996, 대기실·복도, 1920×1280) — 가로 2400px 이상 원내 전경으로 교체 권장 (docs/HANDOVER.md) | 2400×1600 이상 |
 | `tour-changwon-01~06.jpg`, `tour-masan-01~06.jpg` | 병원소개(about/clinic.html) ②내부 둘러보기 갤러리 (개수·캡션은 `assets/js/site-data.js` 의 `tour`). **실제 사진 적용(2026-11-05, 긴 변 최대 2000px)** — 창원점·마산점 각 6장 | 1400×1050 (4:3) 이상 |
 | `icons/quick-implant.png`, `quick-orthodontics.png`, `quick-general.png`, `quick-wisdom-scaling.png`, `quick-aesthetic.png` | 홈 퀵바(빠른 진료 안내) 아이콘 — 투명 PNG. 바꿀 때 index.html 의 width·height·`--h`(원본 높이)도 함께 수정 | 원본 크기 그대로(현재 1배) · 2배 크기 또는 SVG 권장 |
 | `icons/naver-blog.png` | 퀵메뉴(오른쪽 플로팅 블로그 버튼·모바일 + 메뉴) 블로그 아이콘 — 네이버 블로그 말풍선, 투명 PNG 129×120 (제공 원본 "네이버 AI-06.png" 여백 잘라 축소). 표시 높이 19~24px | 바꿀 때 components/quick.html 의 width·height 도 함께 수정 |
