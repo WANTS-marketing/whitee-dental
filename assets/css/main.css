@@ -455,6 +455,7 @@ html[data-fs="xl"] .doc-modal { width: min(680px, 100% - 48px); }
 .case-card__half.is-locked img { filter: blur(6px) brightness(0.9); transform: scale(1.12); } /* 미리 흐리게 만든 그림 — CSS 흐림은 가장자리 정리용 */
 .case-card__tag { position: absolute; z-index: 1; left: 12px; top: 12px; padding: 3px 10px; border-radius: var(--radius-btn); background: rgba(0, 0, 0, 0.55); color: #fff; font-size: var(--fs-xxs); font-weight: 700; letter-spacing: 0.06em; line-height: 1.4; }
 .case-card__lock { position: absolute; z-index: 1; left: 50%; top: 50%; display: inline-flex; align-items: center; gap: 6px; width: max-content; padding: 6px 14px; border-radius: var(--radius-pill); background: rgba(0, 0, 0, 0.55); color: #fff; font-size: var(--fs-xxs); font-weight: 600; white-space: nowrap; transform: translate(-50%, -50%); }
+.case-card__lock.is-demo { flex-direction: column; gap: 2px; width: max-content; max-width: calc(100% - 20px); padding: 8px 12px; border-radius: 8px; white-space: normal; word-break: keep-all; text-align: center; line-height: 1.35; } /* 시안 안내 — 자물쇠 위 · 글자 두 줄까지 (좁은 카드) */
 .case-card__lock svg { flex: none; width: 16px; height: 16px; } /* 좁은 카드에서 아이콘이 눌리지 않게 */
 .case-card__info { position: relative; display: grid; gap: 4px; padding: 16px 52px 18px 18px; }
 .case-card__cat { font-size: var(--fs-xs); font-weight: 600; color: var(--color-accent); }
