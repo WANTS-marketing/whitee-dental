@@ -2,7 +2,8 @@
 /* ==========================================================================
    기존 사이트 치료사례(시술 전후) → 새 사이트 치료사례 데이터 (2단계)
    입력: scripts/import/raw/gallery/list.json + {wrId}.jpg (fetch-gallery.js)
-   출력: assets/images/cases/case-{번호}-before.jpg · case-{번호}-after.jpg · case-{번호}-after-blur.jpg
+   출력: assets/images/cases/case-{번호}-before.jpg · case-{번호}-after-blur.jpg (공개)
+         AFTER 원본 case-{번호}-after.jpg 는 저장소 밖 자료/기존사이트-치료사례/after/ (로그인 회원 전용 — 공개 저장소에 올리지 않음, 운영 시 서버 저장소로)
          assets/data/cases.json (최신순)
 
    - 기존 이미지는 한 장(1000×600)에 [안내 띠 / BEFORE | AFTER / 로고] 가 붙은 양식
@@ -24,6 +25,7 @@ const ROOT = path.resolve(__dirname, '..', '..');
 const RAW = path.join(__dirname, 'raw', 'gallery');
 const OUT_IMG = path.join(ROOT, 'assets', 'images', 'cases');
 const OUT_JSON = path.join(ROOT, 'assets', 'data', 'cases.json');
+const OUT_AFTER = process.env.CASES_AFTER_DIR || path.resolve(ROOT, '..', '자료', '기존사이트-치료사례', 'after'); // AFTER 원본 — 저장소 밖
 const MAX_W = 1600;
 
 /* 본문 — 기존 글 본문은 회원 전용이라 가져오지 못했다. 대표 이미지 위 안내 띠 문구를 옮겨 적은 것
@@ -121,6 +123,7 @@ async function splitInPage({ b64, maxW }) {
   const list = JSON.parse(fs.readFileSync(path.join(RAW, 'list.json'), 'utf8'));
   fs.rmSync(OUT_IMG, { recursive: true, force: true });
   fs.mkdirSync(OUT_IMG, { recursive: true });
+  fs.mkdirSync(OUT_AFTER, { recursive: true });
   const launch = process.env.CHROME_PATH ? { executablePath: process.env.CHROME_PATH } : { channel: 'chrome' };
   const browser = await chromium.launch(launch);
   const page = await browser.newPage();
@@ -135,7 +138,7 @@ async function splitInPage({ b64, maxW }) {
     if (r.error) { manual.push(`${it.wrId} ${r.error}`); continue; }
     const n = it.wrId;
     const names = { before: `case-${n}-before.jpg`, after: `case-${n}-after.jpg`, blur: `case-${n}-after-blur.jpg` };
-    for (const k of Object.keys(names)) fs.writeFileSync(path.join(OUT_IMG, names[k]), Buffer.from(r[k], 'base64'));
+    for (const k of Object.keys(names)) fs.writeFileSync(path.join(k === 'after' ? OUT_AFTER : OUT_IMG, names[k]), Buffer.from(r[k], 'base64'));
     const cap = CAPTIONS[n] || {};
     const body = [cap.period ? `교정 기간: ${cap.period}${cap.range ? ` (${cap.range})` : ''}` : '', cap.detail ? `치료 내용: ${cap.detail}` : ''].filter(Boolean).join('\n');
     rows.push({
@@ -147,11 +150,10 @@ async function splitInPage({ b64, maxW }) {
       date: it.date,
       branch: null, // 기존 글에 지점 정보 없음
       beforeImage: `cases/${names.before}`,
-      afterImage: `cases/${names.after}`,
       afterBlur: `cases/${names.blur}`,
+      afterOriginal: names.after, // 저장소 밖 원본 파일 이름 — 화면에 쓰는 주소는 서버가 로그인 확인 후 내려줄 것 (api.js getCases)
       images: [
         { role: 'before', file: `cases/${names.before}`, w: r.size[0], h: r.size[1] },
-        { role: 'after', file: `cases/${names.after}`, w: r.size[0], h: r.size[1], loginOnly: true },
       ],
       body,
       legacy: { wrId: n, url: it.url, image: it.image },

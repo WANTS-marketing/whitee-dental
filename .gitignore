@@ -24,3 +24,7 @@ scripts/import/cache/
 
 # 기존 사이트 치료사례 원본 합본 이미지 — AFTER·환자 이니셜이 보여 공개 저장소에 올리지 않음 (보관: 자료/기존사이트-치료사례/, docs/HANDOVER.md)
 scripts/import/raw/gallery/*.jpg
+
+# 치료사례 AFTER 원본 — 로그인 회원 전용이라 공개 저장소에 올리지 않음 (보관: 자료/기존사이트-치료사례/after/, 운영 시 서버 저장소에서 로그인 회원에게만)
+assets/images/cases/case-*-after.jpg
+scripts/import/raw/gallery/after/
