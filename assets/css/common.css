@@ -224,11 +224,11 @@ html[data-fs="xl"] .gnb { --gnb-gap: clamp(20px, 12vw - 140px, 96px); }
 body.is-locked { overflow: hidden; }
 
 /* ==========================================================================
-   퀵메뉴 (지점별 인스타·블로그) — 모든 페이지 공통 플로팅 (components/quick.html, common.js initQuick)
-   769px 이상: 화면 오른쪽 가운데 [인스타그램][블로그] 버튼. 마우스를 올리면(터치는 탭, 키보드는 포커스)
+   퀵메뉴 (지점별 인스타·블로그·네이버예약) — 모든 페이지 공통 플로팅 (components/quick.html, common.js initQuick)
+   769px 이상: 화면 오른쪽 [인스타그램][블로그][네이버예약][상담문의][TOP] 버튼 (메인은 맨 위에 페이지 점). 마우스를 올리면(터치는 탭, 키보드는 포커스)
      버튼 왼쪽으로 '창원점 / 마산점' 칩 2개가 펼쳐진다. 버튼 ↔ 칩 사이 10px 는 칩 묶음의 안쪽 여백이라
      마우스를 옮기는 동안 hover 영역이 끊기지 않는다. 벗어나면 0.2초 뒤 닫힘(JS)
-   768px 이하: 오른쪽 아래 '+' 버튼 안에 4개 항목 (아래 모바일 규칙)
+   768px 이하: 오른쪽 아래 '+' 버튼 안에 인스타·블로그 4개 + 네이버예약 2개 + 맨 위로 (아래 모바일 규칙)
    ========================================================================== */
 /* 위치: 오른쪽 40px(1440px 이하 24px), 아래 끝 = 화면 아래에서 120px — 버튼이 늘면(TOP) 위로 늘어난다
    메인 첫 화면에서 퀵바와 가로로 겹치면 main.js 가 --quick-bottom 으로 퀵바 위 끝보다 24px 위까지 올린다 */
@@ -252,6 +252,8 @@ body.is-locked { overflow: hidden; }
 .quick__sns-btn .quick__blog-ico { width: auto; height: 24px; transition: transform 0.3s; }
 /* 인스타그램 로고(공식 그라데이션 PNG, 96×96) — 아이콘 자리 크기에 맞춤 */
 .quick__insta-ico { flex: none; width: 26px; height: 26px; transition: transform 0.3s; }
+/* 네이버 예약 아이콘(네이버 초록 #03C75A 바탕 + 흰 달력, 인라인 SVG) — 인스타 로고와 같은 크기 */
+.quick__booking-ico { flex: none; width: 26px; height: 26px; }
 /* 빛 지나가기 (참고: uiverse.io/elijahgummer/bright-chicken-11, MIT — docs/HANDOVER.md) */
 .quick__sns-btn::after {
   content: ""; position: absolute; z-index: 0; top: -100%; right: 0; width: 32px; height: 300%;
@@ -261,7 +263,7 @@ body.is-locked { overflow: hidden; }
 .quick__sns-btn:focus-visible { outline-color: var(--color-text); }
 /* 왼쪽 바깥까지: 버튼 너비(76~100px) + 막대가 기울어 퍼지는 폭 */
 .quick__item.is-open .quick__sns-btn::after { transform: translateX(-140px) rotate(12deg); }
-.quick__item.is-open .quick__sns-btn :is(svg, .quick__blog-ico, .quick__insta-ico) { transform: scale(1.1); }
+.quick__item.is-open .quick__sns-btn :is(svg, .quick__blog-ico, .quick__insta-ico) { transform: scale(1.1); } /* 네이버예약 아이콘은 svg 라 함께 커진다 */
 
 .quick__chips {
   position: absolute; top: 50%; right: 100%; display: flex; gap: 6px; padding-right: 10px;
@@ -278,7 +280,7 @@ body.is-locked { overflow: hidden; }
 .quick__chip--masan { --chip-color: var(--color-masan); }
 .quick__chip:hover { filter: brightness(0.93); transform: translateY(-1px); }
 .quick__chip:focus-visible { outline: 2px solid var(--chip-color); outline-offset: 2px; }
-/* 칩 묶음 맨 앞 라벨(인스타그램 / 블로그) — 슬림형에서만 보인다(버튼 글자 대신) */
+/* 칩 묶음 맨 앞 라벨(인스타그램 / 블로그 / 네이버예약) — 슬림형에서만 보인다(버튼 글자 대신) */
 .quick__chips-label { display: none; align-items: center; height: 44px; padding: 0 14px; border-radius: var(--radius-pill); background: #222; color: #fff; font-size: var(--fs-xs); font-weight: 600; white-space: nowrap; }
 
 /* 상담문의 → faq/contact.html (포인트 컬러로 강조) · TOP(맨 위로) — 칩 없이 바로 동작, hover 때 링·빛 지나가기 */
@@ -886,7 +888,7 @@ a.article-nav__item:hover .article-nav__title { color: var(--color-accent); }
   .quick.is-open .quick__list { opacity: 1; visibility: visible; transform: none; }
   /* 글자 크기 단계가 커져도 넘치지 않게 폭은 내용에 맞춤(최소 150px) */
   .quick__btn, .quick--float .quick__btn { flex-direction: row; justify-content: flex-start; width: auto; min-width: 150px; white-space: nowrap; height: 48px; gap: 8px; font-size: var(--fs-xs); border-radius: var(--radius-pill); box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15); }
-  .quick__btn svg, .quick--float .quick__btn svg { width: 20px; height: 20px; }
+  .quick__btn svg, .quick--float .quick__btn svg { width: 20px; height: 20px; } /* 네이버예약 아이콘 포함 */
   .quick__blog-ico, .quick--float .quick__blog-ico { height: 19px; }
   .quick__insta-ico { width: 20px; height: 20px; }
 

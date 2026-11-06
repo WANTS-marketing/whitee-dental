@@ -330,6 +330,7 @@
     initMobileNav();
     initQuick();
     fillSocialLinks();
+    fillBookingLinks();
     renderFooterBranches();
     renderBranchBar();
     initCallSheet();
@@ -485,7 +486,7 @@
         const open = !quick.classList.contains('is-open');
         quick.classList.toggle('is-open', open);
         btn.setAttribute('aria-expanded', String(open));
-        btn.setAttribute('aria-label', open ? '지점 SNS 메뉴 닫기' : '지점 SNS 메뉴 열기');
+        btn.setAttribute('aria-label', open ? '지점 SNS·예약 메뉴 닫기' : '지점 SNS·예약 메뉴 열기');
       });
       initQuickChips(quick);
       initQuickTop(quick);
@@ -510,7 +511,7 @@
     }));
   }
 
-  /* 769px 이상 플로팅 [인스타그램][블로그] → '창원점 / 마산점' 칩
+  /* 769px 이상 플로팅 [인스타그램][블로그][네이버예약] → '창원점 / 마산점' 칩
      - 마우스: 버튼·칩(같은 .quick__item 안) 위에 있는 동안 열림, 벗어나면 0.2초 뒤 닫힘
      - 키보드: 버튼에 포커스 → 열림, Tab 으로 칩 이동, 묶음 밖으로 포커스가 나가거나 ESC → 닫힘
      - 터치(hover 없는 기기): 탭으로 열고 닫기, 바깥을 누르면 닫힘 */
@@ -563,6 +564,21 @@
       } else {
         a.removeAttribute('target');
         a.addEventListener('click', (e) => { e.preventDefault(); alert('SNS 주소 준비 중입니다.'); });
+      }
+    });
+  }
+
+  /** 네이버 예약 링크 채우기 (퀵메뉴 칩 · 모바일 '+' 메뉴, a[data-booking="지점 id"])
+      site-data.js branches[].naverBooking — 아직 비어 있으면(TODO) 그 지점 네이버 지도(naverMap)로 대신 연결, 둘 다 없으면 안내 */
+  function fillBookingLinks() {
+    document.querySelectorAll('[data-booking]').forEach((a) => {
+      const b = SITE.branches.find((x) => x.id === a.dataset.booking);
+      const url = b?.naverBooking || b?.naverMap;
+      if (url) {
+        a.href = url;
+      } else {
+        a.removeAttribute('target');
+        a.addEventListener('click', (e) => { e.preventDefault(); alert('예약 링크 준비 중입니다. 전화로 문의해 주세요.'); });
       }
     });
   }
