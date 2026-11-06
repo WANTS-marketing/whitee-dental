@@ -124,7 +124,7 @@ docs/                      배포·인수인계 문서
 | 상담 데이터 저장 방식 (지금 더미 → 서버) | `assets/js/api.js` 상담문의 함수 8개 + `docs/API-SPEC.md` |
 | 치료사례 (기존 사이트 시술 전후 14건) | `assets/data/cases.json` — 다시 만들기: `scripts/import` 의 `fetch-gallery.js` → `build-gallery.js` (BEFORE·AFTER 나누기·흐림 미리보기). AFTER 는 로그인 회원만 — 원본 14장은 저장소 밖(자료/기존사이트-치료사례/after/), 시안은 `?login=1` 이어도 흐림 미리보기 + 시안 안내 (`?login=0` 해제) |
 | 메인 의료진 나열 순서 | `assets/js/site-data.js` 의 `mainDoctorOrder` |
-| 메인 히어로 슬라이드별 사진 위치·확대·어둠·인물 이름표 (PC) | `assets/js/site-data.js` 의 `heroSlides` (`pos` · `scale` · `origin` · `scrim` · `caption {name, role, x, y}`) — `main.js` `initHero` 가 적용. 모바일 사진 위치는 `main.css` 768px 이하 |
+| 메인 히어로 슬라이드별 사진 위치·확대·인물 이름표 (PC) | `assets/js/site-data.js` 의 `heroSlides` (`pos` · `scale` · `origin` · `caption {name, role, x, y}`) — `main.js` `initHero` 가 적용. 모바일 사진 위치는 `main.css` 768px 이하 |
 | 의료진 소개 지점 이동 버튼(화면 아래 [창원점 N][마산점 N]) · 지점별 묶음 | `assets/js/pages.js` `renderDoctorsPage` · `initDoctorBranchNav` (원장 수는 site-data.js 에서 자동) · 스타일 `common.css` '의료진 소개 카드' · '지점 이동 버튼' |
 | 커뮤니티 게시판 목록·상세 (분류 칩·정렬·보기 방식·검색·페이지 번호·이전/다음글) | `assets/js/board.js` 맨 위 `BOARDS` (게시판별 분류·기본 보기·검색 대상) · 스타일 `common.css` '게시판 목록' — 한 페이지 12개(카드 4개 16개) |
 | 게시판 조회수 | 지금 데이터에는 없음 — `api.js` 가 0 으로 채우고 모두 0 이면 화면에서 조회수 칸을 숨김. 서버 연결 때 `views` 값으로 (API-SPEC 4-7) |

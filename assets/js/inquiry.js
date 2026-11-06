@@ -71,7 +71,6 @@
         <tbody data-i-list><tr><td colspan="7" class="inq-table__empty">불러오는 중입니다.</td></tr></tbody>
       </table>
       <nav class="pager" aria-label="페이지" data-i-pager></nav>
-      <div class="inq-board__bottom">${writeBtn}</div>
       <p class="inq-board__note">모든 상담 글은 비밀글입니다. 글을 쓸 때 입력한 비밀번호 4자리로 본인 문의와 답변을 확인할 수 있습니다.</p>`;
     const $ = (s) => root.querySelector(s);
     const catsEl = $('[data-i-cats]'); const countEl = $('[data-i-count]'); const listEl = $('[data-i-list]'); const pagerEl = $('[data-i-pager]'); const table = $('.inq-table');

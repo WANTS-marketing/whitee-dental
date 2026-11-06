@@ -139,7 +139,6 @@ function initHero() {
     if (cfg.pos) s.style.setProperty('--hero-pos', cfg.pos);
     if (cfg.scale) s.style.setProperty('--hero-scale', cfg.scale);
     if (cfg.origin) s.style.setProperty('--hero-origin', cfg.origin);
-    if (cfg.scrim != null) s.style.setProperty('--hero-scrim', cfg.scrim);
     if (cfg.caption && !s.querySelector('.hero__caption')) {
       const c = document.createElement('p');
       c.className = 'hero__caption';
