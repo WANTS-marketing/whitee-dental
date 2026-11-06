@@ -27,7 +27,7 @@
 | `clinic-orthodontics.jpg` | 진료안내 카드 — 치아교정 | 900×320 |
 | `clinic-aesthetic.jpg` | 진료안내 카드 — 심미치료 | 740×460 |
 | `clinic-wisdom-scaling.jpg` | 진료안내 카드 — 사랑니·스케일링 (지금: 정사각 3D 그림 1600×1600, 위쪽 25% 기준 — main.css `.clinic-card--wisdom`) | 700×460 이상 |
-| `clinic-general.jpg` | 진료안내 카드 — 일반치료 (넓은 카드) | 1460×380 |
+| `clinic-general.jpg` | 진료안내 카드 — 일반치료 (넓은 카드, 지금: 4:3 3D 그림 1600×1200, 아래쪽 60% 기준 — main.css `.clinic-card--general`) | 1460×380 이상 |
 | `cases/case-{번호}-before.jpg` · `-after.jpg` · `-after-blur.jpg` | 치료사례 (기존 사이트 시술 전후 14건, 번호 = 기존 글 wr_id 5~18) — `scripts/import/build-gallery.js` 가 합본 이미지를 나눠 만든다. after-blur = 로그인 전 미리보기(작게 줄였다 흐리게 키운 그림). 새 사례는 서버 연결 후 관리자에서 | 430×254 |
 | `news-dummy-01~04.jpg` | 치과소식 더미 썸네일 (실데이터 연결 시 삭제) | 750×870 |
 | `branch-bar-bg.jpg` | 하단 지점 바로가기 배경 (데스크 전경) | 1920×640 |
