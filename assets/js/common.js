@@ -98,10 +98,30 @@
      화면 쪽 스팸 방지: 허니팟(값이 있으면 성공처럼 보이고 저장 안 함) · 내용 5자 미만 막기 · 링크(http, www) 들어간 글 막기
        (같은 검사를 api.js·서버에서도 다시 한다 — docs/API-SPEC.md)
      연락처 숫자만 + 하이픈 자동, 비밀번호 숫자만 4자리
-     onSuccess(result): 접수 성공 시 (없으면 폼 아래 '접수되었습니다 … 상담 현황 보기 →' + 폼 비우기) */
+     접수 성공 시
+       - 이 탭에서 쓴 글 번호를 sessionStorage(witee-inquiry-mine)에 남긴다 → 상담문의 목록에서 '내 문의' 표시 (inquiry.js)
+       - form[data-success-url] 이 있으면(상담문의 작성 페이지) 그 목록으로 이동 — 방금 쓴 글 강조(witee-inquiry-just). 목록은 배너가 없어 맨 위가 바로 본문
+       - onSuccess(result) 가 있으면 그것(메인 빠른 상담문의 완료 화면), 없으면 폼 아래 '접수되었습니다 … 상담 현황 보기 →'(목록 링크) + 폼 비우기 */
   const LINK_RE = /(https?:\/\/|www\.)/i;
-  const statusHref = () => `${document.documentElement.dataset.root || '.'}/faq/status.html`;
+  const statusHref = () => `${document.documentElement.dataset.root || '.'}/faq/contact.html`;
+  const MINE_KEY = 'witee-inquiry-mine';
+  const JUST_KEY = 'witee-inquiry-just';
+  function rememberMine(id) {
+    if (!id) return;
+    try {
+      const mine = JSON.parse(sessionStorage.getItem(MINE_KEY) || '[]');
+      if (!mine.includes(id)) mine.push(id);
+      sessionStorage.setItem(MINE_KEY, JSON.stringify(mine));
+      sessionStorage.setItem(JUST_KEY, String(id));
+    } catch (e) { /* 표시만 못 함 */ }
+  }
   const DONE_TEXT = '접수되었습니다. 상담 현황에서 답변을 확인하실 수 있습니다.';
+  /* 시안 안내 — 접수가 병원에 전달되지 않을 때(api.js isDeliveryReady() = false: Web3Forms 키·서버 없음)
+     모든 상담 폼 전송 버튼 아래 작은 글씨 + 접수 완료 문구 대신. 키가 등록되면 자동으로 사라지고 원래 '접수되었습니다' */
+  const deliveryReady = () => !!window.API?.isDeliveryReady?.();
+  const telList = () => (window.SITE?.branches || []).map((b) => [b.name || b.shortName, b.tel]);
+  const demoText = () => `시안 화면입니다. 실제로 병원에 전달되지 않습니다. 문의는 전화로 부탁드립니다. ${telList().map(([n, t]) => `${n} ${t}`).join(' · ')}`;
+  const demoHtml = () => `시안 화면입니다. 실제로 병원에 전달되지 않습니다. 문의는 전화로 부탁드립니다. ${telList().map(([n, t]) => `${esc(n)} <a href="${telHref(t)}">${esc(t)}</a>`).join(' · ')}`;
   function inquiryForm(form, { onSuccess } = {}) {
     const msg = form.querySelector('.form__msg');
     const submitBtn = form.querySelector('[type="submit"]');
@@ -121,9 +141,23 @@
     const pw = form.elements.password;
     pw?.addEventListener('input', () => { const v = pw.value.replace(/\D/g, '').slice(0, 4); if (v !== pw.value) pw.value = v; });
 
+    // 시안 안내 — 전송 버튼(작성 페이지는 버튼 줄) 바로 아래
+    if (!deliveryReady() && !form.querySelector('.form__demo')) {
+      const note = document.createElement('p');
+      note.className = 'form__demo';
+      note.innerHTML = demoHtml();
+      (submitBtn.closest('.form__actions') || submitBtn).after(note);
+    }
+
     const done = (result) => {
+      if (form.dataset.successUrl && result.data?.id) {
+        const to = new URL(form.dataset.successUrl, location.href);
+        form.reset();
+        location.assign(to.href);
+        return;
+      }
       if (onSuccess) onSuccess(result);
-      else setMsg('', 'success', `${esc(DONE_TEXT)} <a class="form__msg-link" href="${statusHref()}">상담 현황 보기 →</a>`);
+      else setMsg('', deliveryReady() ? 'success' : 'demo', `${deliveryReady() ? esc(DONE_TEXT) : demoHtml()} <a class="form__msg-link" href="${statusHref()}">상담 현황 보기 →</a>`);
       form.reset();
       form.dispatchEvent(new Event('input')); // 글자 수 표시 등 초기화
     };
@@ -133,7 +167,7 @@
       const f = form.elements;
 
       // 허니팟: 사람에게는 보이지 않는 칸 — 값이 있으면 봇으로 보고 조용히 종료(성공처럼 보이게)
-      if (f.website?.value) { done({ ok: true, data: {} }); return; }
+      if (f.website?.value) { if (form.dataset.successUrl) { location.assign(form.dataset.successUrl); return; } done({ ok: true, data: {} }); return; }
       setMsg('');
       if (!form.reportValidity()) return;
       if (!/^01[016789]-?\d{3,4}-?\d{4}$/.test(f.phone.value)) return fail('연락처를 정확히 입력해 주세요. (예: 010-1234-5678)', f.phone);
@@ -155,7 +189,7 @@
           contentRequired: !!f.message,
           source: form.dataset.inquiryForm || '상담문의',
         });
-        if (result.ok) { setMsg(''); done(result); } else fail(result.error.message, result.error.field && f[result.error.field === 'content' ? 'message' : result.error.field]);
+        if (result.ok) { setMsg(''); rememberMine(result.data.id); done(result); } else fail(result.error.message, result.error.field && f[result.error.field === 'content' ? 'message' : result.error.field]);
       } catch (err) {
         console.error(err);
         setMsg('전송에 실패했습니다. 잠시 후 다시 시도하거나 전화로 문의해 주세요.', 'error');
@@ -348,7 +382,7 @@
   function initSelects(scope = document) { scope.querySelectorAll('select').forEach(enhanceSelect); }
   initSelects();
 
-  window.UI = { esc, telHref, img, bg, formatDate, branchBadge, accordion, faqItem, rollText, inquiryForm, initSelects, dialog, confirm: confirmDialog, alert: alertDialog };
+  window.UI = { esc, telHref, img, bg, formatDate, branchBadge, accordion, faqItem, rollText, inquiryForm, initSelects, deliveryReady, demoText, demoHtml, dialog, confirm: confirmDialog, alert: alertDialog };
 
   /* ---------- 이미지 대체 ----------
      1) assets/images/파일명 이 없으면 → assets/images/temp/파일명 (임시 스톡 이미지)
@@ -511,8 +545,8 @@
 
   /** 현재 페이지 메뉴 강조 */
   function initCurrentMenu() {
-    // 게시판 상세(news-view · notice-view · case-view)는 메뉴에 없어서 그 목록 페이지(news · notice · cases)로 본다
-    const here = location.pathname.replace(/\/$/, '/index.html').replace(/\/(news|notice)-view\.html$/, '/$1.html').replace(/\/case-view\.html$/, '/cases.html');
+    // 게시판 상세(news-view · notice-view · case-view)는 메뉴에 없어서 그 목록 페이지(news · notice · cases)로 본다. 상담문의 작성(contact-write) = 상담문의하기(contact)
+    const here = location.pathname.replace(/\/$/, '/index.html').replace(/\/(news|notice)-view\.html$/, '/$1.html').replace(/\/case-view\.html$/, '/cases.html').replace(/\/contact-write\.html$/, '/contact.html');
     document.querySelectorAll('.gnb__sub a, .mnav__sub a').forEach((a) => {
       if (a.pathname === here) {
         a.classList.add('is-current');

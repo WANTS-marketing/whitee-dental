@@ -1,8 +1,10 @@
 /* ==========================================================================
-   상담 현황 게시판 (faq/status.html) — pages.js 가 InquiryBoard.init() 을 부른다. 스타일: common.css '상담 현황'
+   상담문의 목록 (FAQ > 상담문의 = faq/contact.html) — pages.js 가 InquiryBoard.init() 을 부른다. 스타일: common.css '상담 현황'
    데이터는 api.js 함수만 쓴다: listInquiries({ branch, page }) · getInquiry(id, password)  (저장 방식은 몰라도 됨 — docs/API-SPEC.md)
+   글쓰기는 따로: faq/contact-write.html (전송 성공 → 이 목록으로 돌아와 방금 쓴 글 강조)
 
-   지점 칩(전체 / 창원점 / 마산점, 선택 = --color-accent) → [총 N건 | 상담문의하기] → 목록 → 페이지 번호(한 페이지 15개)
+   도구 줄 [총 N건 · 지점 칩(전체 / 창원점 / 마산점, 선택 = --color-accent) | 상담문의하기 →] → 목록 → 페이지 번호(한 페이지 15개) → [상담문의하기 →]
+     '내 문의': 이 탭에서 쓴 글(sessionStorage witee-inquiry-mine — common.js 폼이 남김) 제목 옆 표시. 방금 쓴 글(witee-inquiry-just)은 옅은 파랑 배경으로 잠깐 강조
      PC: 표 [번호 | 지점 | 진료과목 | 제목(자물쇠) | 작성자(김○○) | 상태 | 작성일]
      모바일(768px 이하): 같은 표를 카드형으로 [지점 · 상태 / 제목 / 작성자 · 날짜]
    상태(지점·페이지)는 주소에 남긴다 → ?branch=masan&page=2 (뒤로가기·새로고침 그대로)
@@ -47,13 +49,21 @@
     const root = document.querySelector('[data-inquiry-board]');
     if (!root) return;
     const { esc, branchBadge } = window.UI;
-    const contactHref = 'contact.html';
+    const writeBtn = '<a class="btn inq-board__write" href="contact-write.html">상담문의하기 <span aria-hidden="true">→</span></a>';
+    let mine = [];
+    try { mine = JSON.parse(sessionStorage.getItem('witee-inquiry-mine') || '[]').map(Number); } catch (e) { /* 표시 없음 */ }
+    let just = null;
+    try { just = Number(sessionStorage.getItem('witee-inquiry-just')) || null; sessionStorage.removeItem('witee-inquiry-just'); } catch (e) { /* 강조 없음 */ }
 
-    root.innerHTML = `
-      <nav class="board-cats inq-board__cats" aria-label="지점"><ul class="board-cats__list" data-i-cats></ul></nav>
+    // 방금 작성 페이지에서 접수하고 돌아왔는데 병원에 전달되지 않는 시안이면 목록 위에 안내 (키가 등록되면 안 보임)
+    const demoNote = just && !window.UI.deliveryReady() ? `<p class="inq-board__demo" role="status">${window.UI.demoHtml()}</p>` : '';
+    root.innerHTML = `${demoNote}
       <div class="inq-board__tools">
-        <p class="inq-board__count" data-i-count aria-live="polite"></p>
-        <a class="btn btn--point inq-board__write" href="${contactHref}">상담문의하기</a>
+        <div class="inq-board__left">
+          <p class="inq-board__count" data-i-count aria-live="polite"></p>
+          <nav class="board-cats inq-board__cats" aria-label="지점"><ul class="board-cats__list" data-i-cats></ul></nav>
+        </div>
+        ${writeBtn}
       </div>
       <table class="inq-table">
         <caption class="sr-only">상담 현황 — 제목을 누르고 비밀번호를 입력하면 본인 문의와 답변을 볼 수 있습니다</caption>
@@ -61,6 +71,7 @@
         <tbody data-i-list><tr><td colspan="7" class="inq-table__empty">불러오는 중입니다.</td></tr></tbody>
       </table>
       <nav class="pager" aria-label="페이지" data-i-pager></nav>
+      <div class="inq-board__bottom">${writeBtn}</div>
       <p class="inq-board__note">모든 상담 글은 비밀글입니다. 글을 쓸 때 입력한 비밀번호 4자리로 본인 문의와 답변을 확인할 수 있습니다.</p>`;
     const $ = (s) => root.querySelector(s);
     const catsEl = $('[data-i-cats]'); const countEl = $('[data-i-count]'); const listEl = $('[data-i-list]'); const pagerEl = $('[data-i-pager]'); const table = $('.inq-table');
@@ -96,11 +107,11 @@
 
     const statusBadge = (s) => `<span class="inq-status inq-status--${esc(s)}">${STATUS_LABEL[s] || esc(s)}</span>`;
     const rowHtml = (r, no) => `
-      <tr class="inq-row" data-i-id="${r.id}">
+      <tr class="inq-row${r.id === just ? ' is-just' : ''}" data-i-id="${r.id}">
         <td class="inq-col-no">${no}</td>
         <td class="inq-col-branch">${branchBadge(r.branch)}</td>
         <td class="inq-col-treat">${esc(r.treatment)}</td>
-        <td class="inq-col-title"><button class="inq-row__btn" type="button" data-i-open="${r.id}">${ICON.lock}<span class="inq-row__title">${esc(r.title)}</span><span class="sr-only"> (비밀글, ${STATUS_LABEL[r.status] || ''})</span></button></td>
+        <td class="inq-col-title"><button class="inq-row__btn" type="button" data-i-open="${r.id}">${ICON.lock}<span class="inq-row__title">${esc(r.title)}</span>${mine.includes(r.id) ? '<span class="inq-mine">내 문의</span>' : ''}<span class="sr-only"> (비밀글, ${STATUS_LABEL[r.status] || ''})</span></button></td>
         <td class="inq-col-name"><span class="sr-only">작성자 </span>${esc(r.maskedName)}</td>
         <td class="inq-col-status">${statusBadge(r.status)}</td>
         <td class="inq-col-date"><time datetime="${esc(r.createdAt)}">${fullDate(r.createdAt)}</time></td>
@@ -123,6 +134,11 @@
         ? items.map((r, i) => rowHtml(r, total - (page - 1) * perPage - i)).join('')
         : '<tr><td colspan="7" class="inq-table__empty">등록된 상담 글이 없습니다.</td></tr>';
       pagerEl.innerHTML = pagerHtml(page, totalPages, st);
+      if (just) {
+        const row = listEl.querySelector('.inq-row.is-just');
+        if (row) { row.querySelector('[data-i-open]').focus({ preventScroll: true }); setTimeout(() => row.classList.add('is-just-fade'), 2400); }
+        just = null; // 한 번만
+      }
       if (animate) [table, pagerEl].forEach((el) => { el.classList.remove('is-fade-in'); void el.offsetWidth; el.classList.add('is-fade-in'); });
     }
     function toTop() {

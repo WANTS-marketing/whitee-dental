@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     'notice-view': () => window.Board.view('notice'),
     'case-view': () => window.Board.view('cases'),
     faq: renderFaqList,
-    'inquiry-status': () => window.InquiryBoard?.init(), // inquiry.js
+    contact: () => window.InquiryBoard?.init(), // 상담문의 목록 (inquiry.js)
   }[page];
   run?.();
   document.querySelectorAll('[data-inquiry-form]').forEach((f) => window.UI.inquiryForm(f)); // common.js
@@ -343,22 +343,29 @@ async function renderFaqList() {
       </div>
     </li>`;
 
+  const inCat = (c, list) => (c === '자주 찾는 질문' ? list.filter((r) => r.featured) : c === '전체' ? list : list.filter((r) => r.category === c));
+  // 분류 칩 (커뮤니티 게시판 분류 칩과 같은 .board-cats__btn) — 옆 숫자 = 지금 검색어 기준 질문 수
+  function drawCats(found) {
+    catsEl.innerHTML = FAQ_CATS.map((c) => `<li><button type="button" class="board-cats__btn" data-faq-cat="${esc(c)}" aria-pressed="${c === cat}">${esc(c)} <span class="board-cats__n">${inCat(c, found).length}</span></button></li>`).join('');
+  }
   function draw() {
     const q = search.value.trim().toLowerCase();
-    let list = cat === '자주 찾는 질문' ? rows.filter((r) => r.featured) : cat === '전체' ? rows : rows.filter((r) => r.category === cat);
-    if (q) list = list.filter((r) => `${r.question} ${r.answer || ''}`.toLowerCase().includes(q));
+    const found = q ? rows.filter((r) => `${r.question} ${r.answer || ''}`.toLowerCase().includes(q)) : rows;
+    const list = inCat(cat, found);
+    drawCats(found);
     box.innerHTML = list.length
       ? list.map(item).join('')
       : `<li class="faq-list__empty">${q ? '검색 결과가 없습니다.' : '등록된 질문이 없습니다.'}</li>`;
   }
 
-  catsEl.innerHTML = FAQ_CATS.map((c) => `<li><button type="button" class="faq-cats__btn" aria-pressed="${c === cat}">${esc(c)}</button></li>`).join('');
+  drawCats(rows);
   catsEl.addEventListener('click', (e) => {
-    const btn = e.target.closest('.faq-cats__btn');
+    const btn = e.target.closest('[data-faq-cat]');
     if (!btn) return;
-    cat = btn.textContent;
-    catsEl.querySelectorAll('.faq-cats__btn').forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+    cat = btn.dataset.faqCat;
     draw();
+    catsEl.querySelector(`[data-faq-cat="${CSS.escape(cat)}"]`)?.focus({ preventScroll: true }); // 칩을 다시 그려도 키보드 위치 유지
+    fadeIn(box);
   });
   search.addEventListener('input', draw);
   document.querySelector('[data-faq-search-form]').addEventListener('submit', (e) => e.preventDefault());

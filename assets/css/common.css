@@ -908,34 +908,39 @@ html:has(body.has-lnb .page-doctors) { scroll-padding-top: calc(var(--header-h) 
 .contact-aside .branch-card__tel svg { width: 24px; height: 24px; }
 
 /* ==========================================================================
-   FAQ 게시판 (faq/index.html) — [FAQ | 검색] / [카테고리 메뉴 | 질문 목록]
+   FAQ 게시판 (faq/index.html — 배너 + LNB 서브 레이아웃) — [분류 칩 줄 | 검색] → 질문 목록 → 하단 상담 안내
    ========================================================================== */
 .faq-board { --faq-mark: 56px; --faq-cat: 9.5rem; } /* 카테고리 열은 글자 크기 단계를 따라 넓어진다 */
-.sub-content.faq-page { padding-top: calc(var(--header-h) + 80px); } /* 서브 타이틀 영역 없음 → 헤더 아래 80px */
 /* 하단 상담 안내: 목록과 56px, 문구와 버튼 16px */
-.faq-board__cta { grid-column: 2; display: flex; flex-direction: column; align-items: center; gap: 16px; margin-top: 56px; text-align: center; }
-.faq-cats { grid-row: span 2; } /* 카테고리 메뉴가 길어도 목록 ↔ 안내 간격은 그대로 */
+.faq-board__cta { display: flex; flex-direction: column; align-items: center; gap: 16px; margin-top: 56px; text-align: center; }
 .faq-board__cta-text { font-size: 1rem; color: #444; word-break: keep-all; }
 .faq-board__contact { height: 48px; padding: 0 24px; background: var(--color-point); color: #fff; font-size: var(--fs-sm); font-weight: 600; transition: background var(--dur); }
 .faq-board__contact:hover { background: var(--color-point-hover); }
-.faq-board__top { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; margin-bottom: 40px; }
-.faq-board__title { font-size: 2rem; font-weight: 700; letter-spacing: -0.01em; }
-.faq-search { position: relative; width: 300px; }
-.faq-search__input { width: 100%; height: 48px; padding: 0 36px 0 2px; border: 0; border-bottom: 1px solid #ccc; border-radius: 0; background: none; font-size: var(--fs-sm); transition: border-color var(--dur); }
-.faq-search__input::placeholder { color: #666; }
-.faq-search__input:focus { outline: none; border-bottom-color: var(--color-text); }
-.faq-search__input::-webkit-search-cancel-button { display: none; }
-.faq-search__icon { position: absolute; right: 2px; top: 50%; width: 22px; height: 22px; transform: translateY(-50%); pointer-events: none; }
-.faq-board__body { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 0 40px; align-items: start; }
 
 /* 왼쪽 카테고리: 세로 텍스트 목록, 선택 = 검정 굵게 */
-.faq-cats__list { display: flex; flex-direction: column; gap: 4px; }
-.faq-cats__btn { margin-left: -12px; padding: 6px 12px; border-radius: var(--radius-btn); font-size: var(--fs-md); color: #666; text-align: left; transition: color 0.2s, background-color 0.2s, border-color 0.2s; }
-.faq-cats__btn:hover { color: var(--color-accent); }
-.faq-cats__btn[aria-pressed="true"] { background: var(--color-accent); color: #fff; font-weight: 700; }
-.faq-cats__btn:active, .faq-cats__btn[aria-pressed="true"]:hover { background: var(--color-accent-hover); color: #fff; } /* 선택 = 파랑 면 + 흰 굵은 글자 (README 색 규칙) */
 
 /* 질문 행: Q | 카테고리(고정 너비) | 질문 | 화살표 — 행 높이 약 70px, 얇은 회색 구분선 */
+/* 도구 줄: 분류 칩(커뮤니티 게시판 분류 칩 .board-cats 그대로 — 선택 = --color-accent, 모서리 4px, 옆 숫자 = 질문 수) | 검색
+   좌우 끝 = 질문 목록 좌우 끝. 칩이 넘치면 줄바꿈(검색은 오른쪽 위 고정), 좁은 본문은 검색이 칩 아래 줄 전체 폭, 모바일 칩 줄은 가로 스크롤 */
+.faq-board__tools { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: start; gap: 12px 24px; margin-bottom: 24px; }
+.faq-board__tools .faq-cats { margin-bottom: 0; } /* 모바일 좌우 끝까지 가로 스크롤(.board-cats 규칙)은 그대로 */
+.board-cats__btn[aria-pressed="true"] { border-color: var(--color-accent); background: var(--color-accent); color: #fff; font-weight: 600; } /* 버튼형 칩(FAQ) — 링크형 칩 [aria-current] 과 같은 모양 */
+.board-cats__btn[aria-pressed="true"] .board-cats__n { opacity: 0.85; }
+.board-cats__btn[aria-pressed="true"]:hover { border-color: var(--color-accent-hover); background: var(--color-accent-hover); color: #fff; }
+.faq-search.board-search { width: 280px; }
+.faq-search .board-search__input { height: 40px; } /* 칩과 같은 높이 */
+@container sub (max-width: 55rem) {
+  .faq-board__tools { grid-template-columns: minmax(0, 1fr); }
+  .faq-search.board-search { width: 100%; }
+}
+@media (max-width: 1024px) {
+  .faq-board__tools { grid-template-columns: minmax(0, 1fr); }
+  .faq-search.board-search { width: 100%; }
+}
+@media (max-width: 768px) {
+  .faq-board__tools { gap: 12px; margin-bottom: 16px; }
+  .faq-board__cta { margin-top: 32px; }
+}
 .faq-list { border-top: 1px solid #e5e5e5; }
 .faq-item { border-bottom: 1px solid #e5e5e5; }
 .faq-list .faq-item__btn { display: grid; grid-template-columns: var(--faq-mark) var(--faq-cat) minmax(0, 1fr) 24px; align-items: center; gap: 0; min-height: 70px; padding: 14px 8px 14px 16px; border-bottom: 1px solid transparent; font-size: 1.0625rem; font-weight: 400; color: var(--color-text); transition: border-color var(--dur); }
@@ -982,15 +987,6 @@ html:has(body.has-lnb .page-doctors) { scroll-padding-top: calc(var(--header-h) 
   .sub-head { margin: 36px 0 40px; padding: 0 0 20px; }
 
   /* FAQ: 카테고리 메뉴를 목록 위 가로 스크롤 칩으로 */
-  .faq-board__body { grid-template-columns: minmax(0, 1fr); gap: 24px; }
-  .faq-board__cta { grid-column: auto; margin-top: 32px; }
-  .faq-cats { grid-row: auto; margin: 0 calc(var(--gutter) * -1); padding: 0 var(--gutter); overflow-x: auto; scrollbar-width: none; }
-  .faq-cats::-webkit-scrollbar { display: none; }
-  .faq-cats__list { flex-direction: row; gap: 8px; width: max-content; }
-  .faq-cats__btn { margin-left: 0; padding: 8px 16px; border: 1px solid #ddd; border-radius: var(--radius-btn); background: #fff; font-size: var(--fs-sm); color: #666; white-space: nowrap; }
-  .faq-cats__btn:hover { border-color: rgba(var(--color-accent-rgb), 0.45); color: var(--color-accent); }
-  .faq-cats__btn[aria-pressed="true"] { border-color: var(--color-accent); background: var(--color-accent); color: #fff; }
-  .faq-cats__btn:active, .faq-cats__btn[aria-pressed="true"]:hover { border-color: var(--color-accent-hover); background: var(--color-accent-hover); color: #fff; }
   .gnb, .util, .mega, .mega-dim { display: none; }
   .hamburger { display: block; }
 
@@ -1009,11 +1005,7 @@ html:has(body.has-lnb .page-doctors) { scroll-padding-top: calc(var(--header-h) 
 @media (max-width: 768px) {
   /* FAQ: 검색창은 타이틀 아래 전체 너비, 카테고리명은 질문 위 작은 글씨 */
   .faq-board { --faq-mark: 32px; }
-  .faq-board__top { flex-direction: column; align-items: stretch; gap: 12px; margin-bottom: 24px; }
-  .faq-board__title { font-size: 1.625rem; }
-  .sub-content.faq-page { padding-top: calc(var(--header-h) + 40px); }
   .faq-board__cta { align-items: stretch; }
-  .faq-search { width: 100%; }
   .faq-board__contact { width: 100%; }
   .faq-list .faq-item__btn { grid-template-columns: var(--faq-mark) minmax(0, 1fr) 20px; grid-template-areas: "mark cat arrow" "mark text arrow"; row-gap: 2px; min-height: 0; padding: 16px 4px; font-size: var(--fs-sm); }
   .faq-item__btn .faq-item__mark { grid-area: mark; align-self: start; }
@@ -1110,7 +1102,7 @@ html:has(body.has-lnb .page-doctors) { scroll-padding-top: calc(var(--header-h) 
 /* ---------- 의료진 소개 (about/doctors.html) — 본문 배경 흰색, 상단 배너는 다른 서브페이지와 같은 공통 사진(banner-sub.jpg) ---------- */
 
 /* ==========================================================================
-   상담문의 — 폼 비밀번호 칸 · 사이트 팝업(UI.dialog) · 상담 현황 게시판(faq/status.html, inquiry.js)
+   상담문의 — 폼 비밀번호 칸 · 사이트 팝업(UI.dialog) · 상담문의 목록(faq/contact.html, inquiry.js) · 작성 페이지 버튼(faq/contact-write.html)
    ========================================================================== */
 .btn--danger { background: #c62828; color: #fff; }
 .btn--danger:hover { background: #a61f1f; }
@@ -1119,6 +1111,11 @@ html:has(body.has-lnb .page-doctors) { scroll-padding-top: calc(var(--header-h) 
 .form__help a { color: var(--color-accent); text-decoration: underline; text-underline-offset: 2px; }
 .form__input--pw { max-width: 240px; letter-spacing: 0.2em; }
 .form__input--pw::placeholder { letter-spacing: 0; }
+.form__msg.is-demo { color: #8a5a00; }
+.form__demo { grid-column: 1 / -1; margin-top: -4px; font-size: var(--fs-xxs); line-height: 1.5; color: var(--color-text-sub); word-break: keep-all; }
+.form__actions + .form__demo { text-align: center; }
+.form__demo a, .form__msg.is-demo a:not(.form__msg-link), .inq-board__demo a, .faq-quick__done-desc a { color: inherit; font-weight: 600; white-space: nowrap; text-decoration: underline; text-underline-offset: 2px; }
+.inq-board__demo { margin-bottom: 20px; padding: 14px 18px; border: 1px solid #f3d39b; border-radius: var(--radius-btn); background: #fff8ec; font-size: var(--fs-sm); line-height: 1.6; color: #7a4f00; word-break: keep-all; }
 .form__msg-link { display: inline-block; margin-left: 4px; font-weight: 700; color: var(--color-accent); text-decoration: underline; text-underline-offset: 3px; white-space: nowrap; }
 /* 진료과목 빠른상담: [지점 | 진료과목 | 이름] / [연락처 | 비밀번호 | 상담 신청] + 아래 줄 비밀번호 안내 · 동의 */
 .quick-consult .form { grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -1154,14 +1151,28 @@ html.is-dialog-open { overflow: hidden; }
 }
 @media (prefers-reduced-motion: reduce) { .site-dialog, .site-dialog__panel { transition: none; } }
 
-/* ---------- 상담 현황 (faq/status.html — inquiry.js) — 커뮤니티 목록형과 같은 톤: 행 좌우 여백 --b-pad(32/24/16) · 구분선 · 모서리 4px ---------- */
-.inq-board { --b-pad: 32px; max-width: 1200px; margin: 0 auto; }
+/* ---------- 상담 현황 = 상담문의 목록 (faq/contact.html — inquiry.js) — 커뮤니티 목록형과 같은 톤: 행 좌우 여백 --b-pad(32/24/16) · 구분선 · 모서리 4px ---------- */
+.inq-board { --b-pad: 32px; }
 @media (max-width: 1440px) { .inq-board { --b-pad: 24px; } }
 @media (max-width: 768px) { .inq-board { --b-pad: 16px; } }
-.inq-board__tools { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; padding: 0 var(--b-pad); }
-.inq-board__count { font-size: var(--fs-sm); color: var(--color-text-sub); }
+/* 도구 줄: 왼쪽 [총 N건 · 지점 칩] / 오른쪽 [상담문의하기 →] (목록 아래에도 같은 버튼) */
+.inq-board__tools { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 16px; margin-bottom: 20px; }
+.inq-board__left { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 20px; min-width: 0; }
+.inq-board__count { font-size: var(--fs-sm); color: var(--color-text-sub); white-space: nowrap; }
 .inq-board__count b { font-weight: 700; color: var(--color-text); }
-.inq-board__write { height: 44px; padding: 0 20px; font-weight: 600; }
+.inq-board .inq-board__cats { margin: 0; padding: 0; overflow: visible; }
+.inq-board__write { height: 48px; padding: 0 24px; border-radius: var(--radius-btn); background: var(--color-accent); color: #fff; font-weight: 700; transition: background-color var(--dur); }
+.inq-board__write:hover { background: var(--color-accent-hover); }
+.inq-board__write:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+.inq-board__bottom { display: flex; justify-content: flex-end; margin-top: 32px; }
+.inq-board .pager + .inq-board__bottom { margin-top: 24px; }
+.inq-mine { flex: none; display: inline-flex; align-items: center; height: 22px; padding: 0 8px; border: 1px solid var(--color-accent); border-radius: var(--radius-btn); font-size: var(--fs-xxs); font-weight: 700; line-height: 1; color: var(--color-accent); white-space: nowrap; }
+.inq-row.is-just { background: rgba(var(--color-accent-rgb), 0.08); transition: background-color 1.2s ease; }
+.inq-row.is-just.is-just-fade { background: transparent; }
+.inq-row.is-just.is-just-fade:hover { background: rgba(var(--color-accent-rgb), 0.04); }
+/* 상담문의 작성 페이지 하단 버튼 [목록으로 | 문의 남기기] */
+.form__actions { display: flex; justify-content: center; gap: 12px; margin-top: 8px; }
+.form__actions .btn { min-width: 180px; padding: 0 32px; font-weight: 700; }
 .inq-board__note { margin-top: 32px; font-size: var(--fs-xs); color: var(--color-text-sub); text-align: center; word-break: keep-all; }
 .inq-board__empty, .inq-table td.inq-table__empty { padding: 80px 16px; text-align: center; color: var(--color-text-sub); white-space: normal; }
 .inq-board .pager { margin-top: 48px; }
@@ -1180,8 +1191,9 @@ html.is-dialog-open { overflow: hidden; }
 .inq-col-date { width: calc(6.5em + var(--b-pad)); }
 .inq-row { cursor: pointer; transition: background-color 0.2s; }
 .inq-row:hover { background: rgba(var(--color-accent-rgb), 0.04); }
-.inq-row__btn { display: inline-flex; align-items: center; gap: 8px; max-width: 100%; font-weight: 600; color: var(--color-text); text-align: left; }
-.inq-row__title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; transition: color var(--dur); }
+.inq-row__btn { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; max-width: 100%; font-weight: 600; color: var(--color-text); text-align: left; }
+.inq-row__title { min-width: 0; word-break: keep-all; transition: color var(--dur); } /* 좁은 폭·큰 글자에서는 잘리지 않고 다음 줄로 */
+.inq-table td.inq-col-title { white-space: normal; }
 .inq-row:hover .inq-row__title, .inq-row__btn:focus-visible .inq-row__title { color: var(--color-accent); }
 .inq-lock { flex: none; width: 16px; height: 16px; color: #888; }
 .inq-status { display: inline-flex; align-items: center; height: 28px; padding: 0 10px; border-radius: var(--radius-btn); font-size: var(--fs-xs); font-weight: 600; line-height: 1; white-space: nowrap; }
@@ -1190,8 +1202,11 @@ html.is-dialog-open { overflow: hidden; }
 @media (max-width: 1024px) { .inq-table .inq-col-treat { display: none; } }
 /* 모바일: 표 → 카드형 [지점 · 상태 / 제목 / 작성자 · 날짜] */
 @media (max-width: 768px) {
-  .inq-board__tools { padding: 0; }
-  .inq-board__write { height: 40px; padding: 0 16px; }
+  .inq-board__tools { align-items: stretch; }
+  .inq-board__left { width: 100%; justify-content: space-between; }
+  .inq-board__write { width: 100%; height: 48px; justify-content: center; }
+  .inq-board__bottom .inq-board__write { width: 100%; }
+  .form__actions .btn { flex: 1; min-width: 0; padding: 0 16px; }
   .inq-table, .inq-table tbody { display: block; }
   .inq-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
   .inq-row { display: grid; grid-template-columns: auto auto minmax(0, 1fr) auto; grid-template-areas: "branch branch . status" "title title title title" "name date date date"; align-items: center; gap: 8px 6px; padding: 16px var(--b-pad); border-bottom: 1px solid var(--color-line); }

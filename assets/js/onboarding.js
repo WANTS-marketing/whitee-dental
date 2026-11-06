@@ -163,7 +163,7 @@
     count.innerHTML = `<span class="sr-only">전체 ${STEPS.length}단계 중 </span><strong>${i + 1}</strong><span aria-hidden="true"> / ${STEPS.length}</span><span class="sr-only">단계</span>`;
     el.querySelector('.coach__skip').hidden = !!s.last; // 마지막 단계는 '확인'이 곧 닫기
     el.querySelector('.coach__btns').innerHTML = s.last
-      ? `<a class="coach__btn coach__btn--line" href="${root}/faq/contact.html" data-coach-done>빠른 상담 신청</a>
+      ? `<a class="coach__btn coach__btn--line" href="${root}/faq/contact-write.html" data-coach-done>빠른 상담 신청</a>
          <button type="button" class="coach__btn" data-coach-close>확인</button>`
       : '<button type="button" class="coach__btn" data-coach-next>다음</button>';
     el.querySelector('[data-coach-done]')?.addEventListener('click', () => close({ keepPage: true }));

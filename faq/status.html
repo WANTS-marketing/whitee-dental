@@ -1,63 +1,16 @@
 <!DOCTYPE html>
-<html lang="ko" data-root="..">
+<html lang="ko">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>상담 현황 | 화이트e치과 | 창원치과 | 마산치과</title>
-  <meta name="description" content="창원점 상남동 롯데리아 3층, 마산점 마산역 도보 3분. 분야별 전문의 1:1 책임진료, 임플란트·치아교정·사랑니발치·스케일링·심미치료, 평일 야간진료">
-  <meta name="robots" content="noindex, follow"><!-- 상담 글 목록은 검색 노출 안 함 -->
-  <meta name="naver-site-verification" content="9bc82b586e6aa173ce4c34f00fa7825fdf2832b1">
-  <link rel="canonical" href="https://wants-marketing.github.io/whitee-dental/faq/status.html">
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="화이트e치과">
-  <meta property="og:title" content="상담 현황 | 화이트e치과 | 창원치과 | 마산치과">
-  <meta property="og:description" content="창원점 상남동 롯데리아 3층, 마산점 마산역 도보 3분. 분야별 전문의 1:1 책임진료, 임플란트·치아교정·사랑니발치·스케일링·심미치료, 평일 야간진료">
-  <meta property="og:url" content="https://wants-marketing.github.io/whitee-dental/faq/status.html">
-  <meta property="og:image" content="https://wants-marketing.github.io/whitee-dental/assets/images/og-image.jpg">
-  <meta property="og:locale" content="ko_KR">
-  <meta name="twitter:card" content="summary_large_image">
-  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
-  <link rel="stylesheet" href="../assets/css/variables.css">
-  <link rel="stylesheet" href="../assets/css/common.css">
-  <script src="../assets/js/config.js" defer></script>
-  <script src="../assets/js/site-data.js" defer></script>
-  <script src="../assets/js/api.js" defer></script>
-  <script src="../assets/js/include.js" defer></script>
-  <script src="../assets/js/common.js" defer></script>
-  <script src="../assets/js/inquiry.js" defer></script>
-  <script src="../assets/js/pages.js" defer></script>
+  <title>상담문의 | 화이트e치과</title>
+  <meta name="robots" content="noindex">
+  <!-- 예전 '상담 현황' 주소 → 상담문의 목록(faq/contact.html)으로 자동 이동. 주소 뒤 ?branch=…&page=… · #… 는 그대로 넘긴다 (sitemap 제외) -->
+  <link rel="canonical" href="https://wants-marketing.github.io/whitee-dental/faq/contact.html">
+  <script>location.replace('contact.html' + location.search + location.hash);</script>
+  <meta http-equiv="refresh" content="0; url=contact.html">
 </head>
-<body class="is-sub" data-page="inquiry-status">
-  <div data-include="header"></div>
-
-  <main id="main">
-    <section class="sub-visual">
-      <div class="container">
-        <h1 class="sub-visual__title">상담 현황</h1>
-        <ol class="breadcrumb" aria-label="현재 위치">
-          <li><a href="../index.html">홈</a></li>
-          <li>FAQ</li>
-          <li aria-current="page">상담 현황</li>
-        </ol>
-        <nav class="sub-tabs" aria-label="FAQ 하위 메뉴">
-          <a href="index.html">자주 묻는 질문</a>
-          <a href="contact.html">상담문의하기</a>
-          <a href="status.html" class="is-current" aria-current="page">상담 현황</a>
-        </nav>
-      </div>
-    </section>
-
-    <section class="sub-content">
-      <div class="container">
-        <!-- 상담 현황 게시판 (assets/js/inquiry.js — 데이터는 api.js listInquiries · getInquiry 만 사용)
-             지점 칩 → [총 N건 | 상담문의하기] → 목록(PC 표 / 모바일 카드) → 페이지 번호. 행을 누르면 비밀번호 확인 팝업 → 본인 문의·답변 -->
-        <div class="inq-board" data-inquiry-board><p class="inq-board__empty">불러오는 중입니다.</p></div>
-      </div>
-    </section>
-  </main>
-
-  <div class="quick quick--float" data-include="quick" data-keep></div>
-  <div data-include="footer"></div>
+<body>
+  <p><a href="contact.html">상담문의 목록으로 이동합니다.</a></p>
 </body>
 </html>

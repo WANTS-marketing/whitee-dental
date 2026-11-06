@@ -72,13 +72,16 @@ assets/js/api.js   ← 서버 연결 때 바꾸는 곳은 여기 하나 (함수 
 
 | 화면 | 파일 | 부르는 함수 |
 |---|---|---|
-| 상담문의하기 폼 | `faq/contact.html` | `createInquiry` |
+| 상담문의 작성 폼 (전송 성공 → 목록으로, 방금 쓴 글 맨 위 '내 문의') | `faq/contact-write.html` | `createInquiry` |
 | 진료과목 5페이지 빠른상담 (내용 칸 없음) | `treatment/*.html` | `createInquiry` |
 | 메인 FAQ 옆 빠른 상담문의 | `index.html` | `createInquiry` |
-| 상담 현황 목록 · 비밀번호 열람 | `faq/status.html` (`assets/js/inquiry.js`) | `listInquiries` · `getInquiry` |
+| 상담문의 목록 (FAQ > 상담문의) · 비밀번호 열람 | `faq/contact.html` (`assets/js/inquiry.js`) — 예전 주소 `faq/status.html` 은 쿼리를 유지한 채 여기로 자동 이동 | `listInquiries` · `getInquiry` |
+| 모든 상담 폼·완료 문구의 시안 안내 | common.js `inquiryForm` · main.js · inquiry.js | `isDeliveryReady` |
 | 관리자 | `admin/index.html` (`assets/js/admin.js`) | `adminListInquiries` · `adminGetInquiry` · `answerInquiry` · `updateInquiryStatus` · `deleteInquiry` |
 
-흐름: 폼 작성 → `createInquiry` 저장(+ 병원 메일 알림) → 상담 현황 목록 맨 위에 '접수' → 제목을 누르고 비밀번호 4자리 → `getInquiry` 로 본인 내용 → 관리자 답변 `answerInquiry` → 목록 '답변완료', 본인 화면에 답변 표시.
+'내 문의' 표시는 화면 기능이다 — 이 탭에서 쓴 글 번호를 sessionStorage(`witee-inquiry-mine`)에 남겨 표시만 한다(열람에는 여전히 비밀번호 필요). 서버 연결 뒤에도 그대로 동작한다.
+
+흐름: 폼 작성 → `createInquiry` 저장(+ 병원 메일 알림) → 상담문의 목록 맨 위에 '접수' → 제목을 누르고 비밀번호 4자리 → `getInquiry` 로 본인 내용 → 관리자 답변 `answerInquiry` → 목록 '답변완료', 본인 화면에 답변 표시.
 
 ### 2-2. 데이터 항목 (`inquiries`)
 
@@ -176,6 +179,7 @@ assets/js/api.js   ← 서버 연결 때 바꾸는 곳은 여기 하나 (함수 
 
 - `notified`: 병원 메일 알림을 보냈는지. 화면은 쓰지 않습니다(정보용).
 - 오류: `VALIDATION`(field) · `RATE_LIMITED` · `NETWORK`
+- **시안 안내**: `isDeliveryReady()`(동기, boolean)가 false 면 화면이 모든 상담 폼 버튼 아래와 접수 완료 문구에 '시안 화면입니다. 실제로 병원에 전달되지 않습니다. 문의는 전화로 부탁드립니다. 창원점 … · 마산점 …' 을 보입니다(전화번호는 site-data.js). 지금은 Web3Forms 키가 있으면 true. **서버에 저장·알림을 연결하면 true 를 돌려주도록 바꾸세요** — 그러면 안내가 사라지고 원래 '접수되었습니다'
 - **메일 알림**: 지금은 api.js 가 저장 뒤 Web3Forms 로 병원에 메일을 보냅니다(키 `WEB3FORMS_ACCESS_KEY`, 실패해도 저장은 성공). 서버가 저장 시 알림(메일·문자·카카오 알림톡 등)을 보내게 되면 api.js 의 `notifyByEmail` 호출을 지우세요. 알림 메일에 문의 내용·연락처가 들어가므로 수신 주소 관리에 주의.
 - 허니팟: 폼의 숨은 칸 `website` 에 값이 있으면 화면이 **보내지 않고** 성공처럼 보여 줍니다. 서버로 보내지 않으므로 서버 쪽 스팸 차단은 따로 필요합니다.
 

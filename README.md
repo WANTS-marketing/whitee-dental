@@ -12,12 +12,12 @@
 - 순수 HTML / CSS / JavaScript (프레임워크·빌드 도구 없음)
 - 폰트: Pretendard (jsDelivr CDN)
 - 호스팅: GitHub Pages (GitHub Actions로 배포)
-- 상담문의: 게시판형(상담 현황 `faq/status.html`) — 지금은 **서버 없는 시안**(더미 JSON + 브라우저 탭 저장). 병원 메일 알림은 Web3Forms
+- 상담문의: 게시판형 — FAQ > 상담문의 = 목록(`faq/contact.html`) · 작성(`faq/contact-write.html`). 지금은 **서버 없는 시안**(더미 JSON + 브라우저 탭 저장). 병원 메일 알림은 Web3Forms
 - 서버 연결: `docs/API-SPEC.md` 참고, `assets/js/api.js` 함수 안쪽만 교체 (특정 서비스에 묶이지 않음)
 
 ### 시안 확인용 더미 비밀번호
 
-- 상담 현황(`faq/status.html`)의 더미 상담 글 11건은 **비밀번호가 모두 `1234`** 입니다 (`assets/data/inquiries.json`)
+- 상담문의 목록(`faq/contact.html`)의 더미 상담 글 11건은 **비밀번호가 모두 `1234`** 입니다 (`assets/data/inquiries.json`)
 - 새로 쓴 글·관리자 답변은 그 브라우저 탭에만 저장되고, 탭을 닫으면 더미로 돌아갑니다
 - 관리자 화면 `admin/` 은 시안이라 로그인 없이 열립니다 (실제 운영 시 관리자 인증 필요)
 
@@ -89,7 +89,7 @@ assets/css/                variables.css(디자인 토큰) · common.css · main
 assets/js/
   site-data.js             지점 정보·의료진·SNS 주소  ← 병원 정보 수정은 여기서
   api.js                   데이터 함수 전부(게시판·상담문의·로그인 상태) — 서버 연결 때 바꾸는 파일 (docs/API-SPEC.md)
-  inquiry.js               상담 현황 목록·비밀번호 열람 (faq/status.html)
+  inquiry.js               상담문의 목록·비밀번호 열람·내 문의 표시 (faq/contact.html)
   include.js               컴포넌트 삽입
   common.js                헤더·모바일 메뉴·퀵메뉴·아코디언 등 공통 동작
   main.js / pages.js / admin.js / board.js   페이지별 동작
@@ -106,7 +106,7 @@ docs/                      배포·인수인계 문서
 
 | 하고 싶은 것 | 고칠 곳 |
 |---|---|
-| 전화번호·주소·진료시간 | `assets/js/site-data.js` + `index.html` ③ 지점 카드 + `faq/contact.html` 오른쪽 카드 |
+| 전화번호·주소·진료시간 | `assets/js/site-data.js` + `index.html` ③ 지점 카드 + `faq/contact-write.html` 오른쪽 카드 |
 | 의료진 추가·순서 | `assets/js/site-data.js` 의 `doctors` |
 | SNS 주소 | `assets/js/site-data.js` 의 `social` |
 | 색상·글자 크기 | `assets/css/variables.css` (색은 아래 '색 역할 규칙'대로) |
@@ -119,8 +119,8 @@ docs/                      배포·인수인계 문서
 | 서브 배너 높이 (PC 화면 높이 60%·520~680px, 모바일 45%·최소 320px) | `common.css` '.has-lnb .sub-visual' (모바일은 768px 이하 반응형 쪽) |
 | 서브페이지 시작 위치 (같은 대메뉴 안 이동 = 본문부터, 그 밖 = 배너 맨 위부터) | `assets/js/lnb-jump.js` (맨 위 설명에 규칙 정리) |
 | FAQ·공지 (시안) | `assets/data/*.json` |
-| 상담문의 폼 칸·검사(비밀번호 4자리·내용 5자·링크 막기) | 각 폼 HTML (`faq/contact.html` · `treatment/*.html` 빠른상담 · `index.html` 빠른 상담문의) + `common.js` `inquiryForm` |
-| 상담 현황 목록(15개·지점 칩·모바일 카드형) · 비밀번호 팝업 | `assets/js/inquiry.js` · 스타일 `common.css` '상담 현황' · 팝업 `common.js` `UI.dialog` |
+| 상담문의 폼 칸·검사(비밀번호 4자리·내용 5자·링크 막기) | 각 폼 HTML (`faq/contact-write.html` · `treatment/*.html` 빠른상담 · `index.html` 빠른 상담문의) + `common.js` `inquiryForm` |
+| 상담문의 목록(15개·지점 칩·모바일 카드형·내 문의) · 비밀번호 팝업 — 연결: 메뉴·LNB 상담문의 = 목록, 퀵메뉴·하단 바·FAQ 하단 상담문의 = 작성 | `assets/js/inquiry.js` · 스타일 `common.css` '상담 현황' · 팝업 `common.js` `UI.dialog` |
 | 상담 데이터 저장 방식 (지금 더미 → 서버) | `assets/js/api.js` 상담문의 함수 8개 + `docs/API-SPEC.md` |
 | 메인 의료진 나열 순서 | `assets/js/site-data.js` 의 `mainDoctorOrder` |
 | 의료진 소개 지점 이동 버튼(화면 아래 [창원점 N][마산점 N]) · 지점별 묶음 | `assets/js/pages.js` `renderDoctorsPage` · `initDoctorBranchNav` (원장 수는 site-data.js 에서 자동) · 스타일 `common.css` '의료진 소개 카드' · '지점 이동 버튼' |
