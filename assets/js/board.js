@@ -101,8 +101,9 @@
   function casePair(r, locked) {
     const { img, esc } = window.UI;
     const open = !locked && r.afterImage;
+    const label = locked ? '로그인 후 확인' : '<span class="nowrap">시안: 실제 운영 시</span> <span class="nowrap">원본 공개</span>'; // 로그인했는데 원본 주소가 없으면(시안 — 원본은 저장소 밖) 안내
     return `<span class="case-pair__half img-ph"><img src="${img(r.beforeImage)}" alt="${esc(r.title)} 치료 전" loading="lazy" decoding="async"><span class="case-pair__tag">BEFORE</span></span>`
-      + `<span class="case-pair__half img-ph${open ? '' : ' is-locked'}"><img src="${img(open ? r.afterImage : r.afterBlur)}" alt="${open ? `${esc(r.title)} 치료 후` : ''}" loading="lazy" decoding="async"><span class="case-pair__tag">AFTER</span>${open ? '' : `<span class="case-pair__lock">${LOCK_SVG}로그인 후 확인</span>`}</span>`;
+      + `<span class="case-pair__half img-ph${open ? '' : ' is-locked'}"><img src="${img(open ? r.afterImage : r.afterBlur)}" alt="${open ? `${esc(r.title)} 치료 후` : ''}" loading="lazy" decoding="async"><span class="case-pair__tag">AFTER</span>${open ? '' : `<span class="case-pair__lock${locked ? '' : ' is-demo'}">${LOCK_SVG}${label}</span>`}</span>`;
   }
 
   /* ======================================================================
@@ -354,11 +355,12 @@
         body = `${post.thumbnail ? `<figure><img src="${img(post.thumbnail)}" alt="" loading="lazy"></figure>` : ''}<p>${esc(post.body || post.summary || '')}</p>`; // TODO(2차): 공지 본문(HTML)
       } else {
         // 치료사례: BEFORE 공개 | AFTER 로그인 회원만 (비로그인 = 흐림 미리보기 + '로그인 후 확인해보세요' → 로그인 후 이 글로 돌아옴)
-        const open = !cfg.locked() && post.afterImage;
+        const locked = cfg.locked();
+        const open = !locked && post.afterImage;
         const back = encodeURIComponent(location.pathname.split('/').slice(-2).join('/') + location.search); // 'community/case-view.html?id=…'
         body = `<div class="case-view">
             <figure class="case-view__fig"><span class="case-view__img img-ph"><img src="${img(post.beforeImage)}" alt="${esc(post.title)} 치료 전 사진"></span><figcaption><b>BEFORE</b> 치료 전</figcaption></figure>
-            <figure class="case-view__fig${open ? '' : ' is-locked'}"><span class="case-view__img img-ph"><img src="${img(open ? post.afterImage : post.afterBlur)}" alt="${open ? `${esc(post.title)} 치료 후 사진` : '치료 후 사진 (로그인 후 공개)'}">${open ? '' : `<span class="case-view__lock">${LOCK_SVG}<span>치료 후 사진은 로그인 회원에게만 공개됩니다</span><a class="btn btn--point case-view__login" href="../member/login.html?return=${back}">로그인 후 확인해보세요</a></span>`}</span><figcaption><b>AFTER</b> 치료 후</figcaption></figure>
+            <figure class="case-view__fig${open ? '' : ' is-locked'}"><span class="case-view__img img-ph"><img src="${img(open ? post.afterImage : post.afterBlur)}" alt="${open ? `${esc(post.title)} 치료 후 사진` : locked ? '치료 후 사진 (로그인 후 공개)' : '치료 후 사진 흐린 미리보기 (시안 — 실제 운영 시 원본 공개)'}">${open ? '' : locked ? `<span class="case-view__lock">${LOCK_SVG}<span>치료 후 사진은 로그인 회원에게만 공개됩니다</span><a class="btn btn--point case-view__login" href="../member/login.html?return=${back}">로그인 후 확인해보세요</a></span>` : `<span class="case-view__lock is-demo">${LOCK_SVG}<span>시안: 실제 운영 시 원본 공개</span><small>치료 후 원본 사진은 서버 연결 후 로그인 회원에게만 보여 드립니다</small></span>`}</span><figcaption><b>AFTER</b> 치료 후</figcaption></figure>
           </div>
           ${post.body ? `<p class="case-view__body">${esc(post.body)}</p>` : ''}
           <p class="case-view__note">치료 결과는 개인에 따라 다를 수 있으며, 부작용이 발생할 수 있습니다.</p>`;

@@ -319,17 +319,20 @@ api.js 안에서 HTTP 상태 코드를 위 오류 코드로 바꿔 주면 됩니
 | `branch` | string \| null | 선택 | 지점 (기존 글에는 없음) |
 | `beforeImage` | string | 필수 | BEFORE 사진 — 누구나 |
 | `afterBlur` | string | 필수 | AFTER 흐림 미리보기(작게 줄였다 흐리게 키운 그림) — 누구나 |
-| `afterImage` | string \| null | 로그인 시 | **AFTER 원본 — 로그인 상태일 때만 값, 아니면 null** |
+| `afterImage` | string \| null | 로그인 시 | **AFTER 원본 주소 — 서버가 로그인 확인 후에만 값을 담을 것.** 지금(시안)은 원본이 저장소 밖이라 로그인 상태에서도 항상 null |
+| `afterOriginal` | string | 선택 | AFTER 원본 파일 이름 (`case-{번호}-after.jpg`) — 서버 저장소에 올릴 때 짝을 맞추는 용도. 화면에서 쓰지 않음 |
 | `images` | [{ role: 'before'\|'after', file, w, h, loginOnly? }] | 선택 | 이미지 목록 (비로그인이면 loginOnly 항목 빠짐) |
 | `body` | string | 선택 | 본문 (줄바꿈 \n) |
 | `legacy` | { wrId, url, image } | 선택 | 기존 사이트 원본 글·이미지 주소 |
 
 - 화면 동작
-  - 목록·메인 카드: BEFORE 선명 + AFTER 자리 = `afterBlur` + 자물쇠 '로그인 후 확인' (로그인이면 `afterImage`)
+  - 목록·메인 카드: BEFORE 선명 + AFTER 자리 = `afterBlur` + 자물쇠 '로그인 후 확인' (로그인이고 `afterImage` 가 있으면 원본)
+  - 로그인 상태인데 `afterImage` 가 없으면(지금 시안): `afterBlur` + '시안: 실제 운영 시 원본 공개' — 서버가 원본 주소를 주기 시작하면 자동으로 원본이 보인다
   - 상세: BEFORE | AFTER 나란히(모바일 위아래). 비로그인 AFTER = `afterBlur` + '로그인 후 확인해보세요' → `member/login.html?return=community/case-view.html?id=…` (로그인 후 그 글로 돌아오기 — 서버 연결 때 구현, `pages.js loginReturnUrl`)
   - 모든 상세 하단 고지: '치료 결과는 개인에 따라 다를 수 있으며, 부작용이 발생할 수 있습니다.'
 - 시안 확인용 로그인: 주소에 `?login=1` 을 붙이면 그 탭에서 로그인 상태(`isLoggedIn()` = true, sessionStorage `witee-demo-login`), `?login=0` 해제 — **서버 연결 때 지울 것**
-- ⚠️ **AFTER 원본은 로그인 확인 후에만 서버에서 주소를 내려주는 방식으로 바꿀 것.** 지금은 정적 파일이라 api.js 가 비로그인일 때 `afterImage` 를 빼 주기만 한다 — 파일 주소(`assets/images/cases/case-{번호}-after.jpg`)를 알면 누구나 열 수 있다. 서버는 AFTER 원본을 비공개 저장소에 두고, 로그인 세션을 확인한 요청에만 기한 있는 주소(signed URL)를 응답에 담을 것. 흐림 미리보기·BEFORE 는 공개 저장소로 충분
+- ⚠️ **AFTER 원본 14장은 저장소 밖 보관, 서버 저장소에 올려 로그인 회원에게만 제공.** 공개 저장소·공개 사이트에는 AFTER 원본이 없다 (2026-11-06 — `assets/images/cases/case-*-after.jpg` 는 `.gitignore`, 보관본 `자료/기존사이트-치료사례/after/`).
+  서버 연결 때: ① 14장을 비공개 저장소(버킷)에 올린다 ② 로그인 세션을 확인한 요청에만 기한 있는 주소(signed URL)를 `afterImage` 에 담는다 ③ 비로그인 응답에는 원본 주소·파일 이름 모두 넣지 않는다. 흐림 미리보기·BEFORE 는 공개 저장소로 충분
 - 치료 전·후 사진은 환자 동의서가 있는 사진만 (의료광고 심의 기준도 확인)
 
 ### 4-4. FAQ — `getFaqs({ featured })`

@@ -64,16 +64,17 @@
 
   /** 치료사례 (기존 사이트 '시술 전후' 14건 — scripts/import/build-gallery.js 가 cases.json 생성)
       [{ id, no, title(목록 제목), originalTitle(원래 제목, 상세), categories[], categoryName('치아교정·보철'), date, branch,
-         beforeImage(공개), afterBlur(흐림 미리보기, 공개), afterImage(로그인일 때만 — 아니면 null), images[], body }] 최신순
-      AFTER 원본 주소는 로그인 상태에서만 돌려준다(화면이 원본을 아예 모르게). 다만 지금은 정적 파일이라 주소를 알면 열 수 있다
-      TODO(서버): AFTER 원본은 로그인 확인 후에만 서버가 주소를 내려줄 것 (비공개 저장소 + 기한 있는 주소, API-SPEC '치료사례') */
+         beforeImage(공개), afterBlur(흐림 미리보기, 공개), afterImage(AFTER 원본 주소 — 지금은 항상 null), images[], body }] 최신순
+      AFTER 원본 14장은 공개 저장소에 두지 않는다(저장소 밖 자료/기존사이트-치료사례/after/ 보관) → 시안은 로그인 상태에서도 afterImage = null
+        → 화면은 흐림 미리보기 + '시안: 실제 운영 시 원본 공개' (로그인 전이면 '로그인 후 확인')
+      TODO(서버): AFTER 원본을 서버 저장소(비공개)에 올리고, 로그인 확인 후에만 기한 있는 주소를 afterImage 에 담아 줄 것 (API-SPEC '치료사례') */
   async function getCases({ limit } = {}) {
     const login = isLoggedIn();
     const rows = withViews(await fetchJson('cases')).sort(byDateDesc).map((r) => ({
       ...r,
       categories: r.categories || (r.categoryName ? [r.categoryName] : []),
       categoryName: (r.categories || [r.categoryName]).filter(Boolean).join('·'),
-      afterImage: login ? r.afterImage : null,
+      afterImage: login ? r.afterImage || null : null, // 지금 데이터에는 원본 주소가 없음 — 서버 연결 후 로그인 시에만 값
       images: (r.images || []).filter((im) => login || !im.loginOnly),
     }));
     return limit ? rows.slice(0, limit) : rows;

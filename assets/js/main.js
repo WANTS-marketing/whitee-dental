@@ -649,12 +649,14 @@ async function initCases() {
   const arrow = '<svg class="case-card__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6l12 12M18 9v9H9"/></svg>';
   try {
     const rows = await window.API.getCases({ limit: 3 });
+    const loggedIn = window.API.isLoggedIn();
     list.innerHTML = rows.map((r) => {
       const open = !!r.afterImage;
+      const label = loggedIn ? '<span class="nowrap">시안: 실제 운영 시</span> <span class="nowrap">원본 공개</span>' : '로그인 후 확인'; // 로그인했는데 원본 주소가 없으면(시안) 안내
       return `
         <li><a class="case-card${open ? ' is-unlocked' : ''}" href="./community/case-view.html?id=${encodeURIComponent(r.id)}">
           <span class="case-card__half img-ph"><img src="${img(r.beforeImage)}" alt="${esc(r.title)} 치료 전 사진" loading="lazy" decoding="async"><span class="case-card__tag">BEFORE</span></span>
-          <span class="case-card__half img-ph${open ? '' : ' is-locked'}"><img src="${img(open ? r.afterImage : r.afterBlur)}" alt="${open ? `${esc(r.title)} 치료 후 사진` : ''}" loading="lazy" decoding="async"><span class="case-card__tag">AFTER</span>${open ? '' : `<span class="case-card__lock">${lock}로그인 후 확인</span>`}</span>
+          <span class="case-card__half img-ph${open ? '' : ' is-locked'}"><img src="${img(open ? r.afterImage : r.afterBlur)}" alt="${open ? `${esc(r.title)} 치료 후 사진` : ''}" loading="lazy" decoding="async"><span class="case-card__tag">AFTER</span>${open ? '' : `<span class="case-card__lock${loggedIn ? ' is-demo' : ''}">${lock}${label}</span>`}</span>
           <span class="case-card__info"><span class="case-card__cat">${esc(r.categoryName)}</span><strong class="case-card__title">${esc(r.title)}</strong>${arrow}</span>
         </a></li>`;
     }).join('');
