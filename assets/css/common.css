@@ -482,13 +482,8 @@ html[data-header-theme="dark"] .quick__sns-btn--consult { border-color: rgba(255
    LNB 는 스크롤해도 따라오지 않는다(제자리). 1024px 이하 = 타이틀 블록 숨김, 본문 위 가로 탭(밑줄형)
    본문(.sub-body)은 컨테이너 쿼리 기준(sub) — LNB 만큼 좁아진 실제 폭으로 열 수를 줄인다(sub.css · 아래 '좁은 본문') */
 /* 배너는 화면 맨 위(투명 헤더 뒤)부터 — 헤더 포함 화면 높이의 60%(520~680px, 모바일 45% · 최소 320px), 글은 헤더 아래 공간의 세로 가운데
-   높이를 고정값(height)으로 두는 이유: 글자 크기·폰트 로딩과 상관없이 배너 아래 끝이 정해져야 lnb-jump.js 가 첫 화면부터 정확한 위치로 옮길 수 있다
-   아래쪽 'SCROLL' + 화살표(::after, 옅게) = 본문이 이어진다는 신호 (장식 — 스크린리더 제외) */
+   높이를 고정값(height)으로 두는 이유: 글자 크기·폰트 로딩과 상관없이 배너 아래 끝이 정해져야 lnb-jump.js 가 첫 화면부터 정확한 위치로 옮길 수 있다 */
 .has-lnb .sub-visual { position: relative; display: flex; flex-direction: column; justify-content: center; box-sizing: border-box; height: clamp(520px, 60vh, 680px); height: clamp(520px, 60svh, 680px); min-height: 0; padding: var(--header-h) 0 0; }
-.has-lnb .sub-visual::after { content: "SCROLL" / ""; position: absolute; z-index: 2; left: 50%; bottom: 28px; translate: -50% 0; padding-bottom: 22px; font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.24em; text-indent: 0.24em; line-height: 1; color: currentColor; opacity: 0.55; pointer-events: none;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 10' fill='none' stroke='%23000' stroke-width='1.6'%3E%3Cpath d='M2 2l6 6 6-6'/%3E%3C/svg%3E") center bottom / 14px 9px no-repeat; }
-.has-lnb .sub-visual--image::after { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 10' fill='none' stroke='%23fff' stroke-width='1.6'%3E%3Cpath d='M2 2l6 6 6-6'/%3E%3C/svg%3E"); opacity: 0.7; }
-.has-lnb .sub-visual:not(.sub-visual--image)::after { color: var(--color-text-muted); opacity: 0.8; }
 .sub-visual__label { margin-bottom: 14px; font-size: 0.9375rem; font-weight: 600; letter-spacing: 0.24em; opacity: 0.75; }
 .sub-visual__slogan { font-size: var(--fs-h2); font-weight: 700; line-height: 1.35; letter-spacing: -0.02em; word-break: keep-all; }
 .sub-visual:not(.sub-visual--image) .sub-visual__label { color: var(--color-point); opacity: 1; }
@@ -911,7 +906,6 @@ a.article-nav__item:hover .article-nav__title { color: var(--color-accent); }
 
   .sub-visual { padding: calc(var(--header-h) + 40px) 0 36px; }
   .has-lnb .sub-visual { height: max(320px, 45vh); height: max(320px, 45svh); }
-  .has-lnb .sub-visual::after { bottom: 18px; padding-bottom: 18px; font-size: 0.625rem; }
   .lnb__list { gap: 24px; }
   .sub-head { margin: 28px 0 32px; padding-bottom: 16px; }
   .board__no { display: none; }
