@@ -131,6 +131,24 @@ function initHero() {
   let busy = false;
 
   slider.querySelector('[data-hero-total]').textContent = slides.length;
+  // 슬라이드별 사진 위치·확대·이름표 (site-data.js heroSlides — CSS 변수로 넘기고 PC 에서만 쓴다)
+  const esc = window.UI?.esc || ((s) => String(s));
+  slides.forEach((s, k) => {
+    const cfg = (window.SITE?.heroSlides || [])[k];
+    if (!cfg) return;
+    if (cfg.pos) s.style.setProperty('--hero-pos', cfg.pos);
+    if (cfg.scale) s.style.setProperty('--hero-scale', cfg.scale);
+    if (cfg.origin) s.style.setProperty('--hero-origin', cfg.origin);
+    if (cfg.scrim != null) s.style.setProperty('--hero-scrim', cfg.scrim);
+    if (cfg.caption && !s.querySelector('.hero__caption')) {
+      const c = document.createElement('p');
+      c.className = 'hero__caption';
+      c.style.setProperty('--cx', `${cfg.caption.x}%`);
+      c.style.setProperty('--cy', `${cfg.caption.y}%`);
+      c.innerHTML = `<strong class="hero__caption-name">${esc(cfg.caption.name)}</strong><span class="hero__caption-role">${esc(cfg.caption.role)}</span>`;
+      s.querySelector('.hero__media').after(c);
+    }
+  });
   if (!slider.hasAttribute('tabindex')) slider.tabIndex = 0; // 키보드 ←→ 로 넘기려면 히어로에 포커스가 들어와야 한다
 
   const wrap = (i) => (i + slides.length) % slides.length;
