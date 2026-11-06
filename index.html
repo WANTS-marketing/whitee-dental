@@ -268,9 +268,9 @@
         <div class="faq-preview__box">
           <ul class="accordion" data-faq-preview></ul>
         </div>
-        <!-- 빠른 질문 박스 (main.js initQuickQuestion → common.js UI.inquiryForm, 전송 = 상담문의와 같은 Web3Forms) -->
+        <!-- 빠른 질문 박스 (main.js initQuickQuestion → common.js UI.inquiryForm, 저장 = api.js createInquiry + 메일 알림, 진료과목 = 기타) -->
         <aside class="faq-quick" aria-labelledby="faq-quick-title">
-          <form class="form faq-quick__form" data-inquiry-form="빠른 질문" data-treatment="FAQ 빠른 질문" novalidate>
+          <form class="form faq-quick__form" data-inquiry-form="빠른 질문" data-treatment="기타" novalidate>
             <h3 class="faq-quick__title" id="faq-quick-title">빠른 상담문의</h3>
             <p class="faq-quick__desc">궁금한 점을 남겨주시면 확인 후 연락드립니다.</p>
             <fieldset class="faq-quick__branch">
@@ -284,9 +284,14 @@
               <label class="sr-only" for="fq-phone">연락처</label>
               <input class="form__input" id="fq-phone" name="phone" type="tel" inputmode="numeric" autocomplete="tel" placeholder="연락처" required>
             </div>
+            <div class="faq-quick__pw">
+              <label class="sr-only" for="fq-password">비밀번호 (숫자 4자리)</label>
+              <input class="form__input" id="fq-password" name="password" type="password" inputmode="numeric" autocomplete="new-password" maxlength="4" placeholder="비밀번호 4자리" required aria-describedby="fq-password-help">
+              <p class="faq-quick__pw-help" id="fq-password-help">본인 문의와 답변을 확인할 때 사용합니다.</p>
+            </div>
             <div class="faq-quick__msg">
               <label class="sr-only" for="fq-message">질문 내용</label>
-              <textarea class="form__textarea" id="fq-message" name="message" rows="2" maxlength="200" placeholder="질문 내용 (200자 이내)" required aria-describedby="fq-count"></textarea>
+              <textarea class="form__textarea" id="fq-message" name="message" rows="2" maxlength="200" placeholder="질문 내용 (5자 이상, 200자 이내)" required aria-describedby="fq-count"></textarea>
               <span class="faq-quick__count" id="fq-count" aria-live="polite"><b data-fq-count>0</b>/200</span>
             </div>
             <!-- 허니팟: 사람에게 보이지 않는 칸. 봇이 채우면 전송하지 않음 -->
@@ -300,8 +305,9 @@
           </form>
           <div class="faq-quick__done" hidden tabindex="-1">
             <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><circle cx="24" cy="24" r="21"/><path d="M15 24.5l6 6 12-13"/></svg>
-            <p class="faq-quick__done-title">질문이 접수되었습니다</p>
-            <p class="faq-quick__done-desc">확인 후 남겨주신 연락처로 연락드리겠습니다.</p>
+            <p class="faq-quick__done-title">접수되었습니다</p>
+            <p class="faq-quick__done-desc">상담 현황에서 답변을 확인하실 수 있습니다.</p>
+            <a class="faq-quick__done-link" href="./faq/status.html">상담 현황 보기 →</a>
             <button class="btn btn--line btn--sm" type="button" data-fq-again>다른 질문 남기기</button>
           </div>
         </aside>

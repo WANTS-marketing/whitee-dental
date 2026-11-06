@@ -12,8 +12,14 @@
 - 순수 HTML / CSS / JavaScript (프레임워크·빌드 도구 없음)
 - 폰트: Pretendard (jsDelivr CDN)
 - 호스팅: GitHub Pages (GitHub Actions로 배포)
-- 상담문의 폼: Web3Forms
-- 2차 예정: Supabase (회원·게시판·관리자)
+- 상담문의: 게시판형(상담 현황 `faq/status.html`) — 지금은 **서버 없는 시안**(더미 JSON + 브라우저 탭 저장). 병원 메일 알림은 Web3Forms
+- 서버 연결: `docs/API-SPEC.md` 참고, `assets/js/api.js` 함수 안쪽만 교체 (특정 서비스에 묶이지 않음)
+
+### 시안 확인용 더미 비밀번호
+
+- 상담 현황(`faq/status.html`)의 더미 상담 글 11건은 **비밀번호가 모두 `1234`** 입니다 (`assets/data/inquiries.json`)
+- 새로 쓴 글·관리자 답변은 그 브라우저 탭에만 저장되고, 탭을 닫으면 더미로 돌아갑니다
+- 관리자 화면 `admin/` 은 시안이라 로그인 없이 열립니다 (실제 운영 시 관리자 인증 필요)
 
 ## 로컬에서 실행하기
 
@@ -77,15 +83,16 @@ npx serve _site              # → http://localhost:3000/
 index.html                 메인
 about/ treatment/ community/ faq/ member/   서브페이지
 fee.html, privacy.html     비급여 진료비용, 개인정보처리방침
-admin/                     관리자 화면 (1차: UI만, 검색 제외)
+admin/                     관리자 화면 (시안 — 상담 답변·상태 변경·삭제 동작, 나머지 게시판은 목록만)
 components/                공통 헤더·푸터·퀵메뉴 (include.js가 삽입)
 assets/css/                variables.css(디자인 토큰) · common.css · main.css(메인) · sub.css(서브 콘텐츠 블록) · admin.css
 assets/js/
   site-data.js             지점 정보·의료진·SNS 주소  ← 병원 정보 수정은 여기서
-  api.js                   데이터 불러오기·상담 전송·로그인 상태 (2차에 Supabase로 교체할 파일)
+  api.js                   데이터 함수 전부(게시판·상담문의·로그인 상태) — 서버 연결 때 바꾸는 파일 (docs/API-SPEC.md)
+  inquiry.js               상담 현황 목록·비밀번호 열람 (faq/status.html)
   include.js               컴포넌트 삽입
   common.js                헤더·모바일 메뉴·퀵메뉴·아코디언 등 공통 동작
-  main.js / pages.js / admin.js   페이지별 동작
+  main.js / pages.js / admin.js / board.js   페이지별 동작
   onboarding.js            메인 PC 첫 방문 이용 안내(코치마크)
   config.js                자동 생성 (커밋 안 함)
 assets/data/*.json         공지·사례·FAQ·문의 더미 데이터 · news.json + news/ = 치과소식(기존 사이트 치과스토리 88개)
@@ -111,11 +118,15 @@ docs/                      배포·인수인계 문서
 | 서브 배너 사진 (모든 서브페이지 공통 1장) | `assets/images/banner-sub.jpg` 를 같은 이름으로 교체 (지정: `sub.css` `.sub-visual__bg`) · 어두운 막·위쪽 그라데이션도 한 값 |
 | 서브 배너 높이 (PC 화면 높이 60%·520~680px, 모바일 45%·최소 320px) | `common.css` '.has-lnb .sub-visual' (모바일은 768px 이하 반응형 쪽) |
 | 서브페이지 시작 위치 (같은 대메뉴 안 이동 = 본문부터, 그 밖 = 배너 맨 위부터) | `assets/js/lnb-jump.js` (맨 위 설명에 규칙 정리) |
-| FAQ·공지 (1차) | `assets/data/*.json` |
+| FAQ·공지 (시안) | `assets/data/*.json` |
+| 상담문의 폼 칸·검사(비밀번호 4자리·내용 5자·링크 막기) | 각 폼 HTML (`faq/contact.html` · `treatment/*.html` 빠른상담 · `index.html` 빠른 상담문의) + `common.js` `inquiryForm` |
+| 상담 현황 목록(15개·지점 칩·모바일 카드형) · 비밀번호 팝업 | `assets/js/inquiry.js` · 스타일 `common.css` '상담 현황' · 팝업 `common.js` `UI.dialog` |
+| 상담 데이터 저장 방식 (지금 더미 → 서버) | `assets/js/api.js` 상담문의 함수 8개 + `docs/API-SPEC.md` |
+| 메인 의료진 나열 순서 | `assets/js/site-data.js` 의 `mainDoctorOrder` |
 | 의료진 소개 지점 이동 버튼(화면 아래 [창원점 N][마산점 N]) · 지점별 묶음 | `assets/js/pages.js` `renderDoctorsPage` · `initDoctorBranchNav` (원장 수는 site-data.js 에서 자동) · 스타일 `common.css` '의료진 소개 카드' · '지점 이동 버튼' |
 | 커뮤니티 게시판 목록·상세 (분류 칩·정렬·보기 방식·검색·페이지 번호·이전/다음글) | `assets/js/board.js` 맨 위 `BOARDS` (게시판별 분류·기본 보기·검색 대상) · 스타일 `common.css` '게시판 목록' — 한 페이지 12개(카드 4개 16개) |
-| 게시판 조회수 | 1차 데이터에는 없음 — `api.js` 가 0 으로 채우고 모두 0 이면 화면에서 조회수 칸을 숨김. 2차 Supabase `views` 컬럼으로 |
-| 치과소식 글 | `scripts/import/build-story.js` 로 생성 (분류 규칙·본문 정리도 여기) — 새 글은 2차 Supabase 게시판에서 |
+| 게시판 조회수 | 지금 데이터에는 없음 — `api.js` 가 0 으로 채우고 모두 0 이면 화면에서 조회수 칸을 숨김. 서버 연결 때 `views` 값으로 (API-SPEC 4-7) |
+| 치과소식 글 | `scripts/import/build-story.js` 로 생성 (분류 규칙·본문 정리도 여기) — 새 글은 서버 연결 후 게시판에서 |
 | 메인 첫 방문 이용 안내(코치마크) 문구·단계 | `assets/js/onboarding.js` 의 `STEPS` (스타일: `main.css` 끝 '이용 안내') |
 | 의료진 사진 크기·위치 맞추기 (메인 의료진 · 의료진 소개 카드 공통 — 칸 아래 맞춤 + 같은 보정값) | `assets/js/site-data.js` 의 각 원장 `photoScale` · `photoOffsetY` · `photoOffsetX` (아래 '의료진 사진 보정') |
 

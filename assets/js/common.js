@@ -92,17 +92,24 @@
   }
   initLnb();
 
-  /* ---------- 상담문의 폼 (상담문의하기 · 진료과목 빠른상담 · 메인 빠른 질문 공용) — 전송: api.js submitInquiry(Web3Forms) ----------
-     form[data-inquiry-form="구분"]: 메일 제목의 구분. 진료과목 칸이 없으면 data-treatment 값(예: FAQ 빠른 질문)
-     허니팟(name="website") · 연락처 숫자만 + 하이픈 자동 · 키가 없으면 '전화로 문의해 주세요' 안내
-     onSuccess(result): 접수 성공 시 (없으면 폼 아래 안내 문구 + 폼 비우기) */
+  /* ---------- 상담문의 폼 (상담문의하기 · 진료과목 빠른상담 · 메인 빠른 상담문의 공용) — 저장: api.js createInquiry (+ 병원 메일 알림) ----------
+     form[data-inquiry-form="구분"]: 어느 폼에서 왔는지(source). 진료과목 칸이 없으면 data-treatment 값(예: 메인 빠른 상담문의 = 기타)
+     칸: branch · treatment · name · phone · password(숫자 4자리, 본인 문의·답변 확인용) · message(있는 폼만) · agree · website(허니팟)
+     화면 쪽 스팸 방지: 허니팟(값이 있으면 성공처럼 보이고 저장 안 함) · 내용 5자 미만 막기 · 링크(http, www) 들어간 글 막기
+       (같은 검사를 api.js·서버에서도 다시 한다 — docs/API-SPEC.md)
+     연락처 숫자만 + 하이픈 자동, 비밀번호 숫자만 4자리
+     onSuccess(result): 접수 성공 시 (없으면 폼 아래 '접수되었습니다 … 상담 현황 보기 →' + 폼 비우기) */
+  const LINK_RE = /(https?:\/\/|www\.)/i;
+  const statusHref = () => `${document.documentElement.dataset.root || '.'}/faq/status.html`;
+  const DONE_TEXT = '접수되었습니다. 상담 현황에서 답변을 확인하실 수 있습니다.';
   function inquiryForm(form, { onSuccess } = {}) {
     const msg = form.querySelector('.form__msg');
     const submitBtn = form.querySelector('[type="submit"]');
-    const setMsg = (text, type) => {
-      msg.textContent = text;
+    const setMsg = (text, type, html) => {
+      if (html) msg.innerHTML = html; else msg.textContent = text;
       msg.className = `form__msg${type ? ` is-${type}` : ''}`;
     };
+    const fail = (text, field) => { setMsg(text, 'error'); field?.focus(); };
 
     // 연락처: 숫자만 받아 하이픈 자동 입력
     const phone = form.elements.phone;
@@ -110,10 +117,13 @@
       const d = phone.value.replace(/\D/g, '').slice(0, 11);
       phone.value = d.length < 4 ? d : d.length < 8 ? `${d.slice(0, 3)}-${d.slice(3)}` : `${d.slice(0, 3)}-${d.slice(3, d.length - 4)}-${d.slice(-4)}`;
     });
+    // 비밀번호: 숫자만 4자리
+    const pw = form.elements.password;
+    pw?.addEventListener('input', () => { const v = pw.value.replace(/\D/g, '').slice(0, 4); if (v !== pw.value) pw.value = v; });
 
     const done = (result) => {
       if (onSuccess) onSuccess(result);
-      else setMsg(result.message, 'success');
+      else setMsg('', 'success', `${esc(DONE_TEXT)} <a class="form__msg-link" href="${statusHref()}">상담 현황 보기 →</a>`);
       form.reset();
       form.dispatchEvent(new Event('input')); // 글자 수 표시 등 초기화
     };
@@ -123,26 +133,29 @@
       const f = form.elements;
 
       // 허니팟: 사람에게는 보이지 않는 칸 — 값이 있으면 봇으로 보고 조용히 종료(성공처럼 보이게)
-      if (f.website?.value) { done({ ok: true, message: '접수되었습니다.' }); return; }
+      if (f.website?.value) { done({ ok: true, data: {} }); return; }
+      setMsg('');
       if (!form.reportValidity()) return;
-      if (!/^01[016789]-?\d{3,4}-?\d{4}$/.test(f.phone.value)) {
-        setMsg('연락처를 정확히 입력해 주세요. (예: 010-1234-5678)', 'error');
-        f.phone.focus();
-        return;
-      }
+      if (!/^01[016789]-?\d{3,4}-?\d{4}$/.test(f.phone.value)) return fail('연락처를 정확히 입력해 주세요. (예: 010-1234-5678)', f.phone);
+      if (!/^\d{4}$/.test(f.password?.value || '')) return fail('비밀번호를 숫자 4자리로 입력해 주세요.', f.password);
+      const content = f.message ? f.message.value.trim() : '';
+      if (f.message && content.length < 5) return fail('문의 내용을 5자 이상 입력해 주세요.', f.message);
+      if (LINK_RE.test(content)) return fail('링크(http, www)가 들어간 글은 등록할 수 없습니다. 주소를 빼고 다시 적어 주세요.', f.message);
 
       submitBtn.disabled = true;
       setMsg('전송 중입니다…');
       try {
-        const result = await window.API.submitInquiry({
+        const result = await window.API.createInquiry({
           branch: f.branch.value,
-          treatment: f.treatment?.value || form.dataset.treatment || '',
+          treatment: f.treatment?.value || form.dataset.treatment || '기타',
           name: f.name.value.trim(),
           phone: f.phone.value,
-          message: f.message?.value.trim(),
+          password: f.password.value,
+          content,
+          contentRequired: !!f.message,
           source: form.dataset.inquiryForm || '상담문의',
         });
-        if (result.ok) { setMsg(''); done(result); } else setMsg(result.message, 'error');
+        if (result.ok) { setMsg(''); done(result); } else fail(result.error.message, result.error.field && f[result.error.field === 'content' ? 'message' : result.error.field]);
       } catch (err) {
         console.error(err);
         setMsg('전송에 실패했습니다. 잠시 후 다시 시도하거나 전화로 문의해 주세요.', 'error');
@@ -151,6 +164,63 @@
       }
     });
   }
+
+  /* ---------- 사이트 팝업 (브라우저 기본 alert·confirm 대신) — 상담 현황 비밀번호·상세, 관리자 확인 창 ----------
+     UI.dialog({ title, body(HTML), actions: [{ label, value, variant: 'point'|'line'|'danger' }], wide, onOpen(panel, close) })
+       → Promise<value> (Esc·바깥 클릭·닫기 버튼 = null). 열려 있는 동안 뒤 화면 스크롤 잠금, 포커스는 팝업 안에서만, 닫으면 연 버튼으로 복귀
+     UI.confirm(message, { okLabel, danger }) → Promise<boolean> */
+  function dialog({ title, body = '', actions = [], wide = false, onOpen } = {}) {
+    return new Promise((resolve) => {
+      const opener = document.activeElement;
+      const wrap = document.createElement('div');
+      wrap.className = `site-dialog${wide ? ' site-dialog--wide' : ''}`;
+      const id = `site-dialog-${Date.now()}`;
+      wrap.innerHTML = `
+        <div class="site-dialog__dim" data-dialog-close></div>
+        <div class="site-dialog__panel" role="dialog" aria-modal="true" aria-labelledby="${id}" tabindex="-1">
+          <div class="site-dialog__head"><h2 class="site-dialog__title" id="${id}">${esc(title)}</h2>
+            <button class="site-dialog__x" type="button" data-dialog-close aria-label="닫기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+          <div class="site-dialog__body">${body}</div>
+          ${actions.length ? `<div class="site-dialog__actions">${actions.map((a, i) => `<button class="btn btn--${a.variant === 'danger' ? 'danger' : a.variant === 'point' ? 'point' : 'line'}" type="${a.submit ? 'submit' : 'button'}" data-dialog-value="${i}">${esc(a.label)}</button>`).join('')}</div>` : ''}
+        </div>`;
+      document.body.appendChild(wrap);
+      document.documentElement.classList.add('is-dialog-open');
+      const panel = wrap.querySelector('.site-dialog__panel');
+      let closed = false;
+      const close = (value = null) => {
+        if (closed) return;
+        closed = true;
+        document.removeEventListener('keydown', onKey, true);
+        wrap.classList.remove('is-open');
+        if (!document.querySelectorAll('.site-dialog.is-open').length) document.documentElement.classList.remove('is-dialog-open');
+        setTimeout(() => wrap.remove(), 200);
+        opener?.focus?.({ preventScroll: true });
+        resolve(value);
+      };
+      const focusables = () => [...panel.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')].filter((el) => !el.disabled && el.offsetParent !== null);
+      function onKey(e) {
+        if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); close(null); return; }
+        if (e.key !== 'Tab') return;
+        const els = focusables(); if (!els.length) return;
+        const first = els[0], last = els[els.length - 1];
+        if (e.shiftKey && (document.activeElement === first || document.activeElement === panel)) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+      document.addEventListener('keydown', onKey, true);
+      wrap.addEventListener('click', (e) => {
+        if (e.target.closest('[data-dialog-close]')) close(null);
+        const b = e.target.closest('[data-dialog-value]');
+        if (b && b.type !== 'submit') close(actions[Number(b.dataset.dialogValue)].value);
+      });
+      requestAnimationFrame(() => wrap.classList.add('is-open'));
+      const api = { panel, close, setBody: (html) => { panel.querySelector('.site-dialog__body').innerHTML = html; }, setTitle: (t) => { panel.querySelector('.site-dialog__title').textContent = t; } };
+      if (onOpen) onOpen(api); else (panel.querySelector('[data-dialog-value]') || panel).focus({ preventScroll: true });
+    });
+  }
+  const confirmDialog = (message, { title = '확인', okLabel = '확인', danger = false } = {}) =>
+    dialog({ title, body: `<p class="site-dialog__text">${esc(message)}</p>`, actions: [{ label: '취소', value: false }, { label: okLabel, value: true, variant: danger ? 'danger' : 'point' }] }).then((v) => v === true);
+  const alertDialog = (message, { title = '안내' } = {}) =>
+    dialog({ title, body: `<p class="site-dialog__text">${esc(message)}</p>`, actions: [{ label: '확인', value: true, variant: 'point' }] });
 
   /* ---------- 선택 목록(select) 커스텀 드롭다운 (스타일 common.css '선택 목록') ----------
      닫힌 상태 = 원래 select 그대로(입력칸과 같은 높이·테두리·모서리·포커스, 사이트 화살표 아이콘) — 전송·라벨·필수 입력 안내·reset 이 그대로 동작
@@ -278,7 +348,7 @@
   function initSelects(scope = document) { scope.querySelectorAll('select').forEach(enhanceSelect); }
   initSelects();
 
-  window.UI = { esc, telHref, img, bg, formatDate, branchBadge, accordion, faqItem, rollText, inquiryForm, initSelects };
+  window.UI = { esc, telHref, img, bg, formatDate, branchBadge, accordion, faqItem, rollText, inquiryForm, initSelects, dialog, confirm: confirmDialog, alert: alertDialog };
 
   /* ---------- 이미지 대체 ----------
      1) assets/images/파일명 이 없으면 → assets/images/temp/파일명 (임시 스톡 이미지)

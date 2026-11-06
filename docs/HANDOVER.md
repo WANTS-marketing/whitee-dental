@@ -120,52 +120,27 @@
 - [ ] 흰색 로고 파일 요청 (SVG 또는 2배 PNG, 투명 배경) — 메인 투명 헤더(히어로 위)·푸터용. 지금은 컬러 logo.png 를 CSS filter 로 흰색 처리 중 (main.css '투명 헤더', common.css .logo__img--white)
 - [ ] 비급여 진료비용 표
 - [ ] 개인정보처리방침 전문 (Web3Forms 처리 위탁 문구 포함), 상담 정보 보유 기간
-- [ ] 회원 이용약관 (2차)
+- [ ] **기존 홈페이지 상담문의 74건 이전 여부 (병원 확인)** — 이름·연락처·상담 내용이 든 개인정보라 **옮기지 않는 것을 기본**으로 함. 옮겨야 한다면 병원이 이용 목적·보유 기간·동의 범위를 확인한 뒤, 서버 연결 후 관리자만 볼 수 있게 이전 (상담 현황 공개 목록에 섞지 않는 것을 권장)
+- [ ] 회원 이용약관 (서버 연결·회원가입 때)
 - [ ] 주차·대중교통 안내
 
-## 2차 작업 목록 — Supabase 연동
+## 서버 연결 (회원·게시판·상담문의·관리자)
 
-1차는 정적 화면만. 화면 코드는 그대로 두고 **`assets/js/api.js` 함수 내부만** 교체하도록 구조를 잡아 두었다.
-(함수 이름과 반환 형태 유지: `getNotices / getNews / getCases / getFaqs / getInquiries / submitInquiry / isLoggedIn / getCurrentUser / isAdmin / signInWithKakao / signOut`)
+**`docs/API-SPEC.md` 참고 — `assets/js/api.js` 만 교체하면 서버 연결됨.** 화면 코드는 `window.API` 함수만 부르고 저장 방식을 모른다.
+함수 이름·입력값·반환 형식은 유지하고 함수 안쪽만 바꾼다. 어떤 서버를 쓸지는 아직 정하지 않음(특정 서비스에 묶지 않음). Supabase 를 고를 때의 테이블·RLS 예시는 API-SPEC 부록(선택 사항).
 
-### 1. Supabase Auth (카카오 로그인)
-- [ ] Supabase 프로젝트 생성 (병원 또는 회사 명의 계정 — 개인 계정 금지)
-- [ ] Kakao Developers 앱 생성 → REST API 키·Client Secret → Supabase Auth Providers의 Kakao에 등록
-- [ ] Redirect URL: 시안 주소 + 최종 도메인 둘 다 등록
-- [ ] `api.js` 의 `isLoggedIn / getCurrentUser / signInWithKakao / signOut` 구현
-- [ ] 로그인 후 헤더 "로그인 → 로그아웃/마이페이지" 전환 (`components/header.html`, `common.js`)
-- [ ] 이메일 회원가입을 유지할지 카카오만 쓸지 결정
+지금 상태 (2026-11-06): 상담문의는 **서버 없는 시안** — 폼 → 상담 현황(`faq/status.html`) → 비밀번호 열람 → 관리자 답변(`admin/`) 흐름이 더미 JSON + 브라우저 탭 저장(sessionStorage)으로 동작. 더미 비밀번호는 모두 `1234`. 병원 메일 알림은 지금처럼 Web3Forms.
 
-### 2. 테이블 설계 (초안 — JSON 더미와 같은 필드)
-| 테이블 | 주요 컬럼 |
-|---|---|
-| `profiles` | `id`(auth.users FK), `name`, `phone`, `role`('user'/'admin'), `created_at` |
-| `notices` | `id`, `title`, `body`, `branch`('changwon'/'masan'/'both'), `pinned`, `date` |
-| `news` | `id`, `title`, `body`, `branch`, `thumbnail`, `date` |
-| `cases` | `id`, `category`, `category_name`, `title`, `branch`, `before_image`, `after_image`, `date` |
-| `faqs` | `id`, `category`, `question`, `answer`, `featured`, `order` |
-| `inquiries` | `id`, `branch`, `treatment`, `name`, `phone`, `message`, `source`, `status`('new'/'done'), `agreed_at`, `created_at` |
-
-### 3. RLS (행 단위 보안)
-- [ ] `notices / news / faqs`: 누구나 읽기, 관리자만 쓰기
-- [ ] `cases`: 목록(제목·분류)은 누구나, **이미지 URL은 로그인 사용자만** (Storage 정책과 함께)
-- [ ] `inquiries`: 누구나 insert만 가능(본인 것도 조회 불가), 관리자만 select/update
-- [ ] `profiles`: 본인 행만 읽기·수정, `role` 컬럼은 사용자가 바꿀 수 없게
-
-### 4. 관리자 권한
-- [ ] `profiles.role = 'admin'` 판별 함수(`is_admin()`)를 RLS에서 사용
-- [ ] `/admin/` 진입 시 `API.isAdmin()` 확인 → 아니면 홈으로 이동
-- [ ] `admin.js` 의 수정·삭제·새로 등록 버튼 연결, 상담문의 상태 변경
-- [ ] 상담 접수 시 관리자 메일 알림 (Edge Function 또는 Web3Forms 병행)
-
-### 5. 이미지 Storage
-- [ ] 버킷: `public`(소식 썸네일 등), `cases`(비공개 — 치료사례)
-- [ ] 치료사례 이미지는 로그인 사용자에게 signed URL로만 제공
-- [ ] 관리자 화면에서 업로드 (용량·형식 제한)
-
-### 6. 상담 개인정보
-- [ ] 보유 기간 지나면 자동 삭제(스케줄) 또는 관리자 삭제 절차
-- [ ] 개인정보처리방침에 Supabase(처리 위탁·국외 이전 여부) 반영
+- [ ] ⚠️ **오픈 전 필수: 서버 연결 또는 최소한 Web3Forms 키(`WEB3FORMS_ACCESS_KEY`) 등록** — 지금 시안 주소에는 키가 비어 있어, 상담 폼이 '접수되었습니다'로 보여도 글은 방문자 브라우저 탭에만 남고 병원에는 전달되지 않음 (2026-11-06 확인)
+- [ ] 서버 선택 (병원 또는 회사 명의 계정 — 개인 계정 금지) · 비용·데이터 보관 위치(국외 이전 여부) 확인
+- [ ] 상담문의 8개 함수 연결 (`listInquiries` · `getInquiry` · `createInquiry` · `adminListInquiries` · `adminGetInquiry` · `answerInquiry` · `updateInquiryStatus` · `deleteInquiry`)
+- [ ] **API-SPEC 3장 '서버에서 반드시 처리할 것'** 전부 — 비밀번호 해시·틀린 횟수 제한, 목록은 공개 필드만, 관리자 인증·권한, 스팸(같은 연락처 10분 내 재등록·링크 글)·요청 횟수 제한, 보관 기간 지나면 파기
+- [ ] 관리자 로그인 + `/admin/` 접근 막기 (지금은 로그인 없이 열림 — 화면 맨 위 '시안' 안내)
+- [ ] 메일 알림을 서버에서 보내게 되면 api.js `notifyByEmail` 호출 제거
+- [ ] 공지·치과소식·치료사례·FAQ 함수 연결 (API-SPEC 4장) — 치료사례 사진은 로그인 사용자에게만 주소 제공
+- [ ] 카카오 로그인 (Kakao Developers 앱, Redirect URI 에 시안 주소 + 최종 도메인) · 이메일 회원가입 유지 여부 결정
+- [ ] 메인 이벤트 배너를 관리자에서 바꾸려면 `getBanners` 추가 (지금은 index.html 에 직접 적혀 있음)
+- [ ] 개인정보처리방침에 상담 수집 항목(비밀번호 포함)·보관 기간·처리 위탁(서버·메일 서비스) 반영
 
 ## 작업 시 지킬 것
 

@@ -14,9 +14,9 @@
 
 | 이름 | 용도 | 지금 필요? |
 |---|---|---|
-| `WEB3FORMS_ACCESS_KEY` | 상담문의 폼 전송 키 | 예 (없으면 폼에 "전화로 문의" 안내가 뜸) |
-| `SUPABASE_URL` | 2차 회원·게시판 | 2차 |
-| `SUPABASE_ANON_KEY` | 2차 회원·게시판 (공개용 anon 키) | 2차 |
+| `WEB3FORMS_ACCESS_KEY` | 상담문의 폼 전송 키 | 예 — 서버 연결 전에는 병원이 상담을 받는 유일한 경로. 없으면 상담 글은 화면에 접수되지만 병원에 메일이 가지 않음 |
+| `SUPABASE_URL` | 서버 연결 시 (서버 미정 — Supabase 가 아니면 `API_BASE_URL` 등으로 이름 변경, `docs/API-SPEC.md` 1장) | 서버 연결 때 |
+| `SUPABASE_ANON_KEY` | 서버 연결 시 공개용 키 (위와 같음) | 서버 연결 때 |
 
 `CONTACT_EMAIL`(수신 이메일)은 Secrets에 넣지 않습니다. Web3Forms는 **키를 발급받은 이메일로** 접수 메일을 보내므로,
 수신 주소를 바꾸려면 새 이메일로 키를 다시 발급받아 `WEB3FORMS_ACCESS_KEY` 를 교체합니다. (`.env.example` 에는 기록용으로 남겨 둠)
