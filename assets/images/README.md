@@ -35,6 +35,7 @@
 | `branch-bar-bg.jpg` | 하단 지점 바로가기 배경 (데스크 전경) | 1920×640 |
 | `banner-sub.jpg` | **서브페이지 상단 배너 공통 1장** (치과소개·의료진 소개·병원소개·진료과목 5) — 같은 이름으로 실제 원내 사진을 넣으면 전체 교체. 지금은 임시 스톡(Pexels 8459996, 대기실·복도, 1920×1280) — 가로 2400px 이상 원내 전경으로 교체 권장 (docs/HANDOVER.md) | 2400×1600 이상 |
 | `banner-clinic.jpg` | **병원소개 배너만** (about/clinic.html) — 마산점 진료실 통로(240307_MED_0163) 세로 사진에서 참고 이미지(자료/서브/Rectangle 1682.png) 구도대로 가로 띠(2400×777, 약 3.1:1)로 자른 것. 바꾸려면 같은 이름으로 교체, 지우면 `sub.css` `.sub-visual__bg--clinic` 도 지워 공통 배너로 | 2400×777 |
+| `banner-doctors.jpg` | **의료진 소개 배너만** (about/doctors.html) — 진료 상담 사진(2.의료진/환자상담/진료상담(1).JPG)을 참고 이미지(자료/서브/참고이미지.png) 구도대로 자른 것. 모바일은 원장님이 보이게 오른쪽 기준(`sub.css` 768px). 지우면 `.sub-visual__bg--doctors` 도 지워 공통 배너로 | 2400×777 |
 | `tour-changwon-01~06.jpg`, `tour-masan-01~06.jpg` | 병원소개(about/clinic.html) ②내부 둘러보기 갤러리 (개수·캡션은 `assets/js/site-data.js` 의 `tour`). **실제 사진 적용(2026-11-05, 긴 변 최대 2000px)** — 창원점·마산점 각 6장 | 1400×1050 (4:3) 이상 |
 | `icons/quick-implant.png`, `quick-orthodontics.png`, `quick-general.png`, `quick-wisdom-scaling.png`, `quick-aesthetic.png` | 홈 퀵바(빠른 진료 안내) 아이콘 — 투명 PNG. 바꿀 때 index.html 의 width·height·`--h`(원본 높이)도 함께 수정 | 원본 크기 그대로(현재 1배) · 2배 크기 또는 SVG 권장 |
 | `icons/naver-blog.png` | 퀵메뉴(오른쪽 플로팅 블로그 버튼·모바일 + 메뉴) 블로그 아이콘 — 네이버 블로그 말풍선, 투명 PNG 129×120 (제공 원본 "네이버 AI-06.png" 여백 잘라 축소). 표시 높이 19~24px | 바꿀 때 components/quick.html 의 width·height 도 함께 수정 |

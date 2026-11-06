@@ -8,6 +8,7 @@
    페이지마다 다른 것은 영문 라벨·슬로건·본문 제목뿐. 어두운 막(::after)·위쪽 그라데이션(common.css .has-lnb .sub-visual--image::before)도 한 값 */
 .sub-visual__bg { position: absolute; inset: 0; background: url("../images/banner-sub.jpg") center / cover no-repeat; }
 .sub-visual__bg--clinic { background-image: url("../images/banner-clinic.jpg"); } /* 예외: 병원소개만 마산점 진료실 통로 사진(240307_MED_0163, 세로 사진에서 참고 이미지 Rectangle 1682 구도대로 가로 띠 2400×777 로 자름). 어두운 막·위쪽 그라데이션은 공통 값 그대로 */
+.sub-visual__bg--doctors { background-image: url("../images/banner-doctors.jpg"); } /* 예외: 의료진 소개만 진료 상담 사진(2.의료진/환자상담/진료상담(1).JPG, 참고이미지.png 구도대로 2400×777). 원장님이 오른쪽이라 모바일은 오른쪽 기준(아래 768px) */
 .sub-visual__bg::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(10, 10, 10, 0.55), rgba(10, 10, 10, 0.75)); }
 .sub-visual--image .container { position: relative; }
 .sub-visual__copy { margin-bottom: 12px; font-size: var(--fs-lg); opacity: 0.9; word-break: keep-all; }
@@ -259,6 +260,7 @@
 }
 
 @media (max-width: 768px) {
+  .sub-visual__bg--doctors { background-position: 88% center; } /* 좁은 화면에서도 원장님이 보이게 */
   .sub-visual--image { padding: calc(var(--header-h) + 56px) 0 44px; }
   /* 모바일: 섹션은 예전처럼 위아래 여백으로 잇고, 배경 섹션은 화면 끝까지 (배경 띠 사이에 흰 틈이 생기지 않게) */
   .sub-body .sec { padding: var(--space-4xl) 0; }
