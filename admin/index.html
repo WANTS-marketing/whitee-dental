@@ -17,7 +17,7 @@
   <script src="../assets/js/admin.js" defer></script>
 </head>
 <body class="admin">
-  <!-- 1차: UI만. 2차에 Supabase Auth + profiles.role = 'admin' 확인 후에만 표시 (HANDOVER.md 참고) -->
+  <!-- 시안: 로그인 없이 열림. 실제 운영 시 관리자 인증 후에만 열리게 (docs/API-SPEC.md '관리자 인증') -->
   <aside class="admin__side">
     <a class="admin__logo" href="../index.html">화이트<em>e</em>치과 <small>ADMIN</small></a>
     <nav aria-label="관리자 메뉴">
@@ -33,7 +33,7 @@
   </aside>
 
   <main class="admin__main" id="main">
-    <p class="admin__banner">관리자 화면 미리보기입니다. 저장·삭제 기능은 2차(Supabase 연동)에 연결됩니다. 표시되는 데이터는 더미입니다.</p>
+    <p class="admin__banner" role="note"><strong>시안 — 실제 운영 시 관리자 인증 필요</strong> · 지금은 로그인 없이 열리고, 상담 데이터는 더미 + 이 브라우저 탭에서만 저장됩니다(탭을 닫으면 처음 상태로).</p>
     <header class="admin__head">
       <h1 class="admin__title" data-admin-title>상담문의</h1>
       <button class="btn btn--dark" type="button" data-admin-new>+ 새로 등록</button>
@@ -44,7 +44,13 @@
         <option value="changwon">창원점</option>
         <option value="masan">마산점</option>
       </select>
-      <input class="form__input" type="search" placeholder="검색" aria-label="검색" data-admin-search>
+      <select class="form__select" data-admin-status aria-label="상태 필터">
+        <option value="">전체 상태</option>
+        <option value="received">접수</option>
+        <option value="answered">답변완료</option>
+      </select>
+      <input class="form__input" type="search" placeholder="이름·연락처 검색" aria-label="검색" data-admin-search>
+      <p class="admin__count" data-admin-count aria-live="polite"></p>
     </div>
     <div class="admin__table-wrap">
       <table class="admin__table">
@@ -52,6 +58,7 @@
         <tbody data-admin-tbody></tbody>
       </table>
     </div>
+    <nav class="pager admin__pager" aria-label="페이지" data-admin-pager></nav>
   </main>
 </body>
 </html>

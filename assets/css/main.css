@@ -506,6 +506,11 @@ html.is-fullpage .case-card { aspect-ratio: auto; height: 100%; }
 .faq-quick__toggle input:focus-visible + span { outline: 2px solid var(--tg); outline-offset: 2px; }
 .faq-quick__row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .faq-quick .form__input { height: 40px; padding: 0 14px; font-size: var(--fs-sm); }
+/* 비밀번호(숫자 4자리) + 안내 한 줄 — 입력칸 왼쪽 반, 안내 문구 오른쪽 */
+.faq-quick__pw { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 8px; }
+.faq-quick__pw .form__input { letter-spacing: 0.2em; }
+.faq-quick__pw .form__input::placeholder { letter-spacing: 0; }
+.faq-quick__pw-help { font-size: var(--fs-xxs); line-height: 1.35; color: var(--color-text-sub); word-break: keep-all; }
 .faq-quick__msg { position: relative; }
 .faq-quick .form__textarea { height: auto; min-height: 0; padding: 10px 14px 24px; font-size: var(--fs-sm); line-height: 1.5; resize: none; overscroll-behavior: contain; }
 .faq-quick__count { position: absolute; right: 12px; bottom: 8px; font-size: var(--fs-xxs); color: var(--color-text-muted); pointer-events: none; }
@@ -521,6 +526,7 @@ html.is-fullpage .case-card { aspect-ratio: auto; height: 100%; }
 .faq-quick__done svg { width: 52px; height: 52px; color: var(--color-point); }
 .faq-quick__done-title { font-size: var(--fs-h4); font-weight: 700; }
 .faq-quick__done-desc { margin-bottom: 8px; font-size: var(--fs-xs); color: var(--color-text-sub); }
+.faq-quick__done-link { margin-bottom: 6px; font-size: var(--fs-sm); font-weight: 700; color: var(--color-accent); text-decoration: underline; text-underline-offset: 3px; }
 @media (min-width: 1025px) {
   .faq-preview .faq-preview__inner.container { max-width: none; padding-left: max(40px, (100% - 1600px) / 2); padding-right: max(var(--quick-edge), (100% - 1600px) / 2); }
   /* PC 크기(1920 기준, 화면 폭에 맞게 clamp — rem 부분은 글자 크기 단계를 따라 커진다)
@@ -582,7 +588,8 @@ html.is-fullpage .case-card { aspect-ratio: auto; height: 100%; }
 .story__more:hover svg { transform: translateX(3px); }
 /* 공지사항 목록: 흰 카드 4개(간격 12px), 카드 전체가 링크 — 1줄 [지점 태그] 제목(말줄임) / 2줄 날짜 */
 .notice-latest { display: grid; gap: 12px; align-content: start; }
-.notice-latest > li { display: grid; }
+.notice-latest > li { display: grid; grid-template-columns: minmax(0, 1fr); } /* 긴 제목(말줄임)이 칸 너비를 밀어내지 않게 — 390·아주 크게에서 가로 스크롤 생기던 것 */
+.notice-latest, .notice-item { min-width: 0; }
 .notice-item { display: flex; flex-direction: column; justify-content: center; padding: 24px 28px; border: 1px solid #ececec; border-radius: 10px; background: #fff; transition: border-color var(--dur); }
 .notice-item__title { display: flex; align-items: center; gap: 8px; min-width: 0; font-size: 1.0625rem; font-weight: 500; line-height: 1.5; transition: color var(--dur); } /* 17px */
 .notice-item__text { min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }

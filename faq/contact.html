@@ -41,6 +41,7 @@
         <nav class="sub-tabs" aria-label="FAQ 하위 메뉴">
           <a href="index.html">자주 묻는 질문</a>
           <a href="contact.html" class="is-current" aria-current="page">상담문의하기</a>
+          <a href="status.html">상담 현황</a>
         </nav>
       </div>
     </section>
@@ -79,8 +80,13 @@
               </div>
             </div>
             <div class="form__row">
-              <label class="form__label" for="ct-message">문의 내용</label>
-              <textarea class="form__textarea" id="ct-message" name="message" maxlength="1000" placeholder="불편하신 부분이나 궁금한 점을 적어주세요. (선택)"></textarea>
+              <label class="form__label" for="ct-password">비밀번호 <small class="form__label-sub">숫자 4자리</small><span class="req">*</span></label>
+              <input class="form__input form__input--pw" id="ct-password" name="password" type="password" inputmode="numeric" autocomplete="new-password" maxlength="4" placeholder="숫자 4자리" required aria-describedby="ct-password-help">
+              <p class="form__help" id="ct-password-help">본인 문의와 답변을 확인할 때 사용합니다.</p>
+            </div>
+            <div class="form__row">
+              <label class="form__label" for="ct-message">문의 내용<span class="req">*</span></label>
+              <textarea class="form__textarea" id="ct-message" name="message" maxlength="1000" placeholder="불편하신 부분이나 궁금한 점을 5자 이상 적어주세요. (링크·주소는 넣을 수 없습니다)" required></textarea>
             </div>
             <!-- 허니팟: 사람에게 보이지 않는 칸. 봇이 채우면 전송하지 않음 -->
             <div class="form__hp" aria-hidden="true">
@@ -90,8 +96,8 @@
             <div class="form__row">
               <div class="agree-box" tabindex="0">
               <p><strong>개인정보 수집·이용 안내</strong></p>
-              <p>· 수집 항목: 이름, 연락처, 상담 지점·진료과목, 문의 내용</p>
-              <p>· 이용 목적: 상담 신청 확인 및 연락</p>
+              <p>· 수집 항목: 이름, 연락처, 상담 지점·진료과목, 문의 내용, 비밀번호(본인 문의 확인용)</p>
+              <p>· 이용 목적: 상담 신청 확인 및 연락, 상담 현황 답변 안내</p>
               <p>· 보유 기간: <!-- TODO: 병원 확인 후 기재 -->병원 정책 확인 후 기재 예정</p>
               <p>· 동의를 거부할 수 있으며, 거부 시 온라인 상담 신청이 제한됩니다.</p>
             </div>

@@ -1,4 +1,5 @@
-/* 관리자 화면 (1차: UI만) */
+/* 관리자 화면 (admin/index.html — admin.js). 상담 상세 팝업·상태 배지는 common.css 사이트 팝업·상담 현황 스타일을 같이 쓴다 */
+.admin [hidden] { display: none !important; }
 .admin { display: grid; grid-template-columns: 220px minmax(0, 1fr); min-height: 100vh; padding: 0; background: #f5f6f8; }
 .admin__side { display: flex; flex-direction: column; gap: 24px; padding: 28px 16px; background: var(--color-footer); color: #fff; }
 .admin__logo { padding: 0 8px; font-size: 20px; font-weight: 800; }
@@ -10,10 +11,31 @@
 .admin__menu button.is-active { background: rgba(255, 255, 255, 0.12); color: #fff; font-weight: 600; }
 .admin__back { margin-top: auto; padding: 0 8px; font-size: var(--fs-xs); opacity: 0.6; }
 .admin__main { padding: 32px 40px; }
-.admin__banner { margin-bottom: 24px; padding: 12px 16px; border-radius: var(--radius-sm); background: #fff4e5; color: #8a5a00; font-size: var(--fs-sm); }
+.admin__banner { margin-bottom: 24px; padding: 12px 16px; border: 1px solid #f3d39b; border-radius: var(--radius-btn); background: #fff4e5; color: #7a4f00; font-size: var(--fs-sm); line-height: 1.6; }
+.admin__banner strong { font-weight: 700; }
 .admin__head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
 .admin__title { font-size: var(--fs-h3); }
-.admin__filters { display: flex; gap: 8px; margin-bottom: 16px; }
+.admin__filters { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 16px; }
+.admin__count { margin-left: auto; font-size: var(--fs-xs); color: var(--color-text-sub); }
+.admin__count b { color: var(--color-text); }
+.admin__row { cursor: pointer; }
+.admin__row:focus-visible { outline: 2px solid var(--color-accent); outline-offset: -2px; }
+.admin__none { color: #aaa; }
+.admin__pager { margin-top: 24px; }
+/* 상담 상세 팝업 */
+.adm-inq__info { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 20px; margin-top: 14px; padding: 14px 16px; border-radius: var(--radius-btn); background: #f7f8fa; font-size: var(--fs-xs); }
+.adm-inq__info div { display: flex; gap: 8px; min-width: 0; }
+.adm-inq__info dt { flex: none; width: 3.5em; color: #888; }
+.adm-inq__info dd { min-width: 0; overflow-wrap: anywhere; }
+.adm-inq__info a { color: var(--color-accent); }
+.adm-inq__answer { display: grid; gap: 8px; margin-top: 24px; }
+.adm-inq__answer .form__textarea { height: 160px; }
+.adm-inq__answer .form__msg:empty { display: none; }
+.adm-inq__bar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 4px; }
+.adm-inq__bar .btn { height: 44px; font-weight: 600; }
+.adm-inq__status { display: flex; gap: 6px; }
+.adm-inq__status .form__select { width: 120px; height: 44px; }
+.adm-inq__del { margin-left: auto; }
 .admin__filters .form__select { width: 160px; height: 42px; }
 .admin__filters .form__input { width: 260px; height: 42px; }
 .admin__table-wrap { overflow-x: auto; background: #fff; border-radius: var(--radius-md); box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); }
@@ -22,6 +44,7 @@
 .admin__table th { background: #fafafa; font-weight: 600; color: var(--color-text-sub); }
 .admin__table td.is-wrap { white-space: normal; min-width: 200px; }
 .admin__table tr:hover td { background: #fcfcfc; }
+/* (예전 상태 배지 — 지금은 .inq-status) */
 .admin__status { display: inline-block; padding: 2px 10px; border-radius: var(--radius-pill); font-size: var(--fs-xxs); font-weight: 600; }
 .admin__status--new { background: #e8f0fe; color: #1a73e8; }
 .admin__status--done { background: #e6f4ea; color: #188038; }
@@ -38,4 +61,7 @@
   .admin__main { padding: 20px 16px; }
   .admin__filters { flex-wrap: wrap; }
   .admin__filters .form__input { flex: 1; width: auto; }
+  .admin__count { width: 100%; margin-left: 0; }
+  .adm-inq__info { grid-template-columns: minmax(0, 1fr); }
+  .adm-inq__bar .btn--point { flex: 1; }
 }
