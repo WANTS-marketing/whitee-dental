@@ -124,7 +124,7 @@ window.SITE = {
   /* 의료진 — 의료진 소개(about/doctors.html)·메인 의료진 공통
        focus  주요 진료 (의료진 소개 이름 아래 진료과 태그 옆) — 진료과 기준 임시 작성, 병원 확인 필요(HANDOVER)
        logos  학회·학교 로고 [{ src: 'logo-xxx.png', alt: '대한치과교정학회' }] — 의료진 소개 이름 줄 오른쪽 끝 (assets/images/, 지금은 비어 있음)
-       photoHeadTop 사진(doctor-*-cut.png) 안 머리 위 끝 위치 (사진 높이 대비 0~1, 사진을 바꾸면 다시 잴 것) — 의료진 소개에서 머리가 약력 상자 위로 80px 나오게 맞추는 데 쓴다
+       photoHeadTop 사진(doctor-*-cut.png) 안 머리 위 끝 위치 (사진 높이 대비 0~1, 사진을 바꾸면 다시 잴 것) — 의료진 소개에서 머리가 약력 상자 위로 100px 나오게 사진 높이를 정하는 데 쓴다 (이 페이지는 photoScale·photoOffset 대신 이 값)
        career 약력 — 화면에서 자동 분류(SITE.classifyCareer): 전문의 / 학력 / 경력 / 학회 활동 */
   doctors: [
     // 창원점
