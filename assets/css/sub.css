@@ -6,6 +6,10 @@
 .sub-visual--image { position: relative; overflow: hidden; padding: calc(var(--header-h) + 110px) 0 80px; background: var(--color-bg-hero); border-bottom: 0; color: #fff; }
 .sub-visual__bg { position: absolute; inset: 0; background-position: center; background-size: cover; background-repeat: no-repeat; }
 .sub-visual__bg::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(10, 10, 10, 0.55), rgba(10, 10, 10, 0.75)); }
+/* 병원소개 배너(visual-clinic.jpg — 마산점 간판 사진): 간판 글자가 배너 문구와 겹치지 않게 간판을 문구 아래로
+   PC·태블릿 = 사진 아래쪽 15% 기준, 모바일(배너가 거의 정사각형이라 위치만으로는 겹침) = 1.7배로 키워 위 맞춤 */
+[data-page="clinic"] .sub-visual__bg { background-position: center 15%; }
+@media (max-width: 768px) { [data-page="clinic"] .sub-visual__bg { background-size: auto 170%; background-position: 40% 0%; } }
 .sub-visual--image .container { position: relative; }
 .sub-visual__copy { margin-bottom: 12px; font-size: var(--fs-lg); opacity: 0.9; word-break: keep-all; }
 .sub-visual--image .breadcrumb { color: rgba(255, 255, 255, 0.6); }
