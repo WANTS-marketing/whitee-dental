@@ -321,6 +321,17 @@ async function renderFaqList() {
   const box = document.querySelector('[data-faq-list]');
   if (!box) return;
   const catsEl = document.querySelector('[data-faq-cats]');
+  const catsWrap = document.querySelector('[data-faq-cats-wrap]');
+  const countEl = document.querySelector('[data-faq-count]');
+  // 칩 줄이 넘칠 때: 오른쪽 끝 흐림(.is-fade-end) — 끝까지 밀면 없앰. 선택한 칩은 보이게 스크롤
+  function fadeEdge() {
+    const over = catsWrap.scrollWidth > catsWrap.clientWidth + 1;
+    catsWrap.classList.toggle('is-fade-end', over && catsWrap.scrollLeft + catsWrap.clientWidth < catsWrap.scrollWidth - 2);
+    catsWrap.classList.toggle('is-fade-start', over && catsWrap.scrollLeft > 2);
+  }
+  catsWrap.addEventListener('scroll', fadeEdge, { passive: true });
+  window.addEventListener('resize', fadeEdge);
+  new ResizeObserver(fadeEdge).observe(catsWrap); // 글자 크기 단계 바뀔 때도
   const search = document.querySelector('[data-faq-search]');
   const { esc } = window.UI;
   const chevron = '<svg class="faq-item__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M5 9l7 7 7-7"/></svg>';
@@ -353,6 +364,8 @@ async function renderFaqList() {
     const found = q ? rows.filter((r) => `${r.question} ${r.answer || ''}`.toLowerCase().includes(q)) : rows;
     const list = inCat(cat, found);
     drawCats(found);
+    countEl.innerHTML = `총 <b>${list.length}</b>개 질문`; // 현재 분류·검색 기준
+    fadeEdge();
     box.innerHTML = list.length
       ? list.map(item).join('')
       : `<li class="faq-list__empty">${q ? '검색 결과가 없습니다.' : '등록된 질문이 없습니다.'}</li>`;
@@ -364,7 +377,9 @@ async function renderFaqList() {
     if (!btn) return;
     cat = btn.dataset.faqCat;
     draw();
-    catsEl.querySelector(`[data-faq-cat="${CSS.escape(cat)}"]`)?.focus({ preventScroll: true }); // 칩을 다시 그려도 키보드 위치 유지
+    const cur = catsEl.querySelector(`[data-faq-cat="${CSS.escape(cat)}"]`);
+    cur?.focus({ preventScroll: true }); // 칩을 다시 그려도 키보드 위치 유지
+    if (cur) { const r = cur.getBoundingClientRect(), w = catsWrap.getBoundingClientRect(); if (r.left < w.left || r.right > w.right) catsWrap.scrollBy({ left: r.left < w.left ? r.left - w.left - 24 : r.right - w.right + 24, behavior: 'smooth' }); }
     fadeIn(box);
   });
   search.addEventListener('input', draw);

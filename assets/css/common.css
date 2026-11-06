@@ -920,25 +920,26 @@ html:has(body.has-lnb .page-doctors) { scroll-padding-top: calc(var(--header-h) 
 /* 왼쪽 카테고리: 세로 텍스트 목록, 선택 = 검정 굵게 */
 
 /* 질문 행: Q | 카테고리(고정 너비) | 질문 | 화살표 — 행 높이 약 70px, 얇은 회색 구분선 */
-/* 도구 줄: 분류 칩(커뮤니티 게시판 분류 칩 .board-cats 그대로 — 선택 = --color-accent, 모서리 4px, 옆 숫자 = 질문 수) | 검색
-   좌우 끝 = 질문 목록 좌우 끝. 칩이 넘치면 줄바꿈(검색은 오른쪽 위 고정), 좁은 본문은 검색이 칩 아래 줄 전체 폭, 모바일 칩 줄은 가로 스크롤 */
-.faq-board__tools { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: start; gap: 12px 24px; margin-bottom: 24px; }
-.faq-board__tools .faq-cats { margin-bottom: 0; } /* 모바일 좌우 끝까지 가로 스크롤(.board-cats 규칙)은 그대로 */
+/* 분류 칩 줄: 커뮤니티 게시판 분류 칩(.board-cats) 모양 그대로 — 선택 = --color-accent, 모서리 4px, 옆 숫자 = 질문 수
+   본문 폭 전체에 항상 한 줄 (간격 8px, 칩 안쪽 좌우 14px). 넘치면(좁은 PC·글자 크게·아주 크게·모바일) 가로 스크롤 — 스크롤바 숨김,
+   더 있는 쪽 끝을 흐리게(.is-fade-end / .is-fade-start — pages.js renderFaqList) */
+.faq-board .faq-cats { margin-bottom: 16px; }
+.faq-cats .board-cats__list { flex-wrap: nowrap; width: max-content; min-width: 100%; }
+.faq-cats .board-cats__list > li { flex: 1 0 auto; display: flex; } /* 한 줄에 다 들어가면 남는 폭을 칩이 나눠 가져 본문 폭 전체를 채운다 */
+.faq-cats .board-cats__btn { flex: 1 0 auto; justify-content: center; gap: 4px; padding-left: 14px; padding-right: 14px; letter-spacing: -0.02em; } /* 이름–숫자 4px · 글자 간격 살짝 좁혀 1440(본문 956px)에서도 9개가 한 줄 */
+.faq-cats.is-fade-end { -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 56px), transparent); mask-image: linear-gradient(90deg, #000 calc(100% - 56px), transparent); }
+.faq-cats.is-fade-start { -webkit-mask-image: linear-gradient(90deg, transparent, #000 56px); mask-image: linear-gradient(90deg, transparent, #000 56px); }
+.faq-cats.is-fade-start.is-fade-end { -webkit-mask-image: linear-gradient(90deg, transparent, #000 56px, #000 calc(100% - 56px), transparent); mask-image: linear-gradient(90deg, transparent, #000 56px, #000 calc(100% - 56px), transparent); }
 .board-cats__btn[aria-pressed="true"] { border-color: var(--color-accent); background: var(--color-accent); color: #fff; font-weight: 600; } /* 버튼형 칩(FAQ) — 링크형 칩 [aria-current] 과 같은 모양 */
 .board-cats__btn[aria-pressed="true"] .board-cats__n { opacity: 0.85; }
 .board-cats__btn[aria-pressed="true"]:hover { border-color: var(--color-accent-hover); background: var(--color-accent-hover); color: #fff; }
-.faq-search.board-search { width: 280px; }
-.faq-search .board-search__input { height: 40px; } /* 칩과 같은 높이 */
-@container sub (max-width: 55rem) {
-  .faq-board__tools { grid-template-columns: minmax(0, 1fr); }
-  .faq-search.board-search { width: 100%; }
-}
-@media (max-width: 1024px) {
-  .faq-board__tools { grid-template-columns: minmax(0, 1fr); }
-  .faq-search.board-search { width: 100%; }
-}
+/* 도구 줄: 커뮤니티 게시판 도구 줄(.board-tools — 위 굵은 선, 왼쪽 개수 / 오른쪽 검색)과 같은 모양. 칩 줄 ↔ 16px ↔ 도구 줄 ↔ 16px ↔ 질문 목록 */
+.faq-board .faq-tools { margin-bottom: 16px; }
+.faq-search.board-search { flex: 0 0 320px; width: 320px; } /* 좁은 본문용 게시판 규칙(검색 전체 폭)보다 우선 — 모바일만 전체 폭 */
 @media (max-width: 768px) {
-  .faq-board__tools { gap: 12px; margin-bottom: 16px; }
+  .faq-board .faq-cats { margin-bottom: 16px; }
+  .faq-board .faq-tools { margin-bottom: 16px; }
+  .faq-search.board-search { flex: 1 1 100%; width: auto; }
   .faq-board__cta { margin-top: 32px; }
 }
 .faq-list { border-top: 1px solid #e5e5e5; }

@@ -65,12 +65,14 @@
 
     <section class="sub-content">
       <div class="container faq-board">
-        <!-- FAQ 게시판 (pages.js renderFaqList): [분류 칩 줄(질문 수) | 검색] → 질문 목록(아코디언) → 하단 상담 안내
-             분류 칩 = 커뮤니티 게시판 분류 칩과 같은 모양(.board-cats, 선택 = --color-accent). 줄이 넘치면 줄바꿈, 모바일은 가로 스크롤 -->
-        <div class="faq-board__tools">
-          <nav class="board-cats faq-cats" aria-label="FAQ 분류">
-            <ul class="board-cats__list" data-faq-cats></ul>
-          </nav>
+        <!-- FAQ 게시판 (pages.js renderFaqList): 분류 칩 줄 → 도구 줄 [총 N개 질문 | 검색] → 질문 목록(아코디언) → 하단 상담 안내
+             분류 칩 = 커뮤니티 게시판 분류 칩과 같은 모양(.board-cats, 선택 = --color-accent) — 항상 한 줄, 넘치면 가로 스크롤(스크롤바 숨김 + 오른쪽 끝 흐림)
+             도구 줄 = 커뮤니티 게시판 도구 줄(.board-tools)과 같은 모양 -->
+        <nav class="board-cats faq-cats" aria-label="FAQ 분류" data-faq-cats-wrap>
+          <ul class="board-cats__list" data-faq-cats></ul>
+        </nav>
+        <div class="board-tools faq-tools">
+          <p class="board-tools__count" data-faq-count aria-live="polite"></p>
           <form class="board-search faq-search" role="search" data-faq-search-form>
             <label class="sr-only" for="faq-search">FAQ 검색</label>
             <input class="board-search__input" id="faq-search" type="search" placeholder="궁금한 내용을 검색해 보세요" autocomplete="off" enterkeyhint="search" data-faq-search>
