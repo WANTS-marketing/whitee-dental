@@ -63,17 +63,17 @@
 |---|---|---|---|
 | hero-01.jpg | [3779713](https://www.pexels.com/photo/3779713/) | Andrea Piacquadio | Pexels License |
 | hero-02.jpg | [3845625](https://www.pexels.com/photo/3845625/) | Pexels 페이지에서 확인 | Pexels License |
-| hero-03-event-implant.jpg, visual-implant.jpg | [6502306](https://www.pexels.com/photo/6502306/) | cottonbro studio | Pexels License |
+| hero-03-event-implant.jpg | [6502306](https://www.pexels.com/photo/6502306/) | cottonbro studio | Pexels License |
 | hero-bg.jpg, og-image.jpg, tour-*-01/05 | [6812453](https://www.pexels.com/photo/6812453/) | Pavel Danilyuk | Pexels License |
 | doctors-bg.jpg, tour-*-04/01 | [8459996](https://www.pexels.com/photo/8459996/) | Pexels 페이지에서 확인 | Pexels License |
 | branch-bar-bg.jpg, tour-*-05/03 | [305568](https://www.pexels.com/photo/305568/) | Pexels 페이지에서 확인 | Pexels License |
 | clinic-implant.jpg, case-implant-before.jpg | [6502340](https://www.pexels.com/photo/6502340/) | cottonbro studio | Pexels License |
-| clinic-aesthetic.jpg, case-prosthetics-before.jpg, visual-aesthetic.jpg | [12474261](https://www.pexels.com/photo/12474261/) | Pexels 페이지에서 확인 | Pexels License |
-| clinic-orthodontics.jpg, case-orthodontics-before.jpg, visual-orthodontics.jpg | [5524021](https://www.pexels.com/photo/5524021/) | Anna Avilova | Pexels License |
-| clinic-wisdom-scaling.jpg, visual-wisdom-scaling.jpg, tour-*-06 | [6812456](https://www.pexels.com/photo/6812456/) | Pavel Danilyuk | Pexels License |
+| clinic-aesthetic.jpg, case-prosthetics-before.jpg | [12474261](https://www.pexels.com/photo/12474261/) | Pexels 페이지에서 확인 | Pexels License |
+| clinic-orthodontics.jpg, case-orthodontics-before.jpg | [5524021](https://www.pexels.com/photo/5524021/) | Anna Avilova | Pexels License |
+| clinic-wisdom-scaling.jpg, visual-wisdom-scaling.jpg(본문·공지 더미), tour-*-06 | [6812456](https://www.pexels.com/photo/6812456/) | Pavel Danilyuk | Pexels License |
+| visual-general.jpg(치과소개 본문) | [5355715](https://www.pexels.com/photo/5355715/) | Tima Miroshnichenko | Pexels License |
 | clinic-general.jpg | [33359445](https://www.pexels.com/photo/33359445/) | Marta Branco | Pexels License |
-| visual-general.jpg | [5355715](https://www.pexels.com/photo/5355715/) | Tima Miroshnichenko | Pexels License |
-| visual-intro.jpg, news-dummy-04.jpg | [12745979](https://www.pexels.com/photo/12745979/) | Esma Karagoz | Pexels License |
+| visual-intro.jpg(진료과목 본문·공지 더미), news-dummy-04.jpg | [12745979](https://www.pexels.com/photo/12745979/) | Esma Karagoz | Pexels License |
 | news-dummy-01.jpg | [3845767](https://www.pexels.com/photo/3845767/) | Anna Shvets | Pexels License |
 | news-dummy-02.jpg | [5355720](https://www.pexels.com/photo/5355720/) | Tima Miroshnichenko | Pexels License |
 | news-dummy-03.jpg | [6627424](https://www.pexels.com/photo/6627424/) | kaboompics.com | Pexels License |
@@ -83,6 +83,7 @@
 
 | 파일 | 출처 | 촬영자 | 라이선스 |
 |---|---|---|---|
+| banner-sub.jpg (서브페이지 공통 배너 — 임시, 실제 원내 사진으로 교체 대상) | [Pexels 8459996](https://www.pexels.com/photo/8459996/) (temp/doctors-bg.jpg 와 같은 사진) | Pexels 페이지에서 확인 | Pexels License |
 | hero-03-night.jpg (메인 히어로 3번, 좌우 반전·축소) | [Unsplash J39gT2aIgOM](https://unsplash.com/photos/J39gT2aIgOM) | Klarin Steffens | Unsplash License (상업 사용·수정 가능, 출처 표기 의무 없음) |
 
 ### 교체 방법
@@ -93,6 +94,7 @@
 ## 병원에 받아야 할 자료 (TODO)
 
 - [x] 지점별 인스타그램·블로그 주소 4개 (`assets/js/site-data.js` → `social`)
+- [ ] **서브페이지 공통 배너 사진 1장** (가로 2400px 이상, 원내 전경, 두 지점 공통 느낌 — 특정 지점 간판·인물이 드러나지 않는 컷) → `assets/images/banner-sub.jpg` 로 덮어쓰면 치과소개·의료진 소개·병원소개·진료과목 배너가 모두 바뀜. 받은 원내 사진(240307_MED_0090 간판 · 0180 로고 · 0162 진료실)은 마산점이 드러나 공통 배너로는 쓰지 않음
 - [ ] **지점별 네이버 예약 링크 2개** (`assets/js/site-data.js` → `branches[].naverBooking`) — 퀵메뉴 '네이버예약' 칩·모바일 '+' 메뉴에 쓰임. 받기 전까지는 각 지점 네이버 지도(`naverMap`)로 대신 연결됨
 - [ ] 히어로 4번 임플란트 이벤트 기간
 - [ ] FAQ 01·02 답변 (03·04는 기존 사이트 문구로 작성 — 병원 확인)
