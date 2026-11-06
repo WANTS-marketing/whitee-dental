@@ -853,7 +853,7 @@ a.article-nav__item:hover .article-nav__title { color: var(--color-accent); }
    지점 묶음: [지점 색 작은 라벨 + 28px 제목] → 카드(간격 32px)
    카드: 본문 폭 꽉, 안쪽 여백 48px, [사진 칸 300px | 글 묶음] — 글 묶음(태그~약력 끝)은 사진 높이 안에서 세로 가운데,
      카드 높이 = 내용에 맞게, 최소 = 사진 높이(--photo-h = 칸 너비 × 664/400, 사진 파일 비율)
-   사진(doctor-*-cut.png, 흰 배경 400×664): 칸 아래 끝(= 카드 아래 여백선) 맞춤 + 원장별 보정값 --ps 배율 · --py 아래로(+) · --px 오른쪽으로(+) (사진 높이 대비 %, 메인 의료진과 같은 값)
+   사진(doctor-*-cut.png, 흰 배경 400×664): 칸 아래 끝(= 카드 아래 여백선) 맞춤 + 원장별 보정값 --ps 배율 · --py 아래로(+, 위로 올리는 음수는 0) · --px 오른쪽으로(+) (사진 높이 대비 %, 메인 의료진과 같은 값)
      칸 배경(옅은 베이지 .img-ph)은 사진이 있을 때 없앤다 — 흰 배경 사진이 흰 카드에 이어지게. 사진 파일이 없으면(정정원) 자리 그라데이션
    글자: 지점 태그·진료과 15px / 이름 32px + 직함 17px / 약력 17px · 줄 간격 1.7
    약력 1열: 약력 칸(약 520px)을 2열로 나누면 대부분 두 줄로 꺾여서 1열 — 넘치는 항목만 다음 줄, 들여쓰기 유지 */
@@ -865,10 +865,10 @@ a.article-nav__item:hover .article-nav__title { color: var(--color-accent); }
 .doctor-profile { --photo-w: 300px; --photo-h: calc(var(--photo-w) * 664 / 400); display: grid; grid-template-columns: var(--photo-w) minmax(0, 1fr); align-items: center; column-gap: 48px; padding: 48px; border: 1px solid var(--color-line); border-radius: var(--radius-lg); background: #fff; }
 .doctor-profile__photo { position: relative; align-self: stretch; min-height: var(--photo-h); overflow: hidden; border-radius: var(--radius-md); }
 .doctor-profile__photo:not(:has(.is-missing)) { background: none; }
-.doctor-profile__img {
+.doctor-profile__photo > .doctor-profile__img { /* 칸 공통 규칙(.img-ph > img 높이 100%)보다 우선해야 배율(--ps)이 적용된다 */
   --ps: 1; --py: 0; --px: 0;
   position: absolute; left: 50%; bottom: 0; width: auto; max-width: none; height: calc(var(--photo-h) * var(--ps)); aspect-ratio: 400 / 664; object-fit: cover;
-  transform: translate(calc(-50% + var(--px) * var(--photo-h) / 100), calc(var(--py) * var(--photo-h) / 100));
+  transform: translate(calc(-50% + var(--px) * var(--photo-h) / 100), calc(max(0, var(--py)) * var(--photo-h) / 100)); /* 위로 올리는 보정(--py 음수)은 쓰지 않음 — 사진 아래 끝이 카드 아래 여백선에서 뜨지 않게 (메인 의료진은 그대로) */
   -webkit-mask-image: linear-gradient(180deg, #000 86%, transparent); mask-image: linear-gradient(180deg, #000 86%, transparent); /* 아래 끝을 녹여 잘린 가장자리가 보이지 않게 (보정값으로 사진이 올라간 원장 포함) */
 }
 html:has(body.has-lnb .page-doctors) { scroll-padding-top: calc(var(--header-h) + 24px); } /* #changwon · #masan · 원장 카드 해시로 열 때 = 지점 이동 버튼과 같은 위치(헤더 + 24px) */
