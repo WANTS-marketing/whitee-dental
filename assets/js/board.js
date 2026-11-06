@@ -3,7 +3,7 @@
    pages.js 가 <body data-page> 에 맞춰 Board.list('news') / Board.view('news') 를 부른다. 스타일: common.css '게시판'
 
    목록 [data-board="news|notice|cases"] 안을 통째로 그린다:
-     분류 칩 줄 → 도구 줄 [총 N건 | 정렬(최신순·조회순) · 보기 방식(카드 3개·카드 4개·목록형 / 모바일: 카드·목록형) · 검색]
+     분류 칩 줄 → 도구 줄 [총 N건 | 정렬(최신순·조회순 — 치료사례만, BOARDS.sortable) · 보기 방식(카드 3개·카드 4개·목록형 / 모바일: 카드·목록형) · 검색]
      → 목록(카드 또는 행) → 페이지 번호 ‹ 1 2 3 … ›
    - 상태(분류 cat · 정렬 sort · 검색 q · 페이지 page)는 주소에 남긴다 → 뒤로가기·새로고침·공유 그대로 (?page=2&cat=치아교정&sort=views&q=교정)
    - 보기 방식은 localStorage(witee-board-view-{게시판}) — 저장 못 해도 기본 보기로 동작
@@ -36,6 +36,7 @@
       catsOf: (r) => [r.category],
       catOrder: NEWS_CATS,
       catLabel: '분류',
+      sortable: false, // 정렬(최신순·조회순) 없음 — 항상 최신순
       defaultView: 'card3',
       thumb: (r) => r.thumbnail,
       summary: (r) => r.summary || '',
@@ -52,6 +53,7 @@
       catsOf: (r) => BRANCH_CATS[r.branch] || [],
       catOrder: ['창원점', '마산점'],
       catLabel: '지점',
+      sortable: false, // 정렬 없음 — 고정 공지 맨 위 + 최신순
       defaultView: 'list',
       pinned: true,
       listPlain: true, // 목록형: 썸네일·요약 없이 제목·날짜
@@ -67,6 +69,7 @@
       catsOf: (r) => [r.categoryName],
       catOrder: null, // 글에 나온 순서
       catLabel: '진료',
+      sortable: true, // 정렬 선택(최신순·조회순)
       defaultView: 'card3',
       locked: () => !window.API.isLoggedIn(), // 로그인 전에는 사진 흐림
       thumb: (r) => r.beforeImage,
@@ -121,10 +124,10 @@
       <div class="board-tools">
         <p class="board-tools__count" data-b-count aria-live="polite"></p>
         <div class="board-tools__right">
-          <select class="board-tools__sort" data-b-sort aria-label="정렬">
+          ${cfg.sortable ? `<select class="board-tools__sort" data-b-sort aria-label="정렬">
             <option value="latest">최신순</option>
             <option value="views">조회순</option>
-          </select>
+          </select>` : ''}
           <div class="board-tools__views" role="group" aria-label="보기 방식">
             ${['card3', 'card4', 'card', 'list'].map((v) => `<button type="button" class="board-tools__view board-tools__view--${v}" data-b-view="${v}" aria-label="${VIEW_LABEL[v]}" title="${VIEW_LABEL[v]}">${ICON[v]}</button>`).join('')}
           </div>
@@ -151,7 +154,7 @@
       // 예전 주소: 치료사례 ?category=implant (메인 치료사례 카드) → 분류 이름
       if (!cat && board === 'cases' && p.get('category')) cat = rows.find((r) => r.category === p.get('category'))?.categoryName || '';
       if (!cats.includes(cat)) cat = '';
-      return { cat, sort: p.get('sort') === 'views' ? 'views' : 'latest', q: (p.get('q') || '').trim(), page: Math.max(1, parseInt(p.get('page'), 10) || 1) };
+      return { cat, sort: cfg.sortable && p.get('sort') === 'views' ? 'views' : 'latest', q: (p.get('q') || '').trim(), page: Math.max(1, parseInt(p.get('page'), 10) || 1) };
     };
     const urlOf = ({ cat, sort, q, page }) => {
       const p = new URLSearchParams();
@@ -241,7 +244,7 @@
         <li><a class="board-cats__btn" href="${esc(urlOf({ ...st, cat: c, page: 1 }))}" data-b-cat="${esc(c)}"${c === st.cat ? ' aria-current="true"' : ''}>${c ? esc(c) : '전체'} <span class="board-cats__n">${n(c)}</span></a></li>`).join('');
 
       countEl.innerHTML = `총 <b>${(pinned.length + rest.length).toLocaleString('ko-KR')}</b>건${st.q ? ` <span class="board-tools__q">‘${esc(st.q)}’ 검색 결과</span> <a class="board-tools__clear" href="${esc(urlOf({ ...st, q: '', page: 1 }))}" data-b-clear>검색 지우기</a>` : ''}`;
-      sortEl.value = st.sort;
+      if (sortEl) sortEl.value = st.sort;
       if (document.activeElement !== qInput) qInput.value = st.q;
 
       // 보기 방식 (모바일 = 카드 1열 / 목록형)
@@ -299,7 +302,7 @@
       const tg = e.target.closest('[data-b-expand]');
       if (tg) toggleRow(tg);
     });
-    sortEl.addEventListener('change', () => push({ ...readState(), sort: sortEl.value, page: 1 }));
+    sortEl?.addEventListener('change', () => push({ ...readState(), sort: sortEl.value, page: 1 }));
     searchEl.addEventListener('submit', (e) => {
       e.preventDefault();
       push({ ...readState(), q: qInput.value.trim(), page: 1 });

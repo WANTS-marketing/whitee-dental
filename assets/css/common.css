@@ -592,8 +592,8 @@ html.is-lnb-hold body { min-height: calc(100vh + 2000px); }
 .board-cats__btn[aria-current] { border-color: var(--color-point); background: var(--color-point); color: #fff; font-weight: 600; }
 .board-cats__n { font-size: var(--fs-xs); opacity: 0.7; }
 
-/* 도구 줄: 왼쪽 건수, 오른쪽 [정렬][보기 방식][검색] — 높이 40px, 모서리 4px */
-.board-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; margin-bottom: 28px; padding: 14px 0; border-top: 2px solid var(--color-text); border-bottom: 1px solid var(--color-line); }
+/* 도구 줄: 왼쪽 건수, 오른쪽 [정렬(치료사례만)][보기 방식][검색] — 높이 40px, 모서리 4px */
+.board-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; margin-bottom: 28px; padding: 14px 0 0; border-top: 2px solid var(--color-text); } /* 아래 구분선 없음 — 위 굵은 선만 */
 .board-tools__count { flex: 1 1 auto; min-width: 0; font-size: var(--fs-sm); color: var(--color-text-sub); }
 .board-tools__count b { font-weight: 700; color: var(--color-text); }
 .board-tools__q { margin-left: 6px; color: var(--color-text); }
@@ -716,7 +716,7 @@ html.is-lnb-hold body { min-height: calc(100vh + 2000px); }
 @media (max-width: 768px) {
   .board-cats { margin: 0 calc(var(--gutter) * -1) 16px; padding: 0 var(--gutter); }
   .board-cats__list { flex-wrap: nowrap; width: max-content; }
-  .board-tools { gap: 10px 12px; margin-bottom: 20px; padding: 12px 0; }
+  .board-tools { gap: 10px 12px; margin-bottom: 20px; padding: 12px 0 0; }
   .board-tools .form__select { width: 100px; }
   .board-tools__view--card3, .board-tools__view--card4 { display: none; }
   .board-tools__view--card { display: grid; border-left: 0 !important; }
