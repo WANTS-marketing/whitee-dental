@@ -122,9 +122,10 @@ html[data-fs="xl"] .gnb { --gnb-gap: clamp(20px, 12vw - 140px, 96px); }
 .logo { display: inline-flex; align-items: center; gap: 6px; flex: none; }
 /* 공식 로고 PNG(198×32, 1배) — 헤더는 원본 색, 푸터(어두운 배경)는 흰색으로 */
 .logo__img { display: block; width: 198px; height: auto; }
+.header .logo__img { width: 168px; } /* 헤더 로고 = 198px 의 0.85 (1025~1279px 143px, 모바일 128px) */
 .logo__img--white { filter: brightness(0) invert(1); opacity: 0.9; }
 /* 좁은 데스크톱(1025~1279px): 글자 크게 보기에서 메뉴와 붙지 않게 로고를 조금 줄인다 */
-@media (min-width: 1025px) and (max-width: 1279px) { .header .logo__img { width: 168px; } }
+@media (min-width: 1025px) and (max-width: 1279px) { .header .logo__img { width: 143px; } }
 
 /* ---------- GNB: 전체 펼침 메뉴 (1025px 이상) ----------
    하위 메뉴(.gnb__sub)는 각 대메뉴 바로 아래 열에 놓인다. 열 너비 = 대메뉴 너비 + 메뉴 간격이라 열끼리 빈틈없이 맞닿고,
@@ -451,7 +452,7 @@ body.is-locked { overflow: hidden; }
 /* ---------- 서브페이지 화면 전환: 서서히 나타나기 ----------
    페이지를 열 때 본문(main 의 직계 블록 중 상단 배너를 뺀 것: LNB+본문)이 0.8초 동안 투명 → 불투명.
    상단 배너(.sub-visual)는 이 효과 대신 아래 '서브 배너 사진 펼침' 효과를 쓴다
-   main 자체가 아니라 자식에 거는 이유: main 에 opacity 가 남으면 쌓임 맥락이 생겨 의료진 소개 고정 배경(.page-doctors::before)이 푸터 위로 올라온다.
+   main 자체가 아니라 자식에 거는 이유: main 에 opacity 가 남으면 쌓임 맥락이 생긴다(고정·sticky 요소 기준이 바뀜).
    fill-mode backwards = 끝나면 효과가 사라짐(쌓임 맥락 영향 없음). transform 은 쓰지 않음(고정·sticky 요소 기준이 바뀌어서)
    페이지 안에서 내용이 바뀔 때(병원소개 지점 탭, 치과소식 분류·페이지)는 .is-fade-in 을 다시 붙여 같은 효과 (pages.js fadeIn)
    움직임 줄이기 설정이면 아래 전역 규칙(prefers-reduced-motion)으로 사실상 바로 표시 */
@@ -567,8 +568,9 @@ html.is-lnb-hold body { min-height: calc(100vh + 2000px); }
 .pager { display: flex; justify-content: center; gap: 6px; margin-top: 64px; }
 .pager:empty { display: none; }
 .pager__btn { display: grid; place-items: center; min-width: 40px; height: 40px; padding: 0 8px; border-radius: var(--radius-btn); font-size: var(--fs-sm); color: #555; transition: background-color 0.2s, color 0.2s; }
-.pager__btn:hover { background: var(--color-point-soft); color: var(--color-point); }
-.pager__btn.is-current { background: var(--color-point); color: #fff; font-weight: 700; }
+.pager__btn:hover { background: rgba(var(--color-accent-rgb), 0.08); color: var(--color-accent); }
+.pager__btn.is-current { background: var(--color-accent); color: #fff; font-weight: 700; } /* 선택 = 파랑 면 (README 색 규칙) */
+.pager__btn:active, .pager__btn.is-current:hover { background: var(--color-accent-hover); color: #fff; }
 .pager__btn.is-disabled { color: #ccc; pointer-events: none; }
 .pager__arrow svg { width: 18px; height: 18px; }
 .pager__gap { display: grid; place-items: center; min-width: 28px; height: 40px; color: #999; font-size: var(--fs-sm); }
@@ -592,8 +594,10 @@ html.is-lnb-hold body { min-height: calc(100vh + 2000px); }
 .board-cats::-webkit-scrollbar { display: none; }
 .board-cats__list { display: flex; flex-wrap: wrap; gap: 8px; }
 .board-cats__btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border: 1px solid #ddd; border-radius: var(--radius-btn); background: #fff; font-size: var(--fs-sm); line-height: 1.4; color: #666; white-space: nowrap; transition: color 0.2s, border-color 0.2s, background-color 0.2s; }
-.board-cats__btn:hover { border-color: #999; color: #333; }
-.board-cats__btn[aria-current] { border-color: var(--color-point); background: var(--color-point); color: #fff; font-weight: 600; }
+.board-cats__btn:hover { border-color: rgba(var(--color-accent-rgb), 0.45); color: var(--color-accent); }
+.board-cats__btn[aria-current] { border-color: var(--color-accent); background: var(--color-accent); color: #fff; font-weight: 600; } /* 선택 = 파랑 면 + 흰 글자·숫자 */
+.board-cats__btn[aria-current] .board-cats__n { opacity: 0.85; }
+.board-cats__btn:active, .board-cats__btn[aria-current]:hover { border-color: var(--color-accent-hover); background: var(--color-accent-hover); color: #fff; }
 .board-cats__n { font-size: var(--fs-xs); opacity: 0.7; }
 
 /* 도구 줄: 왼쪽 건수, 오른쪽 [정렬 글자 버튼(치료사례만)][보기 방식][검색] — 높이 40px, 모서리 4px */
@@ -609,15 +613,16 @@ html.is-lnb-hold body { min-height: calc(100vh + 2000px); }
 .board-sort { display: flex; align-items: center; margin-right: 6px; }
 .board-sort__btn { height: 40px; font-size: var(--fs-sm); color: var(--color-text-muted); transition: color var(--dur); }
 .board-sort__btn + .board-sort__btn::before { content: ""; display: inline-block; width: 1px; height: 12px; margin: 0 14px; background: #ccc; vertical-align: -1px; }
-.board-sort__btn:hover { color: var(--color-point); }
-.board-sort__btn[aria-pressed="true"] { color: var(--color-text); font-weight: 700; }
+.board-sort__btn:hover { color: var(--color-accent); }
+.board-sort__btn[aria-pressed="true"] { color: var(--color-accent); font-weight: 700; } /* 면 없는 글자 버튼이라 선택 = 파랑 굵은 글자 */
 .board-sort__btn:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; border-radius: 2px; }
 .board-tools__views { display: flex; border: 1px solid var(--color-line); border-radius: var(--radius-btn); overflow: hidden; }
 .board-tools__view { display: grid; place-items: center; width: 40px; height: 38px; color: #aaa; background: #fff; transition: color 0.2s, background-color 0.2s; }
 .board-tools__view + .board-tools__view { border-left: 1px solid var(--color-line); }
 .board-tools__view svg { width: 18px; height: 18px; fill: currentColor; }
-.board-tools__view:hover { color: var(--color-text); }
-.board-tools__view[aria-pressed="true"] { background: var(--color-point); color: #fff; }
+.board-tools__view:hover { color: var(--color-accent); }
+.board-tools__view[aria-pressed="true"] { background: var(--color-accent); color: #fff; } /* 선택 = 파랑 면 + 흰 아이콘 */
+.board-tools__view:active, .board-tools__view[aria-pressed="true"]:hover { background: var(--color-accent-hover); color: #fff; }
 .board-tools__view:focus-visible { outline: 2px solid var(--color-accent); outline-offset: -2px; }
 .board-tools__view--card { display: none; } /* 모바일 전용 (카드 1열) */
 .board-tools__view--card + .board-tools__view { border-left: 1px solid var(--color-line); }
@@ -899,8 +904,9 @@ a.article-nav__item:hover .article-nav__title { color: var(--color-accent); }
 /* 왼쪽 카테고리: 세로 텍스트 목록, 선택 = 검정 굵게 */
 .faq-cats__list { display: flex; flex-direction: column; gap: 4px; }
 .faq-cats__btn { margin-left: -12px; padding: 6px 12px; border-radius: var(--radius-btn); font-size: var(--fs-md); color: #666; text-align: left; transition: color 0.2s, background-color 0.2s, border-color 0.2s; }
-.faq-cats__btn:hover { color: #333; }
-.faq-cats__btn[aria-pressed="true"] { background: var(--color-point-soft); color: var(--color-point); font-weight: 700; } /* 선택 = 옅은 네이비 면 + 네이비 굵게 (네이비 글자만으로는 검정 글자와 구분이 약해서) */
+.faq-cats__btn:hover { color: var(--color-accent); }
+.faq-cats__btn[aria-pressed="true"] { background: var(--color-accent); color: #fff; font-weight: 700; }
+.faq-cats__btn:active, .faq-cats__btn[aria-pressed="true"]:hover { background: var(--color-accent-hover); color: #fff; } /* 선택 = 파랑 면 + 흰 굵은 글자 (README 색 규칙) */
 
 /* 질문 행: Q | 카테고리(고정 너비) | 질문 | 화살표 — 행 높이 약 70px, 얇은 회색 구분선 */
 .faq-list { border-top: 1px solid #e5e5e5; }
@@ -956,8 +962,9 @@ a.article-nav__item:hover .article-nav__title { color: var(--color-accent); }
   .faq-cats::-webkit-scrollbar { display: none; }
   .faq-cats__list { flex-direction: row; gap: 8px; width: max-content; }
   .faq-cats__btn { margin-left: 0; padding: 8px 16px; border: 1px solid #ddd; border-radius: var(--radius-btn); background: #fff; font-size: var(--fs-sm); color: #666; white-space: nowrap; }
-  .faq-cats__btn:hover { color: #333; }
-  .faq-cats__btn[aria-pressed="true"] { border-color: var(--color-point); background: var(--color-point); color: #fff; }
+  .faq-cats__btn:hover { border-color: rgba(var(--color-accent-rgb), 0.45); color: var(--color-accent); }
+  .faq-cats__btn[aria-pressed="true"] { border-color: var(--color-accent); background: var(--color-accent); color: #fff; }
+  .faq-cats__btn:active, .faq-cats__btn[aria-pressed="true"]:hover { border-color: var(--color-accent-hover); background: var(--color-accent-hover); color: #fff; }
   .gnb, .util, .mega, .mega-dim { display: none; }
   .hamburger { display: block; }
 
@@ -995,6 +1002,7 @@ a.article-nav__item:hover .article-nav__title { color: var(--color-accent); }
   .only-desktop { display: none !important; }
 
   .logo__img { width: 150px; }
+  .header .logo__img { width: 128px; }
 
   /* 퀵메뉴 → 우측 하단 플로팅 버튼 */
   .quick, .quick--float { position: fixed; top: auto; right: 16px; bottom: calc(var(--bottom-bar-h) + env(safe-area-inset-bottom) + 16px); /* 하단 고정 바(아이폰 홈 표시줄 여백 포함) 바로 위 */ left: auto; transform: none; z-index: var(--z-quick); padding: 0; background: none; }
@@ -1069,19 +1077,8 @@ a.article-nav__item:hover .article-nav__title { color: var(--color-accent); }
 /* 어두운 배경 위 키보드 초점: 네이비 테두리가 묻히므로 흰색 (히어로·지점 바로가기 바·푸터·모바일 하단 바) */
 :is(.hero, .branch-bar, .footer, .bottom-bar) :focus-visible { outline-color: #fff; }
 
-/* ---------- 의료진 소개 (about/doctors.html) — 본문 배경: 메인 ⑤진료안내 섹션과 같은 네이비(--color-point) + 원내 사진 곱하기(multiply) 70% ----------
-   사진: assets/images/doctors-page-bg.jpg (마산점 진료실 240307_MED_0162) — 밝은 곳은 네이비 그대로, 어두운 곳만 더 깊게 (main.css .clinic::before 와 같은 방식)
-   페이지가 길어 사진을 전체 높이로 늘리면 크게 확대돼 흐려지므로, 화면에 고정(position: fixed)해 뒤에 깔아 둔다
-   ::before = 네이비 면, ::after = 사진(곱하기) — 둘 다 z-index:-1 로 페이지 맨 뒤. 배너·푸터·의료진 카드(흰 면)가 그 위를 덮는다
-   main 에 position·isolation 을 주지 않는다 — 주면 배경 층이 푸터 위로 올라와 푸터가 비친다 */
-.page-doctors::before, .page-doctors::after { content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none; }
-.page-doctors::before { background: var(--color-point); }
-.page-doctors::after { background: url("../images/doctors-page-bg.jpg") center / cover no-repeat; mix-blend-mode: multiply; opacity: 0.7; }
-/* 네이비 위에 바로 놓이는 글자는 밝게: 지점별 제목, 본문 제목·경로 (LNB 는 흰 행·네이비 블록이라 그대로) */
-.page-doctors .doctor-group__title { color: #fff; }
-.page-doctors .sub-head { border-bottom-color: rgba(255, 255, 255, 0.2); color: #fff; }
-.page-doctors .sub-head .breadcrumb { color: rgba(255, 255, 255, 0.6); }
-.page-doctors .sub-head .breadcrumb [aria-current] { color: #fff; }
-@media (min-width: 1025px) { .page-doctors .lnb__nav { outline: 1px solid rgba(255, 255, 255, 0.18); } } /* 네이비 배경 위라 네이비 타이틀 블록 경계가 묻히지 않게 옅은 흰 테두리 */
-/* 상단 배너: 사진 없이 투명 — 뒤의 네이비 + 원내 사진 배경이 배너까지 이어진다. 글자·투명 헤더는 사진 배너와 같은 흰색(.sub-visual--image 유지) */
-.page-doctors .sub-visual--image { background: transparent; }
+/* ---------- 의료진 소개 (about/doctors.html) — 본문 배경 흰색(#fff, 다른 서브페이지와 같음) ----------
+   상단 배너만 네이비(--color-point) + 원내 사진 곱하기(multiply) 70% — 메인 ⑤진료안내 섹션과 같은 방식, 글자·투명 헤더는 사진 배너와 같은 흰색(.sub-visual--image)
+   사진: assets/images/doctors-page-bg.jpg (마산점 진료실 240307_MED_0162). ::before = 위쪽 어두운 그라데이션(공통), ::after = 사진 층 */
+.page-doctors .sub-visual--image { isolation: isolate; background: var(--color-point); }
+.page-doctors .sub-visual--image::after { content: ""; position: absolute; inset: 0; z-index: 0; background: url("../images/doctors-page-bg.jpg") center / cover no-repeat; mix-blend-mode: multiply; opacity: 0.7; pointer-events: none; }

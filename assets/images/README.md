@@ -14,7 +14,7 @@
 | `hero-03-night.jpg` | 히어로 슬라이드 3 (평일 야간진료) — 밤에 창마다 불이 켜진 건물 (Unsplash, 좌우 반전·가로 3600px 로 줄임, 2026-11-05) | 3600×1329 |
 | `hero-03-event-implant.jpg` | 히어로 슬라이드 4 (임플란트 이벤트) | 1500×750 |
 | `doctors-bg.jpg` | 메인 의료진 섹션 배경 (유리 원형 오브제, 위에 흰 막 90% = 사진 10%) | 2400×1500 |
-| `doctors-page-bg.jpg` | 서브 의료진 소개 페이지 본문 배경 — 마산점 진료실(원본 240307_MED_0162, 3278×4918 을 줄임). 네이비(--color-point) 위에 곱하기 70% (common.css .page-doctors) | 2000×3001 |
+| `doctors-page-bg.jpg` | 서브 의료진 소개 페이지 상단 배너 배경 (본문은 흰색) — 마산점 진료실(원본 240307_MED_0162, 3278×4918 을 줄임). 네이비(--color-point) 위에 곱하기 70% (common.css .page-doctors) | 2000×3001 |
 | `doctor-lee-eunju.jpg` | 이은주 대표원장 (창원) | 600×750 (4:5) |
 | `doctor-kwon-jinseon.jpg` | 권진선 원장 (창원) | 600×750 |
 | `doctor-jeong-jeongwon.jpg` | 정정원 원장 (창원) | 600×750 |
