@@ -423,7 +423,9 @@ html[data-fs="xl"] .doc-modal { width: min(680px, 100% - 48px); }
 .clinic-card--implant .clinic-card__img img { object-position: 32% center; } /* 임플란트 사진(3D 그림): 크라운·지대주 기둥이 카드 가운데 오게 */
 .clinic-card--ortho .clinic-card__img img { object-position: center 90%; } /* 치아교정 사진(3D 그림, 왼쪽 흐린 부분 빼고 1.2:1 로 자름): 납작한 카드에서 브래킷·와이어가 글자 바탕 위(카드 위쪽)에 오게 */
 @media (max-width: 768px) { .clinic-card--ortho .clinic-card__img img { object-position: center 40%; } }
-.clinic-card--ortho .clinic-card__body { --cl-fade: clamp(20px, 1.67vw, 32px); padding-top: calc(var(--cl-fade) + 12px); } /* 치아교정: 카드가 납작해 흰 그라데이션이 사진을 많이 가려서 녹는 구간·글자 위 여백을 줄임 (카드 높이의 약 88% → 60%대) */
+/* 치아교정: 카드가 납작해 흰 그라데이션이 사진을 많이 가려서 — 녹는 구간을 14px 로 아주 짧게, 글자 위 여백도 최소로
+   → 기본 글자 크기에서 카드의 약 50~56% (1920 52% · 1440 56% · 모바일 61% — 글자 + 아래 여백만으로 절반 가까이라 더 줄이면 글자가 사진 위로 나옴), 글자를 키우면 글자를 덮는 만큼만 늘어남 (글자가 사진 위에 떠서 안 읽히지 않게) */
+.clinic-card--ortho .clinic-card__body { --cl-fade: 14px; padding-top: calc(var(--cl-fade) + 4px); }
 .clinic-card--general .clinic-card__img img { object-position: center 60%; } /* 일반치료 사진(4:3 3D 그림): 넓은 카드에서 충치를 비춘 거울이 글자 바탕 위로 오게 */
 .clinic-card--wisdom .clinic-card__img img { object-position: center 25%; } /* 스케일링 사진(정사각 3D 그림): 가로로 긴 카드(모바일·태블릿)에서도 기구 끝·치아 윗면이 보이게 위쪽 기준 */
 .clinic-card--implant .clinic-card__title { font-size: clamp(1.6875rem, 0.5625rem + 1.40625vw, 2.25rem); } /* 36 (= 40 × 0.9) */
