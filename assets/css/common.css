@@ -1119,6 +1119,11 @@ html:has(body.has-lnb .page-doctors) { scroll-padding-top: calc(var(--header-h) 
 .form__help a { color: var(--color-accent); text-decoration: underline; text-underline-offset: 2px; }
 .form__input--pw { max-width: 240px; letter-spacing: 0.2em; }
 .form__input--pw::placeholder { letter-spacing: 0; }
+.form__msg.is-demo { color: #8a5a00; }
+.form__demo { grid-column: 1 / -1; margin-top: -4px; font-size: var(--fs-xxs); line-height: 1.5; color: var(--color-text-sub); word-break: keep-all; }
+.form__actions + .form__demo { text-align: center; }
+.form__demo a, .form__msg.is-demo a:not(.form__msg-link), .inq-board__demo a, .faq-quick__done-desc a { color: inherit; font-weight: 600; white-space: nowrap; text-decoration: underline; text-underline-offset: 2px; }
+.inq-board__demo { margin-bottom: 20px; padding: 14px 18px; border: 1px solid #f3d39b; border-radius: var(--radius-btn); background: #fff8ec; font-size: var(--fs-sm); line-height: 1.6; color: #7a4f00; word-break: keep-all; }
 .form__msg-link { display: inline-block; margin-left: 4px; font-weight: 700; color: var(--color-accent); text-decoration: underline; text-underline-offset: 3px; white-space: nowrap; }
 /* 진료과목 빠른상담: [지점 | 진료과목 | 이름] / [연락처 | 비밀번호 | 상담 신청] + 아래 줄 비밀번호 안내 · 동의 */
 .quick-consult .form { grid-template-columns: repeat(3, minmax(0, 1fr)); }

@@ -223,6 +223,15 @@
     }
   }
 
+  /**
+   * 접수한 상담이 실제로 병원에 전달되는지 — 화면이 '시안 안내'를 보일지 정할 때 쓴다 (동기, boolean)
+   * 지금: Web3Forms 키(WEB3FORMS_ACCESS_KEY)가 있으면 true. 없으면 false → 폼 버튼 아래 시안 안내 + 접수 완료 문구 대신 시안 안내
+   * TODO(서버): 서버에 저장·알림이 연결되면 true 를 돌려줄 것 (키 여부와 상관없이)
+   */
+  function isDeliveryReady() {
+    return !!config.WEB3FORMS_ACCESS_KEY;
+  }
+
   /** 병원 메일 알림 (Web3Forms) — createInquiry 안에서만 쓴다. 키가 없으면(로컬·키 미설정) 보내지 않고 false */
   async function notifyByEmail(row) {
     if (!config.WEB3FORMS_ACCESS_KEY) { console.warn('[api] WEB3FORMS_ACCESS_KEY 가 없어 메일 알림을 보내지 않았습니다.'); return false; }
@@ -353,7 +362,7 @@
 
   window.API = {
     getNotices, getNotice, getNews, getNewsPost, getCases, getCase, getFaqs,
-    listInquiries, getInquiry, createInquiry, adminListInquiries, adminGetInquiry, answerInquiry, updateInquiryStatus, deleteInquiry,
+    listInquiries, getInquiry, createInquiry, isDeliveryReady, adminListInquiries, adminGetInquiry, answerInquiry, updateInquiryStatus, deleteInquiry,
     isLoggedIn, getCurrentUser, isAdmin, signInWithKakao, signOut,
   };
 })();

@@ -55,7 +55,9 @@
     let just = null;
     try { just = Number(sessionStorage.getItem('witee-inquiry-just')) || null; sessionStorage.removeItem('witee-inquiry-just'); } catch (e) { /* 강조 없음 */ }
 
-    root.innerHTML = `
+    // 방금 작성 페이지에서 접수하고 돌아왔는데 병원에 전달되지 않는 시안이면 목록 위에 안내 (키가 등록되면 안 보임)
+    const demoNote = just && !window.UI.deliveryReady() ? `<p class="inq-board__demo" role="status">${window.UI.demoHtml()}</p>` : '';
+    root.innerHTML = `${demoNote}
       <div class="inq-board__tools">
         <div class="inq-board__left">
           <p class="inq-board__count" data-i-count aria-live="polite"></p>

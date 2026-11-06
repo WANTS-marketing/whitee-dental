@@ -116,6 +116,12 @@
     } catch (e) { /* 표시만 못 함 */ }
   }
   const DONE_TEXT = '접수되었습니다. 상담 현황에서 답변을 확인하실 수 있습니다.';
+  /* 시안 안내 — 접수가 병원에 전달되지 않을 때(api.js isDeliveryReady() = false: Web3Forms 키·서버 없음)
+     모든 상담 폼 전송 버튼 아래 작은 글씨 + 접수 완료 문구 대신. 키가 등록되면 자동으로 사라지고 원래 '접수되었습니다' */
+  const deliveryReady = () => !!window.API?.isDeliveryReady?.();
+  const telList = () => (window.SITE?.branches || []).map((b) => [b.name || b.shortName, b.tel]);
+  const demoText = () => `시안 화면입니다. 실제로 병원에 전달되지 않습니다. 문의는 전화로 부탁드립니다. ${telList().map(([n, t]) => `${n} ${t}`).join(' · ')}`;
+  const demoHtml = () => `시안 화면입니다. 실제로 병원에 전달되지 않습니다. 문의는 전화로 부탁드립니다. ${telList().map(([n, t]) => `${esc(n)} <a href="${telHref(t)}">${esc(t)}</a>`).join(' · ')}`;
   function inquiryForm(form, { onSuccess } = {}) {
     const msg = form.querySelector('.form__msg');
     const submitBtn = form.querySelector('[type="submit"]');
@@ -135,6 +141,14 @@
     const pw = form.elements.password;
     pw?.addEventListener('input', () => { const v = pw.value.replace(/\D/g, '').slice(0, 4); if (v !== pw.value) pw.value = v; });
 
+    // 시안 안내 — 전송 버튼(작성 페이지는 버튼 줄) 바로 아래
+    if (!deliveryReady() && !form.querySelector('.form__demo')) {
+      const note = document.createElement('p');
+      note.className = 'form__demo';
+      note.innerHTML = demoHtml();
+      (submitBtn.closest('.form__actions') || submitBtn).after(note);
+    }
+
     const done = (result) => {
       if (form.dataset.successUrl && result.data?.id) {
         const to = new URL(form.dataset.successUrl, location.href);
@@ -144,7 +158,7 @@
         return;
       }
       if (onSuccess) onSuccess(result);
-      else setMsg('', 'success', `${esc(DONE_TEXT)} <a class="form__msg-link" href="${statusHref()}">상담 현황 보기 →</a>`);
+      else setMsg('', deliveryReady() ? 'success' : 'demo', `${deliveryReady() ? esc(DONE_TEXT) : demoHtml()} <a class="form__msg-link" href="${statusHref()}">상담 현황 보기 →</a>`);
       form.reset();
       form.dispatchEvent(new Event('input')); // 글자 수 표시 등 초기화
     };
@@ -369,7 +383,7 @@
   function initSelects(scope = document) { scope.querySelectorAll('select').forEach(enhanceSelect); }
   initSelects();
 
-  window.UI = { esc, telHref, img, bg, formatDate, branchBadge, accordion, faqItem, rollText, inquiryForm, initSelects, dialog, confirm: confirmDialog, alert: alertDialog };
+  window.UI = { esc, telHref, img, bg, formatDate, branchBadge, accordion, faqItem, rollText, inquiryForm, initSelects, deliveryReady, demoText, demoHtml, dialog, confirm: confirmDialog, alert: alertDialog };
 
   /* ---------- 이미지 대체 ----------
      1) assets/images/파일명 이 없으면 → assets/images/temp/파일명 (임시 스톡 이미지)

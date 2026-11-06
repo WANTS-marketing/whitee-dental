@@ -659,7 +659,14 @@ function initQuickQuestion() {
   msg.addEventListener('input', sync);
   form.addEventListener('input', sync);
   window.UI.inquiryForm(form, {
-    onSuccess: () => { form.hidden = true; done.hidden = false; done.focus({ preventScroll: true }); },
+    onSuccess: () => {
+      // 키가 없으면(시안) 완료 화면 문구를 시안 안내로 — 키가 등록되면 HTML 원래 문구('접수되었습니다')
+      if (!window.UI.deliveryReady()) {
+        done.querySelector('.faq-quick__done-title').textContent = '시안 화면입니다';
+        done.querySelector('.faq-quick__done-desc').innerHTML = window.UI.demoHtml().replace(/^시안 화면입니다\. /, '');
+      }
+      form.hidden = true; done.hidden = false; done.focus({ preventScroll: true });
+    },
   });
   box.querySelector('[data-fq-again]').addEventListener('click', () => { done.hidden = true; form.hidden = false; form.elements.branch[0].focus({ preventScroll: true }); });
 }
