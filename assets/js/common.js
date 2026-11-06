@@ -100,7 +100,7 @@
      연락처 숫자만 + 하이픈 자동, 비밀번호 숫자만 4자리
      접수 성공 시
        - 이 탭에서 쓴 글 번호를 sessionStorage(witee-inquiry-mine)에 남긴다 → 상담문의 목록에서 '내 문의' 표시 (inquiry.js)
-       - form[data-success-url] 이 있으면(상담문의 작성 페이지) 그 목록으로 이동 — 방금 쓴 글 강조(witee-inquiry-just) + 같은 대메뉴라 본문부터(lnb-jump 기록)
+       - form[data-success-url] 이 있으면(상담문의 작성 페이지) 그 목록으로 이동 — 방금 쓴 글 강조(witee-inquiry-just). 목록은 배너가 없어 맨 위가 바로 본문
        - onSuccess(result) 가 있으면 그것(메인 빠른 상담문의 완료 화면), 없으면 폼 아래 '접수되었습니다 … 상담 현황 보기 →'(목록 링크) + 폼 비우기 */
   const LINK_RE = /(https?:\/\/|www\.)/i;
   const statusHref = () => `${document.documentElement.dataset.root || '.'}/faq/contact.html`;
@@ -152,7 +152,6 @@
     const done = (result) => {
       if (form.dataset.successUrl && result.data?.id) {
         const to = new URL(form.dataset.successUrl, location.href);
-        try { sessionStorage.setItem('witee-lnb-jump', JSON.stringify({ from: 'faq', to: to.pathname, t: Date.now() })); } catch (e) { /* 배너부터 */ }
         form.reset();
         location.assign(to.href);
         return;

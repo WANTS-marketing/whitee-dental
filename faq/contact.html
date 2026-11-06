@@ -20,7 +20,6 @@
   <link rel="stylesheet" href="../assets/css/variables.css">
   <link rel="stylesheet" href="../assets/css/common.css">
   <link rel="stylesheet" href="../assets/css/sub.css">
-  <script src="../assets/js/lnb-jump.js"></script> <!-- 같은 대메뉴(FAQ) 안에서 이동하면 본문부터, 그 밖에는 배너 맨 위부터 열기 (defer 아님 — 그리기 전에 실행) -->
   <script src="../assets/js/config.js" defer></script>
   <script src="../assets/js/site-data.js" defer></script>
   <script src="../assets/js/api.js" defer></script>
@@ -33,15 +32,8 @@
   <div data-include="header"></div>
 
   <main id="main">
-    <section class="sub-visual sub-visual--image">
-      <div class="sub-visual__bg" aria-hidden="true"></div> <!-- 공통 배너 사진 assets/images/banner-sub.jpg (sub.css .sub-visual__bg) -->
-      <div class="container">
-        <p class="sub-visual__label">FAQ</p>
-        <p class="sub-visual__slogan">궁금한 점을 남겨주시면 전문의가 확인 후 답변드립니다</p>
-      </div>
-    </section>
-
-    <!-- 서브 레이아웃: 왼쪽 LNB(하위 메뉴) + 오른쪽 본문 — 1024px 이하는 본문 위 가로 탭 (common.css '서브 LNB')
+    <!-- 상담문의는 글이 먼저라 배너 없음 (커뮤니티와 같음) — 항상 맨 위(= 바로 LNB·본문)부터
+         서브 레이아웃: 왼쪽 LNB(하위 메뉴) + 오른쪽 본문 — 1024px 이하는 본문 위 가로 탭 (common.css '서브 LNB')
          '상담문의하기' = 목록(contact.html) + 작성(contact-write.html) 두 페이지 — 둘 다 LNB 현재 메뉴는 '상담문의하기' -->
     <div class="sub-layout container">
       <aside class="lnb">
