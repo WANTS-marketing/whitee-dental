@@ -420,6 +420,7 @@ html[data-fs="xl"] .doc-modal { width: min(680px, 100% - 48px); }
 .clinic-card__body { --cl-fade: clamp(48px, 4.17vw, 80px); position: relative; z-index: 2; display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 0; padding: calc(var(--cl-pad) + var(--cl-fade)) var(--cl-pad) var(--cl-pad); background: linear-gradient(0deg, rgba(255, 255, 255, 0.96) 0%, rgba(255, 255, 255, 0.9) calc(100% - var(--cl-fade)), rgba(255, 255, 255, 0) 100%); color: var(--color-text); }
 .clinic-card__title { font-size: clamp(1.35rem, 0.45rem + 1.125vw, 1.8rem); line-height: 1.3; letter-spacing: -0.02em; word-break: keep-all; } /* 28.8 (= 32 × 0.9) */
 .clinic-card--implant .clinic-card__img img { object-position: 32% center; } /* 임플란트 사진(3D 그림): 크라운·지대주 기둥이 카드 가운데 오게 */
+.clinic-card--wisdom .clinic-card__img img { object-position: center 25%; } /* 스케일링 사진(정사각 3D 그림): 가로로 긴 카드(모바일·태블릿)에서도 기구 끝·치아 윗면이 보이게 위쪽 기준 */
 .clinic-card--implant .clinic-card__title { font-size: clamp(1.6875rem, 0.5625rem + 1.40625vw, 2.25rem); } /* 36 (= 40 × 0.9) */
 .clinic-card__sub { margin-right: calc(var(--cl-arrow) + 12px); font-size: clamp(0.875rem, 0.45rem + 0.421875vw, 0.95625rem); line-height: 1.5; color: var(--color-text-sub); word-break: keep-all; text-wrap: balance; } /* 15.3 (= 17 × 0.9, 최소 14px) — 오른쪽은 화살표 자리 */
 .clinic-card__sub > span { display: block; }
