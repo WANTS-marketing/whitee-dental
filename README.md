@@ -115,7 +115,7 @@ docs/                      배포·인수인계 문서
 | 메뉴 | `components/header.html` (데스크톱·모바일 두 군데) |
 | 서브페이지 왼쪽 하위 메뉴(LNB) 행·타이틀 블록(대메뉴 이름·영문) | 각 서브페이지 `<aside class="lnb">` (같은 메뉴 묶음 페이지 모두) · 스타일 `common.css` '서브 LNB' |
 | 서브 배너 문구(영문 라벨·슬로건) · 본문 맨 위 경로·페이지 제목 | 각 서브페이지 `.sub-visual` (대메뉴 묶음마다 같은 문구) · `.sub-head` |
-| 서브 배너 사진 (모든 서브페이지 공통 1장) | `assets/images/banner-sub.jpg` 를 같은 이름으로 교체 (지정: `sub.css` `.sub-visual__bg`) · 어두운 막·위쪽 그라데이션도 한 값 |
+| 서브 배너 사진 (공통 1장 + 병원소개만 예외) | `assets/images/banner-sub.jpg` 를 같은 이름으로 교체 (지정: `sub.css` `.sub-visual__bg`) · 어두운 막·위쪽 그라데이션도 한 값 · **병원소개만** `assets/images/banner-clinic.jpg` (`sub.css` `.sub-visual__bg--clinic`) |
 | 서브 배너 높이 (PC 화면 높이 60%·520~680px, 모바일 45%·최소 320px) | `common.css` '.has-lnb .sub-visual' (모바일은 768px 이하 반응형 쪽) |
 | 서브페이지 시작 위치 (같은 대메뉴 안 이동 = 본문부터, 그 밖 = 배너 맨 위부터) | `assets/js/lnb-jump.js` (맨 위 설명에 규칙 정리) |
 | FAQ·공지 (시안) | `assets/data/*.json` |
