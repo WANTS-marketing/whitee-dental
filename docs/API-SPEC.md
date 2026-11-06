@@ -326,7 +326,7 @@ api.js 안에서 HTTP 상태 코드를 위 오류 코드로 바꿔 주면 됩니
 
 - 화면 동작
   - 목록·메인 카드: BEFORE 선명 + AFTER 자리 = `afterBlur` + 자물쇠 '로그인 후 확인' (로그인이면 `afterImage`)
-  - 상세: BEFORE | AFTER 나란히(모바일 위아래). 비로그인 AFTER = `afterBlur` + '로그인하고 치료 후 사진 보기' → `member/login.html?return=community/case-view.html?id=…` (로그인 후 그 글로 돌아오기 — 서버 연결 때 구현, `pages.js loginReturnUrl`)
+  - 상세: BEFORE | AFTER 나란히(모바일 위아래). 비로그인 AFTER = `afterBlur` + '로그인 후 확인해보세요' → `member/login.html?return=community/case-view.html?id=…` (로그인 후 그 글로 돌아오기 — 서버 연결 때 구현, `pages.js loginReturnUrl`)
   - 모든 상세 하단 고지: '치료 결과는 개인에 따라 다를 수 있으며, 부작용이 발생할 수 있습니다.'
 - 시안 확인용 로그인: 주소에 `?login=1` 을 붙이면 그 탭에서 로그인 상태(`isLoggedIn()` = true, sessionStorage `witee-demo-login`), `?login=0` 해제 — **서버 연결 때 지울 것**
 - ⚠️ **AFTER 원본은 로그인 확인 후에만 서버에서 주소를 내려주는 방식으로 바꿀 것.** 지금은 정적 파일이라 api.js 가 비로그인일 때 `afterImage` 를 빼 주기만 한다 — 파일 주소(`assets/images/cases/case-{번호}-after.jpg`)를 알면 누구나 열 수 있다. 서버는 AFTER 원본을 비공개 저장소에 두고, 로그인 세션을 확인한 요청에만 기한 있는 주소(signed URL)를 응답에 담을 것. 흐림 미리보기·BEFORE 는 공개 저장소로 충분
