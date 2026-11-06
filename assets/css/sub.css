@@ -13,20 +13,10 @@
 [data-page="clinic"] .sub-visual__bg { --bh: clamp(520px, 60vh, 680px); background-position: 50% min(0px, max(calc(var(--bh) - 66.667vw), calc(var(--bh) / 2 + var(--header-h) / 2 - 32vw))); }
 @media (min-width: 769px) and (max-width: 1024px) and (orientation: portrait) { [data-page="clinic"] .sub-visual__bg { background-size: auto 115%; background-position: 50% 0; } }
 @media (max-width: 768px) { [data-page="clinic"] .sub-visual__bg { background-size: auto 120%; background-position: 50% 0; } }
-/* 치과소개 배너(visual-intro.jpg — 창원점 건물 야경 1536×1024): '화이트이(e)치과의원' 간판이 크게, 문구에 가리지 않게
-   간판: 사진 가로 27~86%(가운데 56.5%, 그중 '화이트이(e)치과의원' 부분 27~50% · 가운데 38.5%), 세로 46~59%
-   가로 배너(PC·가로 태블릿): 사진 폭 --iw = 화면 폭의 119%(간판 ≈ 배너 폭 70%), 단 2300px 까지(아주 넓은 화면에서 간판이 헤더 뒤로 가지 않게)·화면 폭보다는 크게
-     간판 전체 가운데(--sx 56.5%)를 배너 가로 가운데에
-   세로 배너(모바일·세로 태블릿): 배너 높이 × 2.25 로 키우고 '화이트이(e)치과의원' 부분 가운데(--sx 38.5%)를 가로 가운데에 — 오른쪽 광고 글자는 잘림
-   세로 위치(공통): 간판 아래 끝(사진 59%)이 문구 묶음 위 끝보다 --gap 위 — 문구가 간판 글자를 가리지 않게
-     문구 묶음 위 끝 ≈ 헤더 아래 공간 가운데 − --half(문구 묶음 높이의 절반, rem 이라 글자 크기 단계에 맞춰 커짐)
-   사진이 배너를 벗어나 빈 곳이 생기지 않게 가로·세로 모두 [배너 − 사진, 0] 안으로 제한 */
-[data-page="intro"] .sub-visual__bg { --bh: clamp(520px, 60vh, 680px); --half: 2.5rem; --gap: 24px; --sx: 0.565;
-  --iw: max(100vw, min(119vw, 2300px), calc(var(--bh) * 1.65)); --ih: calc(var(--iw) / 1.5);
-  background-size: var(--iw) auto;
-  background-position: max(calc(100vw - var(--iw)), min(0px, calc(50vw - var(--iw) * var(--sx)))) max(calc(var(--bh) - var(--ih)), min(0px, calc(var(--bh) / 2 + var(--header-h) / 2 - var(--half) - var(--gap) - var(--ih) * 0.59))); }
-@media (min-width: 769px) and (max-width: 1024px) and (orientation: portrait) { [data-page="intro"] .sub-visual__bg { --iw: calc(var(--bh) * 2.25); --sx: 0.385; } }
-@media (max-width: 768px) { [data-page="intro"] .sub-visual__bg { --bh: max(320px, 45vh); --half: 3.9rem; --gap: 16px; --iw: calc(var(--bh) * 2.25); --sx: 0.385; } } /* 모바일은 슬로건이 두 줄 */
+/* 치과소개 배너(visual-intro.jpg — 마산점 원내 로고 간판 240307_MED_0180): 세로 사진에서 간판 부분만 잘라 양옆 벽면을 이어 붙인 3:1 배너 전용 이미지(2880×960)
+   간판 가운데 = 이미지 가로 50% · 세로 58%(= 배너 문구 중심 높이) → 기본 cover 만으로 간판이 배너 가운데에 크게 온다
+   세로 68%: 아주 넓은 화면(배너가 3:1 보다 납작, 2560 등)에서만 효과 — 간판 아래 영문 줄이 배너 아래로 잘리지 않게 살짝 위로 */
+[data-page="intro"] .sub-visual__bg { background-position: 50% 68%; }
 .sub-visual--image .container { position: relative; }
 .sub-visual__copy { margin-bottom: 12px; font-size: var(--fs-lg); opacity: 0.9; word-break: keep-all; }
 .sub-visual--image .breadcrumb { color: rgba(255, 255, 255, 0.6); }

@@ -36,7 +36,7 @@
 | `news-dummy-01~04.jpg` | 치과소식 더미 썸네일 (실데이터 연결 시 삭제) | 750×870 |
 | `branch-bar-bg.jpg` | 하단 지점 바로가기 배경 (데스크 전경) | 1920×640 |
 | `visual-implant.jpg`, `visual-orthodontics.jpg`, `visual-general.jpg`, `visual-wisdom-scaling.jpg`, `visual-aesthetic.jpg` | 서브페이지 상단 비주얼 | 1920×700 |
-| `visual-intro.jpg` | 치과소개(about/intro.html) 상단 배너 — 창원점 건물 야경(자료/a89d35c7-….png, 1536×1024 → JPG 품질 88). '화이트이(e)치과의원' 간판이 크게·문구 위에 오게 확대·위치 계산(sub.css `[data-page="intro"]`). 원본이 1536px 이라 넓은 화면에서는 약 1.5배 확대돼 살짝 부드러워 보임 — 고해상도 원본을 받으면 교체 권장 | 1536×1024 |
+| `visual-intro.jpg` | 치과소개(about/intro.html) 상단 배너 — 마산점 원내 로고 간판(원본 240307_MED_0180, 세로 3284×4927). 위쪽 천장 반사를 뺀 간판 부분(세로 2473~4273)만 잘라 양옆을 같은 벽면 반전 반복으로 이어 붙인 3:1 합성(2880×960, 품질 84). 간판 가운데 = 가로 50% · 세로 58% → cover 만으로 배너 가운데 | 2880×960 |
 | `visual-clinic.jpg` | 병원소개(about/clinic.html) 상단 배너 — 마산점 간판 사진(원본 240307_MED_0090, 4953×3302 → 2400×1600 · 품질 82). 간판이 배너 가운데(문구와 같은 중심)에 오게 위치 계산(sub.css `[data-page="clinic"]`) | 2400×1600 |
 | `tour-changwon-01~06.jpg`, `tour-masan-01~06.jpg` | 병원소개(about/clinic.html) ②내부 둘러보기 갤러리 (개수·캡션은 `assets/js/site-data.js` 의 `tour`). **실제 사진 적용(2026-11-05, 긴 변 최대 2000px)** — 창원점·마산점 각 6장 | 1400×1050 (4:3) 이상 |
 | `icons/quick-implant.png`, `quick-orthodontics.png`, `quick-general.png`, `quick-wisdom-scaling.png`, `quick-aesthetic.png` | 홈 퀵바(빠른 진료 안내) 아이콘 — 투명 PNG. 바꿀 때 index.html 의 width·height·`--h`(원본 높이)도 함께 수정 | 원본 크기 그대로(현재 1배) · 2배 크기 또는 SVG 권장 |
