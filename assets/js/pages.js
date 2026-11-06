@@ -48,17 +48,31 @@ function fadeIn(el) {
 }
 
 /* ---------- 의료진 소개 (about/doctors.html) ----------
-   지점별 묶음: [지점 색 작은 라벨 + '창원점 의료진'(28px)] 아래 원장 카드 — 겸직 원장(김영우)은 두 지점 모두, 카드 태그 '창원·마산'
-   카드: [사진 칸 300px | 지점 태그·진료과 / 이름·직함 / 약력(1열)] — 사진은 칸 아래 맞춤 + 원장별 보정값(site-data.js photoScale·photoOffsetY·photoOffsetX → --ps·--py·--px)
-     스타일: common.css '의료진 소개 카드'
+   위: 소개 블록(doctors.html 에 직접 — 왼쪽 네이비 문구 | 오른쪽 원내 사진 흑백)
+   지점별 묶음: [지점 색 작은 라벨 + '창원점 의료진'] 아래 원장 — 겸직 원장(김영우)은 두 지점 모두, 이름 아래 '창원·마산 겸직' 태그
+   원장(카드 상자 없음, 원장 사이 가는 가로선 + 위아래 100px): 모두 같은 방향(사진 왼쪽)
+     [이름 52px 굵게 + 직함 52px 400 같은 줄 ······ 학회·학교 로고(site-data.js logos)]
+     [진료과 태그(네이비 면) + 주요 진료(site-data.js focus)]
+     [연한 베이지 약력 상자 — 왼쪽에 사진(아래 끝 = 상자 아래 끝, 머리가 상자 위로 80px) | 약력 2열]
+   약력: 지금 데이터 순서 그대로가 아니라 분류 순서 — 전문의 → 학력 → 경력(네이비 굵게) → 연수·학회 활동(기본 검정) (site-data.js SITE.classifyCareer · isTraining)
+   사진: 원장별 보정값(site-data.js photoScale·photoOffsetY·photoOffsetX → --ps·--py·--px), 흰 배경 사진은 multiply 로 상자 색과 섞음(photoBlend)
+     스타일: common.css '의료진 소개'. 1024px 이하 = 사진 위 · 정보 아래, 이름 36px, 약력 1열
    지점 이동 버튼(.doc-branch-nav): 화면 아래 고정 [창원점 N][마산점 N] — 누르면 그 지점 제목이 헤더 + 24px 아래에 오게 스크롤, 스크롤 위치로 현재 지점 표시(aria-current),
      배너 구간에서는 숨기고 의료진 목록에 들어오면 나타나며 푸터에 닿으면 사라짐. 주소 해시 #changwon / #masan 반영(이 주소로 들어오면 그 지점으로 바로) */
 function renderDoctorsPage() {
   const box = document.querySelector('[data-doctors-page]');
   if (!box) return;
-  const { esc, img, branchBadge } = window.UI;
+  const { esc, img } = window.UI;
+  const S = window.SITE;
   const EN = { changwon: 'CHANGWON', masan: 'MASAN' };
-  const groups = window.SITE.branches.map((b) => ({ b, docs: window.SITE.getDoctorsByBranch(b.id) }));
+  const groups = S.branches.map((b) => ({ b, docs: S.getDoctorsByBranch(b.id) }));
+  // 약력: 전문의 → 학력 → 경력 (굵게 네이비) / 연수 → 학회 활동 (기본)
+  const careerOf = (d) => {
+    const by = { cert: [], edu: [], career: [], training: [], society: [] };
+    (d.career || []).forEach((c) => { const k = S.classifyCareer(c); by[k === 'career' && S.isTraining(c) ? 'training' : k].push(c); });
+    const li = (c, strong) => `<li class="${strong ? 'is-strong' : ''}">${esc(c)}</li>`;
+    return [...by.cert, ...by.edu, ...by.career].map((c) => li(c, true)).join('') + [...by.training, ...by.society].map((c) => li(c, false)).join('');
+  };
   box.innerHTML = groups.map(({ b, docs }) => `
     <section class="doctor-group" id="${b.id}" data-branch="${b.id}" aria-labelledby="doctor-group-${b.id}">
       <div class="doctor-group__head">
@@ -67,15 +81,26 @@ function renderDoctorsPage() {
       </div>
       <div class="doctor-profiles">
         ${docs.map((d) => {
-          const fix = `--ps:${Number(d.photoScale) || 1};--py:${Number(d.photoOffsetY) || 0};--px:${Number(d.photoOffsetX) || 0}`;
-          const career = d.career || [];
+          /* 사진 칸 = 상자 위 80px ~ 상자 아래 끝. 머리 위 끝(photoHeadTop)이 칸 위 끝에 오게: 사진 높이 = 칸 × max(photoScale, 1/(1 - 머리 위치)),
+             남는 만큼 아래로 내려 상자 아래 끝에서 자른다 (--dk 높이 배율, --dy 내림 = 칸 높이 대비 %) */
+          const ht = Math.min(0.4, Math.max(0, Number(d.photoHeadTop) || 0));
+          const dk = Math.max(Number(d.photoScale) || 1, 1 / (1 - ht));
+          const dy = Math.max(0, (dk * (1 - ht) - 1) * 100);
+          const fix = `--dk:${dk.toFixed(4)};--dy:${dy.toFixed(3)};--px:${Number(d.photoOffsetX) || 0}`;
+          const both = d.branches.length > 1;
+          const logos = (d.logos || []).filter((l) => l && l.src);
           return `
-          <article class="doctor-profile" id="${b.id}-${window.SITE.doctorSlug(d)}">
-            <div class="doctor-profile__photo img-ph"><img class="doctor-profile__img" style="${fix}" src="${img(String(d.photo || '').replace(/\.[a-z]+$/i, '-cut.png'))}" alt="${esc(d.name)} ${esc(d.title)} 사진" loading="lazy"></div>
-            <div class="doctor-profile__body">
-              <p class="doctor-profile__tag">${branchBadge(d.branches.length > 1 ? 'both' : d.branches[0])}<span class="doctor-profile__dept">${esc(d.dept)}</span></p>
-              <h3 class="doctor-profile__name">${esc(d.name)} <small>${esc(d.title)}</small></h3>
-              ${career.length ? `<ul class="doctor-profile__career">${career.map((c) => `<li>${esc(c)}</li>`).join('')}</ul>` : ''}
+          <article class="doctor-profile" id="${b.id}-${S.doctorSlug(d)}">
+            <div class="doctor-profile__head">
+              <div class="doctor-profile__id">
+                <h3 class="doctor-profile__name"><strong>${esc(d.name)}</strong> <span>${esc(d.title)}</span></h3>
+                <p class="doctor-profile__tags"><span class="doctor-profile__dept">${esc(d.dept)}</span>${d.focus ? `<span class="doctor-profile__focus">${esc(d.focus)}</span>` : ''}${both ? '<span class="doctor-profile__both">창원·마산 겸직</span>' : ''}</p>
+              </div>
+              ${logos.length ? `<ul class="doctor-profile__logos">${logos.map((l) => `<li><img src="${img(l.src)}" alt="${esc(l.alt || '')}" loading="lazy"></li>`).join('')}</ul>` : ''}
+            </div>
+            <div class="doctor-profile__box">
+              <div class="doctor-profile__photo" style="${fix}"><img class="doctor-profile__img${d.photoBlend === false ? '' : ' is-blend'}" src="${img(String(d.photo || '').replace(/\.[a-z]+$/i, '-cut.png'))}" alt="${esc(d.name)} ${esc(d.title)} 사진" loading="lazy"></div>
+              ${(d.career || []).length ? `<ul class="doctor-profile__career">${careerOf(d)}</ul>` : ''}
             </div>
           </article>`;
         }).join('')}
