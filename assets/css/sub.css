@@ -6,14 +6,13 @@
 .sub-visual--image { position: relative; overflow: hidden; padding: calc(var(--header-h) + 110px) 0 80px; background: var(--color-bg-hero); border-bottom: 0; color: #fff; }
 .sub-visual__bg { position: absolute; inset: 0; background-position: center; background-size: cover; background-repeat: no-repeat; }
 .sub-visual__bg::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(10, 10, 10, 0.55), rgba(10, 10, 10, 0.75)); }
-/* 병원소개 배너(visual-clinic.jpg — 마산점 간판 사진 2400×1600): 간판 글자가 배너 문구와 겹치지 않게 간판 글자를 문구 바로 아래로
-   PC·태블릿: 배너 비율이 화면마다 달라 고정 % 로는 1440 등에서 겹침 → 위치를 화면 폭·배너 높이로 계산
-     사진은 배너 폭에 맞춰 늘어나고(cover, 배너가 사진보다 가로로 김) 간판 글자 줄 = 사진 높이의 47~59% (= 폭의 31.3%~39.3%)
-     문구 묶음 아래 끝 ≈ 배너 높이/2 + 80px → 글자 위 끝을 그보다 20px 아래(배너 높이/2 + 100px)에 둔다. 사진 위가 비지 않게 0 이하로 제한
-   1024px 이하(배너가 덜 납작해 위치만으로는 겹침) = 1.6배(모바일 1.7배)로 키워 위 맞춤 */
-[data-page="clinic"] .sub-visual__bg { --bh: clamp(520px, 60vh, 680px); background-position: center min(0px, calc(var(--bh) / 2 + 100px - 31.3vw)); }
-@media (max-width: 1024px) { [data-page="clinic"] .sub-visual__bg { background-size: auto 160%; background-position: 40% 0%; } } /* 태블릿: 배너가 덜 납작해 위치만으로는 겹침 → 키워서 위 맞춤 */
-@media (max-width: 768px) { [data-page="clinic"] .sub-visual__bg { background-size: auto 170%; background-position: 40% 0%; } }
+/* 병원소개 배너(visual-clinic.jpg — 마산점 간판 사진 2400×1600): 간판이 배너 가운데(문구와 같은 중심 = 헤더 아래 공간의 세로 가운데)에 오게
+   간판 = 사진 가로 50%(앞면 가운데) · 세로 48% 지점이 가운데. 배너가 사진보다 가로로 길면(PC) 사진은 배너 폭에 맞춰 늘어나므로(cover, 사진 높이 = 폭 ÷ 1.5)
+   세로 위치 = 배너 높이/2 + 헤더 높이/2 − 폭 × 0.32, 사진이 배너를 벗어나 빈 곳이 생기지 않게 [배너 높이 − 사진 높이, 0] 안으로 제한.
+   배너가 덜 납작하면(모바일·세로 태블릿) 사진이 높이에 맞춰져 세로로 움직일 수 없어 간판이 위로 치우침 → 1.2배(세로 태블릿 1.15배)로 키우고 위 맞춤 = 간판이 가운데 */
+[data-page="clinic"] .sub-visual__bg { --bh: clamp(520px, 60vh, 680px); background-position: 50% min(0px, max(calc(var(--bh) - 66.667vw), calc(var(--bh) / 2 + var(--header-h) / 2 - 32vw))); }
+@media (min-width: 769px) and (max-width: 1024px) and (orientation: portrait) { [data-page="clinic"] .sub-visual__bg { background-size: auto 115%; background-position: 50% 0; } }
+@media (max-width: 768px) { [data-page="clinic"] .sub-visual__bg { background-size: auto 120%; background-position: 50% 0; } }
 .sub-visual--image .container { position: relative; }
 .sub-visual__copy { margin-bottom: 12px; font-size: var(--fs-lg); opacity: 0.9; word-break: keep-all; }
 .sub-visual--image .breadcrumb { color: rgba(255, 255, 255, 0.6); }
