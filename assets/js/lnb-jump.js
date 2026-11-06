@@ -2,7 +2,8 @@
    서브페이지 시작 위치 — 같은 대메뉴 안에서 이동하면 본문부터, 그 밖에는 배너 맨 위부터
    (LNB 가 있는 서브페이지 <head> 에서 바로 실행, defer 아님 — 그리기 전에 위치를 정해야 해서)
 
-   대메뉴 = 주소의 폴더: about(화이트e치과) · treatment(진료과목) · community(커뮤니티)
+   대메뉴 = 주소의 폴더: about(화이트e치과) · treatment(진료과목) · community(커뮤니티) · faq(상담문의 목록·작성 — FAQ 첫 페이지 faq/index.html 은 배너·LNB 가 없어 이 스크립트 없음)
+   상담문의 작성 페이지에서 전송에 성공하면 common.js 가 같은 기록을 남기고 목록으로 이동 → 목록도 본문부터
    ※ 커뮤니티 페이지는 배너가 없어(글 우선) 이 스크립트를 넣지 않는다 — 항상 맨 위(= 바로 LNB·본문)부터
 
    1) 기록: 서브페이지에서 링크를 누르면 sessionStorage 에 {from: 지금 대메뉴, to: 갈 경로, t: 시각} 을 남긴다
@@ -25,7 +26,7 @@
   var GAP = 32; // PC: 흰 헤더 아래 ~ LNB 타이틀 블록·경로 줄 윗선 간격
 
   function groupOf(path) {
-    var m = /\/(about|treatment|community)\/[^/]*$/.exec(path || '');
+    var m = /\/(about|treatment|community|faq)\/[^/]*$/.exec(path || '');
     return m ? m[1] : null;
   }
   var here = groupOf(location.pathname);

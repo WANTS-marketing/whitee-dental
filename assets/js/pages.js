@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     'notice-view': () => window.Board.view('notice'),
     'case-view': () => window.Board.view('cases'),
     faq: renderFaqList,
-    'inquiry-status': () => window.InquiryBoard?.init(), // inquiry.js
+    contact: () => window.InquiryBoard?.init(), // 상담문의 목록 (inquiry.js)
   }[page];
   run?.();
   document.querySelectorAll('[data-inquiry-form]').forEach((f) => window.UI.inquiryForm(f)); // common.js

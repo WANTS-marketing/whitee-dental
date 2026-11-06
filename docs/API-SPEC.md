@@ -72,13 +72,15 @@ assets/js/api.js   ← 서버 연결 때 바꾸는 곳은 여기 하나 (함수 
 
 | 화면 | 파일 | 부르는 함수 |
 |---|---|---|
-| 상담문의하기 폼 | `faq/contact.html` | `createInquiry` |
+| 상담문의 작성 폼 (전송 성공 → 목록으로, 방금 쓴 글 맨 위 '내 문의') | `faq/contact-write.html` | `createInquiry` |
 | 진료과목 5페이지 빠른상담 (내용 칸 없음) | `treatment/*.html` | `createInquiry` |
 | 메인 FAQ 옆 빠른 상담문의 | `index.html` | `createInquiry` |
-| 상담 현황 목록 · 비밀번호 열람 | `faq/status.html` (`assets/js/inquiry.js`) | `listInquiries` · `getInquiry` |
+| 상담문의 목록 (FAQ > 상담문의하기) · 비밀번호 열람 | `faq/contact.html` (`assets/js/inquiry.js`) | `listInquiries` · `getInquiry` |
 | 관리자 | `admin/index.html` (`assets/js/admin.js`) | `adminListInquiries` · `adminGetInquiry` · `answerInquiry` · `updateInquiryStatus` · `deleteInquiry` |
 
-흐름: 폼 작성 → `createInquiry` 저장(+ 병원 메일 알림) → 상담 현황 목록 맨 위에 '접수' → 제목을 누르고 비밀번호 4자리 → `getInquiry` 로 본인 내용 → 관리자 답변 `answerInquiry` → 목록 '답변완료', 본인 화면에 답변 표시.
+'내 문의' 표시는 화면 기능이다 — 이 탭에서 쓴 글 번호를 sessionStorage(`witee-inquiry-mine`)에 남겨 표시만 한다(열람에는 여전히 비밀번호 필요). 서버 연결 뒤에도 그대로 동작한다.
+
+흐름: 폼 작성 → `createInquiry` 저장(+ 병원 메일 알림) → 상담문의 목록 맨 위에 '접수' → 제목을 누르고 비밀번호 4자리 → `getInquiry` 로 본인 내용 → 관리자 답변 `answerInquiry` → 목록 '답변완료', 본인 화면에 답변 표시.
 
 ### 2-2. 데이터 항목 (`inquiries`)
 

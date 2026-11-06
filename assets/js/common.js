@@ -98,9 +98,23 @@
      화면 쪽 스팸 방지: 허니팟(값이 있으면 성공처럼 보이고 저장 안 함) · 내용 5자 미만 막기 · 링크(http, www) 들어간 글 막기
        (같은 검사를 api.js·서버에서도 다시 한다 — docs/API-SPEC.md)
      연락처 숫자만 + 하이픈 자동, 비밀번호 숫자만 4자리
-     onSuccess(result): 접수 성공 시 (없으면 폼 아래 '접수되었습니다 … 상담 현황 보기 →' + 폼 비우기) */
+     접수 성공 시
+       - 이 탭에서 쓴 글 번호를 sessionStorage(witee-inquiry-mine)에 남긴다 → 상담문의 목록에서 '내 문의' 표시 (inquiry.js)
+       - form[data-success-url] 이 있으면(상담문의 작성 페이지) 그 목록으로 이동 — 방금 쓴 글 강조(witee-inquiry-just) + 같은 대메뉴라 본문부터(lnb-jump 기록)
+       - onSuccess(result) 가 있으면 그것(메인 빠른 상담문의 완료 화면), 없으면 폼 아래 '접수되었습니다 … 상담 현황 보기 →'(목록 링크) + 폼 비우기 */
   const LINK_RE = /(https?:\/\/|www\.)/i;
-  const statusHref = () => `${document.documentElement.dataset.root || '.'}/faq/status.html`;
+  const statusHref = () => `${document.documentElement.dataset.root || '.'}/faq/contact.html`;
+  const MINE_KEY = 'witee-inquiry-mine';
+  const JUST_KEY = 'witee-inquiry-just';
+  function rememberMine(id) {
+    if (!id) return;
+    try {
+      const mine = JSON.parse(sessionStorage.getItem(MINE_KEY) || '[]');
+      if (!mine.includes(id)) mine.push(id);
+      sessionStorage.setItem(MINE_KEY, JSON.stringify(mine));
+      sessionStorage.setItem(JUST_KEY, String(id));
+    } catch (e) { /* 표시만 못 함 */ }
+  }
   const DONE_TEXT = '접수되었습니다. 상담 현황에서 답변을 확인하실 수 있습니다.';
   function inquiryForm(form, { onSuccess } = {}) {
     const msg = form.querySelector('.form__msg');
@@ -122,6 +136,13 @@
     pw?.addEventListener('input', () => { const v = pw.value.replace(/\D/g, '').slice(0, 4); if (v !== pw.value) pw.value = v; });
 
     const done = (result) => {
+      if (form.dataset.successUrl && result.data?.id) {
+        const to = new URL(form.dataset.successUrl, location.href);
+        try { sessionStorage.setItem('witee-lnb-jump', JSON.stringify({ from: 'faq', to: to.pathname, t: Date.now() })); } catch (e) { /* 배너부터 */ }
+        form.reset();
+        location.assign(to.href);
+        return;
+      }
       if (onSuccess) onSuccess(result);
       else setMsg('', 'success', `${esc(DONE_TEXT)} <a class="form__msg-link" href="${statusHref()}">상담 현황 보기 →</a>`);
       form.reset();
@@ -133,7 +154,7 @@
       const f = form.elements;
 
       // 허니팟: 사람에게는 보이지 않는 칸 — 값이 있으면 봇으로 보고 조용히 종료(성공처럼 보이게)
-      if (f.website?.value) { done({ ok: true, data: {} }); return; }
+      if (f.website?.value) { if (form.dataset.successUrl) { location.assign(form.dataset.successUrl); return; } done({ ok: true, data: {} }); return; }
       setMsg('');
       if (!form.reportValidity()) return;
       if (!/^01[016789]-?\d{3,4}-?\d{4}$/.test(f.phone.value)) return fail('연락처를 정확히 입력해 주세요. (예: 010-1234-5678)', f.phone);
@@ -155,7 +176,7 @@
           contentRequired: !!f.message,
           source: form.dataset.inquiryForm || '상담문의',
         });
-        if (result.ok) { setMsg(''); done(result); } else fail(result.error.message, result.error.field && f[result.error.field === 'content' ? 'message' : result.error.field]);
+        if (result.ok) { setMsg(''); rememberMine(result.data.id); done(result); } else fail(result.error.message, result.error.field && f[result.error.field === 'content' ? 'message' : result.error.field]);
       } catch (err) {
         console.error(err);
         setMsg('전송에 실패했습니다. 잠시 후 다시 시도하거나 전화로 문의해 주세요.', 'error');
@@ -511,8 +532,8 @@
 
   /** 현재 페이지 메뉴 강조 */
   function initCurrentMenu() {
-    // 게시판 상세(news-view · notice-view · case-view)는 메뉴에 없어서 그 목록 페이지(news · notice · cases)로 본다
-    const here = location.pathname.replace(/\/$/, '/index.html').replace(/\/(news|notice)-view\.html$/, '/$1.html').replace(/\/case-view\.html$/, '/cases.html');
+    // 게시판 상세(news-view · notice-view · case-view)는 메뉴에 없어서 그 목록 페이지(news · notice · cases)로 본다. 상담문의 작성(contact-write) = 상담문의하기(contact)
+    const here = location.pathname.replace(/\/$/, '/index.html').replace(/\/(news|notice)-view\.html$/, '/$1.html').replace(/\/case-view\.html$/, '/cases.html').replace(/\/contact-write\.html$/, '/contact.html');
     document.querySelectorAll('.gnb__sub a, .mnav__sub a').forEach((a) => {
       if (a.pathname === here) {
         a.classList.add('is-current');

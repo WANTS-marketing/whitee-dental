@@ -1110,7 +1110,7 @@ html:has(body.has-lnb .page-doctors) { scroll-padding-top: calc(var(--header-h) 
 /* ---------- 의료진 소개 (about/doctors.html) — 본문 배경 흰색, 상단 배너는 다른 서브페이지와 같은 공통 사진(banner-sub.jpg) ---------- */
 
 /* ==========================================================================
-   상담문의 — 폼 비밀번호 칸 · 사이트 팝업(UI.dialog) · 상담 현황 게시판(faq/status.html, inquiry.js)
+   상담문의 — 폼 비밀번호 칸 · 사이트 팝업(UI.dialog) · 상담문의 목록(faq/contact.html, inquiry.js) · 작성 페이지 버튼(faq/contact-write.html)
    ========================================================================== */
 .btn--danger { background: #c62828; color: #fff; }
 .btn--danger:hover { background: #a61f1f; }
@@ -1154,14 +1154,28 @@ html.is-dialog-open { overflow: hidden; }
 }
 @media (prefers-reduced-motion: reduce) { .site-dialog, .site-dialog__panel { transition: none; } }
 
-/* ---------- 상담 현황 (faq/status.html — inquiry.js) — 커뮤니티 목록형과 같은 톤: 행 좌우 여백 --b-pad(32/24/16) · 구분선 · 모서리 4px ---------- */
-.inq-board { --b-pad: 32px; max-width: 1200px; margin: 0 auto; }
+/* ---------- 상담 현황 = 상담문의 목록 (faq/contact.html — inquiry.js) — 커뮤니티 목록형과 같은 톤: 행 좌우 여백 --b-pad(32/24/16) · 구분선 · 모서리 4px ---------- */
+.inq-board { --b-pad: 32px; }
 @media (max-width: 1440px) { .inq-board { --b-pad: 24px; } }
 @media (max-width: 768px) { .inq-board { --b-pad: 16px; } }
-.inq-board__tools { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; padding: 0 var(--b-pad); }
-.inq-board__count { font-size: var(--fs-sm); color: var(--color-text-sub); }
+/* 도구 줄: 왼쪽 [총 N건 · 지점 칩] / 오른쪽 [상담문의하기 →] (목록 아래에도 같은 버튼) */
+.inq-board__tools { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 16px; margin-bottom: 20px; }
+.inq-board__left { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 20px; min-width: 0; }
+.inq-board__count { font-size: var(--fs-sm); color: var(--color-text-sub); white-space: nowrap; }
 .inq-board__count b { font-weight: 700; color: var(--color-text); }
-.inq-board__write { height: 44px; padding: 0 20px; font-weight: 600; }
+.inq-board .inq-board__cats { margin: 0; padding: 0; overflow: visible; }
+.inq-board__write { height: 48px; padding: 0 24px; border-radius: var(--radius-btn); background: var(--color-accent); color: #fff; font-weight: 700; transition: background-color var(--dur); }
+.inq-board__write:hover { background: var(--color-accent-hover); }
+.inq-board__write:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+.inq-board__bottom { display: flex; justify-content: flex-end; margin-top: 32px; }
+.inq-board .pager + .inq-board__bottom { margin-top: 24px; }
+.inq-mine { flex: none; display: inline-flex; align-items: center; height: 22px; padding: 0 8px; border: 1px solid var(--color-accent); border-radius: var(--radius-btn); font-size: var(--fs-xxs); font-weight: 700; line-height: 1; color: var(--color-accent); white-space: nowrap; }
+.inq-row.is-just { background: rgba(var(--color-accent-rgb), 0.08); transition: background-color 1.2s ease; }
+.inq-row.is-just.is-just-fade { background: transparent; }
+.inq-row.is-just.is-just-fade:hover { background: rgba(var(--color-accent-rgb), 0.04); }
+/* 상담문의 작성 페이지 하단 버튼 [목록으로 | 문의 남기기] */
+.form__actions { display: flex; justify-content: center; gap: 12px; margin-top: 8px; }
+.form__actions .btn { min-width: 180px; padding: 0 32px; font-weight: 700; }
 .inq-board__note { margin-top: 32px; font-size: var(--fs-xs); color: var(--color-text-sub); text-align: center; word-break: keep-all; }
 .inq-board__empty, .inq-table td.inq-table__empty { padding: 80px 16px; text-align: center; color: var(--color-text-sub); white-space: normal; }
 .inq-board .pager { margin-top: 48px; }
@@ -1180,8 +1194,9 @@ html.is-dialog-open { overflow: hidden; }
 .inq-col-date { width: calc(6.5em + var(--b-pad)); }
 .inq-row { cursor: pointer; transition: background-color 0.2s; }
 .inq-row:hover { background: rgba(var(--color-accent-rgb), 0.04); }
-.inq-row__btn { display: inline-flex; align-items: center; gap: 8px; max-width: 100%; font-weight: 600; color: var(--color-text); text-align: left; }
-.inq-row__title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; transition: color var(--dur); }
+.inq-row__btn { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; max-width: 100%; font-weight: 600; color: var(--color-text); text-align: left; }
+.inq-row__title { min-width: 0; word-break: keep-all; transition: color var(--dur); } /* 좁은 폭·큰 글자에서는 잘리지 않고 다음 줄로 */
+.inq-table td.inq-col-title { white-space: normal; }
 .inq-row:hover .inq-row__title, .inq-row__btn:focus-visible .inq-row__title { color: var(--color-accent); }
 .inq-lock { flex: none; width: 16px; height: 16px; color: #888; }
 .inq-status { display: inline-flex; align-items: center; height: 28px; padding: 0 10px; border-radius: var(--radius-btn); font-size: var(--fs-xs); font-weight: 600; line-height: 1; white-space: nowrap; }
@@ -1190,8 +1205,11 @@ html.is-dialog-open { overflow: hidden; }
 @media (max-width: 1024px) { .inq-table .inq-col-treat { display: none; } }
 /* 모바일: 표 → 카드형 [지점 · 상태 / 제목 / 작성자 · 날짜] */
 @media (max-width: 768px) {
-  .inq-board__tools { padding: 0; }
-  .inq-board__write { height: 40px; padding: 0 16px; }
+  .inq-board__tools { align-items: stretch; }
+  .inq-board__left { width: 100%; justify-content: space-between; }
+  .inq-board__write { width: 100%; height: 48px; justify-content: center; }
+  .inq-board__bottom .inq-board__write { width: 100%; }
+  .form__actions .btn { flex: 1; min-width: 0; padding: 0 16px; }
   .inq-table, .inq-table tbody { display: block; }
   .inq-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
   .inq-row { display: grid; grid-template-columns: auto auto minmax(0, 1fr) auto; grid-template-areas: "branch branch . status" "title title title title" "name date date date"; align-items: center; gap: 8px 6px; padding: 16px var(--b-pad); border-bottom: 1px solid var(--color-line); }
