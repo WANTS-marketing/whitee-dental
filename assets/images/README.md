@@ -16,7 +16,6 @@
 | `doctors-bg.jpg` | 메인 의료진 섹션 배경 (유리 원형 오브제, 위에 흰 막 90% = 사진 10%) | 2400×1500 |
 | `doctor-lee-eunju.jpg` | 이은주 대표원장 (창원) | 600×750 (4:5) |
 | `doctor-kwon-jinseon.jpg` | 권진선 원장 (창원) | 600×750 |
-| `doctor-jeong-jeongwon.jpg` | 정정원 원장 (창원) | 600×750 |
 | `doctor-lee-hwiso.jpg` | 이휘소 원장 (창원) | 600×750 |
 | `doctor-kim-youngwoo.jpg` | 김영우 원장 (창원·마산 겸직) | 600×750 |
 | `doctor-jeong-hoseok.jpg` | 정호석 대표원장 (마산) | 600×750 |
