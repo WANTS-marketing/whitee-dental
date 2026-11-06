@@ -578,7 +578,11 @@ html.is-lnb-hold body { min-height: calc(100vh + 2000px); }
    [분류 칩 줄] → [도구 줄: 총 N건 | 정렬 · 보기 방식 · 검색] → [목록: 카드 3개 / 카드 4개 / 목록형] → [페이지 번호]
    목록 폭 = LNB 옆 본문(.sub-body, 컨테이너 쿼리 sub) 기준. 썸네일 비율은 게시판마다(--b-ratio)
    ========================================================================== */
-.board-ui { --b-ratio: 1; }
+/* --b-pad = 목록형 행 안쪽 좌우 여백 (태그·제목 시작선 · 날짜 끝선). 목록형일 때는 도구 줄(총 N건·보기 토글·검색)도 같은 여백 → 시작선·끝선 일치
+   32px · 1440px 이하 24px · 모바일 16px. 카드 보기는 카드가 목록 끝선에 붙어 있어 도구 줄 여백 없음 */
+.board-ui { --b-ratio: 1; --b-pad: 32px; }
+@media (max-width: 1440px) { .board-ui { --b-pad: 24px; } }
+@media (max-width: 768px) { .board-ui { --b-pad: 16px; } }
 [data-board="notice"] { --b-ratio: 4 / 3; }
 [data-board="cases"] { --b-ratio: 3 / 4; }
 .board-list__empty { padding: 72px 0; text-align: center; color: var(--color-text-muted); }
@@ -594,6 +598,7 @@ html.is-lnb-hold body { min-height: calc(100vh + 2000px); }
 
 /* 도구 줄: 왼쪽 건수, 오른쪽 [정렬 글자 버튼(치료사례만)][보기 방식][검색] — 높이 40px, 모서리 4px */
 .board-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; margin-bottom: 28px; padding: 14px 0 0; border-top: 2px solid var(--color-text); } /* 아래 구분선 없음 — 위 굵은 선만 */
+.board-ui:has(.board-list[data-view="list"]) .board-tools { padding-left: var(--b-pad); padding-right: var(--b-pad); } /* 목록형: 행과 같은 좌우 여백 */
 .board-tools__count { flex: 1 1 auto; min-width: 0; font-size: var(--fs-sm); color: var(--color-text-sub); }
 .board-tools__count b { font-weight: 700; color: var(--color-text); }
 .board-tools__q { margin-left: 6px; color: var(--color-text); }
@@ -661,7 +666,7 @@ html.is-lnb-hold body { min-height: calc(100vh + 2000px); }
 .board-list[data-view="list"] { border-top: 0; }
 .board-row { display: grid; grid-template-columns: minmax(0, 1fr); align-items: center; border-bottom: 1px solid var(--color-line); }
 .board-row.is-pinned { background: var(--color-point-soft); }
-.board-row__link { display: grid; grid-template-columns: 120px minmax(0, 1fr) auto; align-items: center; gap: 24px; min-width: 0; padding: 20px 8px; }
+.board-row__link { display: grid; grid-template-columns: 120px minmax(0, 1fr) auto; align-items: center; gap: 24px; min-width: 0; padding: 20px var(--b-pad); } /* 고정 공지 옅은 배경(.board-row)은 목록 전체 폭 */
 .board-row.is-plain .board-row__link { grid-template-columns: minmax(0, 1fr) auto; padding-top: 22px; padding-bottom: 22px; }
 .board-row__thumb { display: block; aspect-ratio: var(--b-ratio); max-height: 120px; border-radius: var(--radius-sm); }
 [data-board="cases"] .board-row__thumb { aspect-ratio: 1; } /* 세로 사진(3:4)은 목록형에서 정사각으로 */
@@ -706,7 +711,7 @@ html.is-lnb-hold body { min-height: calc(100vh + 2000px); }
 @media (max-width: 768px) {
   .board-cats { margin: 0 calc(var(--gutter) * -1) 16px; padding: 0 var(--gutter); }
   .board-cats__list { flex-wrap: nowrap; width: max-content; }
-  .board-tools { gap: 10px 12px; margin-bottom: 20px; padding: 12px 0 0; }
+  .board-tools { gap: 10px 12px; margin-bottom: 20px; padding-top: 12px; }
   .board-tools__view--card3, .board-tools__view--card4 { display: none; }
   .board-tools__view--card { display: grid; border-left: 0 !important; }
   .board-search { flex: 1 1 100%; width: auto; }
@@ -714,8 +719,8 @@ html.is-lnb-hold body { min-height: calc(100vh + 2000px); }
   [data-view="card4"] .board-card__sum { -webkit-line-clamp: 2; }
   [data-view="card4"] .board-card__title { font-size: 1.125rem; }
   .board-card__hover { display: none; } /* 터치 화면은 hover 없음 */
-  .board-row__link { grid-template-columns: 88px minmax(0, 1fr); gap: 14px; padding: 16px 0; }
-  .board-row.is-plain .board-row__link { padding: 16px 0; }
+  .board-row__link { grid-template-columns: 88px minmax(0, 1fr); gap: 14px; padding: 16px var(--b-pad); }
+  .board-row.is-plain .board-row__link { padding: 16px var(--b-pad); }
   .board-row__title { white-space: normal; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; font-size: 1rem; }
   .board-row__sum { display: none; }
   .case-view { gap: 10px; }
