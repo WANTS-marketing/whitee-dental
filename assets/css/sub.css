@@ -6,9 +6,13 @@
 .sub-visual--image { position: relative; overflow: hidden; padding: calc(var(--header-h) + 110px) 0 80px; background: var(--color-bg-hero); border-bottom: 0; color: #fff; }
 .sub-visual__bg { position: absolute; inset: 0; background-position: center; background-size: cover; background-repeat: no-repeat; }
 .sub-visual__bg::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(10, 10, 10, 0.55), rgba(10, 10, 10, 0.75)); }
-/* 병원소개 배너(visual-clinic.jpg — 마산점 간판 사진): 간판 글자가 배너 문구와 겹치지 않게 간판을 문구 아래로
-   PC·태블릿 = 사진 아래쪽 15% 기준, 모바일(배너가 거의 정사각형이라 위치만으로는 겹침) = 1.7배로 키워 위 맞춤 */
-[data-page="clinic"] .sub-visual__bg { background-position: center 15%; }
+/* 병원소개 배너(visual-clinic.jpg — 마산점 간판 사진 2400×1600): 간판 글자가 배너 문구와 겹치지 않게 간판 글자를 문구 바로 아래로
+   PC·태블릿: 배너 비율이 화면마다 달라 고정 % 로는 1440 등에서 겹침 → 위치를 화면 폭·배너 높이로 계산
+     사진은 배너 폭에 맞춰 늘어나고(cover, 배너가 사진보다 가로로 김) 간판 글자 줄 = 사진 높이의 47~59% (= 폭의 31.3%~39.3%)
+     문구 묶음 아래 끝 ≈ 배너 높이/2 + 80px → 글자 위 끝을 그보다 20px 아래(배너 높이/2 + 100px)에 둔다. 사진 위가 비지 않게 0 이하로 제한
+   1024px 이하(배너가 덜 납작해 위치만으로는 겹침) = 1.6배(모바일 1.7배)로 키워 위 맞춤 */
+[data-page="clinic"] .sub-visual__bg { --bh: clamp(520px, 60vh, 680px); background-position: center min(0px, calc(var(--bh) / 2 + 100px - 31.3vw)); }
+@media (max-width: 1024px) { [data-page="clinic"] .sub-visual__bg { background-size: auto 160%; background-position: 40% 0%; } } /* 태블릿: 배너가 덜 납작해 위치만으로는 겹침 → 키워서 위 맞춤 */
 @media (max-width: 768px) { [data-page="clinic"] .sub-visual__bg { background-size: auto 170%; background-position: 40% 0%; } }
 .sub-visual--image .container { position: relative; }
 .sub-visual__copy { margin-bottom: 12px; font-size: var(--fs-lg); opacity: 0.9; word-break: keep-all; }
@@ -187,7 +191,7 @@
 .loc--changwon .loc__head svg, .loc--changwon .loc__head em { color: var(--color-changwon); }
 .loc--masan .loc__head svg, .loc--masan .loc__head em { color: var(--color-masan); }
 .loc__head em { font-style: normal; }
-.loc__body { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); align-items: center; gap: 40px; } /* 오른쪽 정보 묶음 = 지도 높이 기준 세로 가운데 */
+.loc__body { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; gap: 40px; } /* 지도 : 정보 = 50 : 50, 오른쪽 정보 묶음 = 지도 높이 기준 세로 가운데 */
 .loc__map { position: relative; min-height: 420px; border-radius: var(--radius-lg); overflow: hidden; background: var(--color-bg-soft); }
 /* 지도 준비 중 자리 — 카카오맵 퍼가기 코드(.root_daum_roughmap)가 들어오면 자동으로 숨김 */
 .loc__map-ph { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; color: var(--color-text-muted); font-size: var(--fs-sm); }
@@ -200,14 +204,22 @@
    주소·전화는 옆 .loc__info 에 통일된 표기로 있음. 카카오 로고·로드뷰·길찾기 바(.wrap_controllers)는 유지 */
 .loc__map .root_daum_roughmap .cont { display: none !important; }
 /* 정보 표: 맨 위 테두리 없음(바로 위 블록 제목의 굵은 선 하나만). 행마다 위아래 20px, 아래 선은 행 끝에 맞춰 이어진다(칸은 행 높이로 늘림)
-   라벨은 값의 첫 줄 높이 가운데(값과 글자 크기가 같아 위 맞춤 = 첫 줄 가운데) — 값이 두 줄로 꺾여도 첫 줄에 맞는다.
-   큰 전화번호 행만 라벨을 칸 세로 가운데(.loc__dt--mid). 값은 칸 안에서 세로 가운데 */
-.loc__info dl { display: grid; grid-template-columns: 88px 1fr; }
+   라벨 열 96px 고정, 값 열 = 남은 폭 전부. 라벨은 값의 첫 줄 높이에 맞춘다(위 맞춤 + 같은 글자 크기·줄 높이) — 여러 줄 값이어도 가운데로 내려가지 않음.
+   큰 전화번호 행만 라벨을 칸 세로 가운데(.loc__dt--mid)
+   여러 줄 값(.loc__lines — 주소·진료시간): 줄 사이 4px, 줄마다 keep-all(단어 중간에서 안 꺾임)
+     주소 = [도로명] / [층 (건물)] 굵게 + [찾아오는 길] 회색 작게 · 진료시간 = 요일별 한 줄, 요일 라벨 폭 고정(5em)으로 시간 시작선이 세로로 맞음, 휴진 회색 */
+.loc__info dl { display: grid; grid-template-columns: 96px minmax(0, 1fr); }
 .loc__info dt, .loc__info dd { display: flex; padding: 20px 0; border-bottom: 1px solid var(--color-line); font-size: var(--fs-sm); word-break: keep-all; }
 .loc__info dt { align-items: flex-start; font-weight: 700; }
 .loc__info dt.loc__dt--mid { align-items: center; }
 .loc__info dd { flex-direction: column; justify-content: center; }
-.loc__sub { margin-top: 2px; }
+.loc__info dt, .loc__info dd, .loc__line { line-height: 1.6; }
+.loc__info dd.loc__lines { justify-content: flex-start; gap: 4px; }
+.loc__line { display: block; word-break: keep-all; overflow-wrap: normal; }
+.loc__sub { font-size: var(--fs-xs); color: var(--color-text-muted); }
+.loc__hour { display: flex; color: var(--color-text); font-weight: 600; }
+.loc__day { flex: none; width: 5em; color: var(--color-text-sub); font-weight: 500; }
+.loc__hour.is-off .loc__time { color: var(--color-text-muted); font-weight: 500; }
 .loc__info dd { color: var(--color-text-sub); }
 .loc__info dd strong { color: var(--color-text); }
 .loc__tel { font-size: var(--fs-h3) !important; font-weight: 800; color: var(--color-text) !important; }

@@ -166,6 +166,7 @@ function initDoctorBranchNav(groups) {
    숨긴 패널은 display:none 이 아니라 화면 밖에 같은 너비로 두므로(sub.css .clinic-panel) 지도가 처음부터 제 크기로 그려지고,
    탭이 열릴 때 relayout(지도 다시 맞추기)도 한 번 더 한다 */
 function renderClinic() {
+  const DAY_LABEL = { 토: '토요일', 일: '일요일' }; // 오시는길 진료시간 — 요일 라벨을 '토요일'처럼 풀어 쓴다 (site-data.js hours.label 은 다른 곳에서 짧게 씀)
   const panels = [...document.querySelectorAll('.clinic-panel')];
   if (!panels.length) return;
   const { esc, telHref, img } = window.UI;
@@ -177,10 +178,10 @@ function renderClinic() {
     if (info) {
       info.innerHTML = `
         <dl>
-          <dt>주소</dt><dd><strong>${esc(b.address)}</strong><strong>(${esc(b.addressNote)})</strong>${b.landmark ? `<span class="loc__sub">${esc(b.landmark)}</span>` : ''}</dd>
+          <dt>주소</dt><dd class="loc__lines">${(b.addressLines || [b.address]).map((l, i, arr) => `<strong class="loc__line">${esc(l)}${i === arr.length - 1 && b.addressNote ? ` (${esc(b.addressNote)})` : ''}</strong>`).join('')}${b.landmark ? `<span class="loc__line loc__sub">${esc(b.landmark)}</span>` : ''}</dd>
           <dt class="loc__dt--mid">전화</dt><dd><a class="loc__tel" href="${telHref(b.tel)}">${esc(b.tel)}</a></dd>
           <dt>이메일</dt><dd>${esc(b.email)}</dd>
-          <dt>진료시간</dt><dd><strong>${esc(b.hoursShort)}</strong></dd>
+          <dt>진료시간</dt><dd class="loc__lines">${b.hours.map((x) => `<span class="loc__line loc__hour${/휴진/.test(x.time) ? ' is-off' : ''}"><span class="loc__day">${esc(DAY_LABEL[x.label] || x.label)}</span><span class="loc__time">${esc(x.time)}</span></span>`).join('')}</dd>
         </dl>`;
     }
     const transit = document.querySelector(`[data-loc-transit="${b.id}"]`);

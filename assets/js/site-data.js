@@ -9,6 +9,7 @@ window.SITE = {
       name: '창원점',
       fullName: '화이트e치과의원 창원점',
       address: '경상남도 창원시 성산구 단정로 7 밀레니엄타워 3층',
+      addressLines: ['경상남도 창원시 성산구 단정로 7', '밀레니엄타워 3층'], // 병원소개 오시는길 표: 의미 단위 줄 나눔 (2번째 줄 뒤에 (addressNote))
       addressNote: '상남동 롯데리아 3층',
       ceo: '이은주',
       bizNo: '566-95-00700',
@@ -32,6 +33,7 @@ window.SITE = {
       name: '마산점',
       fullName: '화이트e치과의원 마산점',
       address: '경상남도 창원시 마산회원구 3·15대로 686, 9~10층',
+      addressLines: ['경상남도 창원시 마산회원구 3·15대로 686', '9~10층'],
       addressNote: '석전동 365병원',
       ceo: '정호석',
       bizNo: '577-91-01943',
