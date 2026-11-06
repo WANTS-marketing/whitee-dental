@@ -21,11 +21,38 @@ html::-webkit-scrollbar { display: none; }
 .hero__slide.is-moving { transition: transform 0.9s cubic-bezier(0.65, 0, 0.35, 1); }
 .hero__media { position: absolute; inset: 0; background: linear-gradient(120deg, #3a3330, #151515); } /* 사진이 없을 때 */
 .hero__media img { width: 100%; height: 100%; object-fit: cover; }
-@media (max-width: 768px) { .hero__media--consult img { object-position: 78% center; } } /* 히어로 2번(진료 상담): 세로 화면에서는 원장님 쪽(오른쪽)이 보이게 */
-.hero__media::before { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(90deg, rgba(10, 10, 10, 0.85) 0%, rgba(10, 10, 10, 0.65) 50%, rgba(10, 10, 10, 0.5) 100%); }
+@media (max-width: 768px) { .hero__media--consult img { object-position: 63% center; } /* hero-02 3000×1247 — 원장님 얼굴이 사진 가로 약 60% */ } /* 히어로 2번(진료 상담): 세로 화면에서는 원장님 쪽(오른쪽)이 보이게 */
+/* 어두운 막: 왼쪽(문구 쪽) 진하게 → 오른쪽(사진 피사체 쪽) 옅게 — 왼쪽 0.65 · 가운데 0.35 · 오른쪽 0.1 (위쪽 헤더 그라데이션은 .hero__slider::after 따로) */
+.hero__media::before { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(90deg, rgba(10, 10, 10, 0.65) 0%, rgba(10, 10, 10, 0.35) 50%, rgba(10, 10, 10, 0.1) 100%); }
 /* 들어오는 사진: scale 1.06 → 1 (전환과 함께 1.2s) */
 .hero__media img { transform: scale(1); transition: transform 1.2s cubic-bezier(0.65, 0, 0.35, 1); }
 .hero__slide.is-entering .hero__media img { transform: scale(1.06); transition: none; }
+/* 문구 뒤 옅은 어둠(PC): 화면 전체 막은 왼쪽 0.65 → 가운데 0.35 → 오른쪽 0.1 로 옅어서, 문구가 걸치는 가운데 왼쪽에 밝은 사진(창문·흰 가운)이 오면
+   흰 글자 대비가 4.5:1 아래로 떨어진다 → 문구 묶음 뒤에만 가장자리가 부드럽게 사라지는 어둠을 한 겹 더 (문구와 함께 나타남) */
+@media (min-width: 1025px) {
+  .hero__content { isolation: isolate; }
+  .hero__content::before { content: ""; position: absolute; z-index: -1; left: calc(-1 * var(--hero-x) - 40px); width: min(1300px, 75vw); top: -45%; bottom: -45%; background: rgba(10, 10, 10, var(--hero-scrim, 0.6)); -webkit-mask: radial-gradient(farthest-side at 42% 50%, #000 45%, transparent 100%); mask: radial-gradient(farthest-side at 42% 50%, #000 45%, transparent 100%); opacity: 0; pointer-events: none; }
+  .hero__slide.is-shown .hero__content::before { animation: hero-out 0.8s var(--ease) reverse both; }
+  .hero__slide.is-leaving .hero__content::before { animation: hero-out 0.3s ease both; }
+}
+/* PC: 슬라이드별 사진 위치·확대 (site-data.js heroSlides → --hero-pos · --hero-scale · --hero-origin) */
+@media (min-width: 1025px) {
+  .hero__media img { object-position: var(--hero-pos, 50% 50%); transform-origin: var(--hero-origin, 50% 50%); transform: scale(var(--hero-scale, 1)); }
+  .hero__slide.is-entering .hero__media img { transform: scale(calc(var(--hero-scale, 1) * 1.06)); }
+}
+/* 인물 이름표 (site-data.js heroSlides[].caption — main.js 가 만든다): 흰 반투명 + 모서리 4px + 옅은 그림자, 왼쪽 작은 파랑 선
+   이름 16px 굵게 / 직함·진료과 14px. 슬라이드가 들어온 뒤 0.4s 후 아래에서 올라온다. 1366px 이하·모바일은 숨김 */
+.hero__caption { display: none; }
+@media (min-width: 1367px) {
+  .hero__caption { position: absolute; z-index: 2; left: var(--cx); top: var(--cy); display: grid; gap: 2px; padding: 12px 18px 12px 24px; border-radius: 4px; background: rgba(255, 255, 255, 0.9); box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16); color: var(--color-text); opacity: 0; white-space: nowrap; pointer-events: none; }
+  .hero__caption::before { content: ""; position: absolute; left: 12px; top: 14px; bottom: 14px; width: 3px; border-radius: 2px; background: var(--color-accent); }
+  .hero__caption-name { font-size: 1rem; font-weight: 700; line-height: 1.4; }
+  .hero__caption-role { font-size: 0.875rem; line-height: 1.4; color: var(--color-text-sub); }
+  .hero__slide.is-shown .hero__caption { animation: hero-up 0.6s var(--ease) 0.4s both; }
+  .hero__slide.is-leaving .hero__caption { animation: hero-out 0.3s ease both; }
+  .is-intro .hero__slide.is-shown .hero__caption { animation-delay: 1.7s; } /* 첫 진입: 문구 뒤에 */
+}
+@media (prefers-reduced-motion: reduce) { .hero__caption { opacity: 1; } }
 /* 세로 위치: 헤더에 가려지지 않는 부분(헤더 아래 ~ 히어로 끝)의 가운데 */
 .hero__content { --hero-shift: 100px; position: absolute; z-index: 2; top: calc(50% + var(--header-h) / 2); left: calc(var(--hero-x) + var(--hero-shift)); right: calc(var(--hero-x) + 160px); transform: translateY(-50%); } /* 왼쪽: 로고 시작선 + 100px(--hero-shift, PC) · 오른쪽 160px: 플로팅 퀵메뉴 자리 */
 @media (max-width: 1024px) { .hero__content { --hero-shift: 0px; } } /* 태블릿·모바일은 그대로 */
@@ -913,8 +940,13 @@ html.is-fullpage .cases__list { height: max(420px, (100vh - var(--header-h)) * 0
    헤더 칸(common.css .header__inner: 최대 1600px, 좌우 최소 40px)과 같은 선 → 문구 왼쪽 = 로고 시작선, 조작 버튼 오른쪽 = 헤더 오른쪽 끝선 */
 @media (min-width: 1025px) {
   .hero { --hero-x: max(40px, (100cqw - 1600px) / 2); }
-  /* 좁은 데스크톱 + 글자 크게: 가장 긴 제목 줄이 3줄이 되지 않게 화면 폭 기준 상한 */
-  .hero__title { font-size: min(var(--fs-display), 5.4vw); }
+  .hero__content { --hero-shift: 0px; } /* 문구 묶음 왼쪽 시작선 = 로고 시작선 */
+  /* 문구 크기: 1920px 기준 라벨 20 · 타이틀 72 · 서브 20 · 버튼 높이 56 → 화면 폭에 비례해 1366px 까지 줄어든다(clamp)
+     라벨·서브는 어르신 가독성 최소 16px 아래로 내리지 않는다. 좁은 데스크톱 + 글자 크게: 제목 상한 5.4vw (3줄 방지) */
+  .hero__label { font-size: clamp(1rem, 1.0417vw, 1.25rem); }
+  .hero__title { margin-top: clamp(12px, 0.833vw, 16px); font-size: min(clamp(3.2rem, 3.75vw, 4.5rem), 5.4vw); line-height: 1.2; }
+  .hero__desc { margin-top: clamp(20px, 1.25vw, 24px); font-size: clamp(1rem, 1.0417vw, 1.25rem); }
+  .hero__btn { margin-top: clamp(32px, 2.08vw, 40px); height: clamp(44px, 2.917vw, 56px); padding: 0 clamp(28px, 1.875vw, 36px); font-size: clamp(1rem, 0.9375vw, 1.125rem); }
 }
 
 /* ---------- 첫 진입 애니메이션 (페이지 로드 시 1회) ----------
@@ -949,7 +981,7 @@ html.is-fullpage .cases__list { height: max(420px, (100vh - var(--header-h)) * 0
 /* 낮은 화면(높이 800px 이하): 첫 화면 한 장에 [문구 → 조작 버튼 → 퀵바] 가 다 들어가도록 단계적으로 줄인다
    1단계 제목 크기를 화면 높이 기준으로 축소(최대 6vh) + 문구 간격 축소 → 2단계 서브 문구 숨김(글자 크게·아주 크게) */
 @media (min-width: 1025px) and (min-height: 700px) and (max-height: 800px) {
-  html .screen-home .hero__title { font-size: min(var(--fs-display), 5.4vw, 6vh); margin-top: 8px; }
+  html .screen-home .hero__title { font-size: min(clamp(3.2rem, 3.75vw, 4.5rem), 5.4vw, 6vh); margin-top: 8px; }
   .screen-home .hero__desc { margin-top: 14px; }
   .screen-home .hero__btn { margin-top: 22px; }
   html:is([data-fs="lg"], [data-fs="xl"]) .screen-home .hero__desc { display: none; }
