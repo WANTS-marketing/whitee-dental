@@ -110,7 +110,7 @@ window.SITE = {
   doctors: [
     // 창원점
     {
-      name: '이은주', title: '대표원장', dept: '치과교정과', branches: ['changwon'], photo: 'doctor-lee-eunju.jpg', photoScale: 1.12, photoOffsetY: 0.8, photoBlend: false, photoBacker: false, // 배경 투명 PNG (2026-11-06 교체)
+      name: '이은주', title: '대표원장', dept: '치과교정과', branches: ['changwon'], photo: 'doctor-lee-eunju.jpg', photoScale: 1.15, photoOffsetY: 2.3, photoBlend: false, photoBacker: false, // 배경 투명 PNG (2026-11-06 교체: 이은주2-Photoroom.png)
       career: [
         '보건복지부 인증 치과교정과 전문의', '보건복지부 인증 통합치의학과 전문의',
         '부산대학교 치과대학 수석졸업', '부산대학교 치과교정학 석사', '부산대학교병원 치과교정과 인턴·레지던트 수료',
