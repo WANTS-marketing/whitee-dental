@@ -680,6 +680,7 @@ function initQuickQuestion() {
   msg.addEventListener('input', sync);
   form.addEventListener('input', sync);
   window.UI.inquiryForm(form, {
+    demoNote: false, // 버튼 아래 시안 안내 문구 없음
     onSuccess: () => {
       // 키가 없으면(시안) 완료 화면 문구를 시안 안내로 — 키가 등록되면 HTML 원래 문구('접수되었습니다')
       if (!window.UI.deliveryReady()) {

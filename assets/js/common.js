@@ -122,7 +122,7 @@
   const telList = () => (window.SITE?.branches || []).map((b) => [b.name || b.shortName, b.tel]);
   const demoText = () => `시안 화면입니다. 실제로 병원에 전달되지 않습니다. 문의는 전화로 부탁드립니다. ${telList().map(([n, t]) => `${n} ${t}`).join(' · ')}`;
   const demoHtml = () => `시안 화면입니다. 실제로 병원에 전달되지 않습니다. 문의는 전화로 부탁드립니다. ${telList().map(([n, t]) => `${esc(n)} <a href="${telHref(t)}">${esc(t)}</a>`).join(' · ')}`;
-  function inquiryForm(form, { onSuccess } = {}) {
+  function inquiryForm(form, { onSuccess, demoNote = true } = {}) {
     const msg = form.querySelector('.form__msg');
     const submitBtn = form.querySelector('[type="submit"]');
     const setMsg = (text, type, html) => {
@@ -141,8 +141,8 @@
     const pw = form.elements.password;
     pw?.addEventListener('input', () => { const v = pw.value.replace(/\D/g, '').slice(0, 4); if (v !== pw.value) pw.value = v; });
 
-    // 시안 안내 — 전송 버튼(작성 페이지는 버튼 줄) 바로 아래
-    if (!deliveryReady() && !form.querySelector('.form__demo')) {
+    // 시안 안내 — 전송 버튼(작성 페이지는 버튼 줄) 바로 아래 (demoNote: false 면 생략 — 메인 FAQ 빠른 질문 박스)
+    if (demoNote && !deliveryReady() &&!form.querySelector('.form__demo')) {
       const note = document.createElement('p');
       note.className = 'form__demo';
       note.innerHTML = demoHtml();
