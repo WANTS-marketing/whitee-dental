@@ -874,20 +874,24 @@ a.article-nav__item:hover .article-nav__title { color: var(--color-accent); }
    좌우 반반: 왼쪽 딥 네이비 면(라벨 · 큰 문구 40px · 설명 · 원형 배지 2개 · 하단 바) | 오른쪽 원내 진료실 사진(흑백, 임시)
    큰 문구의 강조 글자는 네이비 위라 밝은 파랑(--color-accent-light — 기본 파랑은 네이비 위 대비 부족)
    본문 폭(약 956px)의 절반이라 큰 문구는 4줄로 끊는다. 768px 이하는 문구 위 · 사진 아래 */
-.doc-intro { display: grid; grid-template-columns: 1fr 1fr; margin-bottom: var(--space-4xl); border-radius: var(--radius-md); overflow: hidden; background: var(--color-point); color: #fff; }
-.doc-intro__text { display: flex; flex-direction: column; padding: 56px 48px 0; min-width: 0; }
+/* PC: 높이 약 420~480px (2026-11-08 약 640px 에서 줄임) — 문구 3 : 사진 2, 큰 제목 2줄(줄마다 한 줄 유지, 글자 크기는 박스 폭에 맞춰 최대 36px), 원형 배지 90px */
+.doc-intro { container: docintro / inline-size; display: grid; grid-template-columns: 3fr 2fr; margin-bottom: var(--space-4xl); border-radius: var(--radius-md); overflow: hidden; background: var(--color-point); color: #fff; }
+.doc-intro__text { display: flex; flex-direction: column; padding: 44px 40px 0; min-width: 0; }
 .doc-intro__label { font-size: var(--fs-sm); font-weight: 600; line-height: 1.5; color: rgba(255, 255, 255, 0.8); }
-.doc-intro__title { margin-top: 16px; font-size: 2.5rem; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; color: #fff; word-break: keep-all; }
+/* 제목 글자 크기 = min(36px, 문구 칸 폭 ÷ 15글자) — 둘째 줄(15자 남짓)이 한 줄에 들어가게 (문구 칸 = 박스 60% - 좌우 40px) */
+.doc-intro__title { margin-top: 10px; font-size: min(2.25rem, calc(4cqi - 5.4px)); font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; color: #fff; word-break: keep-all; }
+.doc-intro__line { display: block; white-space: nowrap; }
 .doc-intro__title em { font-style: normal; color: var(--color-accent-light); }
-.doc-intro__desc { margin-top: 20px; font-size: var(--fs-md); line-height: 1.8; color: rgba(255, 255, 255, 0.86); word-break: keep-all; }
-.doc-intro__badges { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 32px; margin-bottom: 40px; }
-.doc-intro__badge { display: grid; place-items: center; width: 7.5rem; height: 7.5rem; border: 1px solid rgba(255, 255, 255, 0.4); border-radius: 50%; font-size: var(--fs-sm); line-height: 1.4; text-align: center; }
+.doc-intro__desc { margin-top: 16px; font-size: var(--fs-md); line-height: 1.7; color: rgba(255, 255, 255, 0.86); word-break: keep-all; }
+.doc-intro__badges { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; margin-bottom: 32px; }
+.doc-intro__badge { display: grid; place-items: center; width: 90px; height: 90px; border: 1px solid rgba(255, 255, 255, 0.4); border-radius: 50%; font-size: 0.875rem; line-height: 1.35; text-align: center; }
 .doc-intro__badge b { display: block; font-weight: 700; color: var(--color-accent-light); }
-.doc-intro__bar { display: flex; align-items: center; gap: 10px; margin: auto -48px 0; padding: 20px 48px; border-top: 1px solid rgba(255, 255, 255, 0.14); background: rgba(255, 255, 255, 0.06); font-size: var(--fs-sm); line-height: 1.5; word-break: keep-all; }
+.doc-intro__bar { display: flex; align-items: center; gap: 10px; margin: auto -40px 0; padding: 15px 40px; border-top: 1px solid rgba(255, 255, 255, 0.14); background: rgba(255, 255, 255, 0.06); font-size: var(--fs-sm); line-height: 1.5; word-break: keep-all; }
 .doc-intro__bar svg { flex: none; width: 24px; height: 24px; color: var(--color-accent-light); }
 .doc-intro__bar strong { font-weight: 700; }
-.doc-intro__photo { position: relative; min-height: 440px; }
-.doc-intro__photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 60%; filter: grayscale(1) contrast(1.05); }
+/* 사진: 박스 높이에 맞춰 잘림(cover) — 진료 의자(왼쪽)와 화이트e치과 로고 칸막이(가운데)가 보이게 가로 28% 기준 */
+.doc-intro__photo { position: relative; min-height: 0; }
+.doc-intro__photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 28% 65%; filter: grayscale(1) contrast(1.05); }
 
 /* ---------- 의료진 소개 — 원장 (about/doctors.html — pages.js renderDoctorsPage) ----------
    지점 묶음: [지점 색 작은 라벨 + 28px 제목] → 원장들. 카드 상자 없음 — 원장 사이 가는 가로선 + 위아래 100px
@@ -966,9 +970,6 @@ html:has(body.has-lnb .page-doctors) { scroll-padding-top: calc(var(--header-h) 
   .doctor-profile__name { font-size: 2.75rem; }
   .doctor-profile__box { padding: 40px 48px 40px calc(var(--doc-pw) + 48px); }
   .doctor-profile { column-gap: 48px; }
-  .doc-intro__text { padding: 48px 36px 0; }
-  .doc-intro__bar { margin-inline: -36px; padding-inline: 36px; }
-  .doc-intro__title { font-size: 2.25rem; }
 }
 /* 더 좁은 본문 (1366·1440 + 글자 크게·아주 크게 — .sub-body 832px(52rem) 이하, rem 이라 글자가 클수록 일찍)
    사진 옆에 약력을 두면 약력이 길어져 머리가 상자 위로 나오지 않음 → 1024px 이하처럼 사진 위 · 정보 아래. 본문이 넓어 약력은 2열 */
@@ -988,6 +989,10 @@ html:has(body.has-lnb .page-doctors) { scroll-padding-top: calc(var(--header-h) 
 }
 /* 1024px 이하: 사진(옅은 파랑 면 위, 머리가 면 위로 --pop) → 이름·태그 → 약력 상자 1열, 이름 36px */
 @media (max-width: 1024px) {
+  /* 소개 박스: 사진 위(높이 260px, 의자·로고 칸막이 보이게) · 문구 아래 */
+  .doc-intro { grid-template-columns: 1fr; }
+  .doc-intro__photo { order: -1; height: 260px; }
+  .doc-intro__title { font-size: min(2rem, calc(6.2cqi - 3px)); }
   .doctor-profile { --mh: 440px; display: flex; flex-direction: column; padding-block: 64px; }
   .doctor-profile:first-child { padding-top: 40px; }
   .doctor-profile__head { order: 2; margin: 28px 0 24px; }
@@ -1006,11 +1011,11 @@ html:has(body.has-lnb .page-doctors) { scroll-padding-top: calc(var(--header-h) 
   .doctor-profile__name { font-size: 2rem; }
   .doctor-profile__career { padding: 24px 20px; }
   .doctor-profile__logos img { height: 40px; }
-  .doc-intro { grid-template-columns: 1fr; }
-  .doc-intro__text { padding: 40px 24px 0; }
-  .doc-intro__title { font-size: 2rem; }
-  .doc-intro__bar { margin-inline: -24px; padding: 16px 24px; }
-  .doc-intro__photo { min-height: 240px; }
+  .doc-intro__photo { height: 200px; }
+  .doc-intro__text { padding: 28px 24px 0; }
+  .doc-intro__title { font-size: 1.625rem; }
+  .doc-intro__line { white-space: normal; } /* 좁은 화면은 줄바꿈 허용 */
+  .doc-intro__bar { margin-inline: -24px; padding: 12px 24px; }
 }
 
 /* ---------- 지점 이동 버튼 (의료진 소개 — pages.js initDoctorBranchNav) ----------
