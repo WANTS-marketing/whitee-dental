@@ -72,7 +72,10 @@ function renderDoctorsPage() {
     const by = { cert: [], edu: [], career: [], training: [], society: [] };
     (d.career || []).forEach((c) => { const k = S.classifyCareer(c); by[k === 'career' && S.isTraining(c) ? 'training' : k].push(c); });
     const li = (c, strong) => `<li class="${strong ? 'is-strong' : ''}">${esc(c)}</li>`;
-    return [...by.cert, ...by.edu, ...by.career].map((c) => li(c, true)).join('') + [...by.training, ...by.society].map((c) => li(c, false)).join('');
+    const all = [...[...by.cert, ...by.edu, ...by.career].map((c) => li(c, true)), ...[...by.training, ...by.society].map((c) => li(c, false))];
+    // 두 묶음(앞 절반 올림 / 나머지) — 2열이면 나란히, 1열이면 위아래로 이어짐 (열마다 따로 흘러 한쪽 줄바꿈이 다른 쪽 간격을 벌리지 않음)
+    const half = Math.ceil(all.length / 2);
+    return `<ul class="doctor-profile__col">${all.slice(0, half).join('')}</ul>${all.length > half ? `<ul class="doctor-profile__col">${all.slice(half).join('')}</ul>` : ''}`;
   };
   box.innerHTML = groups.map(({ b, docs }) => `
     <section class="doctor-group" id="${b.id}" data-branch="${b.id}" aria-labelledby="doctor-group-${b.id}">
@@ -100,27 +103,35 @@ function renderDoctorsPage() {
             </div>
             <div class="doctor-profile__box">
               <div class="doctor-profile__photo${d.photoBlend === false ? '' : ' is-whitebg'}"><img class="doctor-profile__img" src="${img(String(d.photo || '').replace(/\.[a-z]+$/i, '-cut.png'))}" alt="${esc(d.name)} ${esc(d.title)} 사진" loading="lazy"></div>
-              ${(d.career || []).length ? `<ul class="doctor-profile__career">${careerOf(d)}</ul>` : ''}
+              ${(d.career || []).length ? `<div class="doctor-profile__career">${careerOf(d)}</div>` : ''}
             </div>
           </article>`;
         }).join('')}
       </div>
     </section>`).join('');
   box.querySelectorAll('.doctor-profile__img').forEach((im) => im.addEventListener('error', () => im.classList.add('is-missing'), { once: true }));
-  // 이 페이지만 본문 오른쪽 끝 = 플로팅 퀵메뉴 왼쪽 끝 - 32px (--doc-right: '.page-doctors .sub-layout' · '.doc-list')
-  // 원장 목록(.doc-list) 왼쪽 끝 = 헤더 로고 시작선 (--doc-left). 1024px 이하는 둘 다 쓰지 않음(일반 여백)
+  /* 이 페이지 가로 배치 (1025px 이상): 위쪽 [LNB | 경로·제목·소개 블록] 묶음과 원장 목록이 같은 가운데·같은 폭
+     좌우 여백 --doc-side = max(퀵메뉴와 32px 띄울 만큼, (화면 - 1600px) ÷ 2) — 왼쪽 = 오른쪽, 최대 너비 1600px (common.css '.page-doctors .sub-layout' · '.doc-list')
+     1024px 이하는 쓰지 않음(일반 여백) */
   const root = document.documentElement;
+  const DOC_MAX = 1600;
   const setDocRight = () => {
-    const wide = window.innerWidth > 1024;
     const q = document.querySelector('.quick--float');
-    const qr = q && wide ? q.getBoundingClientRect() : null;
-    if (qr && qr.width) root.style.setProperty('--doc-right', `${Math.round(root.clientWidth - qr.left + 32)}px`);
-    else root.style.removeProperty('--doc-right');
-    const logo = wide ? document.querySelector('.header .logo') : null;
-    const lr = logo ? logo.getBoundingClientRect() : null;
-    if (lr && lr.width) root.style.setProperty('--doc-left', `${Math.round(lr.left)}px`);
-    else root.style.removeProperty('--doc-left');
+    const qr = q && window.innerWidth > 1024 ? q.getBoundingClientRect() : null;
+    if (qr && qr.width) {
+      const cw = root.clientWidth;
+      root.style.setProperty('--doc-side', `${Math.round(Math.max(cw - qr.left + 32, (cw - DOC_MAX) / 2))}px`);
+    } else root.style.removeProperty('--doc-side');
   };
+  /* 약력 2열 여부: 약력 칸에 한 열 15글자(15em) × 2 + 열 간격 64px 가 들어가면 2열(.is-2col), 아니면 1열
+     2열 = 두 묶음(.doctor-profile__col)을 나란히 — 열 너비는 글자 길이대로, 남는 폭은 두 열 사이(common.css) */
+  const setCols = () => box.querySelectorAll('.doctor-profile__career').forEach((wrap) => {
+    wrap.classList.remove('is-2col');
+    const cs = getComputedStyle(wrap);
+    const fsz = parseFloat(cs.fontSize) || 19;
+    const inner = wrap.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+    wrap.classList.toggle('is-2col', wrap.children.length > 1 && inner >= fsz * 30 + 64);
+  });
   /* 약력이 길면 상자는 내용대로 길어지고 사진 칸(상자 위 --pop ~ 상자 아래 끝)도 따라 길어진다.
      사진 크기는 기본 칸 높이(--ph0) 기준이라 그대로 — 원장마다 얼굴 크기·정수리 높이가 같게 (staffCrop, 2026-11-08 예전 fitBoxes 의 사진 키우기 삭제) */
   // 상자가 사진보다 길어지면(좁은 폭 + 글자 크게 → 약력 1열) 사진 아래 끝이 상자 안에서 보이므로, 그 원장만 사진 아래 64px 를 녹인다(.is-short)
@@ -129,7 +140,7 @@ function renderDoctorsPage() {
     c.classList.remove('is-short');
     if (im) c.classList.toggle('is-short', c.getBoundingClientRect().bottom - im.getBoundingClientRect().bottom > 1);
   });
-  const layout = () => { setDocRight(); markShort(); };
+  const layout = () => { setDocRight(); setCols(); markShort(); };
   layout();
   window.addEventListener('resize', layout);
   new MutationObserver(layout).observe(root, { attributes: true, attributeFilter: ['data-fs'] }); // 글자 크기 단계 → 퀵메뉴 폭·약력 길이가 바뀜
@@ -163,7 +174,7 @@ function initDoctorBranchNav(groups) {
   };
   // 가로 위치: 본문(.sub-body) 가운데. 모바일에서 오른쪽 아래 '+' 버튼과 겹치면 왼쪽으로 비킨다
   function place() {
-    const body = document.querySelector('.sub-body')?.getBoundingClientRect();
+    const body = (document.querySelector('.doc-list [data-doctors-page]') || document.querySelector('.sub-body'))?.getBoundingClientRect(); // 원장 목록 가운데 (= 화면 가운데, 여백이 좌우 같음)
     if (!body) return;
     let x = body.left + body.width / 2;
     const plus = document.querySelector('.quick__toggle');
