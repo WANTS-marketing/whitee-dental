@@ -875,7 +875,7 @@ a.article-nav__item:hover .article-nav__title { color: var(--color-accent); }
    큰 문구의 강조 글자는 네이비 위라 밝은 파랑(--color-accent-light — 기본 파랑은 네이비 위 대비 부족)
    본문 폭(약 956px)의 절반이라 큰 문구는 4줄로 끊는다. 768px 이하는 문구 위 · 사진 아래 */
 /* PC: 높이 약 420~480px (2026-11-08 약 640px 에서 줄임) — 문구 3 : 사진 2, 큰 제목 2줄(줄마다 한 줄 유지, 글자 크기는 박스 폭에 맞춰 최대 36px), 원형 배지 90px */
-.doc-intro { container: docintro / inline-size; display: grid; grid-template-columns: 3fr 2fr; margin-bottom: var(--space-4xl); border-radius: var(--radius-md); overflow: hidden; background: var(--color-point); color: #fff; }
+.doc-intro { container: docintro / inline-size; display: grid; grid-template-columns: 3fr 2fr; margin-bottom: 0; border-radius: var(--radius-md); overflow: hidden; background: var(--color-point); color: #fff; }
 .doc-intro__text { display: flex; flex-direction: column; padding: 44px 40px 0; min-width: 0; }
 .doc-intro__label { font-size: var(--fs-sm); font-weight: 600; line-height: 1.5; color: rgba(255, 255, 255, 0.8); }
 /* 제목 글자 크기 = min(36px, 문구 칸 폭 ÷ 15글자) — 둘째 줄(15자 남짓)이 한 줄에 들어가게 (문구 칸 = 박스 60% - 좌우 40px) */
@@ -915,6 +915,9 @@ html:has(body.has-lnb .page-doctors) { scroll-padding-top: calc(var(--header-h) 
 @media (min-width: 1025px) {
   .page-doctors .sub-layout { max-width: none; margin: 0; padding-left: var(--doc-side, calc(var(--quick-edge) + 24px)); padding-right: var(--doc-side, calc(var(--quick-edge) + 24px)); }
 }
+/* 소개 박스 ~ 첫 지점 제목 간격 = 예전(박스 아래 여백 + 위쪽 묶음 아래 여백 = --space-4xl × 2)의 30% → --space-4xl × 0.6 (PC 60px · 태블릿 48px · 모바일 약 38px, 2026-11-08) */
+.page-doctors .sub-layout { padding-bottom: calc(var(--space-4xl) * 0.6); }
+.page-doctors .sub-content { min-height: 0; } /* 공통 최소 높이(40vh)가 줄어든 소개 박스보다 커서 간격이 벌어지지 않게 */
 .page-doctors .doctor-group__head { text-align: center; } /* 지점 제목 = 넓어진 본문 가운데 */
 /* 원장 목록 = LNB 열 밖 (about/doctors.html .doc-list): 위쪽 묶음과 같은 좌우 여백(--doc-side) — 지점 제목·원장 사이 구분선·지점 이동 버튼도 이 가운데 기준
    이 블록이 container 'sub' — 아래 원장 블록의 @container sub 규칙(좁은 본문)은 이 폭 기준 */
