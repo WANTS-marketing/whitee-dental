@@ -1366,7 +1366,7 @@ html:has(.policy) { scroll-padding-top: calc(var(--header-h) + 24px); }
 .policy__orgs { padding: 0; list-style: none; }
 .policy__orgs > li + li { margin-top: 12px; }
 @media (max-width: 768px) {
-  .policy-toc { margin-bottom: 40px; }
+  .policy-toc { margin-bottom: 40px; padding: 24px; } /* 모바일: 안쪽 여백 상하좌우 24px */
   .policy-toc__list { grid-template-columns: 1fr; grid-template-rows: none; grid-auto-flow: row; }
   .policy__title { font-size: var(--fs-lg); }
 }
