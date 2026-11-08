@@ -23,7 +23,7 @@
   --color-point: #16233f;            /* 딥 네이비 */
   --color-point-hover: #2a3a5c;      /* 네이비 면 hover·눌림 (조금 밝게) */
   --color-point-soft: #eef1f6;       /* 옅은 네이비 면 — 선택 행·hover 배경 */
-  --color-doctor-box: #f3f6fb;       /* 의료진 소개 약력 상자 — 아주 옅은 파랑 (point-soft 보다 밝게, 흰 페이지·연회색 섹션과 구분) */
+  --color-doctor-box: #f8fafd;       /* 의료진 소개 약력 상자 — 흰색에 가까운 아주 옅은 파랑 (2026-11-08 #f3f6fb → #f8fafd) */
   --color-point-rgb: 22, 35, 63;     /* 반투명용 rgba(var(--color-point-rgb), a) */
 
   /* 파랑 = 강조 글자·진행 표시·hover·링크·체크 */
