@@ -56,7 +56,7 @@ function fadeIn(el) {
      [진료과 태그(네이비 면) + 주요 진료(site-data.js focus)]
      [연한 베이지 약력 상자 — 왼쪽에 사진(아래 끝 = 상자 아래 끝, 머리가 상자 위로 80px) | 약력 2열]
    약력: 지금 데이터 순서 그대로가 아니라 분류 순서 — 전문의 → 학력 → 경력(네이비 굵게) → 연수·학회 활동(기본 검정) (site-data.js SITE.classifyCareer · isTraining)
-   사진: 원장별 보정값(site-data.js photoScale·photoOffsetY·photoOffsetX → --ps·--py·--px), 흰 배경 사진은 multiply 로 상자 색과 섞음(photoBlend)
+   사진: 원장별 보정값(site-data.js photoScale·photoOffsetY·photoOffsetX → --ps·--py·--px), 흰 배경 사진(photoBlend 켜진 원장)도 이 페이지에서는 multiply 를 쓰지 않음 — 흰 가운·얼굴로 상자 색이 비쳐서. 대신 .is-whitebg 가장자리만 녹임 (메인 의료진은 그대로 multiply)
      스타일: common.css '의료진 소개'. 1024px 이하 = 사진 위 · 정보 아래, 이름 36px, 약력 1열
    지점 이동 버튼(.doc-branch-nav): 화면 아래 고정 [창원점 N][마산점 N] — 누르면 그 지점 제목이 헤더 + 24px 아래에 오게 스크롤, 스크롤 위치로 현재 지점 표시(aria-current),
      배너 구간에서는 숨기고 의료진 목록에 들어오면 나타나며 푸터에 닿으면 사라짐. 주소 해시 #changwon / #masan 반영(이 주소로 들어오면 그 지점으로 바로) */
@@ -98,7 +98,7 @@ function renderDoctorsPage() {
               ${logos.length ? `<ul class="doctor-profile__logos">${logos.map((l) => `<li><img src="${img(l.src)}" alt="${esc(l.alt || '')}" loading="lazy"></li>`).join('')}</ul>` : ''}
             </div>
             <div class="doctor-profile__box">
-              <div class="doctor-profile__photo"><img class="doctor-profile__img${d.photoBlend === false ? '' : ' is-blend'}" src="${img(String(d.photo || '').replace(/\.[a-z]+$/i, '-cut.png'))}" alt="${esc(d.name)} ${esc(d.title)} 사진" loading="lazy"></div>
+              <div class="doctor-profile__photo"><img class="doctor-profile__img${d.photoBlend === false ? '' : ' is-whitebg'}" src="${img(String(d.photo || '').replace(/\.[a-z]+$/i, '-cut.png'))}" alt="${esc(d.name)} ${esc(d.title)} 사진" loading="lazy"></div>
               ${(d.career || []).length ? `<ul class="doctor-profile__career">${careerOf(d)}</ul>` : ''}
             </div>
           </article>`;

@@ -893,11 +893,11 @@ a.article-nav__item:hover .article-nav__title { color: var(--color-accent); }
    지점 묶음: [지점 색 작은 라벨 + 28px 제목] → 원장들. 카드 상자 없음 — 원장 사이 가는 가로선 + 위아래 100px
    원장: 모두 같은 방향(사진 왼쪽)
      위: [이름 52px 굵게 + 직함 52px 400 회색] ······ 오른쪽 끝 학회·학교 로고(site-data.js logos, 없으면 비움)
-         [진료과 태그(네이비 면 흰 글자, 모서리 4px) + 주요 진료(focus) + 겸직 태그]
-     아래: 아주 옅은 파랑 약력 상자(--color-doctor-box, 모서리 12px, 안쪽 48px, 최소 높이 440px) — 왼쪽에 사진, 오른쪽(사진에서 48px) 약력 2열 16px
+         [진료과 태그(지점 색 면 흰 글자 16px — 겸직 원장은 보고 있는 지점 묶음 색, 모서리 4px) + 주요 진료(focus) 18px + 겸직 태그]
+     아래: 흰색에 가까운 옅은 파랑 약력 상자(--color-doctor-box, 모서리 12px, 안쪽 위아래·오른쪽 64px, 최소 높이 440px) — 왼쪽에 사진, 오른쪽(사진에서 48px) 약력 2열 19px(1600px 이하 1열), 상자 세로 가운데
        사진 칸 = 상자 위 100px(--pop) ~ 상자 아래 끝, 너비 = 사진 원본 비율대로 자동(--doc-pw). 머리 위 끝(site-data.js photoHeadTop)을 칸 위 끝에 맞춘다
          — 사진은 자르거나 흐리게 하지 않음(아래 끝 = 상자 아래 끝, 왼쪽 끝 = 상자 왼쪽 끝). pages.js 가 --dk 높이 배율 계산, 약력이 길면 원장별 --box-h 를 늘려 사진도 같이 키움(fitBoxes)
-       흰 배경 사진(doctor-*-cut.png)은 multiply 로 흰색을 상자 색·페이지 흰색과 섞는다(.is-blend — site-data.js photoBlend: false 면 끔)
+       흰 배경 사진(doctor-*-cut.png)은 multiply 를 쓰지 않는다(흰 가운·얼굴로 상자 색이 비침). 사진 좌우·위 가장자리 24px 만 흰색→투명으로 녹임(.is-whitebg — 배경 투명 PNG 는 그대로)
      약력: 전문의·학력·경력 = 네이비 굵게, 연수·학회 활동 = 기본 검정 (pages.js careerOf)
    1024px 이하: 사진(옅은 파랑 면 위, 머리가 면 위로) → 이름·태그 → 약력 상자(1열), 이름 36px */
 .doctor-group + .doctor-group { margin-top: var(--space-4xl); }
@@ -921,24 +921,26 @@ html:has(body.has-lnb .page-doctors) { scroll-padding-top: calc(var(--header-h) 
 .doctor-profile__name strong { font-weight: 700; color: var(--color-text); }
 .doctor-profile__name span { font-weight: 400; color: #8a8a8a; }
 .doctor-profile__tags { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin-top: 18px; }
-.doctor-profile__dept { display: inline-flex; align-items: center; height: 2rem; padding: 0 12px; border-radius: var(--radius-btn); background: var(--color-point); color: #fff; font-size: var(--fs-xs); font-weight: 700; white-space: nowrap; }
-.doctor-profile__focus { font-size: var(--fs-md); font-weight: 600; color: var(--color-text); word-break: keep-all; }
+.doctor-profile__dept { display: inline-flex; align-items: center; height: 2.25rem; padding: 0 14px; border-radius: var(--radius-btn); background: var(--doc-color, var(--color-point)); color: #fff; font-size: 1rem; font-weight: 700; white-space: nowrap; } /* 지점 색 면 = 묶음(.doctor-group[data-branch])의 --doc-color → 겸직 원장도 보고 있는 지점 색 */
+.doctor-profile__focus { font-size: 1.125rem; font-weight: 600; color: var(--color-text); word-break: keep-all; }
 .doctor-profile__both { display: inline-flex; align-items: center; height: 2rem; padding: 0 12px; border: 1px solid var(--color-line); border-radius: var(--radius-btn); font-size: var(--fs-xs); font-weight: 600; color: var(--color-text-sub); white-space: nowrap; }
 .doctor-profile__logos { display: flex; flex: none; align-items: center; gap: 16px; }
 .doctor-profile__logos img { display: block; height: 56px; width: auto; }
-.doctor-profile__box { grid-column: 1 / -1; position: relative; display: flex; align-items: center; min-height: var(--box-h); padding: 48px 48px 48px calc(var(--doc-pw) + 48px); overflow: visible; border-radius: var(--radius-md); background: var(--color-doctor-box); } /* 약력은 사진 오른쪽 48px 부터 */
+.doctor-profile__box { grid-column: 1 / -1; position: relative; display: flex; align-items: center; min-height: var(--box-h); padding: 64px 64px 64px calc(var(--doc-pw) + 48px); overflow: visible; border-radius: var(--radius-md); background: var(--color-doctor-box); } /* 약력은 사진 오른쪽 48px 부터 */
 .doctor-profile__photo { position: absolute; left: 0; bottom: 0; width: var(--doc-pw); height: calc(var(--box-h) + var(--pop)); pointer-events: none; } /* 약력이 길어 상자가 커져도 사진은 그대로(커지면 약력 글자를 덮음) */
 .doctor-profile__photo > .doctor-profile__img { /* 칸 공통 규칙(.img-ph > img)보다 우선 */
   position: absolute; left: 0; bottom: 0; width: auto; max-width: none; height: calc(100% * var(--dk)); aspect-ratio: 400 / 664; object-fit: cover;
   /* 사진 왼쪽 끝 = 상자 왼쪽 끝, 아래 끝 = 상자 아래 끝. 자르기·흐림(mask) 없음. 가로 보정(photoOffsetX)은 메인 의료진에서만 */
 }
-.doctor-profile__img.is-blend { mix-blend-mode: multiply; }
+/* 흰 배경 사진: 좌우·위 가장자리 24px 만 흰색→투명 (상자 위에서 흰 사각형 경계가 보이지 않게, 팔·어깨는 거의 그대로) */
+.doctor-profile__img.is-whitebg { -webkit-mask-image: linear-gradient(90deg, transparent, #000 24px, #000 calc(100% - 24px), transparent), linear-gradient(180deg, transparent, #000 24px); -webkit-mask-composite: source-in; mask-image: linear-gradient(90deg, transparent, #000 24px, #000 calc(100% - 24px), transparent), linear-gradient(180deg, transparent, #000 24px); mask-composite: intersect; }
 .doctor-profile__img.is-missing { display: none; }
-.doctor-profile__career { width: 100%; columns: 2; column-gap: 40px; }
-.doctor-profile__career li { position: relative; break-inside: avoid; padding: 0 0 8px 14px; font-size: var(--fs-md); line-height: 1.7; color: var(--color-text); word-break: keep-all; }
+.doctor-profile__career { width: 100%; columns: 2; column-gap: 64px; }
+.doctor-profile__career li { position: relative; break-inside: avoid; padding: 0 0 10px 16px; font-size: 1.1875rem; line-height: 1.7; color: var(--color-text); word-break: keep-all; }
 .doctor-profile__career li::before { content: ""; position: absolute; left: 0; top: calc(0.85em - 2px); width: 4px; height: 4px; border-radius: 50%; background: #999; }
 .doctor-profile__career li.is-strong { font-weight: 700; color: var(--color-point); }
 .doctor-profile__career li.is-strong::before { background: var(--color-point); }
+.doctor-profile__career li:last-child { padding-bottom: 0; }
 /* 좁은 본문 (1366 이하 노트북 · 글자 크게·아주 크게 — .sub-body 880px 이하) */
 @container sub (max-width: 55rem) {
   .doctor-profile { --box-h: 400px; }
@@ -961,6 +963,8 @@ html:has(body.has-lnb .page-doctors) { scroll-padding-top: calc(var(--header-h) 
   .doctor-profile__photo > .doctor-profile__img { left: 50%; translate: -50% 0; }
   .doctor-profile__career { order: 3; columns: 2; column-gap: 40px; padding: 40px; border-radius: var(--radius-md); background: var(--color-doctor-box); }
 }
+/* 1600px 이하: 약력 1열 — 사진 옆 배치·사진 위 배치(좁은 본문) 모두 (글자 19px 로 2열이면 한 항목이 여러 줄로 꺾임). 위 @container 규칙보다 뒤에 둬야 이김 */
+@media (max-width: 1600px) { .doctor-profile__career { columns: 1; } }
 /* 1024px 이하: 사진(옅은 파랑 면 위, 머리가 면 위로 --pop) → 이름·태그 → 약력 상자 1열, 이름 36px */
 @media (max-width: 1024px) {
   .doctor-profile { --mh: 440px; display: flex; flex-direction: column; padding-block: 64px; }
