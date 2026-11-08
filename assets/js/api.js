@@ -92,6 +92,13 @@
     return featured ? rows.filter((r) => r.featured) : rows;
   }
 
+  /** 비급여 진료비용 — { baseDate, baseDateLabel, categories, items: [{ code, name, category, unit, amountText, amount, min, max, note, page, row, duplicate? }] }
+      items 는 원본 수가표 순서 그대로. duplicate: true = 원본 인쇄 중복 행(화면에서 숨김). 금액이 바뀌면 assets/data/fee.json 만 고친다 (README '자주 하는 수정') */
+  async function getFees() {
+    // TODO(서버): 관리자에서 수정한 비급여 항목 (API-SPEC '비급여 진료비용')
+    return fetchJson('fee');
+  }
+
   /* ======================================================================
      상담문의 게시판 — 서버 없이 동작하는 시안 (docs/API-SPEC.md '상담문의')
      ----------------------------------------------------------------------
@@ -381,7 +388,7 @@
   }
 
   window.API = {
-    getNotices, getNotice, getNews, getNewsPost, getCases, getCase, getFaqs,
+    getNotices, getNotice, getNews, getNewsPost, getCases, getCase, getFaqs, getFees,
     listInquiries, getInquiry, createInquiry, isDeliveryReady, adminListInquiries, adminGetInquiry, answerInquiry, updateInquiryStatus, deleteInquiry,
     isLoggedIn, getCurrentUser, isAdmin, signInWithKakao, signOut,
   };

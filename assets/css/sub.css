@@ -303,3 +303,98 @@
   .transit__item { grid-template-columns: minmax(0, 1fr); gap: 6px; padding: 16px; }
   .partner-logos { grid-template-columns: repeat(2, 1fr); }
 }
+
+/* ---------- 비급여 진료비용 (fee.html .fee — pages.js renderFeePage) ----------
+   PC = 표(수가명+코드 | 상세구분 | 적용단위 | 금액 오른쪽 정렬) · 모바일(768px 이하) = 같은 표를 카드 모양으로 · 인쇄 = 표만(@media print)
+   분류 칩·도구 줄은 FAQ·게시판과 같은 .board-cats · .board-tools (선택 = --color-accent) */
+.fee-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px 32px; margin-bottom: 32px; }
+.fee-head__notice { flex: 1 1 520px; max-width: 760px; font-size: var(--fs-md); line-height: 1.75; color: var(--color-text); word-break: keep-all; }
+.fee-head__meta { display: flex; align-items: center; gap: 16px; }
+.fee-head__date { font-size: var(--fs-sm); color: var(--color-text-sub); white-space: nowrap; }
+.fee-head__date b { margin-left: 4px; font-weight: 700; color: var(--color-text); }
+.fee-head__print { display: inline-flex; align-items: center; gap: 6px; height: 36px; font-size: var(--fs-xs); font-weight: 600; }
+.fee-head__print svg { width: 16px; height: 16px; }
+.fee-head__print:hover { color: var(--color-accent); border-color: var(--color-accent); }
+.fee-tools__only { display: inline-flex; align-items: center; gap: 6px; font-size: var(--fs-xs); color: var(--color-text-sub); cursor: pointer; white-space: nowrap; }
+.fee-tools__only input { width: 16px; height: 16px; accent-color: var(--color-accent); }
+.fee-print-scope { display: none; }
+
+.fee-table { width: 100%; border-collapse: collapse; font-size: var(--fs-sm); line-height: 1.5; }
+.fee-table th, .fee-table td { padding: 10px 16px; border-bottom: 1px solid var(--color-line); text-align: left; vertical-align: middle; word-break: keep-all; overflow-wrap: anywhere; }
+.fee-table thead th { position: sticky; top: var(--header-h); z-index: 1; background: var(--color-bg-soft); border-bottom: 1px solid #cfcfcf; font-size: var(--fs-xs); font-weight: 700; color: var(--color-text-sub); }
+.fee-table__cat { width: 14%; color: var(--color-text-sub); }
+.fee-table__unit { width: 20%; color: var(--color-text-sub); }
+.fee-table__amount { width: 18%; text-align: right !important; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.fee-table__amount.is-none { font-weight: 400; color: var(--color-text-muted); }
+.fee-table__won { margin-left: 2px; font-weight: 500; }
+.fee-table__title { display: block; font-weight: 500; color: var(--color-text); }
+.fee-table__code { display: block; margin-top: 0; font-size: var(--fs-xxs); color: var(--color-text-muted); letter-spacing: 0.02em; }
+.fee-table tbody tr:hover { background: var(--color-point-soft); }
+.fee-table__empty { padding: 56px 16px !important; text-align: center !important; color: var(--color-text-sub); }
+.fee-foot { margin-top: 16px; font-size: var(--fs-xs); color: var(--color-text-sub); word-break: keep-all; }
+
+/* 원본 수가표 (접기) */
+.fee-origin { margin-top: 56px; border-top: 1px solid var(--color-line); border-bottom: 1px solid var(--color-line); }
+.fee-origin__summary { display: flex; align-items: center; gap: 8px; padding: 20px 4px; font-size: var(--fs-lg); font-weight: 700; cursor: pointer; list-style: none; }
+.fee-origin__summary::-webkit-details-marker { display: none; }
+.fee-origin__summary svg { width: 20px; height: 20px; margin-left: auto; color: var(--color-point); transition: transform var(--dur); }
+.fee-origin[open] .fee-origin__summary svg { transform: rotate(180deg); }
+.fee-origin__summary:hover { color: var(--color-accent); }
+.fee-origin__sub { font-size: var(--fs-xs); font-weight: 400; color: var(--color-text-sub); }
+.fee-origin__grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 16px; padding: 4px 0 32px; }
+.fee-origin__item { display: block; width: 100%; padding: 0; border: 1px solid var(--color-line); border-radius: var(--radius-sm); background: #fff; overflow: hidden; text-align: center; transition: border-color var(--dur), box-shadow var(--dur); }
+.fee-origin__item img { display: block; width: 100%; height: auto; }
+.fee-origin__item:hover { border-color: var(--color-accent); box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08); }
+.fee-origin__no { display: block; padding: 6px 0; border-top: 1px solid var(--color-line); font-size: var(--fs-xs); color: var(--color-text-sub); }
+.fee-lightbox .lightbox__cap a { color: #fff; text-decoration: underline; text-underline-offset: 3px; }
+.fee-lightbox .lightbox__img { background: #fff; }
+
+@media (max-width: 1024px) {
+  .fee-origin__grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+@media screen and (max-width: 768px) {
+  .fee-head { flex-direction: column; align-items: stretch; margin-bottom: 24px; }
+  .fee-head__notice { flex: none; }
+  .fee-head__meta { justify-content: space-between; }
+  .fee-tools .board-search { width: 100%; }
+  /* 표 → 카드: 1줄 = 수가명(+코드) · 금액, 2줄 = 상세구분 · 적용단위 */
+  .fee-table, .fee-table tbody { display: block; }
+  .fee-table thead { display: none; }
+  .fee-table tr { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; grid-template-areas: "name name amount" "cat unit unit"; align-items: start; column-gap: 12px; padding: 14px 4px; border-bottom: 1px solid var(--color-line); }
+  .fee-table td { padding: 0; border: 0; width: auto; }
+  .fee-table__name { grid-area: name; }
+  .fee-table__amount { grid-area: amount; }
+  .fee-table__cat, .fee-table__unit { margin-top: 6px; font-size: var(--fs-xs); }
+  .fee-table__cat { grid-area: cat; }
+  .fee-table__unit { grid-area: unit; column-gap: 0; }
+  .fee-table__unit::before { content: "·"; margin-right: 8px; margin-left: -4px; color: #bbb; }
+  .fee-table tbody tr:hover { background: none; }
+  .fee-table__empty { display: block; }
+  .fee-origin__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+  .fee-origin__summary { font-size: var(--fs-md); flex-wrap: wrap; }
+}
+
+/* 인쇄: 제목·안내·기준일·인쇄 범위 + 표만 (헤더·푸터·퀵메뉴·칩·검색·원본 이미지 숨김) */
+@media print {
+  @page { size: A4; margin: 14mm 12mm; }
+  body[data-page="fee"] { background: #fff; }
+  body[data-page="fee"] :is(#header, .header, [data-include="header"], [data-include="footer"], .footer, .branch-bar, .bottom-bar, .call-sheet, .quick, .mega-dim, .breadcrumb, .fee-cats, .fee-tools, .fee-head__print, .fee-origin, .fee-lightbox, .mnav, .skip-link) { display: none !important; }
+  body[data-page="fee"] .sub-visual { padding: 0 0 8px; border: 0; background: none; text-align: left; }
+  body[data-page="fee"] .sub-visual__title { font-size: 18pt; }
+  body[data-page="fee"] .sub-content { padding: 0; min-height: 0; }
+  body[data-page="fee"] .container { max-width: none; padding: 0 !important; }
+  .fee-head { display: block; margin-bottom: 8px; }
+  .fee-head__notice { max-width: none; font-size: 9.5pt; line-height: 1.5; }
+  .fee-head__meta { margin-top: 4px; }
+  .fee-head__date { font-size: 9.5pt; color: #000; }
+  .fee-print-scope { display: block; margin-bottom: 8px; font-size: 9pt; color: #444; }
+  .fee-table { font-size: 9pt; line-height: 1.3; }
+  .fee-table thead { display: table-header-group; }
+  .fee-table thead th { position: static; background: #eee !important; color: #000; font-size: 9pt; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .fee-table th, .fee-table td { padding: 4px 8px; border: 1px solid #999; color: #000; }
+  .fee-table tr { break-inside: avoid; }
+  .fee-table tbody tr:hover { background: none; }
+  .fee-table__code { display: inline; margin: 0 0 0 6px; font-size: 8pt; color: #555; }
+  .fee-table__title { display: inline; }
+  .fee-foot { font-size: 8.5pt; color: #444; }
+}

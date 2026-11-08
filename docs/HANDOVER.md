@@ -67,6 +67,34 @@
 | 치료사례 6 | 화이트e치과 시술 전후(덧니 교정) | 2025-04-07 (목록 04-07 + 이미지 폴더 2025-04) | https://whiteedental.co.kr/bbs/board.php?bo_table=gallery&wr_id=6 | https://whiteedental.co.kr/data/editor/2504/1c122374826fe7d954ac194596487cee_1743988190_6898.jpg | `assets/images/cases/case-6-before.jpg` · `-after.jpg` · `-after-blur.jpg` |
 | 치료사례 5 | 화이트e치과 시술 전후(교정, 보철, 임플란트) | 2025-03-07 (목록 03-07 + 이미지 폴더 2025-03) | https://whiteedental.co.kr/bbs/board.php?bo_table=gallery&wr_id=5 | https://whiteedental.co.kr/data/editor/2503/e8a1936e1cf073499027ad1c1d2aa8a7_1741306019_9898.jpg | `assets/images/cases/case-5-before.jpg` · `-after.jpg` · `-after-blur.jpg` |
 
+### 비급여 진료비용 수가표 (A4 스캔 12장) — 2026-11-08
+
+- 원본 페이지: https://whiteedental.co.kr/bbs/content.php?co_id=pay (페이지 CSS `background-image` 로 들어간 A4 스캔 이미지 12장, 각 1241×1755)
+- 업로드 시기: **2025년 2월** (이미지 폴더 `/data/editor/2502/`, 파일 이름 시각 1738829957~67 = 2025-02-06) → 화면 기준일 '2025년 2월' (`fee.json` `baseDateLabel`)
+- 원본 보관: 저장소 밖 `자료/기존사이트-비급여/` (`fee-NN-원본파일명.jpg` = 원본 페이지 순서 + 원본 페이지 HTML). 오픈 후 기존 서버가 사라지므로 병원 자료와 함께 따로 백업
+- 사이트에는 압축본만: `assets/images/fee/fee-NN.jpg`(1241px, 약 290KB) + `fee-NN-thumb.jpg`(360px) — 공개 자료라 저장소에 올림
+- **원본 페이지에서 11·12번 이미지 순서가 뒤바뀌어 있음** (10번 끝 WELEE035 → 12번 첫 행 WELEE036, 12번 끝 N8T005 → 11번 첫 행 N8T006). 사이트·`fee.json` 은 표가 이어지는 순서(page 1~12)로 정리 — 원본 12번 = page 11, 원본 11번 = page 12
+- 텍스트로 옮김: 이미지를 한 장씩 읽어 `assets/data/fee.json` 503행 (코드·수가명·상세구분·적용단위·금액). **금액이 적힌 행은 61개뿐**, 나머지는 원본도 금액 칸이 비어 있음(화면 '–'). 범위 금액(최소~최대) 없음, 원본에 비고 칸 없음
+  - 대조: 이미지별 행 수(표 가로 격자선 자동 집계) = json 행 수 12장 모두 일치 · 금액 칸 전체(코드+금액 칸 확대본)를 이미지와 다시 대조해 61개 모두 일치 · 읽기 애매해 '확인필요'로 둔 칸 0개
+  - page 11 첫 행(N8T006 소견서(보험회사 제출용) 발급)이 원본 이미지에 **같은 행이 두 번 인쇄**되어 있음 → json 에는 두 행 모두 두고 첫 행에 `duplicate: true`, 화면에는 한 번만 (화면 502개 항목)
+  - 글자 판독: 코드의 `N5I…`(영문 I)·`N7O…`(영문 O)는 확대해서 숫자 1·0 과 모양이 다른 것을 확인. 'Class II/III Elastic', 'FR II/III' 은 원본 글꼴에서 I 와 l 이 같아 보여 로마 숫자 II·III 으로 적음
+  - 원본 표기 그대로 둔 것(오타로 보여도 고치지 않음): Wire Temprary · Metal Braket · Resin braket · Tongue clib · Bite oring · 아테로케어/아트로케어 · 같은 이름 다른 코드(Hyrax R.P.E N6L070·N6L091, 치근단 촬영 N7O030·N7O031, Re-Tie N6K170·N6L229 등)
+
+| 원본 순서 | 원본 주소 | 화면 page | 사이트 파일 | 행 수 | 금액 있는 행 |
+|---|---|---|---|---|---|
+| 1 | https://whiteedental.co.kr/data/editor/2502/759a746f884d7c6e38f1db49e42847ac_1738829957_1311.jpg | 1 | `assets/images/fee/fee-01.jpg` | 41 (머리글 제외) | 4 |
+| 2 | https://whiteedental.co.kr/data/editor/2502/759a746f884d7c6e38f1db49e42847ac_1738829957_2108.jpg | 2 | `assets/images/fee/fee-02.jpg` | 42 | 5 |
+| 3 | https://whiteedental.co.kr/data/editor/2502/759a746f884d7c6e38f1db49e42847ac_1738829957_6829.jpg | 3 | `assets/images/fee/fee-03.jpg` | 42 | 6 |
+| 4 | https://whiteedental.co.kr/data/editor/2502/759a746f884d7c6e38f1db49e42847ac_1738829958_3193.jpg | 4 | `assets/images/fee/fee-04.jpg` | 42 | 2 |
+| 5 | https://whiteedental.co.kr/data/editor/2502/759a746f884d7c6e38f1db49e42847ac_1738829958_4213.jpg | 5 | `assets/images/fee/fee-05.jpg` | 42 | 13 |
+| 6 | https://whiteedental.co.kr/data/editor/2502/759a746f884d7c6e38f1db49e42847ac_1738829958_4901.jpg | 6 | `assets/images/fee/fee-06.jpg` | 42 | 3 |
+| 7 | https://whiteedental.co.kr/data/editor/2502/759a746f884d7c6e38f1db49e42847ac_1738829959_2476.jpg | 7 | `assets/images/fee/fee-07.jpg` | 42 | 0 |
+| 8 | https://whiteedental.co.kr/data/editor/2502/759a746f884d7c6e38f1db49e42847ac_1738829959_5898.jpg | 8 | `assets/images/fee/fee-08.jpg` | 42 | 0 |
+| 9 | https://whiteedental.co.kr/data/editor/2502/759a746f884d7c6e38f1db49e42847ac_1738829959_8184.jpg | 9 | `assets/images/fee/fee-09.jpg` | 42 | 1 |
+| 10 | https://whiteedental.co.kr/data/editor/2502/759a746f884d7c6e38f1db49e42847ac_1738829960_5517.jpg | 10 | `assets/images/fee/fee-10.jpg` | 42 | 16 |
+| 11 | https://whiteedental.co.kr/data/editor/2502/759a746f884d7c6e38f1db49e42847ac_1738829967_2018.jpg | 12 | `assets/images/fee/fee-12.jpg` | 42 | 5 |
+| 12 | https://whiteedental.co.kr/data/editor/2502/759a746f884d7c6e38f1db49e42847ac_1738829967_7662.jpg | 11 | `assets/images/fee/fee-11.jpg` | 42 | 6 |
+
 ## 사용한 외부 서비스·라이브러리
 
 | 이름 | 용도 | 라이선스·조건 | 계정 |
@@ -167,7 +195,10 @@
 - [ ] 배경 제거된 상반신 사진(PNG, 세로 1200px 이상, 같은 크롭 기준) — 메인 의료진 섹션 인물 나열용. **받음(7명, 2026-11-04)**: 이은주(2026-11-06 배경 투명 PNG 로 교체)·권진선·이휘소·김영우·정호석·조혜진·송희태 (흰 배경 400×664 — 고해상도 받으면 교체 권장) / **남은 1명**: 조용정. (정정원 원장 퇴사로 사이트에서 삭제, 2026-11-06) 파일명 `assets/images/doctor-{영문 이름}-cut.png` (예: doctor-lee-eunju-cut.png, `assets/images/README.md` 표 참고). 지금은 실루엣 플레이스홀더
 - [ ] 공식 로고 고해상도(SVG 또는 2배 PNG) — 현재 1배 PNG(logo.png) 적용됨, 원내 사진, 진료 사진
 - [ ] 흰색 로고 파일 요청 (SVG 또는 2배 PNG, 투명 배경) — 메인 투명 헤더(히어로 위)·푸터용. 지금은 컬러 logo.png 를 CSS filter 로 흰색 처리 중 (main.css '투명 헤더', common.css .logo__img--white)
-- [ ] 비급여 진료비용 표
+- [ ] **비급여 진료비용 최신 원본(엑셀)** — 현재는 기존 홈페이지 2025년 2월 스캔본 기준 (`fee.html` · `assets/data/fee.json`, 위 '기존 사이트에서 옮긴 자료'). 받으면 `fee.json` 의 `items`·`baseDate`·`baseDateLabel` 교체 + `assets/images/fee/` 원본 이미지 영역 정리
+  - 금액 칸이 빈 항목 442개(원본도 빈칸 — 화면 '–') 를 그대로 고지할지, 금액 있는 항목만 고지할지
+  - 내부 관리용으로 보이는 코드·수가명(예: 000000 GBR F/U 체크, 11111111 bite ck, ADFASDFAS 상태 ck, NNNNN hole R/F)이 원본에 그대로 있음 — 공개 고지 목록에서 뺄지
+  - 원본 표기 오타(Wire Temprary · Metal Braket · Tongue clib 등)를 고칠지
 - [ ] **개인정보처리방침 병원 확인** (2026-11-06, 2026-11-08 정리) — `privacy.html` 은 기존 사이트(whiteedental.co.kr/privacy.php) 원문을 문장·순서·기호 그대로 보여 줌 (화면의 회색 '병원 확인 필요' 상자는 2026-11-08 삭제 — 확인할 것은 여기에만)
   - 원문에서 바꾼 곳: 조항 제목 앞 번호(1.~12.)만, 그리고 12조 신고 기관 4곳을 현재 기관으로 — 개인정보분쟁조정위원회(www.kopico.go.kr/1833-6972) · 개인정보침해신고센터(privacy.kisa.or.kr/118) · 대검찰청(www.spo.go.kr/1301) · 경찰청 사이버수사국(ecrm.police.go.kr/182). 원문은 개인분쟁조정위원회 1336 · 정보보호마크인증위원회 · 대검찰청 인터넷범죄수사센터 · 경찰청 사이버테러대응센터
   - 수집 항목: 새 사이트에서 추가로 받는 항목이 원문에 없음 — 상담 비밀번호(숫자 4자리) · 지점(창원점·마산점)·진료과목 · 회원가입 정보(카카오 로그인 예정) · 수집방법(게시판 외 상담문의·빠른상담·빠른 질문 폼)

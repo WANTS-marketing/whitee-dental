@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     'notice-view': () => window.Board.view('notice'),
     'case-view': () => window.Board.view('cases'),
     faq: renderFaqList,
+    fee: renderFeePage,
     contact: () => window.InquiryBoard?.init(), // 상담문의 목록 (inquiry.js)
   }[page];
   run?.();
@@ -471,3 +472,145 @@ async function renderFaqList() {
   }
 }
 
+/* ---------- 비급여 진료비용 (fee.html) ----------
+   데이터: assets/data/fee.json (api.js getFees) — 원본 수가표 순서 그대로, duplicate(원본 인쇄 중복 행)는 숨김
+   분류 칩 = 상세구분(categories 순서, 앞에 '전체') · 검색 = 수가명 · '금액 표기 항목만' 체크
+   표 하나로 그린다: PC = 표, 모바일(768px 이하) = 같은 표를 카드 모양으로(sub.css) · 인쇄 = 지금 보이는 행만 표로(@media print)
+   원본 수가표: 압축본 12장 썸네일 → 누르면 크게 보기(라이트박스, 이전·다음·Esc) */
+async function renderFeePage() {
+  const root = document.querySelector('[data-fee]');
+  if (!root) return;
+  const { esc } = window.UI;
+  const $ = (sel) => root.querySelector(sel);
+  const body = $('[data-fee-body]');
+  const catsEl = $('[data-fee-cats]');
+  const countEl = $('[data-fee-count]');
+  const scopeEl = $('[data-fee-scope]');
+  const search = $('[data-fee-search]');
+  const only = $('[data-fee-only]');
+  const ALL = '전체';
+  let data = null;
+  let rows = [];
+  let cat = ALL;
+
+  const won = (n) => Number(n).toLocaleString('ko-KR');
+  // 금액 표기: 범위(min~max) > 원본 표기(amountText, 쉼표 포함 그대로) > 없음
+  const amountHtml = (r) => {
+    if (r.min != null && r.max != null) return `${won(r.min)}~${won(r.max)}<span class="fee-table__won">원</span>`;
+    if (r.amountText) return `${esc(r.amountText)}<span class="fee-table__won">원</span>`;
+    return '<span class="fee-table__none" aria-hidden="true">–</span><span class="sr-only">금액 표기 없음</span>';
+  };
+  const hasAmount = (r) => !!r.amountText || r.min != null;
+  const row = (r) => `
+    <tr>
+      <td class="fee-table__name"><span class="fee-table__title">${esc(r.name)}</span><span class="fee-table__code">${esc(r.code)}</span></td>
+      <td class="fee-table__cat">${esc(r.category)}</td>
+      <td class="fee-table__unit">${esc(r.unit)}</td>
+      <td class="fee-table__amount${hasAmount(r) ? '' : ' is-none'}">${amountHtml(r)}</td>
+    </tr>`;
+
+  function filtered() {
+    const q = search.value.trim().toLowerCase();
+    let list = q ? rows.filter((r) => r.name.toLowerCase().includes(q)) : rows;
+    if (only.checked) list = list.filter(hasAmount);
+    return list;
+  }
+  function draw() {
+    const found = filtered();
+    const list = cat === ALL ? found : found.filter((r) => r.category === cat);
+    const cats = [ALL, ...data.categories];
+    catsEl.innerHTML = cats.map((c) => `<li><button type="button" class="board-cats__btn" data-fee-cat="${esc(c)}" aria-pressed="${c === cat}">${esc(c)} <span class="board-cats__n">${c === ALL ? found.length : found.filter((r) => r.category === c).length}</span></button></li>`).join('');
+    countEl.innerHTML = `총 <b>${list.length}</b>개 항목`;
+    const q = search.value.trim();
+    scopeEl.textContent = `인쇄 범위: ${cat}${q ? ` · 수가명 '${q}'` : ''}${only.checked ? ' · 금액 표기 항목만' : ''} — ${list.length}개 항목 · 기준일 ${data.baseDateLabel}`;
+    body.innerHTML = list.length
+      ? list.map(row).join('')
+      : `<tr><td colspan="4" class="fee-table__empty">${q ? '검색 결과가 없습니다.' : '해당 항목이 없습니다.'}</td></tr>`;
+  }
+
+  catsEl.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-fee-cat]');
+    if (!btn) return;
+    cat = btn.dataset.feeCat;
+    draw();
+    catsEl.querySelector(`[data-fee-cat="${CSS.escape(cat)}"]`)?.focus({ preventScroll: true }); // 칩을 다시 그려도 키보드 위치 유지
+  });
+  search.addEventListener('input', draw);
+  only.addEventListener('change', draw);
+  $('[data-fee-search-form]').addEventListener('submit', (e) => e.preventDefault());
+  $('[data-fee-print]').addEventListener('click', () => window.print());
+
+  try {
+    data = await window.API.getFees();
+    rows = data.items.filter((r) => !r.duplicate);
+    $('[data-fee-date]').textContent = data.baseDateLabel;
+    draw();
+    renderFeeOrigin(root, data);
+  } catch (err) {
+    console.error(err);
+    body.innerHTML = '<tr><td colspan="4" class="fee-table__empty">비급여 진료비용을 불러오지 못했습니다.</td></tr>';
+  }
+}
+
+/* 원본 수가표 썸네일 + 라이트박스 (fee.html) — 썸네일 fee-NN-thumb.jpg, 크게 보기 fee-NN.jpg */
+function renderFeeOrigin(root, data) {
+  const list = root.querySelector('[data-fee-origin]');
+  const rootPath = document.documentElement.dataset.root || '.';
+  const imgs = (data.source?.images || []).map((p) => `${rootPath}/${p}`);
+  const total = imgs.length;
+  root.querySelector('[data-fee-origin-sub]').textContent = `(${data.baseDateLabel} 스캔본 ${total}장)`;
+  list.innerHTML = imgs.map((src, i) => `
+    <li><button type="button" class="fee-origin__item" data-index="${i}" aria-label="원본 수가표 ${i + 1} / ${total} 크게 보기">
+      <img src="${src.replace(/\.jpg$/, '-thumb.jpg')}" width="360" height="509" alt="" loading="lazy" decoding="async">
+      <span class="fee-origin__no">${i + 1} / ${total}</span>
+    </button></li>`).join('');
+
+  const box = document.createElement('div');
+  box.className = 'lightbox fee-lightbox';
+  box.setAttribute('role', 'dialog');
+  box.setAttribute('aria-modal', 'true');
+  box.setAttribute('aria-label', '원본 수가표 크게 보기');
+  box.tabIndex = -1;
+  box.innerHTML = `
+    <figure class="lightbox__figure"><img class="lightbox__img" alt=""><figcaption class="lightbox__cap"></figcaption></figure>
+    <button type="button" class="lightbox__btn lightbox__close" aria-label="닫기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
+    <button type="button" class="lightbox__btn lightbox__prev" aria-label="이전 장"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <button type="button" class="lightbox__btn lightbox__next" aria-label="다음 장"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg></button>`;
+  document.body.appendChild(box);
+  const img = box.querySelector('.lightbox__img');
+  const cap = box.querySelector('.lightbox__cap');
+  let index = 0;
+  let opener = null;
+  function open(i) {
+    index = (i + total) % total;
+    img.src = imgs[index];
+    img.alt = `원본 비급여 수가표 ${index + 1} / ${total}`;
+    cap.innerHTML = `원본 수가표 ${index + 1} / ${total} · <a href="${imgs[index]}" target="_blank" rel="noopener">새 창에서 원본 크기로 보기</a>`;
+    if (!box.classList.contains('is-open')) {
+      box.classList.add('is-open');
+      document.body.classList.add('is-locked');
+      box.focus({ preventScroll: true });
+    }
+  }
+  function close() {
+    box.classList.remove('is-open');
+    document.body.classList.remove('is-locked');
+    opener?.focus();
+  }
+  list.addEventListener('click', (e) => {
+    const item = e.target.closest('.fee-origin__item');
+    if (!item) return;
+    opener = item;
+    open(Number(item.dataset.index));
+  });
+  box.querySelector('.lightbox__close').addEventListener('click', close);
+  box.querySelector('.lightbox__prev').addEventListener('click', () => open(index - 1));
+  box.querySelector('.lightbox__next').addEventListener('click', () => open(index + 1));
+  box.addEventListener('click', (e) => { if (e.target === box) close(); });
+  document.addEventListener('keydown', (e) => {
+    if (!box.classList.contains('is-open')) return;
+    if (e.key === 'Escape') close();
+    if (e.key === 'ArrowLeft') open(index - 1);
+    if (e.key === 'ArrowRight') open(index + 1);
+  });
+}
