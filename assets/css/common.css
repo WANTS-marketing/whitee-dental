@@ -147,7 +147,9 @@ html[data-fs="xl"] .gnb { --gnb-gap: clamp(20px, 12vw - 140px, 96px); }
   visibility: hidden; clip-path: inset(0 0 100% 0); /* 닫힌 상태: 아래쪽이 모두 가려짐 — 열 때 위에서 아래로 드러나고, 닫을 때 아래에서 위로 걷힌다 */
   transition: clip-path 0.3s var(--ease), visibility 0s 0.3s;
 }
-.gnb__item + .gnb__item .gnb__sub { border-left: 1px solid var(--color-line); }
+/* 열 구분선은 열려 있을 때(.is-mega)만 — 닫히는 중(0.3s 걷힘)에 헤더 아래로 선 끝이 남아 보이지 않게 바로 지운다 */
+.gnb__item + .gnb__item .gnb__sub { border-left: 1px solid transparent; }
+.header.is-mega .gnb__item + .gnb__item .gnb__sub { border-left-color: var(--color-line); }
 /* 모든 열이 같은 규칙: 열 = 대메뉴 글자 칸 + 간격(--gnb-step), 글자 중심 = 열 중심. 글자가 열보다 길면 열 안에서 줄바꿈(keep-all) — 옆 열과 겹치지 않게 */
 /* 하위 메뉴 글자: 단어 중간에서는 끊지 않음(keep-all) — 띄어쓰기·'·' 뒤에서만 줄바꿈. 두 줄이 되면 줄 간격 1.35 로 한 항목처럼,
    위아래 여백은 그만큼 늘려(9px + 0.075em) 한 줄 항목 높이·항목 사이 간격은 예전(줄 간격 1.5)과 같게 */
