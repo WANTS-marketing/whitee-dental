@@ -100,7 +100,13 @@ window.SITE = {
                     지금 -cut.png 는 전원 흰 배경(투명 아님)이라 모두 true → 배경을 지운 투명 PNG 로 바꾼 원장은 false 로
        photoBacker  true 면 사진 뒤에 흰 둥근 그라데이션(인물 크기)을 깐다 — 섹션 배경 사진(doctors-bg.jpg)의 무늬가 흰 가운 등으로 비칠 때 그 원장만.
                     photoBlend: true 일 때만 쓰임 (투명 PNG 면 필요 없음). 없으면 꺼짐
-     지금 값 = '정수리 ~ 턱' 높이가 모두 같고(사진 기준 225px) 정수리가 칸 위에서 7% 선에 오도록 계산한 값. 방법은 README '자주 하는 수정' */
+     지금 값 = '정수리 ~ 턱' 높이가 모두 같고(사진 기준 225px) 정수리가 칸 위에서 7% 선에 오도록 계산한 값. 방법은 README '자주 하는 수정'
+     의료진 소개 페이지(about/doctors.html) 사진 크롭 — staffCrop: { scale, x, y } (메인 의료진 photoScale·photoOffset 과 따로, 2026-11-08)
+       기준 = 김영우 원장 구도(머리~가슴). 사진 칸 = 상자 위로 튀어나온 부분(--pop) + 상자 높이. pages.js renderDoctorsPage 가 --cs/--cx/--cy 로 넘김
+       scale  사진 높이 ÷ 사진 칸 높이. 얼굴 길이(정수리~턱)가 모두 같게: 김영우 1/(1-0.05) × (김영우 얼굴 0.415 ÷ 이 원장 얼굴 길이, 사진 높이 대비)
+       x      얼굴 가운데의 가로 위치(사진 너비 대비 0~1) → 이 점을 사진 칸 가운데에 맞춘다
+       y      정수리 위치(사진 높이 대비 0~1) → 이 점을 사진 칸 위 끝에 맞춘다 (= 상자 위로 튀어나온 높이 모두 같음)
+       아래쪽은 상자 아래 끝에서 잘림(상반신). 사진을 바꾸면 정수리·턱·얼굴 가운데를 다시 재서 넣는다 */
   /* 메인 히어로 슬라이드별 사진 설정 (index.html 슬라이드 순서와 같게, main.js initHero 가 적용) — PC(1025px 이상)에만
        pos     사진 위치 object-position ('가로% 세로%') — 사진이 화면보다 넓거나 높을 때 어느 쪽을 보일지
        scale   확대 비율 (1 = 꽉 채움). 1 보다 크면 origin 을 기준으로 키운다 — 피사체를 가운데~오른쪽으로 옮길 때
@@ -129,7 +135,7 @@ window.SITE = {
   doctors: [
     // 창원점
     {
-      name: '이은주', focus: '교정치료, 투명교정, 설측교정', logos: [], title: '대표원장', dept: '치과교정과', branches: ['changwon'], photo: 'doctor-lee-eunju.jpg', photoHeadTop: 0.167, photoScale: 1.15, photoOffsetY: 2.3, photoBlend: false, photoBacker: false, // 배경 투명 PNG (2026-11-06 교체: 이은주2-Photoroom.png)
+      name: '이은주', focus: '교정치료, 투명교정, 설측교정', logos: [], title: '대표원장', dept: '치과교정과', branches: ['changwon'], photo: 'doctor-lee-eunju.jpg', staffCrop: { scale: 1.523, x: 0.498, y: 0.167 }, photoHeadTop: 0.167, photoScale: 1.15, photoOffsetY: 2.3, photoBlend: false, photoBacker: false, // 배경 투명 PNG (2026-11-06 교체: 이은주2-Photoroom.png)
       career: [
         '보건복지부 인증 치과교정과 전문의', '보건복지부 인증 통합치의학과 전문의',
         '부산대학교 치과대학 수석졸업', '부산대학교 치과교정학 석사', '부산대학교병원 치과교정과 인턴·레지던트 수료',
@@ -139,14 +145,14 @@ window.SITE = {
       ],
     },
     {
-      name: '권진선', focus: '임플란트, 보철치료', logos: [], title: '원장', dept: '치과보철과', branches: ['changwon'], photo: 'doctor-kwon-jinseon.jpg', photoHeadTop: 0.08, photoScale: 1.14, photoOffsetY: 12.1, photoBlend: true, photoBacker: true,
+      name: '권진선', focus: '임플란트, 보철치료', logos: [], title: '원장', dept: '치과보철과', branches: ['changwon'], photo: 'doctor-kwon-jinseon.jpg', staffCrop: { scale: 1.398, x: 0.53, y: 0.08 }, photoHeadTop: 0.08, photoScale: 1.14, photoOffsetY: 12.1, photoBlend: true, photoBacker: true,
       career: [
         '보건복지부 인증 치과보철과 전문의', '부산대학교 치과병원 치과보철과 외래교수', '부산대학교 대학원 치과보철학 박사',
         '부산대학교 치의학전문대학원 졸업', '부산대학교 치과병원 인턴, 치과보철과 레지던트 수료', '대한치과보철학회 인정의·정회원',
       ],
     },
     {
-      name: '이휘소', focus: '충치치료, 신경치료, 보철치료', logos: [], title: '원장', dept: '보철·보존', branches: ['changwon'], photo: 'doctor-lee-hwiso.jpg', photoHeadTop: 0.063, photoScale: 1.21, photoOffsetY: 20.3, photoBlend: true, photoBacker: true,
+      name: '이휘소', focus: '충치치료, 신경치료, 보철치료', logos: [], title: '원장', dept: '보철·보존', branches: ['changwon'], photo: 'doctor-lee-hwiso.jpg', staffCrop: { scale: 1.603, x: 0.495, y: 0.063 }, photoHeadTop: 0.063, photoScale: 1.21, photoOffsetY: 20.3, photoBlend: true, photoBacker: true,
       career: [
         '연세대학교 치과대학 졸업', '대한치과의사협회지 2021.06 논문 저자', '오스템 엔도 세미나, 김평식 엔도 세미나 수료',
         '대한치과보존학회·대한심미치과학회 정회원', '경남교통방송(tbn) 라디오 출연', '대한치과의사협회 표창장 (2021)', '전) 김제시보건소 역학조사관',
@@ -155,7 +161,7 @@ window.SITE = {
     // 마산점
     {
       // TODO: 진료과 표기 병원 확인 — 현재 '통합치의학과', 기존 사이트 약력에는 '소아치과 전문의'로 표기됨
-      name: '정호석', focus: '임플란트, 보철치료, 소아치료', logos: [], title: '대표원장', dept: '통합치의학과', branches: ['masan'], photo: 'doctor-jeong-hoseok.jpg', photoHeadTop: 0.062, photoScale: 1.07, photoOffsetY: 7.1, photoBlend: true, photoBacker: true,
+      name: '정호석', focus: '임플란트, 보철치료, 소아치료', logos: [], title: '대표원장', dept: '통합치의학과', branches: ['masan'], photo: 'doctor-jeong-hoseok.jpg', staffCrop: { scale: 1.528, x: 0.498, y: 0.062 }, photoHeadTop: 0.062, photoScale: 1.07, photoOffsetY: 7.1, photoBlend: true, photoBacker: true,
       career: [
         '보건복지부 인증 소아치과 전문의', '보건복지부 인증 통합치의학과 전문의', '원광대학교 치과대학 졸업', '원광대학교병원 소아치과 인턴·레지던트 수료', '원광대학교 치과대학원 수료',
         '화성시치과의사회 회장 역임, (현) 고문', '대한치과보철학회 인증 우수보철치과의사과정 수료', '미국 펜실베니아대학교 근관치료과정 수료',
@@ -163,7 +169,7 @@ window.SITE = {
       ],
     },
     {
-      name: '송희태', focus: '교정치료, 투명교정', logos: [], title: '원장', dept: '치과교정과', branches: ['masan'], photo: 'doctor-song-heetae.jpg', photoHeadTop: 0.095, photoScale: 0.99, photoOffsetY: -3.3, photoBlend: true, photoBacker: true,
+      name: '송희태', focus: '교정치료, 투명교정', logos: [], title: '원장', dept: '치과교정과', branches: ['masan'], photo: 'doctor-song-heetae.jpg', staffCrop: { scale: 1.304, x: 0.575, y: 0.095 }, photoHeadTop: 0.095, photoScale: 0.99, photoOffsetY: -3.3, photoBlend: true, photoBacker: true,
       career: [
         '보건복지부 인증 치과교정과 전문의', '보건복지부 인증 통합치의학과 전문의', '대한치과교정학회 인정의',
         '서울대학교 학사, 경희대학교 치의학석사', '경희대학교 치과병원 인턴 수석 수료, 교정과 레지던트', '대한치과교정학회 정회원',
@@ -172,14 +178,14 @@ window.SITE = {
       ],
     },
     {
-      name: '조용정', focus: '임플란트, 보철치료', logos: [], title: '원장', dept: '치과보철과', branches: ['masan'], photo: 'doctor-cho-yongjeong.jpg', photoHeadTop: 0.054, photoScale: 1.16, photoOffsetY: 16.5, photoOffsetX: 3, photoBlend: true, photoBacker: true,
+      name: '조용정', focus: '임플란트, 보철치료', logos: [], title: '원장', dept: '치과보철과', branches: ['masan'], photo: 'doctor-cho-yongjeong.jpg', staffCrop: { scale: 1.479, x: 0.4, y: 0.056 }, photoHeadTop: 0.054, photoScale: 1.16, photoOffsetY: 16.5, photoOffsetX: 3, photoBlend: true, photoBacker: true,
       career: [
         '보건복지부 인증 치과보철과 전문의', '서울대학교 치과대학 졸업', '강남성모병원 인턴, 치과보철과 레지던트 수료',
         '대한치과보철학회 인정의·정회원', '국군수도병원 보철과장 역임', '전) 서울에스바른치과 대표원장',
       ],
     },
     {
-      name: '조혜진', focus: '충치치료, 신경치료', logos: [], title: '원장', dept: '치과보존과', branches: ['masan'], photo: 'doctor-cho-hyejin.jpg', photoHeadTop: 0.059, photoScale: 1.08, photoOffsetY: 7, photoBlend: true, photoBacker: true,
+      name: '조혜진', focus: '충치치료, 신경치료', logos: [], title: '원장', dept: '치과보존과', branches: ['masan'], photo: 'doctor-cho-hyejin.jpg', staffCrop: { scale: 1.374, x: 0.559, y: 0.059 }, photoHeadTop: 0.059, photoScale: 1.08, photoOffsetY: 7, photoBlend: true, photoBacker: true,
       career: [
         '보건복지부 인증 치과보존과 전문의', '보건복지부 인증 통합치의학과 전문의', '원광대학교 치과대학 졸업',
         '조선대학교 치과병원 인턴, 치과보존과 레지던트 수료', '대한치과보존학회 인정의·정회원',
@@ -188,7 +194,7 @@ window.SITE = {
     },
     // 겸직
     {
-      name: '김영우', focus: '임플란트, 사랑니발치', logos: [], title: '원장', dept: '구강악안면외과', branches: ['changwon', 'masan'], photo: 'doctor-kim-youngwoo.jpg', photoHeadTop: 0.047, photoScale: 0.93, photoOffsetY: -4.3, photoBlend: true, photoBacker: true,
+      name: '김영우', focus: '임플란트, 사랑니발치', logos: [], title: '원장', dept: '구강악안면외과', branches: ['changwon', 'masan'], photo: 'doctor-kim-youngwoo.jpg', staffCrop: { scale: 1.053, x: 0.5, y: 0.05 }, photoHeadTop: 0.047, photoScale: 0.93, photoOffsetY: -4.3, photoBlend: true, photoBacker: true,
       career: [
         '보건복지부 인증 구강악안면외과 전문의', '보건복지부 인증 통합치의학과 전문의', '서울대학교치과병원 구강악안면외과 인턴·레지던트 수료',
         '서울대학교 치의학대학원 구강악안면외과학 석사 수료', '대한구강악안면성형재건외과학회 인정의',

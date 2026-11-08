@@ -895,9 +895,10 @@ a.article-nav__item:hover .article-nav__title { color: var(--color-accent); }
      위: [이름 52px 굵게 + 직함 52px 400 회색] ······ 오른쪽 끝 학회·학교 로고(site-data.js logos, 없으면 비움)
          [진료과 태그(지점 색 면 흰 글자 16px — 겸직 원장은 보고 있는 지점 묶음 색, 모서리 4px) + 주요 진료(focus) 18px + 겸직 태그]
      아래: 흰색에 가까운 옅은 파랑 약력 상자(--color-doctor-box, 모서리 12px, 안쪽 위아래·오른쪽 64px, 최소 높이 440px) — 왼쪽에 사진, 오른쪽(사진에서 48px) 약력 2열 19px(1600px 이하 1열), 상자 세로 가운데
-       사진 칸 = 상자 위 100px(--pop) ~ 상자 아래 끝, 너비 = 사진 원본 비율대로 자동(--doc-pw). 머리 위 끝(site-data.js photoHeadTop)을 칸 위 끝에 맞춘다
-         — 사진은 자르거나 흐리게 하지 않음(아래 끝 = 상자 아래 끝, 왼쪽 끝 = 상자 왼쪽 끝). pages.js 가 --dk 높이 배율 계산, 약력이 길면 원장별 --box-h 를 늘려 사진도 같이 키움(fitBoxes)
-       흰 배경 사진(doctor-*-cut.png)은 multiply 를 쓰지 않는다(흰 가운·얼굴로 상자 색이 비침). 사진 좌우·위 가장자리 24px 만 흰색→투명으로 녹임(.is-whitebg — 배경 투명 PNG 는 그대로)
+       사진 칸 = 상자 위 100px(--pop) ~ 상자 아래 끝, 너비 --doc-pw(모든 원장 같음). 크롭 = site-data.js staffCrop(김영우 원장 구도 기준 — 얼굴 길이·정수리 높이 같게)
+         정수리를 칸 위 끝에, 얼굴 가운데를 칸 가운데에. 사진 크기는 기본 칸 높이(--ph0) 기준이라 약력이 길어 상자가 커져도 얼굴 크기는 그대로, 아래는 상자 아래 끝에서 잘림
+         — 원장별 크롭 값은 pages.js 가 --cs·--cx·--cy 로 넘김. 칸 밖은 잘라냄(아래쪽 = 상반신 구도)
+       흰 배경 사진(doctor-*-cut.png)은 multiply 를 쓰지 않는다(흰 가운·얼굴로 상자 색이 비침). 칸 좌우 끝 24px 만 흰색→투명으로 녹임(.is-whitebg — 배경 투명 PNG 는 그대로)
      약력: 전문의·학력·경력 = 네이비 굵게, 연수·학회 활동 = 기본 검정 (pages.js careerOf)
    1024px 이하: 사진(옅은 파랑 면 위, 머리가 면 위로) → 이름·태그 → 약력 상자(1열), 이름 36px */
 .doctor-group + .doctor-group { margin-top: var(--space-4xl); }
@@ -910,8 +911,15 @@ html:has(body.has-lnb .page-doctors) { scroll-padding-top: calc(var(--header-h) 
   .page-doctors .sub-layout { max-width: none; margin: 0; padding-left: calc(max(0px, (100% - var(--container) - var(--gutter) * 2) / 2) + max(var(--gutter), var(--quick-safe))); padding-right: var(--doc-right, calc(var(--quick-edge) + 24px)); }
 }
 .page-doctors .doctor-group__head { text-align: center; } /* 지점 제목 = 넓어진 본문 가운데 */
-/* --box-h 상자 최소 높이 · --pop 머리가 상자 위로 나오는 높이 · --dk 사진 높이 배율(pages.js, 머리 위치로 계산) · --doc-pw 사진 칸 너비 = 사진 높이 × 원본 비율(400/664) */
-.doctor-profile { --box-h: 440px; --pop: 100px; --dk: 1; --doc-pw: calc((var(--box-h) + var(--pop)) * var(--dk) * 400 / 664); display: grid; grid-template-columns: var(--doc-pw) minmax(0, 1fr); column-gap: 48px; padding-block: 100px; }
+/* 원장 목록 = LNB 열 밖 전체 폭 (about/doctors.html .doc-list): 왼쪽 = 헤더 로고 시작선(--doc-left), 오른쪽 = 퀵메뉴 앞 32px(--doc-right) — pages.js 가 잰다.
+   이 블록이 container 'sub' — 아래 원장 블록의 @container sub 규칙(좁은 본문)은 이 폭 기준 */
+.doc-list { container: sub / inline-size; padding: 0 var(--gutter) var(--space-4xl); }
+@media (min-width: 1025px) {
+  .doc-list { padding-left: var(--doc-left, 40px); padding-right: var(--doc-right, calc(var(--quick-edge) + 24px)); }
+}
+/* --box-h 상자 최소 높이 · --pop 머리가 상자 위로 나오는 높이 · --ph0 사진 크기 기준 칸 높이(= --box-h + --pop)
+   --doc-pw 사진 칸 너비 = --ph0 × 0.70 (김영우 원장 사진 너비 × 1.1 — 확대한 원장의 어깨까지 들어가게) · --cs/--cx/--cy 원장별 크롭(pages.js ← staffCrop) */
+.doctor-profile { --box-h: 440px; --pop: 100px; --ph0: calc(var(--box-h) + var(--pop)); --doc-pw: calc(var(--ph0) * 0.7); display: grid; grid-template-columns: var(--doc-pw) minmax(0, 1fr); column-gap: 48px; padding-block: 100px; }
 .doctor-profile:first-child { padding-top: 60px; }
 .doctor-profile + .doctor-profile { border-top: 1px solid var(--color-line); }
 .doctor-profile:last-child { padding-bottom: 0; }
@@ -927,16 +935,22 @@ html:has(body.has-lnb .page-doctors) { scroll-padding-top: calc(var(--header-h) 
 .doctor-profile__logos { display: flex; flex: none; align-items: center; gap: 16px; }
 .doctor-profile__logos img { display: block; height: 56px; width: auto; }
 .doctor-profile__box { grid-column: 1 / -1; position: relative; display: flex; align-items: center; min-height: var(--box-h); padding: 64px 64px 64px calc(var(--doc-pw) + 48px); overflow: visible; border-radius: var(--radius-md); background: var(--color-doctor-box); } /* 약력은 사진 오른쪽 48px 부터 */
-.doctor-profile__photo { position: absolute; left: 0; bottom: 0; width: var(--doc-pw); height: calc(var(--box-h) + var(--pop)); pointer-events: none; } /* 약력이 길어 상자가 커져도 사진은 그대로(커지면 약력 글자를 덮음) */
+/* 사진 칸: 상자 위 --pop ~ 상자 아래 끝 (상자가 길어지면 칸도 같이 길어짐), 칸 밖은 잘라냄 */
+.doctor-profile__photo { position: absolute; left: 0; top: calc(var(--pop) * -1); bottom: 0; width: var(--doc-pw); overflow: hidden; pointer-events: none; }
 .doctor-profile__photo > .doctor-profile__img { /* 칸 공통 규칙(.img-ph > img)보다 우선 */
-  position: absolute; left: 0; bottom: 0; width: auto; max-width: none; height: calc(100% * var(--dk)); aspect-ratio: 400 / 664; object-fit: cover;
-  /* 사진 왼쪽 끝 = 상자 왼쪽 끝, 아래 끝 = 상자 아래 끝. 자르기·흐림(mask) 없음. 가로 보정(photoOffsetX)은 메인 의료진에서만 */
+  /* 크롭: 사진 높이 = --ph0 × scale, 정수리(y) = 칸 위 끝, 얼굴 가운데(x) = 칸 가운데. 사진 비율 400:664(0.6024) */
+  position: absolute; max-width: none; object-fit: cover;
+  height: calc(var(--ph0) * var(--cs)); width: calc(var(--ph0) * var(--cs) * 0.6024);
+  top: calc(var(--ph0) * var(--cs) * var(--cy) * -1); left: calc(50% - var(--ph0) * var(--cs) * 0.6024 * var(--cx));
 }
-/* 흰 배경 사진: 좌우·위 가장자리 24px 만 흰색→투명 (상자 위에서 흰 사각형 경계가 보이지 않게, 팔·어깨는 거의 그대로) */
-.doctor-profile__img.is-whitebg { -webkit-mask-image: linear-gradient(90deg, transparent, #000 24px, #000 calc(100% - 24px), transparent), linear-gradient(180deg, transparent, #000 24px); -webkit-mask-composite: source-in; mask-image: linear-gradient(90deg, transparent, #000 24px, #000 calc(100% - 24px), transparent), linear-gradient(180deg, transparent, #000 24px); mask-composite: intersect; }
+/* 흰 배경 사진: 칸 좌우 끝 24px 만 흰색→투명 (상자 위에서 흰 사각형 경계가 보이지 않게). 위는 정수리 = 칸 위 끝이라 녹이지 않음 */
+.doctor-profile__photo.is-whitebg { -webkit-mask-image: linear-gradient(90deg, transparent, #000 24px, #000 calc(100% - 24px), transparent); mask-image: linear-gradient(90deg, transparent, #000 24px, #000 calc(100% - 24px), transparent); }
+/* 상자가 사진보다 길어진 원장(pages.js .is-short): 사진 아래 끝 64px 를 녹여 상자 안에서 사진 끝 선이 보이지 않게 */
+.doctor-profile__photo.is-short > .doctor-profile__img { -webkit-mask-image: linear-gradient(180deg, #000 calc(100% - 64px), transparent); mask-image: linear-gradient(180deg, #000 calc(100% - 64px), transparent); }
 .doctor-profile__img.is-missing { display: none; }
-.doctor-profile__career { width: 100%; columns: 2; column-gap: 64px; }
-.doctor-profile__career li { position: relative; break-inside: avoid; padding: 0 0 10px 16px; font-size: 1.1875rem; line-height: 1.7; color: var(--color-text); word-break: keep-all; }
+/* 약력 19px. 2열은 한 열이 18글자(18em) 이상 들어갈 때만 — 좁으면 저절로 1열 (예전 '1600px 이하 1열' 대신 실제 폭 기준, 2026-11-08) */
+.doctor-profile__career { width: 100%; columns: 18em 2; column-gap: 64px; font-size: 1.1875rem; }
+.doctor-profile__career li { position: relative; break-inside: avoid; padding: 0 0 10px 16px; font-size: 1em; line-height: 1.7; color: var(--color-text); word-break: keep-all; }
 .doctor-profile__career li::before { content: ""; position: absolute; left: 0; top: calc(0.85em - 2px); width: 4px; height: 4px; border-radius: 50%; background: #999; }
 .doctor-profile__career li.is-strong { font-weight: 700; color: var(--color-point); }
 .doctor-profile__career li.is-strong::before { background: var(--color-point); }
@@ -958,13 +972,14 @@ html:has(body.has-lnb .page-doctors) { scroll-padding-top: calc(var(--header-h) 
   .doctor-profile__head { order: 2; margin: 32px 0 24px; }
   .doctor-profile__name { font-size: 2.75rem; }
   .doctor-profile__box { display: contents; }
+  .doctor-profile { --ph0: var(--mh); }
   .doctor-profile__photo { order: 1; position: relative; inset: auto; width: 100%; height: var(--mh); }
   .doctor-profile__photo::before { content: ""; position: absolute; inset: var(--pop) 0 0; border-radius: var(--radius-md); background: var(--color-doctor-box); }
-  .doctor-profile__photo > .doctor-profile__img { left: 50%; translate: -50% 0; }
-  .doctor-profile__career { order: 3; columns: 2; column-gap: 40px; padding: 40px; border-radius: var(--radius-md); background: var(--color-doctor-box); }
+  /* 칸이 사진보다 넓음 → 칸 대신 사진 좌우 끝 24px 를 녹임 */
+  .doctor-profile__photo.is-whitebg { -webkit-mask-image: none; mask-image: none; }
+  .doctor-profile__photo.is-whitebg > .doctor-profile__img { -webkit-mask-image: linear-gradient(90deg, transparent, #000 24px, #000 calc(100% - 24px), transparent); mask-image: linear-gradient(90deg, transparent, #000 24px, #000 calc(100% - 24px), transparent); }
+  .doctor-profile__career { order: 3; columns: 18em 2; column-gap: 40px; padding: 40px; border-radius: var(--radius-md); background: var(--color-doctor-box); }
 }
-/* 1600px 이하: 약력 1열 — 사진 옆 배치·사진 위 배치(좁은 본문) 모두 (글자 19px 로 2열이면 한 항목이 여러 줄로 꺾임). 위 @container 규칙보다 뒤에 둬야 이김 */
-@media (max-width: 1600px) { .doctor-profile__career { columns: 1; } }
 /* 1024px 이하: 사진(옅은 파랑 면 위, 머리가 면 위로 --pop) → 이름·태그 → 약력 상자 1열, 이름 36px */
 @media (max-width: 1024px) {
   .doctor-profile { --mh: 440px; display: flex; flex-direction: column; padding-block: 64px; }
@@ -972,9 +987,12 @@ html:has(body.has-lnb .page-doctors) { scroll-padding-top: calc(var(--header-h) 
   .doctor-profile__head { order: 2; margin: 28px 0 24px; }
   .doctor-profile__name { font-size: 2.25rem; }
   .doctor-profile__box { display: contents; }
+  .doctor-profile { --ph0: var(--mh); }
   .doctor-profile__photo { order: 1; position: relative; inset: auto; width: 100%; height: var(--mh); }
   .doctor-profile__photo::before { content: ""; position: absolute; inset: var(--pop) 0 0; border-radius: var(--radius-md); background: var(--color-doctor-box); }
-  .doctor-profile__photo > .doctor-profile__img { left: 50%; translate: -50% 0; }
+  /* 칸이 사진보다 넓음 → 칸 대신 사진 좌우 끝 24px 를 녹임 */
+  .doctor-profile__photo.is-whitebg { -webkit-mask-image: none; mask-image: none; }
+  .doctor-profile__photo.is-whitebg > .doctor-profile__img { -webkit-mask-image: linear-gradient(90deg, transparent, #000 24px, #000 calc(100% - 24px), transparent); mask-image: linear-gradient(90deg, transparent, #000 24px, #000 calc(100% - 24px), transparent); }
   .doctor-profile__career { order: 3; columns: 1; padding: 32px; border-radius: var(--radius-md); background: var(--color-doctor-box); }
 }
 @media (max-width: 768px) {
