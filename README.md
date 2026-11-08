@@ -119,7 +119,7 @@ docs/                      배포·인수인계 문서
 | 서브 배너 높이 (PC 화면 높이 60%·520~680px, 모바일 45%·최소 320px) | `common.css` '.has-lnb .sub-visual' (모바일은 768px 이하 반응형 쪽) |
 | 서브페이지 시작 위치 (같은 대메뉴 안 이동 = 본문부터, 그 밖 = 배너 맨 위부터) | `assets/js/lnb-jump.js` (맨 위 설명에 규칙 정리) |
 | FAQ·공지 (시안) | `assets/data/*.json` |
-| 비급여 진료비용 금액·항목·기준일 | **`assets/data/fee.json` 만** — 한 줄 = 항목 하나 `{ code, name, category, unit, amountText, amount, min, max, note }`. 금액은 `amountText`(화면 표기, 예 `"150,000"`)와 `amount`(숫자 150000)를 같이 고치고, 범위 금액은 `min`·`max` 숫자(`amountText` 는 비움), 금액 없음은 `""`·`null`. 기준일은 맨 위 `baseDate`(`2025-02`)·`baseDateLabel`(`2025년 2월`). 분류 칩 순서 = `categories` (새 상세구분을 쓰면 여기에도 추가). 화면 `fee.html` · `pages.js` `renderFeePage` · 스타일 `sub.css` '비급여 진료비용' |
+| 비급여 진료비용 금액·항목·기준일 | **`assets/data/fee.json` 만** — 한 줄 = 항목 하나 `{ code, name, category, unit, amountText, amount, min, max, note }`. 금액은 `amountText`(화면 표기, 예 `"150,000"`)와 `amount`(숫자 150000)를 같이 고치고, 범위 금액은 `min`·`max` 숫자(`amountText` 는 비움), 금액 없음은 `""`·`null`. 화면·인쇄에서 뺄 행은 지우지 말고 `"hidden": true` (지금 내부 관리용 7행). 기준일은 맨 위 `baseDate`(`2025-02`)·`baseDateLabel`(`2025년 2월`). 분류 칩 순서 = `categories` (새 상세구분을 쓰면 여기에도 추가). 화면 `fee.html` · `pages.js` `renderFeePage` · 스타일 `sub.css` '비급여 진료비용' |
 | 상담문의 폼 칸·검사(비밀번호 4자리·내용 5자·링크 막기) | 각 폼 HTML (`faq/contact-write.html` · `treatment/*.html` 빠른상담 · `index.html` 빠른 상담문의) + `common.js` `inquiryForm` |
 | 상담문의 목록(15개·지점 칩·모바일 카드형·내 문의) · 비밀번호 팝업 — 연결: 메뉴·LNB 상담문의 = 목록, 퀵메뉴·하단 바·FAQ 하단 상담문의 = 작성 | `assets/js/inquiry.js` · 스타일 `common.css` '상담 현황' · 팝업 `common.js` `UI.dialog` |
 | 상담 데이터 저장 방식 (지금 더미 → 서버) | `assets/js/api.js` 상담문의 함수 8개 + `docs/API-SPEC.md` |
