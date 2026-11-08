@@ -340,6 +340,40 @@ api.js 안에서 HTTP 상태 코드를 위 오류 코드로 바꿔 주면 됩니
 - 더미: `assets/data/faq.json` · 화면: 메인 FAQ 5개(`featured`), `faq/index.html`
 - 필드: `id`, `category`, `question`, `answer`(빈 값이면 화면이 '답변 준비 중'), `featured`(메인 노출), `order`(순서, 작은 수 먼저)
 
+### 4-4-1. 비급여 진료비용 — `getFees()`
+
+- 더미: `assets/data/fee.json` (기존 홈페이지 2025년 2월 스캔 수가표를 옮긴 것) · 화면: `fee.html` (`pages.js` `renderFeePage`) — 분류 칩(상세구분)·수가명 검색·'금액 표기 항목만'·인쇄는 모두 화면에서 처리
+- 반환 형태 (관리자에서 수정하게 만들 때도 이 모양 그대로 돌려주면 화면은 바꿀 것 없음):
+
+```json
+{
+  "baseDate": "2025-02",            // 기준일 (YYYY-MM 또는 YYYY-MM-DD)
+  "baseDateLabel": "2025년 2월",     // 화면·인쇄에 보이는 기준일 문구
+  "categories": ["임플란트", "보철", "틀니", "보존", "소아,예방", "교정", "미용(과세)", "기타"],  // 분류 칩 순서
+  "source": { "url": "…", "note": "…", "images": ["assets/images/fee/fee-01.jpg", "…"] },     // 원본 수가표 이미지(접기 영역). 없으면 빈 배열
+  "items": [
+    { "code": "N1A020", "name": "임플란트 진단 및 치료계획", "category": "임플란트", "unit": "1구강당(1일 1회)",
+      "amountText": "150,000", "amount": 150000, "min": null, "max": null, "note": "", "page": 1, "row": 5 }
+  ]
+}
+```
+
+| 필드 | 형식 | 설명 |
+|---|---|---|
+| `code` | string | 수가 코드 (원본 그대로, 화면은 수가명 아래 작은 회색 글씨) |
+| `name` | string | 수가명 — 검색 대상 |
+| `category` | string | 상세구분 — `categories` 중 하나 |
+| `unit` | string | 적용단위 (예: 치아당, 1구강당(1일 1회), 악당(상,하악)) |
+| `amountText` | string | 화면 표기 금액, 쉼표 포함 원본 그대로 (`"150,000"`). 금액 없으면 `""` |
+| `amount` | number \| null | 숫자 금액 (정렬·계산용). 없으면 `null` |
+| `min` · `max` | number \| null | 범위 금액(최소~최대)일 때만. 있으면 화면은 `min~max원` 으로 표시 |
+| `note` | string | 비고 (없으면 `""`) |
+| `page` · `row` | number | 원본 수가표 몇 번째 장·몇 번째 행 (원본 이미지와 대조용, 관리자 화면에서는 생략 가능) |
+| `duplicate` | boolean (선택) | 원본 인쇄 중복 행 — `true` 면 화면에서 숨김 |
+
+- 관리자 화면에서 할 일(제안): 항목 추가·수정·삭제·순서 변경, 기준일 바꾸기, 원본(엑셀) 업로드로 일괄 교체. 저장할 때 `amountText` ↔ `amount` 를 함께 맞출 것(서버에서 검증)
+- 의료법 제45조 고지 항목이라 **임의 작성 금지 — 병원 원본(엑셀) 기준으로만** 바꿉니다
+
 ### 4-5. 로그인·회원가입 — `isLoggedIn()`, `getCurrentUser()`, `isAdmin()`, `signInWithKakao()`, `signOut()`
 
 - 화면: `member/login.html`·`member/join.html`(지금은 화면만 — 전송 안 함), 헤더 로그인·회원가입 링크, 치료사례 사진 잠금

@@ -19,6 +19,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
   <link rel="stylesheet" href="./assets/css/variables.css">
   <link rel="stylesheet" href="./assets/css/common.css">
+  <link rel="stylesheet" href="./assets/css/sub.css">
   <script src="./assets/js/config.js" defer></script>
   <script src="./assets/js/site-data.js" defer></script>
   <script src="./assets/js/api.js" defer></script>
@@ -26,7 +27,7 @@
   <script src="./assets/js/common.js" defer></script>
   <script src="./assets/js/pages.js" defer></script>
 </head>
-<body class="is-sub">
+<body class="is-sub" data-page="fee">
   <div data-include="header"></div>
 
   <main id="main">
@@ -42,10 +43,50 @@
 
     <section class="sub-content">
       <div class="container">
-        <!-- TODO: 비급여 진료비용 — 병원에서 받은 항목·금액 표로 작성 (의료법상 고지 의무 항목, 임의 작성 금지) -->
-        <div class="preparing">
-          <strong>콘텐츠 준비 중입니다</strong>
-          <p>비급여 진료비용 내용은 병원 자료를 받은 뒤 채워질 예정입니다.</p>
+        <!-- 비급여 진료비용 — 기존 홈페이지 수가표(A4 스캔 12장, 2025년 2월)를 assets/data/fee.json 으로 옮긴 것. 화면은 pages.js renderFeePage
+             금액이 바뀌면 fee.json 만 고친다 (README '자주 하는 수정'). 원본 이미지 = assets/images/fee/ (압축본), 원본 보관 = 저장소 밖 자료/기존사이트-비급여/ -->
+        <div class="fee" data-fee>
+          <div class="fee-head">
+            <p class="fee-head__notice">본 비급여 진료비용은 의료법 제45조에 따라 고지합니다. 환자 상태와 치료 방법에 따라 비용이 달라질 수 있으니 상담 시 확인해 주세요.</p>
+            <div class="fee-head__meta">
+              <p class="fee-head__date">기준일 <b data-fee-date>-</b></p>
+              <button class="btn btn--line btn--sm fee-head__print" type="button" data-fee-print>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M7 8V3h10v5M7 17H4V9h16v8h-3"/><path d="M7 13h10v8H7z"/></svg>인쇄
+              </button>
+            </div>
+          </div>
+
+          <!-- 분류 칩(상세구분) · 도구 줄 = FAQ·커뮤니티 게시판과 같은 모양(.board-cats · .board-tools, 선택 = --color-accent) -->
+          <nav class="board-cats fee-cats" aria-label="비급여 상세구분">
+            <ul class="board-cats__list" data-fee-cats></ul>
+          </nav>
+          <div class="board-tools fee-tools">
+            <p class="board-tools__count" data-fee-count aria-live="polite"></p>
+            <label class="fee-tools__only"><input type="checkbox" data-fee-only> 금액 표기 항목만</label>
+            <form class="board-search fee-search" role="search" data-fee-search-form>
+              <label class="sr-only" for="fee-search">수가명 검색</label>
+              <input class="board-search__input" id="fee-search" type="search" placeholder="수가명 검색 (예: 레진)" autocomplete="off" enterkeyhint="search" data-fee-search>
+              <button class="board-search__btn" type="submit" aria-label="검색"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg></button>
+            </form>
+          </div>
+
+          <p class="fee-print-scope" data-fee-scope></p>
+          <table class="fee-table">
+            <caption class="sr-only">비급여 진료비용 표 — 수가명(코드), 상세구분, 적용단위, 금액</caption>
+            <thead>
+              <tr><th scope="col" class="fee-table__name">수가명</th><th scope="col" class="fee-table__cat">상세구분</th><th scope="col" class="fee-table__unit">적용단위</th><th scope="col" class="fee-table__amount">금액</th></tr>
+            </thead>
+            <tbody data-fee-body>
+              <tr><td colspan="4" class="fee-table__empty">불러오는 중…</td></tr>
+            </tbody>
+          </table>
+          <p class="fee-foot">금액이 ‘–’인 항목은 원본 수가표에 금액이 적혀 있지 않은 항목입니다. 비용은 상담 시 안내해 드립니다.</p>
+
+          <!-- 원본 수가표 — 압축본 12장(assets/images/fee/), 누르면 크게 보기(라이트박스) -->
+          <details class="fee-origin">
+            <summary class="fee-origin__summary">원본 수가표 보기 <span class="fee-origin__sub" data-fee-origin-sub></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 9l7 7 7-7"/></svg></summary>
+            <ol class="fee-origin__grid" data-fee-origin></ol>
+          </details>
         </div>
       </div>
     </section>
