@@ -80,10 +80,15 @@
           <div class="doc-intro__photo img-ph" aria-hidden="true"><img src="../assets/images/tour-masan-04.jpg" alt="" loading="lazy"></div>
         </section>
 
-        <div data-doctors-page></div>
       </div>
     </section>
       </div>
+    </div>
+
+    <!-- 원장 목록: LNB 열과 상관없이 전체 폭 — 왼쪽 = 헤더 로고 시작선(--doc-left), 오른쪽 = 플로팅 퀵메뉴 앞 32px(--doc-right). 둘 다 pages.js renderDoctorsPage 가 잰다 (1024px 이하는 일반 .container 여백)
+         LNB 는 위쪽(경로·제목·소개 블록 옆)에만 있음. 이 블록 자체가 container 'sub' 라 원장 블록의 좁은 본문 규칙(@container sub)은 이 폭 기준 -->
+    <div class="doc-list">
+      <div data-doctors-page></div>
     </div>
   </main>
 

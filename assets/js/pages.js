@@ -82,10 +82,11 @@ function renderDoctorsPage() {
       </div>
       <div class="doctor-profiles">
         ${docs.map((d) => {
-          /* 사진 칸 = 상자 위 80px ~ 상자 아래 끝. 머리 위 끝(photoHeadTop)이 칸 위 끝에 오게: 사진 높이 = 칸 × max(photoScale, 1/(1 - 머리 위치)),
-             남는 만큼 아래로 내려 상자 아래 끝에서 자른다 (--dk 높이 배율, --dy 내림 = 칸 높이 대비 %) */
-          const ht = Math.min(0.4, Math.max(0, Number(d.photoHeadTop) || 0));
-          const fix = `--dk:${(1 / (1 - ht)).toFixed(4)}`; // 사진 높이 = 칸 높이 ÷ (1 - 머리 위치) → 머리 위 끝 = 칸 위 끝, 아래 끝 = 상자 아래 끝 (자르지 않음)
+          /* 사진 크롭 (site-data.js staffCrop — 김영우 원장 구도 기준, 메인 의료진 값과 따로)
+             사진 칸 = 상자 위 --pop ~ 상자 아래 끝. 사진 높이 = 칸 × scale, 정수리(y)를 칸 위 끝에, 얼굴 가운데(x)를 칸 가운데에. 아래는 상자 아래 끝에서 잘림 */
+          const c = d.staffCrop || {};
+          const ht = Math.min(0.4, Math.max(0, Number(c.y ?? d.photoHeadTop) || 0));
+          const fix = `--cs:${Number(c.scale) || (1 / (1 - ht)).toFixed(4)};--cx:${Number(c.x) || 0.5};--cy:${ht}`;
           const both = d.branches.length > 1;
           const logos = (d.logos || []).filter((l) => l && l.src);
           return `
@@ -98,7 +99,7 @@ function renderDoctorsPage() {
               ${logos.length ? `<ul class="doctor-profile__logos">${logos.map((l) => `<li><img src="${img(l.src)}" alt="${esc(l.alt || '')}" loading="lazy"></li>`).join('')}</ul>` : ''}
             </div>
             <div class="doctor-profile__box">
-              <div class="doctor-profile__photo"><img class="doctor-profile__img${d.photoBlend === false ? '' : ' is-whitebg'}" src="${img(String(d.photo || '').replace(/\.[a-z]+$/i, '-cut.png'))}" alt="${esc(d.name)} ${esc(d.title)} 사진" loading="lazy"></div>
+              <div class="doctor-profile__photo${d.photoBlend === false ? '' : ' is-whitebg'}"><img class="doctor-profile__img" src="${img(String(d.photo || '').replace(/\.[a-z]+$/i, '-cut.png'))}" alt="${esc(d.name)} ${esc(d.title)} 사진" loading="lazy"></div>
               ${(d.career || []).length ? `<ul class="doctor-profile__career">${careerOf(d)}</ul>` : ''}
             </div>
           </article>`;
@@ -106,36 +107,29 @@ function renderDoctorsPage() {
       </div>
     </section>`).join('');
   box.querySelectorAll('.doctor-profile__img').forEach((im) => im.addEventListener('error', () => im.classList.add('is-missing'), { once: true }));
-  // 이 페이지만 본문 오른쪽 끝 = 플로팅 퀵메뉴 왼쪽 끝 - 32px (common.css '.page-doctors .sub-layout' 의 --doc-right). 1024px 이하는 쓰지 않음
+  // 이 페이지만 본문 오른쪽 끝 = 플로팅 퀵메뉴 왼쪽 끝 - 32px (--doc-right: '.page-doctors .sub-layout' · '.doc-list')
+  // 원장 목록(.doc-list) 왼쪽 끝 = 헤더 로고 시작선 (--doc-left). 1024px 이하는 둘 다 쓰지 않음(일반 여백)
   const root = document.documentElement;
   const setDocRight = () => {
+    const wide = window.innerWidth > 1024;
     const q = document.querySelector('.quick--float');
-    const qr = q && window.innerWidth > 1024 ? q.getBoundingClientRect() : null;
+    const qr = q && wide ? q.getBoundingClientRect() : null;
     if (qr && qr.width) root.style.setProperty('--doc-right', `${Math.round(root.clientWidth - qr.left + 32)}px`);
     else root.style.removeProperty('--doc-right');
+    const logo = wide ? document.querySelector('.header .logo') : null;
+    const lr = logo ? logo.getBoundingClientRect() : null;
+    if (lr && lr.width) root.style.setProperty('--doc-left', `${Math.round(lr.left)}px`);
+    else root.style.removeProperty('--doc-left');
   };
-  /* 원장별 약력 상자 높이: 약력이 길어 상자가 최소 높이(--box-h)보다 커지면, 그 높이를 --box-h 로 넣어 사진도 같이 키운다
-     (머리가 늘 상자 위 --pop 만큼 나오고 아래 끝 = 상자 아래 끝). 사진이 커지면 약력 칸이 좁아져 다시 길어지므로 몇 번 반복, 최소 높이의 1.4배까지 */
-  const fitBoxes = () => {
-    box.querySelectorAll('.doctor-profile').forEach((a) => {
-      a.style.removeProperty('--box-h');
-      if (getComputedStyle(a).display === 'flex') return; // 사진 위 · 정보 아래 배치(1024px 이하 · 좁은 본문)는 상자가 따로라 맞출 것 없음
-      const bx = a.querySelector('.doctor-profile__box');
-      const ul = a.querySelector('.doctor-profile__career');
-      if (!bx || !ul) return;
-      const base = parseFloat(getComputedStyle(a).getPropertyValue('--box-h')) || 440;
-      let h = base;
-      for (let i = 0; i < 6; i++) {
-        const cs = getComputedStyle(bx);
-        const need = Math.ceil(ul.getBoundingClientRect().height + parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom));
-        if (need <= h + 1) break;
-        h = Math.min(need, base * 1.4);
-        a.style.setProperty('--box-h', `${h}px`);
-        if (h >= base * 1.4) break;
-      }
-    });
-  };
-  const layout = () => { setDocRight(); fitBoxes(); };
+  /* 약력이 길면 상자는 내용대로 길어지고 사진 칸(상자 위 --pop ~ 상자 아래 끝)도 따라 길어진다.
+     사진 크기는 기본 칸 높이(--ph0) 기준이라 그대로 — 원장마다 얼굴 크기·정수리 높이가 같게 (staffCrop, 2026-11-08 예전 fitBoxes 의 사진 키우기 삭제) */
+  // 상자가 사진보다 길어지면(좁은 폭 + 글자 크게 → 약력 1열) 사진 아래 끝이 상자 안에서 보이므로, 그 원장만 사진 아래 64px 를 녹인다(.is-short)
+  const markShort = () => box.querySelectorAll('.doctor-profile__photo').forEach((c) => {
+    const im = c.querySelector('.doctor-profile__img');
+    c.classList.remove('is-short');
+    if (im) c.classList.toggle('is-short', c.getBoundingClientRect().bottom - im.getBoundingClientRect().bottom > 1);
+  });
+  const layout = () => { setDocRight(); markShort(); };
   layout();
   window.addEventListener('resize', layout);
   new MutationObserver(layout).observe(root, { attributes: true, attributeFilter: ['data-fs'] }); // 글자 크기 단계 → 퀵메뉴 폭·약력 길이가 바뀜
