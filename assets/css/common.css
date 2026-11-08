@@ -1342,30 +1342,39 @@ html.is-dialog-open { overflow: hidden; }
    기존 사이트 문구 그대로. 본문 16px(rem — 글자 크기 단계 적용) · 줄 간격 1.8, 조항 제목 굵게, 위에 조항 목차(앵커)
    .policy-todo = '병원 확인 필요' 회색 안내 상자 — 병원 확인 후 이 클래스 상자(+ <!-- TODO --> 주석)를 한 번에 지운다 */
 html:has(.policy) { scroll-padding-top: calc(var(--header-h) + 24px); }
-.policy { max-width: 960px; margin: 0 auto; font-size: var(--fs-md); line-height: 1.8; color: var(--color-text); word-break: keep-all; overflow-wrap: anywhere; }
-.policy-toc { margin-bottom: 56px; padding: 28px 32px; border: 1px solid var(--color-line); border-radius: var(--radius-md); background: var(--color-bg-soft); }
+/* 정렬 규칙 (2026-11-08)
+   - 시작선 하나: 조항 제목·문단·목록·회색 상자 모두 .policy 왼쪽 끝에서 시작 (본문만 들여쓰기 X, 목록 기호가 밖으로 나가지 X)
+   - 목록(.policy__li): 기호(ο · - · 1.) 칸 폭 고정(--mark-w) → 기호 다음 글자 시작선 고정, 줄바꿈된 둘째 줄도 같은 선
+   - 간격: 문단 사이 12px · 조항 사이 48px(모바일도) · 왼쪽 정렬 */
+.policy { --mark-w: 1.25em; max-width: 960px; margin: 0 auto; font-size: var(--fs-md); line-height: 1.8; color: var(--color-text); text-align: left; word-break: keep-all; overflow-wrap: anywhere; }
+/* 목차: 번호 칸 2em(오른쪽 정렬) + 제목. 2열이고 열 단위 순서(왼쪽 1~6 · 오른쪽 7~12) */
+.policy-toc { margin-bottom: 56px; padding: 32px; border: 1px solid var(--color-line); border-radius: var(--radius-md); background: var(--color-bg-soft); }
 .policy-toc__title { font-size: var(--fs-lg); font-weight: 700; line-height: 1.4; }
-.policy-toc__list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 32px; margin-top: 14px; padding-left: 1.6em; list-style: decimal; }
-.policy-toc__list li::marker { color: var(--color-point); font-weight: 700; }
+.policy-toc__list { counter-reset: toc; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: repeat(6, auto); grid-auto-flow: column; gap: 8px 32px; margin-top: 16px; padding: 0; list-style: none; }
+.policy-toc__list li { counter-increment: toc; display: grid; grid-template-columns: 2em minmax(0, 1fr); column-gap: 0.5em; align-items: baseline; }
+.policy-toc__list li::before { content: counter(toc) "."; text-align: right; color: var(--color-point); font-weight: 700; font-variant-numeric: tabular-nums; }
 .policy-toc__list a { color: var(--color-text); text-decoration: underline; text-decoration-color: transparent; text-underline-offset: 4px; transition: color var(--dur), text-decoration-color var(--dur); }
 .policy-toc__list a:is(:hover, :focus-visible) { color: var(--color-accent); text-decoration-color: currentColor; }
 .policy__sec + .policy__sec { margin-top: 48px; }
-.policy__title { margin-bottom: 14px; padding-bottom: 12px; border-bottom: 1px solid var(--color-line); font-size: var(--fs-h4); font-weight: 700; line-height: 1.5; color: var(--color-point); }
-.policy__sec p + p, .policy__sec p + ol, .policy__sec ol + p { margin-top: 6px; }
+.policy__title { display: flex; gap: 0.35em; padding-bottom: 12px; border-bottom: 1px solid var(--color-line); font-size: var(--fs-h4); font-weight: 700; line-height: 1.5; color: var(--color-point); }
+.policy__num { flex: none; font-variant-numeric: tabular-nums; }
+.policy__sec > * + * { margin-top: 12px; }
+.policy__sec > .policy__title + * { margin-top: 16px; }
 .policy__item { font-weight: 600; }
-.policy__sub { padding-left: 1em; }
-.policy__orgs { margin-top: 6px; padding-left: 1em; list-style: none; }
-.policy__orgs li + li { margin-top: 2px; }
+.policy__li { display: grid; grid-template-columns: var(--mark-w) minmax(0, 1fr); }
+.policy__mark { font-weight: 400; }
+.policy__orgs { padding: 0; list-style: none; }
+.policy__orgs > li + li { margin-top: 12px; }
 .policy-todo { margin-top: 20px; padding: 18px 22px; border-left: 3px solid #8a8a8a; border-radius: var(--radius-sm); background: #f2f2f2; color: #444; font-size: var(--fs-sm); line-height: 1.7; }
+.policy__sec > .policy-todo { margin-top: 20px; }
 .policy > .policy-todo { margin-top: 48px; }
 .policy-todo__label { display: inline-flex; align-items: center; height: 1.75rem; margin-bottom: 8px; padding: 0 10px; border-radius: var(--radius-btn); background: #666; color: #fff; font-size: var(--fs-xs); font-weight: 700; }
-.policy-todo ul { margin-top: 4px; }
-.policy-todo li { position: relative; padding-left: 14px; }
-.policy-todo li::before { content: ""; position: absolute; left: 2px; top: calc(0.85em - 2px); width: 4px; height: 4px; border-radius: 50%; background: #666; }
+.policy-todo ul { margin-top: 4px; padding: 0; list-style: none; }
+.policy-todo li { display: grid; grid-template-columns: var(--mark-w) minmax(0, 1fr); }
+.policy-todo li::before { content: "•"; color: #666; }
 @media (max-width: 768px) {
-  .policy-toc { margin-bottom: 40px; padding: 22px 20px; }
-  .policy-toc__list { grid-template-columns: 1fr; }
-  .policy__sec + .policy__sec { margin-top: 40px; }
+  .policy-toc { margin-bottom: 40px; }
+  .policy-toc__list { grid-template-columns: 1fr; grid-template-rows: none; grid-auto-flow: row; }
   .policy__title { font-size: var(--fs-lg); }
   .policy-todo { padding: 16px 18px; }
 }
