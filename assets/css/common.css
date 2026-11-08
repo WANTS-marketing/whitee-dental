@@ -906,20 +906,21 @@ a.article-nav__item:hover .article-nav__title { color: var(--color-accent); }
 .doctor-group__label { font-size: 0.8125rem; font-weight: 700; letter-spacing: 0.16em; line-height: 1.4; color: var(--doc-color, var(--color-point)); }
 .doctor-group__title { margin-top: 6px; font-size: 1.75rem; line-height: 1.35; letter-spacing: -0.02em; }
 html:has(body.has-lnb .page-doctors) { scroll-padding-top: calc(var(--header-h) + 24px); } /* #changwon · #masan · 원장 해시로 열 때 = 지점 이동 버튼과 같은 위치(헤더 + 24px) */
-/* 이 페이지만 본문 폭 제한 해제: LNB 는 그대로(왼쪽 = 다른 서브페이지와 같은 위치), 오른쪽 끝 = 플로팅 퀵메뉴 앞 32px (--doc-right, pages.js 가 잼) */
+/* 이 페이지 가로 배치 (1025px 이상): 위쪽 [LNB | 경로·제목·소개 블록] 묶음과 원장 목록(.doc-list)이 같은 가운데·같은 폭
+   좌우 여백 = --doc-side (pages.js: max(퀵메뉴와 32px 띄울 만큼, (화면 - 1600px) ÷ 2)) → 왼쪽 = 오른쪽, 최대 너비 1600px */
 @media (min-width: 1025px) {
-  .page-doctors .sub-layout { max-width: none; margin: 0; padding-left: calc(max(0px, (100% - var(--container) - var(--gutter) * 2) / 2) + max(var(--gutter), var(--quick-safe))); padding-right: var(--doc-right, calc(var(--quick-edge) + 24px)); }
+  .page-doctors .sub-layout { max-width: none; margin: 0; padding-left: var(--doc-side, calc(var(--quick-edge) + 24px)); padding-right: var(--doc-side, calc(var(--quick-edge) + 24px)); }
 }
 .page-doctors .doctor-group__head { text-align: center; } /* 지점 제목 = 넓어진 본문 가운데 */
-/* 원장 목록 = LNB 열 밖 전체 폭 (about/doctors.html .doc-list): 왼쪽 = 헤더 로고 시작선(--doc-left), 오른쪽 = 퀵메뉴 앞 32px(--doc-right) — pages.js 가 잰다.
+/* 원장 목록 = LNB 열 밖 (about/doctors.html .doc-list): 위쪽 묶음과 같은 좌우 여백(--doc-side) — 지점 제목·원장 사이 구분선·지점 이동 버튼도 이 가운데 기준
    이 블록이 container 'sub' — 아래 원장 블록의 @container sub 규칙(좁은 본문)은 이 폭 기준 */
 .doc-list { container: sub / inline-size; padding: 0 var(--gutter) var(--space-4xl); }
 @media (min-width: 1025px) {
-  .doc-list { padding-left: var(--doc-left, 40px); padding-right: var(--doc-right, calc(var(--quick-edge) + 24px)); }
+  .doc-list { padding-left: var(--doc-side, calc(var(--quick-edge) + 24px)); padding-right: var(--doc-side, calc(var(--quick-edge) + 24px)); }
 }
 /* --box-h 상자 최소 높이 · --pop 머리가 상자 위로 나오는 높이 · --ph0 사진 크기 기준 칸 높이(= --box-h + --pop)
    --doc-pw 사진 칸 너비 = --ph0 × 0.70 (김영우 원장 사진 너비 × 1.1 — 확대한 원장의 어깨까지 들어가게) · --cs/--cx/--cy 원장별 크롭(pages.js ← staffCrop) */
-.doctor-profile { --box-h: 440px; --pop: 100px; --ph0: calc(var(--box-h) + var(--pop)); --doc-pw: calc(var(--ph0) * 0.7); display: grid; grid-template-columns: var(--doc-pw) minmax(0, 1fr); column-gap: 48px; padding-block: 100px; }
+.doctor-profile { --box-h: 440px; --pop: 100px; --ph0: calc(var(--box-h) + var(--pop)); --doc-pw: calc(var(--ph0) * 0.7); display: grid; grid-template-columns: var(--doc-pw) minmax(0, 1fr); column-gap: 72px; padding-block: 100px; } /* 사진 오른쪽 끝 ~ 이름·약력 시작선 72px */
 .doctor-profile:first-child { padding-top: 60px; }
 .doctor-profile + .doctor-profile { border-top: 1px solid var(--color-line); }
 .doctor-profile:last-child { padding-bottom: 0; }
@@ -934,7 +935,7 @@ html:has(body.has-lnb .page-doctors) { scroll-padding-top: calc(var(--header-h) 
 .doctor-profile__both { display: inline-flex; align-items: center; height: 2rem; padding: 0 12px; border: 1px solid var(--color-line); border-radius: var(--radius-btn); font-size: var(--fs-xs); font-weight: 600; color: var(--color-text-sub); white-space: nowrap; }
 .doctor-profile__logos { display: flex; flex: none; align-items: center; gap: 16px; }
 .doctor-profile__logos img { display: block; height: 56px; width: auto; }
-.doctor-profile__box { grid-column: 1 / -1; position: relative; display: flex; align-items: center; min-height: var(--box-h); padding: 64px 64px 64px calc(var(--doc-pw) + 48px); overflow: visible; border-radius: var(--radius-md); background: var(--color-doctor-box); } /* 약력은 사진 오른쪽 48px 부터 */
+.doctor-profile__box { grid-column: 1 / -1; position: relative; display: flex; align-items: center; min-height: var(--box-h); padding: 64px 72px 64px calc(var(--doc-pw) + 72px); overflow: visible; border-radius: var(--radius-md); background: var(--color-doctor-box); } /* 약력은 사진 오른쪽 48px 부터 */
 /* 사진 칸: 상자 위 --pop ~ 상자 아래 끝 (상자가 길어지면 칸도 같이 길어짐), 칸 밖은 잘라냄 */
 .doctor-profile__photo { position: absolute; left: 0; top: calc(var(--pop) * -1); bottom: 0; width: var(--doc-pw); overflow: hidden; pointer-events: none; }
 .doctor-profile__photo > .doctor-profile__img { /* 칸 공통 규칙(.img-ph > img)보다 우선 */
@@ -948,18 +949,23 @@ html:has(body.has-lnb .page-doctors) { scroll-padding-top: calc(var(--header-h) 
 /* 상자가 사진보다 길어진 원장(pages.js .is-short): 사진 아래 끝 64px 를 녹여 상자 안에서 사진 끝 선이 보이지 않게 */
 .doctor-profile__photo.is-short > .doctor-profile__img { -webkit-mask-image: linear-gradient(180deg, #000 calc(100% - 64px), transparent); mask-image: linear-gradient(180deg, #000 calc(100% - 64px), transparent); }
 .doctor-profile__img.is-missing { display: none; }
-/* 약력 19px. 2열은 한 열이 18글자(18em) 이상 들어갈 때만 — 좁으면 저절로 1열 (예전 '1600px 이하 1열' 대신 실제 폭 기준, 2026-11-08) */
-.doctor-profile__career { width: 100%; columns: 18em 2; column-gap: 64px; font-size: 1.1875rem; }
-.doctor-profile__career li { position: relative; break-inside: avoid; padding: 0 0 10px 16px; font-size: 1em; line-height: 1.7; color: var(--color-text); word-break: keep-all; }
+/* 약력 19px. 2열(.is-2col)은 약력 칸에 한 열 15글자(15em) × 2 + 64px 가 들어갈 때만 (pages.js setCols) — 아니면 1열
+   2열: 약력을 앞 절반(올림)·나머지 두 묶음(.doctor-profile__col)으로 나눠 나란히 — 열마다 따로 흘러 한쪽 줄바꿈이 다른 쪽 간격을 벌리지 않음.
+   남는 폭은 두 열 사이로(space-between) → 오른쪽 열 끝이 상자 오른쪽 안쪽 여백(72px)에 닿아 사진~약력 간격(72px)과 좌우 균형 */
+.doctor-profile__career { width: 100%; display: flex; flex-direction: column; font-size: 1.1875rem; } /* 1열: 두 묶음이 위아래로 이어짐 */
+.doctor-profile__career.is-2col { display: grid; grid-template-columns: repeat(2, fit-content(calc((100% - 64px) / 2))); justify-content: space-between; column-gap: 64px; } /* 2열: 두 묶음 나란히. 열 너비 = 글자 길이, 단 최대 절반(긴 열이 다른 열을 밀어 한쪽만 줄바꿈되지 않게). 남는 폭은 두 열 사이 */
+.doctor-profile__col { min-width: 0; }
+.doctor-profile__career li { position: relative; padding: 0 0 10px 16px; font-size: 1em; line-height: 1.7; color: var(--color-text); word-break: keep-all; }
 .doctor-profile__career li::before { content: ""; position: absolute; left: 0; top: calc(0.85em - 2px); width: 4px; height: 4px; border-radius: 50%; background: #999; }
 .doctor-profile__career li.is-strong { font-weight: 700; color: var(--color-point); }
 .doctor-profile__career li.is-strong::before { background: var(--color-point); }
-.doctor-profile__career li:last-child { padding-bottom: 0; }
+.doctor-profile__col:last-child li:last-child, .doctor-profile__career.is-2col .doctor-profile__col li:last-child { padding-bottom: 0; } /* 1열은 맨 끝만, 2열은 열마다 끝 */
 /* 좁은 본문 (1366 이하 노트북 · 글자 크게·아주 크게 — .sub-body 880px 이하) */
 @container sub (max-width: 55rem) {
   .doctor-profile { --box-h: 400px; }
   .doctor-profile__name { font-size: 2.75rem; }
-  .doctor-profile__box { padding: 40px 36px 40px calc(var(--doc-pw) + 48px); }
+  .doctor-profile__box { padding: 40px 48px 40px calc(var(--doc-pw) + 48px); }
+  .doctor-profile { column-gap: 48px; }
   .doc-intro__text { padding: 48px 36px 0; }
   .doc-intro__bar { margin-inline: -36px; padding-inline: 36px; }
   .doc-intro__title { font-size: 2.25rem; }
@@ -978,7 +984,7 @@ html:has(body.has-lnb .page-doctors) { scroll-padding-top: calc(var(--header-h) 
   /* 칸이 사진보다 넓음 → 칸 대신 사진 좌우 끝 24px 를 녹임 */
   .doctor-profile__photo.is-whitebg { -webkit-mask-image: none; mask-image: none; }
   .doctor-profile__photo.is-whitebg > .doctor-profile__img { -webkit-mask-image: linear-gradient(90deg, transparent, #000 24px, #000 calc(100% - 24px), transparent); mask-image: linear-gradient(90deg, transparent, #000 24px, #000 calc(100% - 24px), transparent); }
-  .doctor-profile__career { order: 3; columns: 18em 2; column-gap: 40px; padding: 40px; border-radius: var(--radius-md); background: var(--color-doctor-box); }
+  .doctor-profile__career { order: 3; padding: 40px; border-radius: var(--radius-md); background: var(--color-doctor-box); }
 }
 /* 1024px 이하: 사진(옅은 파랑 면 위, 머리가 면 위로 --pop) → 이름·태그 → 약력 상자 1열, 이름 36px */
 @media (max-width: 1024px) {
@@ -993,7 +999,7 @@ html:has(body.has-lnb .page-doctors) { scroll-padding-top: calc(var(--header-h) 
   /* 칸이 사진보다 넓음 → 칸 대신 사진 좌우 끝 24px 를 녹임 */
   .doctor-profile__photo.is-whitebg { -webkit-mask-image: none; mask-image: none; }
   .doctor-profile__photo.is-whitebg > .doctor-profile__img { -webkit-mask-image: linear-gradient(90deg, transparent, #000 24px, #000 calc(100% - 24px), transparent); mask-image: linear-gradient(90deg, transparent, #000 24px, #000 calc(100% - 24px), transparent); }
-  .doctor-profile__career { order: 3; columns: 1; padding: 32px; border-radius: var(--radius-md); background: var(--color-doctor-box); }
+  .doctor-profile__career { order: 3; padding: 32px; border-radius: var(--radius-md); background: var(--color-doctor-box); }
 }
 @media (max-width: 768px) {
   .doctor-profile { --mh: 360px; --pop: 72px; padding-block: 48px; }
