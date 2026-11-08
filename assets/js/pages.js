@@ -473,8 +473,8 @@ async function renderFaqList() {
 }
 
 /* ---------- 비급여 진료비용 (fee.html) ----------
-   데이터: assets/data/fee.json (api.js getFees) — 원본 수가표 순서 그대로, duplicate(원본 인쇄 중복 행)는 숨김
-   분류 칩 = 상세구분(categories 순서, 앞에 '전체') · 검색 = 수가명 · '금액 표기 항목만' 체크
+   데이터: assets/data/fee.json (api.js getFees) — 원본 수가표 순서 그대로, duplicate(원본 인쇄 중복 행)·hidden(내부 관리용 행)은 숨김
+   분류 칩 = 상세구분(categories 순서, 앞에 '전체') · 검색 = 수가명 · '금액 표기 항목만' 체크(기본 켬 — fee.html checked, 끄면 전체) · 칩 숫자도 체크·검색 기준
    표 하나로 그린다: PC = 표, 모바일(768px 이하) = 같은 표를 카드 모양으로(sub.css) · 인쇄 = 지금 보이는 행만 표로(@media print)
    원본 수가표: 압축본 12장 썸네일 → 누르면 크게 보기(라이트박스, 이전·다음·Esc) */
 async function renderFeePage() {
@@ -542,7 +542,7 @@ async function renderFeePage() {
 
   try {
     data = await window.API.getFees();
-    rows = data.items.filter((r) => !r.duplicate);
+    rows = data.items.filter((r) => !r.duplicate && !r.hidden); // 원본 인쇄 중복 행 · 내부 관리용 행(hidden) 은 화면·인쇄에서 뺀다
     $('[data-fee-date]').textContent = data.baseDateLabel;
     draw();
     renderFeeOrigin(root, data);
