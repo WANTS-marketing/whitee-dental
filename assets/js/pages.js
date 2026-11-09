@@ -47,7 +47,7 @@ function renderTreatmentPage() {
     };
     next();
   });
-  /* 아래 영역(.t-lower — 장치 비교 · 갤러리 · FAQ · 기공센터 · 진료 연결 · 하단 고지): 화면 1025px 이상(LNB 옆 본문)에서
+  /* 아래 영역(.t-lower — 갤러리 · FAQ · 기공센터 · 진료 연결 · 하단 고지): 화면 1025px 이상(LNB 옆 본문)에서
      영역 가로 중심을 화면 가운데(= 펼침형 갤러리 중심)로 옮김 — 폭은 본문 칸 그대로. 갤러리보다 먼저(갤러리가 이 위치를 기준으로 화면 끝까지 넓힘) */
   const lower = document.querySelector('[data-t-lower]');
   const lowerBody = lower?.closest('.sub-body');
