@@ -958,17 +958,16 @@ html:has(body.has-lnb .page-doctors) { scroll-padding-top: calc(var(--header-h) 
 /* 상자가 사진보다 길어진 원장(pages.js .is-short): 사진 아래 끝 64px 를 녹여 상자 안에서 사진 끝 선이 보이지 않게 */
 .doctor-profile__photo.is-short > .doctor-profile__img { -webkit-mask-image: linear-gradient(180deg, #000 calc(100% - 64px), transparent); mask-image: linear-gradient(180deg, #000 calc(100% - 64px), transparent); }
 .doctor-profile__img.is-missing { display: none; }
-/* 약력 19px. 2열(.is-2col)은 약력 칸에 한 열 15글자(15em) × 2 + 64px 가 들어갈 때만 (pages.js setCols) — 아니면 1열
-   2열: 약력을 앞 절반(올림)·나머지 두 묶음(.doctor-profile__col)으로 나눠 나란히 — 열마다 따로 흘러 한쪽 줄바꿈이 다른 쪽 간격을 벌리지 않음.
-   남는 폭은 두 열 사이로(space-between) → 오른쪽 열 끝이 상자 오른쪽 안쪽 여백(72px)에 닿아 사진~약력 간격(72px)과 좌우 균형 */
-.doctor-profile__career { width: 100%; display: flex; flex-direction: column; font-size: 1.1875rem; } /* 1열: 두 묶음이 위아래로 이어짐 */
-.doctor-profile__career.is-2col { display: grid; grid-template-columns: repeat(2, fit-content(calc((100% - 64px) / 2))); justify-content: space-between; column-gap: 64px; } /* 2열: 두 묶음 나란히. 열 너비 = 글자 길이, 단 최대 절반(긴 열이 다른 열을 밀어 한쪽만 줄바꿈되지 않게). 남는 폭은 두 열 사이 */
-.doctor-profile__col { min-width: 0; }
-.doctor-profile__career li { position: relative; padding: 0 0 10px 16px; font-size: 1em; line-height: 1.7; color: var(--color-text); word-break: keep-all; }
-.doctor-profile__career li::before { content: ""; position: absolute; left: 0; top: calc(0.85em - 2px); width: 4px; height: 4px; border-radius: 50%; background: #999; }
-.doctor-profile__career li.is-strong { font-weight: 700; color: var(--color-point); }
-.doctor-profile__career li.is-strong::before { background: var(--color-point); }
-.doctor-profile__col:last-child li:last-child, .doctor-profile__career.is-2col .doctor-profile__col li:last-child { padding-bottom: 0; } /* 1열은 맨 끝만, 2열은 열마다 끝 */
+/* 약력: 19px · 500 · 줄 간격 1.5 · #1a1f2b, 항목 사이 14px, 점(4px)과 글자 사이 10px — 모든 항목 같은 색·굵기
+   시작선 = 이름 왼쪽 끝 (상자 왼쪽 안쪽 여백 = 사진 칸 + 72px = 이름 열 시작). 상자 안에서 세로 가운데(상자 align-items: center)
+   1열 기본. 항목 8개 이상 원장만 2열(.is-2col, pages.js careerOf) — 두 묶음을 왼쪽부터 붙이고 열 사이 56px 고정(상자 폭에 맞춰 벌어지지 않음).
+   열 너비 = 글자 길이(max-content), 상자보다 길면 그 열만 줄바꿈(minmax 0) — 상자 밖으로 넘치지 않게. 768px 이하는 항상 1열 */
+.doctor-profile__career { --career-gap: 14px; width: 100%; display: flex; flex-direction: column; gap: var(--career-gap); font-size: 1.1875rem; font-weight: 500; line-height: 1.5; color: #1a1f2b; }
+.doctor-profile__career.is-2col { display: grid; grid-template-columns: repeat(2, minmax(0, max-content)); justify-content: start; column-gap: 56px; }
+.doctor-profile__col { display: flex; flex-direction: column; gap: var(--career-gap); min-width: 0; }
+.doctor-profile__career li { position: relative; padding-left: 14px; word-break: keep-all; }
+.doctor-profile__career li::before { content: ""; position: absolute; left: 0; top: calc(0.75em - 2px); width: 4px; height: 4px; border-radius: 50%; background: currentColor; }
+@media (max-width: 1280px) { .doctor-profile__career { font-size: 1.125rem; } }
 /* 좁은 본문 (1366 이하 노트북 · 글자 크게·아주 크게 — .sub-body 880px 이하) */
 @container sub (max-width: 55rem) {
   .doctor-profile { --box-h: 400px; }
@@ -1014,7 +1013,7 @@ html:has(body.has-lnb .page-doctors) { scroll-padding-top: calc(var(--header-h) 
 @media (max-width: 768px) {
   .doctor-profile { --mh: 360px; --pop: 72px; padding-block: 48px; }
   .doctor-profile__name { font-size: 2rem; }
-  .doctor-profile__career { padding: 24px 20px; }
+  .doctor-profile__career, .doctor-profile__career.is-2col { display: flex; padding: 24px 20px; font-size: 1rem; } /* 모바일: 16px, 항상 1열 */
   .doctor-profile__logos img { height: 40px; }
   .doc-intro__photo { height: 200px; }
   .doc-intro__text { padding: 28px 24px 0; }
@@ -1058,11 +1057,12 @@ html:has(body.has-lnb .page-doctors) { scroll-padding-top: calc(var(--header-h) 
    FAQ 게시판 (faq/index.html — 배너 + LNB 서브 레이아웃) — [분류 칩 줄 | 검색] → 질문 목록 → 하단 상담 안내
    ========================================================================== */
 .faq-board { --faq-mark: 56px; --faq-cat: 9.5rem; } /* 카테고리 열은 글자 크기 단계를 따라 넓어진다 */
-/* 하단 상담 안내: 목록과 56px, 문구와 버튼 16px */
-.faq-board__cta { display: flex; flex-direction: column; align-items: center; gap: 16px; margin-top: 56px; text-align: center; }
+/* 하단 상담 안내: 목록과 56px, [문구 | 버튼] 한 줄 가운데(사이 24px, 좁으면 버튼이 다음 줄) — 768px 이하는 세로 */
+.faq-board__cta { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 16px 24px; margin-top: 56px; text-align: center; }
 .faq-board__cta-text { font-size: 1rem; color: #444; word-break: keep-all; }
-.faq-board__contact { height: 48px; padding: 0 24px; background: var(--color-point); color: #fff; font-size: var(--fs-sm); font-weight: 600; transition: background var(--dur); }
-.faq-board__contact:hover { background: var(--color-point-hover); }
+/* 버튼: 흰 바탕 + 옅은 선, hover = 밝은 파랑 면·흰 글자 */
+.faq-board__contact { height: 48px; padding: 0 24px; border: 1px solid var(--color-line); background: #fff; color: var(--color-text); font-size: var(--fs-sm); font-weight: 600; transition: background var(--dur), color var(--dur), border-color var(--dur); }
+.faq-board__contact:hover, .faq-board__contact:focus-visible { border-color: var(--color-accent); background: var(--color-accent); color: #fff; }
 
 /* 왼쪽 카테고리: 세로 텍스트 목록, 선택 = 검정 굵게 */
 
@@ -1103,7 +1103,7 @@ html:has(body.has-lnb .page-doctors) { scroll-padding-top: calc(var(--header-h) 
 /* 답변: 연한 베이지, A 는 Q 와 같은 세로선, 글은 질문 시작선에 맞춤 */
 /* A 는 답변 글 바로 왼쪽(카테고리 열 끝, 글 시작선에서 40px 왼쪽), 첫 줄과 기준선(baseline) 맞춤.
    답변 글은 질문 글 시작선 그대로라 두 번째 줄부터도 A 아래로 들어가지 않는다 */
-.faq-item__answer { display: grid; grid-template-columns: var(--faq-mark) var(--faq-cat) minmax(0, 1fr) 24px; align-items: baseline; padding: 28px 8px 32px 16px; background: #faf8f5; }
+.faq-item__answer { display: grid; grid-template-columns: var(--faq-mark) var(--faq-cat) minmax(0, 1fr) 24px; align-items: baseline; padding: 28px 8px 32px 16px; background: #f4f7fd; } /* 답변 칸: 흰색에 가까운 옅은 파랑 (예전 베이지 #faf8f5) */
 .faq-item__answer .faq-item__mark { grid-column: 2; justify-self: end; width: 40px; }
 .faq-item__a { grid-column: 3; font-size: 1rem; line-height: 1.8; color: #444; white-space: pre-line; word-break: keep-all; }
 .faq-list__empty { padding: 60px 0; text-align: center; color: var(--color-text-sub); border-bottom: 1px solid #e5e5e5; }
@@ -1151,7 +1151,7 @@ html:has(body.has-lnb .page-doctors) { scroll-padding-top: calc(var(--header-h) 
 @media (max-width: 768px) {
   /* FAQ: 검색창은 타이틀 아래 전체 너비, 카테고리명은 질문 위 작은 글씨 */
   .faq-board { --faq-mark: 32px; }
-  .faq-board__cta { align-items: stretch; }
+  .faq-board__cta { flex-direction: column; align-items: stretch; }
   .faq-board__contact { width: 100%; }
   .faq-list .faq-item__btn { grid-template-columns: var(--faq-mark) minmax(0, 1fr) 20px; grid-template-areas: "mark cat arrow" "mark text arrow"; row-gap: 2px; min-height: 0; padding: 16px 4px; font-size: var(--fs-sm); }
   .faq-item__btn .faq-item__mark { grid-area: mark; align-self: start; }
@@ -1296,8 +1296,9 @@ html.is-dialog-open { overflow: hidden; }
 .inq-board__count { font-size: var(--fs-sm); color: var(--color-text-sub); white-space: nowrap; }
 .inq-board__count b { font-weight: 700; color: var(--color-text); }
 .inq-board .inq-board__cats { margin: 0; padding: 0; overflow: visible; }
-.inq-board__write { height: 48px; padding: 0 24px; border-radius: var(--radius-btn); background: var(--color-accent); color: #fff; font-weight: 700; transition: background-color var(--dur); }
-.inq-board__write:hover { background: var(--color-accent-hover); }
+/* 자주 묻는 질문 '상담문의하기'(.faq-board__contact)와 같은 색·효과: 흰 바탕 + 옅은 선, hover = 밝은 파랑 면·흰 글자 */
+.inq-board__write { height: 48px; padding: 0 24px; border: 1px solid var(--color-line); border-radius: var(--radius-btn); background: #fff; color: var(--color-text); font-weight: 700; transition: background var(--dur), color var(--dur), border-color var(--dur); }
+.inq-board__write:hover, .inq-board__write:focus-visible { border-color: var(--color-accent); background: var(--color-accent); color: #fff; }
 .inq-board__write:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
 .inq-mine { flex: none; display: inline-flex; align-items: center; height: 22px; padding: 0 8px; border: 1px solid var(--color-accent); border-radius: var(--radius-btn); font-size: var(--fs-xxs); font-weight: 700; line-height: 1; color: var(--color-accent); white-space: nowrap; }
 .inq-row.is-just { background: rgba(var(--color-accent-rgb), 0.08); transition: background-color 1.2s ease; }
