@@ -961,9 +961,6 @@ html:has(body.has-lnb .page-doctors) { scroll-padding-top: calc(var(--header-h) 
 /* 흰 배경 사진: 칸 좌우 끝 24px 만 흰색→투명 (상자 위에서 흰 사각형 경계가 보이지 않게). 위는 정수리 = 칸 위 끝이라 녹이지 않음 */
 .doctor-profile__photo.is-whitebg { -webkit-mask-image: linear-gradient(90deg, transparent, #000 24px, #000 calc(100% - 24px), transparent); mask-image: linear-gradient(90deg, transparent, #000 24px, #000 calc(100% - 24px), transparent); }
 .doctor-profile__img.is-missing { display: none; }
-/* 자료 대기 원장(site-data.js pending): 사진 대신 실루엣 — 높이 --ph0 틀, 아래 = 칸 아래 */
-.doctor-profile__ph { position: absolute; left: 50%; bottom: 0; height: calc(var(--ph0) * 0.92); transform: translateX(-50%); fill: rgba(var(--color-point-rgb), 0.08); }
-.doctor-profile__pending { font-size: 1.0625rem; color: var(--color-text-sub); }
 /* 약력: 19px · 500 · 줄 간격 1.5 · #1a1f2b, 항목 사이 14px, 점(4px)과 글자 사이 10px — 모든 항목 같은 색·굵기
    시작선 = 이름 왼쪽 끝 (상자 왼쪽 안쪽 여백 = 사진 칸 + 72px = 이름 열 시작). 상자 안에서 세로 가운데(상자 align-items: center)
    1열 기본. 항목 8개 이상 원장만 2열(.is-2col, pages.js careerOf) — 두 묶음을 같은 폭(1fr)으로, 열 사이 48px, 상자 오른쪽 안쪽 56px 까지 다 씀(최대 폭 제한 없음).
