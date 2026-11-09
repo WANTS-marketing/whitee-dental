@@ -44,20 +44,23 @@
 .t-point { padding: 32px 28px; border: 1px solid #e3e8f0; border-radius: 16px; background: #fff; }
 .t-point__no { font-size: 0.9375rem; font-weight: 800; letter-spacing: 0.04em; color: var(--color-accent); }
 .t-point__text { margin-top: 14px; font-size: 1.125rem; font-weight: 700; line-height: 1.55; word-break: keep-all; }
-/* 결정 기준 3칸 — 모두 같은 구조 (2026-11-09 통일): 칸 #F8FAFD · 여백 32px · 둥근 16px · 3칸 높이 같게
-   칸 제목 18px 굵게 남색 → 20px → 항목 한 줄씩(흰 줄, 최소 48px, 좌우 16px, 둥근 10px, 줄 간격 8px): [아이콘 18px 파랑] 10px 글자 16px #1A1F2B
-   아이콘은 첫 줄 높이(24px)에 맞춤 → 한 줄이면 세로 가운데. 2번 칸 덧붙임 문장은 목록 아래 16px · 14px #6B7280. 항목 아이콘만 왼쪽, 글자는 아이콘 오른쪽 칸의 가운데. 칸 제목·덧붙임도 가운데. 제목 + 목록 묶음은 칸 안에서 세로 가운데 */
-.t-criteria { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; align-items: stretch; }
-.t-crit { display: flex; flex-direction: column; justify-content: center; padding: 32px; border-radius: 16px; background: #f8fafd; }
-.t-crit__title { margin-bottom: 20px; text-align: center; font-size: 1.125rem; font-weight: 700; color: var(--color-point); }
-.t-crit__body { display: flex; flex-direction: column; } /* 제목 + 목록(+ 덧붙임 문장)을 한 묶음으로 칸 높이 안에서 세로 가운데 (.t-crit justify-content) — 항목이 가장 많은 칸은 꽉 참 */
-.t-crit__list { display: grid; gap: 8px; }
-.t-crit__item { display: flex; align-items: flex-start; gap: 10px; min-height: 48px; padding: 12px 12px 12px 14px; border-radius: 10px; background: #fff; }
+/* 결정 기준 3칸 — 박스 없이 구분선 (2026-11-09): 위 가로선 2px 남색(전체 폭) → 3칸 가로, 칸 사이 세로선 1px #E3E8F0(칸 좌우 40px, 바깥쪽 끝은 선·여백 없음)
+   칸 제목 18px 굵게 남색 · 왼쪽 · 위 28px 아래 16px(세 칸 제목 같은 높이) → 항목 한 줄씩, 위아래 14px, 항목 사이 가로선 1px #EEF1F5(마지막 아래 없음)
+   항목 = [아이콘 18px 파랑(체크·화살표·Q), 첫 줄 높이] 10px 글자 16px #1A1F2B 왼쪽 정렬(둘째 줄도 글자 시작선). 2번 칸 덧붙임 문장 = 목록 아래 16px · 14px #6B7280
+   좁은 본문(카드 1열 구간)·모바일: 세로로 쌓고 칸 사이는 가로선, 칸 좌우 여백 0 */
+.t-criteria { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 2px solid var(--color-point); }
+.t-crit { min-width: 0; padding: 0 40px; }
+.t-crit:first-child { padding-left: 0; }
+.t-crit:last-child { padding-right: 0; }
+.t-crit + .t-crit { border-left: 1px solid #e3e8f0; }
+.t-crit__title { padding-top: 28px; margin-bottom: 16px; font-size: 1.125rem; font-weight: 700; color: var(--color-point); }
+.t-crit__item { display: flex; align-items: flex-start; gap: 10px; padding: 14px 0; }
+.t-crit__item + .t-crit__item { border-top: 1px solid #eef1f5; }
 .t-crit__icon { display: grid; flex: none; place-items: center; width: 18px; height: 24px; color: var(--color-accent); }
 .t-crit__icon svg { width: 18px; height: 18px; }
 .t-crit__icon b { font-size: 1rem; font-weight: 800; line-height: 1; }
-.t-crit__text { flex: 1; min-width: 0; text-align: center; font-size: 1rem; line-height: 24px; color: #1a1f2b; word-break: keep-all; }
-.t-crit__note { margin-top: 16px; text-align: center; font-size: 0.875rem; line-height: 1.6; color: #6b7280; word-break: keep-all; }
+.t-crit__text { flex: 1; min-width: 0; font-size: 1rem; line-height: 24px; color: #1a1f2b; word-break: keep-all; }
+.t-crit__note { margin-top: 16px; font-size: 0.875rem; line-height: 1.6; color: #6b7280; word-break: keep-all; }
 /* 4단계 세로 타임라인: 왼쪽 번호 원(48px, 파랑) + 원 사이 세로선(파랑 30%), 오른쪽 제목 20px + 본문 17px */
 .t-steps { display: grid; }
 .t-step { position: relative; display: grid; grid-template-columns: 48px minmax(0, 1fr); gap: 0 24px; padding-bottom: 36px; }
@@ -94,16 +97,19 @@
 .t-btn--fill:hover { background: var(--color-accent-hover); }
 /* 하단 고지 */
 .t-notice { margin-top: 64px; padding-top: 24px; border-top: 1px solid #e3e8f0; font-size: 0.875rem; line-height: 1.7; color: #888; word-break: keep-all; }
-@container sub (max-width: 55rem) { .t-criteria { grid-template-columns: minmax(0, 1fr); } }
+@container sub (max-width: 55rem) {
+  .t-criteria { grid-template-columns: minmax(0, 1fr); }
+  .t-crit, .t-crit:first-child, .t-crit:last-child { padding: 0 0 12px; }
+  .t-crit + .t-crit { border-left: 0; border-top: 1px solid #e3e8f0; }
+}
 @media (max-width: 768px) {
   .t-page .t-visual__title { font-size: 1.375rem; }
   .t-summary { margin-top: 28px; font-size: 1.0625rem; }
   .t-sec { margin-top: 56px; }
   .t-sec__title { margin-bottom: 20px; font-size: 1.375rem; }
-  .t-points, .t-criteria { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  .t-points { grid-template-columns: minmax(0, 1fr); gap: 12px; }
   .t-point { padding: 22px 20px; }
   .t-point__text { margin-top: 8px; font-size: 1.0625rem; }
-  .t-crit { padding: 24px; }
   .t-step { grid-template-columns: 40px minmax(0, 1fr); gap: 0 16px; }
   .t-step__no { width: 40px; height: 40px; }
   .t-step:not(:last-child)::before { left: 19px; top: 40px; }
