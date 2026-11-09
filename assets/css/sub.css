@@ -166,6 +166,9 @@
 .t-fold__card.is-open .t-fold__media::after { opacity: 0; }
 .t-fold__no { position: absolute; z-index: 1; left: 0; right: 0; bottom: 24px; font-size: 0.875rem; font-weight: 700; letter-spacing: 0.04em; text-align: center; color: #fff; transition: opacity 0.2s ease; }
 .t-fold__card.is-open .t-fold__no { opacity: 0; }
+/* 예시 이미지 안내(데이터 illustrative: true): 펼친 카드 사진 왼쪽 아래 안쪽 — 12px 흰색 80% · 반투명 남색 알약. 접힌 띠에서는 즉시 숨김, 펼칠 때 설명 글과 같이 나타남 */
+.t-fold__ill { position: absolute; z-index: 1; left: 16px; bottom: 16px; max-width: calc(100% - 32px); padding: 4px 10px; border-radius: 999px; background: rgba(22, 35, 63, 0.55); font-size: 0.75rem; line-height: 1.4; color: rgba(255, 255, 255, 0.8); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; opacity: 0; visibility: hidden; transition: none; pointer-events: none; }
+.t-fold__card.is-open .t-fold__ill { opacity: 1; visibility: visible; transition: opacity 350ms ease 400ms, visibility 0s 400ms; }
 .t-fold__body { position: absolute; top: 0; bottom: 0; left: calc(var(--open-w) / 2); width: calc(var(--open-w) / 2); display: flex; flex-direction: column; justify-content: center; padding: 40px; visibility: hidden; opacity: 0; transform: translateX(-24px); transition: none; }
 .t-fold__card.is-open .t-fold__body { visibility: visible; opacity: 1; transform: none; transition: opacity 350ms ease 400ms, transform 350ms var(--fold-ease) 400ms, visibility 0s 400ms; }
 .t-fold__num { font-size: 0.875rem; font-weight: 700; letter-spacing: 0.04em; color: var(--color-accent); }
@@ -192,6 +195,7 @@
 .t-fold.is-swipe .t-fold__card, .t-fold.is-swipe .t-fold__card.is-open { display: flex; flex-direction: column; width: 88%; scroll-snap-align: start; transition: none; }
 .t-fold.is-swipe .t-fold__track::after { content: ""; flex: none; width: 1px; } /* 마지막 카드 오른쪽 여백 */
 .t-fold.is-swipe .t-fold__hit, .t-fold.is-swipe .t-fold__no, .t-fold.is-swipe .t-fold__media::after { display: none; }
+.t-fold.is-swipe .t-fold__ill { left: 12px; bottom: 12px; opacity: 1; visibility: visible; transition: none; } /* 스와이프: 모든 카드가 펼친 모양이라 항상 표시 */
 .t-fold.is-swipe .t-fold__media, .t-fold.is-swipe .t-fold__card.is-open .t-fold__media { position: relative; width: 100%; aspect-ratio: 4 / 3; transition: none; }
 .t-fold.is-swipe .t-fold__media .t-slot > img { object-position: center top; } /* 4:5 사진의 위쪽 4:3 */
 .t-fold.is-swipe .t-fold__card:not(.is-open) .t-slot__ph { opacity: 1; }
@@ -205,7 +209,7 @@
 .t-fold.is-swipe .t-fold__tabs::-webkit-scrollbar { display: none; }
 .t-fold.is-swipe .t-fold__tabs::after { content: ""; flex: none; width: 1px; }
 .t-fold.is-swipe .t-fold__tab { font-size: 1.0625rem; }
-@media (prefers-reduced-motion: reduce) { .t-fold__track, .t-fold__card, .t-fold__media, .t-fold__body, .t-fold__card.is-open .t-fold__body { transition: none !important; } }
+@media (prefers-reduced-motion: reduce) { .t-fold__track, .t-fold__card, .t-fold__media, .t-fold__body, .t-fold__card.is-open .t-fold__body, .t-fold__card.is-open .t-fold__ill { transition: none !important; } }
 /* 기공센터: 왼쪽 이미지 + 오른쪽 글, 배경 #F8FAFD · 둥근 16px (모바일 이미지 위·글 아래) */
 .t-lab { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; overflow: hidden; border-radius: 16px; background: #f8fafd; }
 .t-lab .t-lab__img { border-radius: 0; }

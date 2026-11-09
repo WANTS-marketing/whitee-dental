@@ -119,6 +119,7 @@ const treatments = blocks.map((b) => {
         text: lineOf(c, '설명'),
         fits: lineOf(c, '이런 분이라면 상담해 보세요').split(/\s+\/\s+/).filter(Boolean),
         note: lineOf(c, '안내'),
+        illustrative: lineOf(c, '예시') !== '아니요', // 기본 = 예시 이미지(펼친 카드 사진에 '이해를 돕기 위한 예시' 안내). 병원 실제 사진이면 원고에 '- 예시: 아니요'
       };
     });
   }
