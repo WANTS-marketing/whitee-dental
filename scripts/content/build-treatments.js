@@ -91,7 +91,7 @@ ${X.photos.map((p) => `          <figure class="t-photo">${slot(p, "")}<figcapti
               <div class="t-fold__track" data-t-fold-track>
 ${cases.map((c, i) => { const no = String(i + 1).padStart(2, '0'); return `                <div class="t-fold__card${i === 0 ? ' is-open' : ''}" role="tabpanel" id="t-case-panel-${i + 1}" aria-labelledby="t-case-tab-${i + 1}">
                   <button type="button" class="t-fold__hit" aria-label="${no} ${esc(c.tab)} 보기"></button>
-                  <div class="t-fold__media">${slot(c.image, '')}<span class="t-fold__no" aria-hidden="true">${no}</span></div>
+                  <div class="t-fold__media">${slot(c.image, '')}<span class="t-fold__no" aria-hidden="true">${no}</span>${c.illustrative !== false ? '<span class="t-fold__ill">이미지는 이해를 돕기 위한 예시입니다</span>' : ''}</div>
                   <div class="t-fold__body"${i === 0 ? '' : ' aria-hidden="true"'}><div class="t-fold__inner">
                     <span class="t-fold__num">${no}</span>
                     <h3 class="t-fold__title">${esc(c.titleMain)}${c.titleSub ? `<span class="t-fold__sub">${esc(c.titleSub)}</span>` : ''}</h3>
