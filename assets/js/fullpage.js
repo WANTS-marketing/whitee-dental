@@ -1,14 +1,14 @@
 /* ==========================================================================
    메인 풀스크린 섹션 넘김 — PC(1025px 이상, 화면 높이 700px 이상)에서만 (참고: 경희대병원 메인)
-   - 섹션: 히어로(+퀵바) → 진료안내 → 의료진 → 치료사례 → FAQ → 치과소식 → 지점 바로가기 바 + 푸터(마지막, 높이 자동)
+   - 섹션: 히어로(+퀵바) → 4가지 약속 → 의료진 → 치료사례(+협력기관 띠) → FAQ·상담 → 공지·소식 → 지점 바로가기 바 + 푸터(마지막, 높이 자동)
    - 마우스 휠·트랙패드 한 번, 키보드(↓↑ · PageDown/PageUp · Space · Home/End) 한 번에 한 섹션, 0.8s ease-in-out
    - 이동 중·이동 후 약 1s 는 입력 무시 + 휠 입력이 200ms 이상 끊긴 뒤의 새 입력만 받음(트랙패드 관성으로 두 칸 넘어가지 않게)
-   - 주소 해시(#treatment 등) 반영, 새로고침해도 그 섹션에서 시작
+   - 주소 해시(#why 등) 반영, 새로고침해도 그 섹션에서 시작
    - 잠금: 첫 진입 히어로 애니메이션 중, 메가메뉴·약력 팝업·코치마크 열림 (의료진 사진 hover 는 잠그지 않음)
    - 투명 헤더: 섹션마다 data-header-theme(dark|light) → html[data-header-theme] (넘김이 시작될 때 다음 섹션 값으로 미리), main.css '투명 헤더'
    - 섹션 안에서 스크롤되는 영역(FAQ 목록, 긴 의료진 약력 .bio-scroll)은 끝에 닿을 때까지 그 안에서 스크롤
-   - 히어로(첫 섹션): 휠·↓·PageDown·Space 는 먼저 슬라이드 1→4 (main.js window.HeroSlider), 4번 다음에 진료안내로
-     ↑·PageUp 은 이전 슬라이드, 1번에서 위로는 아무 동작 없음. 진료안내에서 위로 오면 히어로 4번으로 도착
+   - 히어로(첫 섹션): 휠·↓·PageDown·Space 는 먼저 슬라이드 1→4 (main.js window.HeroSlider), 4번 다음에 4가지 약속으로
+     ↑·PageUp 은 이전 슬라이드, 1번에서 위로는 아무 동작 없음. 4가지 약속에서 위로 오면 히어로 4번으로 도착
      Home·End·섹션 점·메뉴 링크는 슬라이드와 상관없이 바로 그 섹션
    - 모바일·태블릿·낮은 화면: 아무것도 하지 않음(일반 스크롤 + 등장 애니메이션)
    스타일: main.css '풀스크린 섹션 넘김' (html.is-fullpage 일 때만)
@@ -16,7 +16,7 @@
 (function () {
   const SECTIONS = [
     { sel: '.screen-home__first', hash: 'home', label: '홈' },
-    { sel: '#screen-clinic', hash: 'treatment', label: '진료안내' },
+    { sel: '#screen-why', hash: 'why', label: '4가지 약속' },
     { sel: '#screen-doctors', hash: 'doctors', label: '의료진' },
     { sel: '#screen-cases', hash: 'cases', label: '치료사례' },
     { sel: '#screen-faq', hash: 'faq', label: '자주 묻는 질문' },

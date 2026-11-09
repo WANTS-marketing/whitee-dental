@@ -693,12 +693,12 @@ function initQuickQuestion() {
   box.querySelector('[data-fq-again]').addEventListener('click', () => { done.hidden = true; form.hidden = false; form.elements.branch[0].focus({ preventScroll: true }); });
 }
 
-/* ---------- ⑦ FAQ 미리보기 ---------- */
+/* ---------- ⑥ FAQ 미리보기 (자주 묻는 질문 4개 + 온라인 상담 문의 한 섹션) ---------- */
 async function renderFaqPreview() {
   const box = document.querySelector('[data-faq-preview]');
   if (!box) return;
   try {
-    const faqs = (await window.API.getFaqs({ featured: true })).slice(0, 5);
+    const faqs = (await window.API.getFaqs({ featured: true })).slice(0, 4); // 메인은 4개 + '질문 전체보기'
     box.innerHTML = faqs.map((f, i) => window.UI.faqItem(f, i, 'faq-pre')).join('');
     window.UI.accordion(box);
   } catch (err) {
@@ -849,8 +849,8 @@ async function initStory() {
    의료진 섹션부터 적용. 섹션 타이틀은 fade-up, 카드 묶음은 자식이 0.08s 간격으로 순차 등장 (간격은 main.css). 움직임 줄이기 설정이면 끔 */
 function initReveal() {
   if (!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  const singles = '.doctors__head, .clinic__head, .cases__head, .faq-preview__head, .faq-preview__box, .faq-quick, .story-notice, .story__body';
-  const groups = '.clinic__grid, .cases__list'; // 치과소식 카드는 탭으로 다시 그려지므로 묶음(.story__body)째로 등장
+  const singles = '.doctors__head, .why__head, .cases__head, .faq-preview__head, .faq-preview__box, .faq-quick, .story-notice, .story__body';
+  const groups = '.why__grid, .cases__list'; // 치과소식 카드는 탭으로 다시 그려지므로 묶음(.story__body)째로 등장
   const targets = [
     // 의료진 인물 줄: 줄 전체가 아니라 사진·이름 하나하나 등장 (main.css .reveal-photos — 흰 배경 사진 multiply 가 끊기지 않게)
     ...[...document.querySelectorAll('.doctors__main')].map((el) => { el.classList.add('reveal-photos'); return el; }),

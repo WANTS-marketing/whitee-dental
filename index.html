@@ -36,7 +36,9 @@
   <main id="main">
     <h1 class="sr-only">화이트e치과 — 창원점 · 마산점</h1>
 
-    <!-- 홈 묶음(첫 화면): 히어로 + 빠른 진료 안내 퀵바 — 이어서 진료안내 → 의료진 → 치료사례 → FAQ → 치과소식 → (푸터) 지점 바로가기 바
+    <!-- 메인 구성 (2026-11-09): 홈 묶음(히어로 슬라이드 — 이벤트 슬라이드 포함 + 빠른 진료 안내 퀵바) → WHY 화이트e 4가지 약속 → 분야별 전문의
+         → 치료사례(+ 아래 협력기관 띠) → 자주 묻는 질문 + 온라인 상담 문의 → 공지사항 · 소식 → (푸터) 지점 바로가기 바
+         (예전 '진료안내' 사진 카드 5개 섹션은 빠른 진료 안내와 링크가 겹쳐 삭제)
          진료 철학 문구는 치과소개(about/intro.html)로, 지점 정보는 하단 지점 바로가기 바로 옮겼다 -->
     <div class="screen-home" id="screen-home">
     <div class="screen-home__first" data-header-theme="dark"><!-- data-header-theme: 풀스크린 넘김에서 이 섹션일 때 투명 헤더 글자색 (dark = 어두운 배경 → 흰 글자, light = 밝은 배경 → 어두운 글자) -->
@@ -51,7 +53,7 @@
                 <!-- 라벨 묶음: 줄이 넘치면 '창원점 · 마산점'이 통째로 다음 줄로 (앞의 · 는 main.css .hero__label-row 가 숨김) -->
                 <p class="hero__label"><span class="hero__label-row"><span>since 2003 · 20년의 진료</span><span>창원점 · 마산점</span></span></p>
                 <h2 class="hero__title">내 치아에 맞는 전문의가<br>처음부터 끝까지 책임집니다</h2>
-                <p class="hero__desc">교정·치주·보철·구강악안면외과까지,<br class="only-desktop"> 분야별 전문의가 한 분 한 분 직접 진료합니다.</p>
+                <p class="hero__desc">교정·보철·보존·구강악안면외과까지,<br class="only-desktop"> 분야별 전문의가 한 분 한 분 직접 진료합니다.</p>
                 <a class="btn btn--white hero__btn" href="./about/doctors.html">의료진 소개
                   <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M2 8h12M9 3l5 5-5 5"/></svg></a>
               </div>
@@ -144,67 +146,29 @@
 
     </div>
 
-    <!-- ③ 진료안내 -->
-    <section class="clinic screen" id="screen-clinic" data-header-theme="dark" aria-labelledby="clinic-title">
-      <div class="container clinic__inner">
-        <div class="clinic__head">
-          <span class="sec-label">CLINIC</span>
-          <h2 class="clinic__title" id="clinic-title">진료안내</h2>
-          <p class="sec-desc">화이트e치과는 다양한 진료 경험을 바탕으로<br class="only-desktop"> 개개인에게 맞는 최적의 치료를 제공합니다.</p>
+    <!-- ③ WHY 화이트e — 4가지 약속 (site-data.js SITE.promises 의 short 문구 — 치과소개 'WHY WHITE e' 와 같은 데이터, common.js renderSiteBlocks) -->
+    <section class="why screen" id="screen-why" data-header-theme="dark" aria-labelledby="why-title">
+      <div class="container why__inner">
+        <div class="why__head">
+          <span class="sec-label">WHY WHITE e</span>
+          <h2 class="why__title" id="why-title">화이트e치과의<br>4가지 약속</h2>
+          <p class="why__desc">since 2003, 20년 이상 지켜온 화이트e치과의 약속</p>
+          <a class="btn why__more roll-text" href="./about/intro.html">치과소개 더보기
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg></a>
         </div>
-        <div class="clinic__grid">
-          <a class="clinic-card clinic-card--implant" href="./treatment/implant.html">
-            <span class="clinic-card__img img-ph"><img src="./assets/images/clinic-implant.jpg" alt="잇몸뼈에 심은 임플란트 위에 지대주와 크라운을 올리는 모습 3D 그림" loading="lazy"></span>
-            <span class="clinic-card__body">
-              <strong class="clinic-card__title">임플란트</strong>
-              <span class="clinic-card__sub"><span>상실된 치아의 기능 회복</span><span>즉시식립 · 네비게이션 · 고난도</span></span>
-            </span>
-            <span class="clinic-card__arrow" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg></span>
-          </a>
-          <a class="clinic-card clinic-card--aesthetic" href="./treatment/aesthetic.html">
-            <span class="clinic-card__img img-ph"><img src="./assets/images/clinic-aesthetic.jpg" alt="가지런하고 하얀 앞니와 잇몸 클로즈업 3D 그림" loading="lazy"></span>
-            <span class="clinic-card__body">
-              <strong class="clinic-card__title">심미치료</strong>
-              <span class="clinic-card__sub"><span>올세라믹 · 라미네이트</span><span>치아미백 · 잇몸성형</span></span>
-            </span>
-            <span class="clinic-card__arrow" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg></span>
-          </a>
-          <a class="clinic-card clinic-card--wisdom" href="./treatment/wisdom-scaling.html">
-            <span class="clinic-card__img img-ph"><img src="./assets/images/clinic-wisdom-scaling.jpg" alt="스케일링 기구로 치아 표면을 깨끗하게 하는 모습 3D 그림" loading="lazy"></span>
-            <span class="clinic-card__body">
-              <strong class="clinic-card__title">사랑니·<wbr>스케일링</strong>
-              <span class="clinic-card__sub"><span>상태에 따른 진단과 발치</span><span>스케일링</span></span>
-            </span>
-            <span class="clinic-card__arrow" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg></span>
-          </a>
-          <a class="clinic-card clinic-card--ortho" href="./treatment/orthodontics.html">
-            <span class="clinic-card__img img-ph"><img src="./assets/images/clinic-orthodontics.jpg" alt="치아에 붙인 교정 장치(브래킷)와 와이어 3D 그림" loading="lazy"></span>
-            <span class="clinic-card__body">
-              <strong class="clinic-card__title">치아교정</strong>
-              <span class="clinic-card__sub"><span>치열과 교합을 고려한 교정</span><span>클리피씨 · 투명 · 어린이 교정</span></span>
-            </span>
-            <span class="clinic-card__arrow" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg></span>
-          </a>
-          <a class="clinic-card clinic-card--general" href="./treatment/general.html">
-            <span class="clinic-card__img img-ph"><img src="./assets/images/clinic-general.jpg" alt="치과 거울에 비친 어금니 충치를 살펴보는 모습 3D 그림" loading="lazy"></span>
-            <span class="clinic-card__body">
-              <strong class="clinic-card__title">일반치료</strong>
-              <span class="clinic-card__sub">충치 · 신경치료 · 보철 · 잇몸치료</span>
-            </span>
-            <span class="clinic-card__arrow" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg></span>
-          </a>
-        </div>
+        <ul class="why__grid" data-promises="short"></ul>
       </div>
     </section>
 
-    <!-- ④ 의료진 -->
+    <!-- ④ 분야별 전문의 -->
     <section class="doctors screen" id="screen-doctors" data-header-theme="light" aria-labelledby="doctors-title">
       <div class="container doctors__inner">
         <!-- 머리말: PC 왼쪽 제목·설명 / 오른쪽 지점 탭 (태블릿·모바일은 제목 아래 탭) — 아래 인물 줄이 컨테이너 전체 폭을 쓴다 -->
         <div class="doctors__head">
           <div class="doctors__intro">
             <h2 class="doctors__title" id="doctors-title"><span class="text-point">분야별 전문의</span>가<br class="only-mobile"> 직접 진료합니다</h2>
-            <p class="doctors__desc">교정과 · 치주과 · 보철과 · 보존과 · 구강악안면외과 · 통합치의학과 전문의가 지점별로 함께합니다.</p>
+            <p class="doctors__desc"><span data-specialty-text>치과교정과 · 치과보철과 · 치과보존과 · 구강악안면외과 · 통합치의학과</span> 전문의가 지점별로 함께합니다.</p><!-- 진료과 = site-data.js SITE.specialties (치과소개와 같은 데이터) -->
+            <a class="doctors__more" href="./about/doctors.html">의료진 소개 보기<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a>
           </div>
           <div class="doctors__controls">
           <div class="doctors__tabs" role="tablist" aria-label="지점 선택">
@@ -220,7 +184,7 @@
       </div>
     </section>
 
-    <!-- ⑤ 치료사례 -->
+    <!-- ⑤ 치료사례 + 협력기관 띠 -->
     <section class="cases screen" id="screen-cases" data-header-theme="light" aria-labelledby="cases-title">
       <div class="container cases__inner">
         <div class="cases__head">
@@ -238,9 +202,17 @@
         <!-- 최신 치료사례 3건 (main.js initCases ← api.js getCases) — 카드 = [BEFORE 선명 / AFTER 로그인 전 흐림·자물쇠] + 분류·제목, 누르면 상세 -->
         <ul class="cases__list" data-cases></ul>
       </div>
+      <!-- 협력기관 띠 (얇게) — 강조 배지 3개 + 기관 이름이 가로로 천천히 흐름(움직임 줄이기 설정이면 정지). 데이터 = site-data.js SITE.partners (치과소개 PARTNERS 와 같음) -->
+      <div class="partners-strip" role="region" aria-labelledby="partners-strip-title">
+        <div class="container partners-strip__inner">
+          <h2 class="partners-strip__title" id="partners-strip-title"><span class="sec-label">PARTNERS</span> 함께하는 협력 기관</h2>
+          <ul class="partners-strip__badges" data-partner-highlights="badge"></ul>
+        </div>
+        <div class="partner-marquee" data-partner-marquee aria-label="협력 기관 목록"></div>
+      </div>
     </section>
 
-    <!-- ⑥ FAQ 미리보기 -->
+    <!-- ⑥ 자주 묻는 질문(4개) + 온라인 상담 문의 — 한 섹션 -->
     <section class="faq-preview screen" id="screen-faq" data-header-theme="light" aria-labelledby="faq-preview-title">
       <div class="container faq-preview__inner">
         <div class="faq-preview__head">
@@ -249,11 +221,12 @@
         </div>
         <div class="faq-preview__box">
           <ul class="accordion" data-faq-preview></ul>
+          <a class="faq-preview__more" href="./faq/index.html">질문 전체보기<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a>
         </div>
         <!-- 빠른 질문 박스 (main.js initQuickQuestion → common.js UI.inquiryForm, 저장 = api.js createInquiry + 메일 알림, 진료과목 = 기타) -->
         <aside class="faq-quick" aria-labelledby="faq-quick-title">
           <form class="form faq-quick__form" data-inquiry-form="빠른 질문" data-treatment="기타" novalidate>
-            <h3 class="faq-quick__title" id="faq-quick-title">빠른 상담문의</h3>
+            <h3 class="faq-quick__title" id="faq-quick-title">온라인 상담 문의</h3>
             <p class="faq-quick__desc">궁금한 점을 남겨주시면 확인 후 연락드립니다.</p>
             <fieldset class="faq-quick__branch">
               <legend class="sr-only">지점 선택</legend>
@@ -296,7 +269,7 @@
       </div>
     </section>
 
-    <!-- ⑦ 치과소식 -->
+    <!-- ⑦ 공지사항 · 소식 (2단) -->
     <section class="story screen" id="screen-story" data-header-theme="light" aria-labelledby="story-title">
       <div class="container story__inner">
         <!-- 왼쪽(약 36%): 공지사항 최신 4개 목록 (main.js initStory) / 오른쪽(약 64%): 치과소식 카드 캐러셀 — 두 헤더 줄 높이는 subgrid 로 같게 -->

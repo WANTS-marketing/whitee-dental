@@ -91,12 +91,8 @@
           <h2 class="sec-title">화이트e치과의 4가지 약속</h2>
           
         </div>
-        <div class="strength-grid">
-          <article class="strength"><span class="strength__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="8" cy="8" r="3"/><circle cx="16" cy="8" r="3"/><path d="M2 20c0-3.3 2.7-6 6-6 1.5 0 2.9.6 4 1.5A6 6 0 0122 20"/></svg></span><h3 class="strength__title">분야별 협진 진료시스템</h3><p class="strength__text">치과교정과·치주과·보철과·구강악안면외과·통합치의학과 전문의가 함께 진료합니다.</p></article>
-          <article class="strength"><span class="strength__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 21h18M5 21V10l7-5 7 5v11M9 21v-6h6v6"/></svg></span><h3 class="strength__title">전지점 공동운영 기공센터</h3><p class="strength__text"><!-- TODO: 기공센터 설명 병원 확인 -->창원점·마산점이 기공센터를 함께 운영합니다.</p></article>
-          <article class="strength"><span class="strength__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 9l2 6 2-4 2 4 2-6M7 12h10"/></svg></span><h3 class="strength__title">합리적인 치료비용</h3><p class="strength__text">상담과 정확한 진단을 바탕으로 합리적인 비용의 치료를 계획합니다.</p></article>
-          <article class="strength"><span class="strength__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 019.5 4a8.5 8.5 0 1010.5 10.5z"/></svg></span><h3 class="strength__title">전지점 평일 야간진료</h3><p class="strength__text">창원점·마산점 모두 평일 저녁 9시까지 진료합니다.</p></article>
-        </div>
+        <!-- 4가지 약속: site-data.js SITE.promises (메인 WHY 화이트e 와 같은 데이터, common.js renderSiteBlocks) -->
+        <div class="strength-grid" data-promises="full"></div>
       </div>
     </section>
 
@@ -107,7 +103,7 @@
             <span class="sec-label">COLLABORATION</span>
             <h2 class="intro-split__title">분야별 전문의의<br>협진 진료시스템</h2>
             <p class="intro-split__text">분야별 협진 진료시스템과 1:1 맞춤진료로 믿을 수 있는 의료진이 함께합니다. 한 분야의 치료가 다른 분야와 연결될 때에도 각 전문의가 함께 진단하고 계획합니다.</p>
-            <div style="margin-top:28px"><div class="spec-row"><span class="spec-circle">치과교정과<small>전문의</small></span><span class="spec-circle">치주과<small>전문의</small></span><span class="spec-circle">보철과<small>전문의</small></span><span class="spec-circle">구강악안면외과<small>전문의</small></span><span class="spec-circle">통합치의학과<small>전문의</small></span></div></div>
+            <div style="margin-top:28px"><div class="spec-row" data-specialties></div><!-- 전문의 진료과: site-data.js SITE.specialties (메인 분야별 전문의와 같은 데이터) --></div>
           </div>
           <div class="img-ph intro-split__img"><img src="../assets/images/visual-general.jpg" alt="전문의가 환자를 진료하는 모습" loading="lazy"></div>
         </div>
@@ -121,43 +117,9 @@
           <h2 class="sec-title">함께하는 협력 기관</h2>
           <p class="sec-desc">지역의 다양한 기관·단체와 함께하고 있습니다.</p>
         </div>
-        <div class="partner-highlights">
-          <div class="partner-highlight"><strong>부산대학병원 협력</strong><span><!-- TODO: 협력 내용 확인 -->협력 의료기관</span></div>
-          <div class="partner-highlight"><strong>경찰 자문</strong><span><!-- TODO: 자문 내용 확인 -->자문 활동</span></div>
-          <div class="partner-highlight"><strong>방송 출연</strong><span>‘세상에 이런일이’</span></div>
-        </div>
-        <!-- TODO: 협력업체 로고 이미지 (29개) 병원에 요청 — 지금은 이름만 표시 -->
-        <ul class="partner-logos">
-          <li>전국금속노동조합</li>
-          <li>DOOSAN</li>
-          <li>한화디펜스</li>
-          <li>경상남도 대한미용협회</li>
-          <li>창원대학교</li>
-          <li>창원시 배드민턴협회</li>
-          <li>마산 어시장상인회</li>
-          <li>한국실버경찰봉사대 의창구지회</li>
-          <li>웨딩드림</li>
-          <li>라라한방병원</li>
-          <li>미시안 안과의원</li>
-          <li>미시안 여성의원</li>
-          <li>창원시 사회인 야구단</li>
-          <li>(주)창원청과시장</li>
-          <li>탑골프아카데미</li>
-          <li>효성중공업</li>
-          <li>경남 자율방재단연합회</li>
-          <li>창원시 소프트볼협회<!-- TODO: 로고 확인 --></li>
-          <li>바르게살기운동 경남협의회</li>
-          <li>창원 LG 세이커스</li>
-          <li>경남FC</li>
-          <li>창원 시청축구단</li>
-          <li>창원 성산소방서</li>
-          <li>엔디티 엔지니어링(주)</li>
-          <li>중소기업융합경남연합회</li>
-          <li>가온내과</li>
-          <li>365병원</li>
-          <li>강추한방병원</li>
-          <li>창원메트로시티석전 아파트</li>
-        </ul>
+        <!-- 협력 기관: site-data.js SITE.partners (메인 협력기관 띠와 같은 데이터) -->
+        <div class="partner-highlights" data-partner-highlights></div>
+        <ul class="partner-logos" data-partner-logos></ul>
       </div>
     </section>
       </div>
