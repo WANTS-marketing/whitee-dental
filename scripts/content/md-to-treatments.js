@@ -85,7 +85,7 @@ const treatments = blocks.map((b) => {
   if (caseSec) {
     extras.cases = caseSec.split(/\n#### /).slice(1).map((c) => {
       const title = c.split('\n')[0].trim();
-      const m = title.match(/^(.*?)\s*\(([^)]+)\)$/); // '발치 후 바로 심는 경우 (즉시 식립)' → 제목 + 진료명
+      const m = title.match(/^(.*?)\s*\(([^)]+)\)$/); // '발치 후 바로 심는 경우 (발치 당일 임플란트)' → 제목 + 진료명
       return {
         title,
         titleMain: m ? m[1] : title,
