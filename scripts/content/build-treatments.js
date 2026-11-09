@@ -130,7 +130,7 @@ ${lnb}
 
         <!-- 1. 비주얼 박스: 영문 라벨 + h1(원고 H1). 사진 = treatments.json image -->
         <div class="t-visual">
-          <img class="t-visual__img" src="../assets/images/${esc(t.image)}" alt="">
+          <img class="t-visual__img${t.visualFlip ? ' t-visual__img--flip' : ''}" src="../assets/images/${esc(t.image)}" alt="">
           <div class="t-visual__text">
             <span class="t-visual__label">${esc(t.labelEn)}</span>
             <h1 class="t-visual__title">${t.h1Break && t.h1.startsWith(t.h1Break) ? `${esc(t.h1Break)}<br>${esc(t.h1.slice(t.h1Break.length).trim())}` : esc(t.h1)}</h1>
@@ -140,11 +140,11 @@ ${lnb}
         <!-- 2. 요약 문단 -->
         <p class="t-summary${t.summaryCenter ? ' t-summary--center' : ''}">${(t.summaryBreaks || []).reduce((h, br) => h.replace(esc(br), `${esc(br)}<br class="only-desktop">`), esc(t.summary))}</p>
 
-        <!-- 3. 화이트e치과 진료 포인트 -->
+        <!-- 3. 화이트e치과 진료 포인트 (문장 끝 마침표는 화면에서 붙임 — 원고에는 없음) -->
         <section class="t-sec" aria-labelledby="t-points-title">
           <h2 class="t-sec__title t-sec__title--center" id="t-points-title">화이트e치과 진료 포인트</h2>
           <ol class="t-points">
-${t.points.map((p, i) => `            <li class="t-point"><span class="t-point__no">${String(i + 1).padStart(2, '0')}</span><p class="t-point__text">${esc(p)}</p></li>`).join('\n')}
+${t.points.map((p, i) => `            <li class="t-point"><span class="t-point__no">${String(i + 1).padStart(2, '0')}</span><p class="t-point__text">${esc(p)}${/[.?!]$/.test(p) ? '' : '.'}</p></li>`).join('\n')}
           </ol>
         </section>
 
