@@ -70,35 +70,42 @@ function page(t) {
   /* 이미지 칸: 자리표시(연한 회색 + '파일명 · 권장 크기')를 먼저 그리고, pages.js 가 assets/images/{file}.webp → .jpg → .png 를 찾아
      있으면 그 사진으로 바꾼다(없으면 자리표시 그대로 — 깨진 이미지 아이콘 없음). 파일 목록: docs/IMAGE-SLOTS.md */
   const slot = (s, alt = '', cls = '') => `<div class="t-slot${cls ? ` ${cls}` : ''}" style="aspect-ratio: ${s.ratio}" data-slot="${esc(s.file)}" data-slot-alt="${esc(alt)}"><span class="t-slot__ph" aria-hidden="true">${esc(s.name)} · ${esc(s.size)}</span></div>`;
-  // 상담 카드 아이콘: 지금은 사이트 선 아이콘(아이콘 이름 끝 단어로 고름), assets/images/treatment/{slug}/{icon}.svg 가 있으면 pages.js 가 그 파일로 바꿈
-  const CASE_ICON = {
-    immediate: '<path d="M8 3v3M16 3v3M4 9h16M5 5h14a1 1 0 011 1v13a1 1 0 01-1 1H5a1 1 0 01-1-1V6a1 1 0 011-1z"/><path d="M9 14.5l2 2 4-4"/>',
-    complex: '<path d="M12 20s-7-4.4-7-10a4 4 0 017-2.6A4 4 0 0119 10c0 5.6-7 10-7 10z"/><path d="M8.5 12h2l1-2 1.5 4 1-2h1.5"/>',
-    revision: '<path d="M20 11a8 8 0 00-14.3-4.9L4 8M4 4v4h4"/><path d="M4 13a8 8 0 0014.3 4.9L20 16M20 20v-4h-4"/>',
-    denture: '<path d="M4 10c0-3 3.6-5 8-5s8 2 8 5c0 4-2 9-4 9-1.5 0-2-3-4-3s-2.5 3-4 3c-2 0-4-5-4-9z"/><path d="M8 10.5h8"/>',
-    guide: '<circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2.5"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>',
-    prf: '<path d="M12 3s6 6.5 6 11a6 6 0 01-12 0c0-4.5 6-11 6-11z"/><path d="M9.5 14.5a2.5 2.5 0 002.5 2.5"/>',
-  };
-  const caseIcon = (name) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${CASE_ICON[String(name).split('-').pop()] || CASE_ICON.complex}</svg>`;
   const photoStrip = X.photos ? `
         <!-- 추가 · 사진 띠 (기존 상세 기반, 원고 '추가 블록 — 사진 띠') -->
         <div class="t-photos">
 ${X.photos.map((p) => `          <figure class="t-photo">${slot(p, "")}<figcaption class="t-photo__cap">${esc(p.caption)}</figcaption></figure>`).join('\n')}
         </div>
 ` : '';
-  const cases = (X.cases || []).filter((c) => c.verified);
+  /* 이런 경우에도 상담해 보세요 — 탭 갤러리 (2026-11-09): 탭 6개 → 패널 [사진 55% | 글 45%] → ‹ 1 / 6 ›
+     패널은 모두 같은 칸에 겹쳐 두어 높이 = 가장 긴 패널(탭을 바꿔도 아래가 들썩이지 않음). 동작: pages.js initTreatmentGallery
+     게시: 아니요(네비게이션·자가혈)도 화면에 표시하고 안내 문구(note)를 붙임 — 병원 확인 대기(docs/HOSPITAL-CHECK.md #8) */
+  const cases = X.cases || [];
   const caseSection = cases.length ? `
-        <!-- 추가 · 이런 경우에도 상담해 보세요 (기존 상세 기반, 원고 '추가 블록'). 게시: 아니요(가이드·자가혈)는 데이터에만 -->
+        <!-- 추가 · 이런 경우에도 상담해 보세요 (기존 상세 기반, 원고 '추가 블록') -->
         <section class="t-sec" aria-labelledby="t-cases-title">
           <h2 class="t-sec__title t-sec__title--center" id="t-cases-title">이런 경우에도 상담해 보세요</h2>
-          <div class="t-cases">
-${cases.map((c) => `            <article class="t-case">
-              <span class="t-case__icon" data-icon-slot="treatment/${esc(t.slug)}/${esc(c.icon)}">${caseIcon(c.icon)}</span>
-              <h3 class="t-case__title">${esc(c.title)}</h3>
-              <p class="t-case__text">${esc(c.text)}</p>
-              <p class="t-case__fits-title">이런 분이라면 상담해 보세요</p>
-              <ul class="t-case__fits">${c.fits.map((f) => `<li>${CRIT_ICON.check}<span>${esc(f)}</span></li>`).join('')}</ul>
-            </article>`).join('\n')}
+          <div class="t-gallery" data-t-gallery>
+            <div class="t-gallery__tabs" role="tablist" aria-label="상담해 볼 경우 선택">
+${cases.map((c, i) => `              <button type="button" class="t-gallery__tab" role="tab" id="t-case-tab-${i + 1}" aria-controls="t-case-panel-${i + 1}" aria-selected="${i === 0}"${i ? ' tabindex="-1"' : ''}>${esc(c.tab)}</button>`).join('\n')}
+            </div>
+            <div class="t-gallery__stage" data-t-gallery-stage>
+${cases.map((c, i) => `              <div class="t-gallery__panel${i === 0 ? ' is-active' : ''}" role="tabpanel" id="t-case-panel-${i + 1}" aria-labelledby="t-case-tab-${i + 1}"${i ? ' aria-hidden="true"' : ''}>
+                ${slot(c.image, '', 't-gallery__img')}
+                <div class="t-gallery__text">
+                  <span class="t-gallery__no">${String(i + 1).padStart(2, '0')}</span>
+                  <h3 class="t-gallery__title">${esc(c.titleMain)}${c.titleSub ? `<span class="t-gallery__sub">${esc(c.titleSub)}</span>` : ''}</h3>
+                  <p class="t-gallery__desc">${esc(c.text)}</p>
+                  <p class="t-gallery__fits-title">이런 분이라면 상담해 보세요</p>
+                  <ul class="t-gallery__fits">${c.fits.map((f) => `<li>${CRIT_ICON.check}<span>${esc(f)}</span></li>`).join('')}</ul>
+                  ${c.note ? `<p class="t-gallery__note">${esc(c.note)}</p>` : ''}
+                </div>
+              </div>`).join('\n')}
+            </div>
+            <div class="t-gallery__nav">
+              <button type="button" class="t-gallery__arrow" data-t-gallery-prev aria-label="이전 경우 보기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+              <span class="t-gallery__count" aria-live="polite"><b data-t-gallery-now>1</b> / ${cases.length}</span>
+              <button type="button" class="t-gallery__arrow" data-t-gallery-next aria-label="다음 경우 보기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+            </div>
           </div>
         </section>
 ` : '';
