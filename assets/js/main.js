@@ -11,7 +11,59 @@ document.addEventListener('DOMContentLoaded', () => {
   initReveal();
   initQuickReveal();
   initHeroLayout();
+  initWhySlider();
 });
+
+/* ---------- ② WHY WHITE e — 4가지 약속 카드 슬라이더 ----------
+   가로 스크롤 + scroll-snap(main.css .why__track). ‹ › = 카드 한 장(카드 폭 + 간격)씩, 처음·끝에서 그쪽 버튼 비활성(disabled)
+   마우스: 끌어서 넘기기(끄는 동안 snap 끔, 놓으면 가까운 카드에 맞춤, 끈 뒤의 클릭은 링크 이동 막음). 터치: 브라우저 기본 스와이프
+   마우스 휠은 가로채지 않음(세로 휠 = 페이지·섹션 넘김 그대로). 자동 재생 없음. 카드 링크는 Tab 으로 이동(포커스 받은 카드는 브라우저가 보이게 스크롤) */
+function initWhySlider() {
+  const track = document.querySelector('[data-why-track]');
+  if (!track) return;
+  const prev = document.querySelector('[data-why-prev]');
+  const next = document.querySelector('[data-why-next]');
+  const step = () => {
+    const card = track.querySelector('.why-card');
+    return card ? card.getBoundingClientRect().width + (parseFloat(getComputedStyle(track).columnGap) || 0) : track.clientWidth * 0.8;
+  };
+  const update = () => {
+    const max = track.scrollWidth - track.clientWidth;
+    if (prev) prev.disabled = track.scrollLeft <= 2;
+    if (next) next.disabled = track.scrollLeft >= max - 2;
+  };
+  prev?.addEventListener('click', () => track.scrollBy({ left: -step(), behavior: 'smooth' }));
+  next?.addEventListener('click', () => track.scrollBy({ left: step(), behavior: 'smooth' }));
+  track.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', update);
+
+  // 마우스 끌기
+  let down = null;
+  let moved = false;
+  track.addEventListener('pointerdown', (e) => {
+    if (e.pointerType !== 'mouse' || e.button !== 0) return;
+    down = { x: e.clientX, left: track.scrollLeft };
+    moved = false;
+  });
+  window.addEventListener('pointermove', (e) => {
+    if (!down) return;
+    const dx = e.clientX - down.x;
+    if (!moved && Math.abs(dx) < 5) return;
+    if (!moved) { moved = true; track.classList.add('is-dragging'); }
+    track.scrollLeft = down.left - dx;
+  });
+  const end = () => {
+    if (!down) return;
+    down = null;
+    if (!moved) return;
+    track.classList.remove('is-dragging'); // snap 다시 켜지면 가까운 카드에 맞춰짐
+    setTimeout(() => { moved = false; }, 0);
+  };
+  window.addEventListener('pointerup', end);
+  window.addEventListener('pointercancel', end);
+  track.addEventListener('click', (e) => { if (moved) { e.preventDefault(); e.stopPropagation(); } }, true);
+  update();
+}
 
 /* ---------- 모바일: 히어로가 보이는 동안 SNS 플로팅 버튼(+) 숨김 ----------
    첫 화면에서 히어로 조작 버튼을 가리지 않게. 히어로를 완전히 지나 스크롤하면 나타난다 (main.css .is-hero-visible)
@@ -818,7 +870,7 @@ async function initStory() {
 function initReveal() {
   if (!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const singles = '.why__head, .clinic__head, .doctors__head, .cases__head, .faq-preview__head, .faq-preview__box, .faq-quick, .story-notice, .story__body';
-  const groups = '.why__grid, .clinic__grid, .cases__list'; // 치과소식 카드는 탭으로 다시 그려지므로 묶음(.story__body)째로 등장
+  const groups = '.why__track, .clinic__grid, .cases__list'; // 치과소식 카드는 탭으로 다시 그려지므로 묶음(.story__body)째로 등장
   const targets = [
     // 의료진 인물 줄: 줄 전체가 아니라 사진·이름 하나하나 등장 (main.css .reveal-photos — 흰 배경 사진 multiply 가 끊기지 않게)
     ...[...document.querySelectorAll('.doctors__main')].map((el) => { el.classList.add('reveal-photos'); return el; }),
