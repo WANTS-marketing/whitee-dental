@@ -109,7 +109,12 @@
    1280px 이하: 값 17px, 그림 사이 20px / 768px 이하: 장치별 카드 세로 쌓기 [그림 → 이름 → 항목(왼쪽 회색) · 값(오른쪽)] */
 .t-step__link { display: inline-block; margin-top: 10px; font-size: 0.9375rem; font-weight: 600; color: var(--color-accent); }
 .t-step__link:hover { text-decoration: underline; text-underline-offset: 3px; }
+.t-devices { position: relative; left: var(--dev-shift, 0px); } /* 화면 가운데로(pages.js) */
 .t-devices__table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+/* 표 왼쪽 위 칸 = 섹션 제목(다른 섹션 제목과 같은 크기) + 부제 14px 회색, 왼쪽 정렬 · 그림 높이 기준 세로 가운데(아래 여백 = 이름 줄 + 24px) */
+.t-devices__head { padding: 0 12px 68px 0; vertical-align: middle; text-align: left; }
+.t-devices__head .t-sec__title { margin-bottom: 0; }
+.t-devices__sub { margin-top: 8px; font-size: 0.875rem; line-height: 1.5; color: #6b7280; word-break: keep-all; }
 .t-devices__col-label { width: 160px; }
 .t-devices__table thead th { padding: 0 12px 24px; vertical-align: bottom; text-align: center; }
 .t-devices__table thead .t-slot { border-radius: 16px; }
@@ -126,7 +131,10 @@
   .t-devices__table tbody td { font-size: 1.0625rem; padding: 0 10px; }
 }
 @media (max-width: 768px) {
-  .t-devices__table { display: none; }
+  /* 표는 제목 칸만 남기고(카드 위 제목) 나머지 숨김 */
+  .t-devices__table, .t-devices__table thead, .t-devices__table tr, .t-devices__head { display: block; }
+  .t-devices__table colgroup, .t-devices__table thead th, .t-devices__table tbody { display: none; }
+  .t-devices__head { padding: 0 0 20px; }
   .t-devices__cards { display: grid; gap: 16px; }
   .t-devices__card { padding: 16px; border: 1px solid #e3e8f0; border-radius: 16px; }
   .t-devices__card .t-slot { border-radius: 12px; }

@@ -87,6 +87,7 @@ const treatments = blocks.map((b) => {
   if (devSec) {
     extras.devices = {
       title: lineOf(devSec, '제목'),
+      sub: lineOf(devSec, '부제'),
       linkStep: Number(lineOf(devSec, '링크 단계')),
       link: lineOf(devSec, '링크'),
       note: lineOf(devSec, '안내'),
