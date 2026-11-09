@@ -47,20 +47,21 @@ function renderTreatmentPage() {
     };
     next();
   });
-  document.querySelectorAll('[data-t-fold]').forEach(initTreatmentFold);
-  // 치아교정 '교정 장치 비교' 섹션: 화면 1025px 이상(LNB 옆 본문)에서 섹션 가로 중심을 화면 가운데(= 아래 펼침형 갤러리 중심)로 옮김 — 폭은 본문 칸 그대로
-  const devSec = document.querySelector('.t-devices');
-  const devBody = devSec?.closest('.sub-body');
-  if (devSec && devBody) {
+  /* 아래 영역(.t-lower — 장치 비교 · 갤러리 · FAQ · 기공센터 · 진료 연결 · 하단 고지): 화면 1025px 이상(LNB 옆 본문)에서
+     영역 가로 중심을 화면 가운데(= 펼침형 갤러리 중심)로 옮김 — 폭은 본문 칸 그대로. 갤러리보다 먼저(갤러리가 이 위치를 기준으로 화면 끝까지 넓힘) */
+  const lower = document.querySelector('[data-t-lower]');
+  const lowerBody = lower?.closest('.sub-body');
+  if (lower && lowerBody) {
     const mq = window.matchMedia('(min-width: 1025px)');
     const center = () => {
-      if (!mq.matches) { devSec.style.removeProperty('--dev-shift'); return; }
-      const r = devBody.getBoundingClientRect();
-      devSec.style.setProperty('--dev-shift', `${Math.round(document.documentElement.clientWidth / 2 - (r.left + r.width / 2))}px`);
+      if (!mq.matches) { lower.style.removeProperty('--lower-shift'); return; }
+      const r = lowerBody.getBoundingClientRect();
+      lower.style.setProperty('--lower-shift', `${Math.round(document.documentElement.clientWidth / 2 - (r.left + r.width / 2))}px`);
     };
     center();
-    window.addEventListener('resize', center);
+    window.addEventListener('resize', center); // 갤러리의 resize(다음 프레임)보다 먼저 실행
   }
+  document.querySelectorAll('[data-t-fold]').forEach(initTreatmentFold);
   // 페이지 안 바로가기(예: 치아교정 단계 2 '장치별 비교 보기 ↓' → #t-devices): 고정 헤더 아래 24px 에 오도록 부드럽게 (동작 줄이기면 즉시)
   document.querySelectorAll('[data-t-jump]').forEach((a) => a.addEventListener('click', (e) => {
     const target = document.querySelector(a.getAttribute('href'));
@@ -137,7 +138,7 @@ function initTreatmentFold(root) {
   const tabList = root.querySelector('[role="tablist"]');
   if (!tabs.length || !viewport || !track) return;
   const N = cards.length;
-  const body = root.closest('.sub-body') || root.parentElement;
+  const body = root.closest('[data-t-lower]') || root.closest('.sub-body') || root.parentElement; // 아래 영역 안이면 그 위치 기준(화면 가운데로 옮겨진 칸)
   const layoutBox = root.closest('.sub-layout') || body;
   const mqDesk = window.matchMedia('(min-width: 1025px)');
   const reduced = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;

@@ -123,6 +123,7 @@ ${cases.map((c, i) => `              <button type="button" class="t-fold__tab" r
   /* 교정 장치 비교 — '검사부터 관리까지' 다음 독립 섹션 (치아교정, 2026-11-09 — 기존 상세 16 표 중 유형 · 겉보기 · 방문 간격만)
      표 하나로 [항목 열 160px | 장치 4열]: 맨 위 줄 = [섹션 제목 + 부제 | 장치 그림 4:3 + 이름 ×4] → 그림과 값 칸이 같은 세로줄
      섹션 가로 중심 = 화면 가운데(갤러리 중심과 같게 — pages.js 가 LNB 만큼 옆으로 옮김, 폭은 본문 칸 그대로)
+     표 값의 ' + ' 앞에서 줄바꿈(예: 치아색 브라켓 / + 은색 뚜껑 — 표시만, 모바일 카드는 한 줄)
      768px 이하 = 표를 숨기고 장치별 카드 세로 쌓기(그림 → 이름 → 항목 3줄) — 둘 중 하나만 보임(sub.css)
      단계 '링크 단계' 본문 끝에 '장치별 비교 보기 ↓' (pages.js: 부드럽게 스크롤)
      data-verified="false" = 병원 확인 전(docs/HOSPITAL-CHECK.md #14) — 화면에는 표시 */
@@ -135,7 +136,7 @@ ${cases.map((c, i) => `              <button type="button" class="t-fold__tab" r
             <caption class="sr-only">${esc(D.title)} — ${DEV_ROWS.map((r) => r[0]).join(' · ')}</caption>
             <colgroup><col class="t-devices__col-label">${D.items.map(() => '<col>').join('')}</colgroup>
             <thead><tr><td class="t-devices__head"><h2 class="t-sec__title" id="t-devices-title">${esc(D.title)}</h2>${D.sub ? `<p class="t-devices__sub">${esc(D.sub)}</p>` : ''}</td>${D.items.map((d) => `<th scope="col" data-verified="${d.verified}">${slot(d.image, '')}<span class="t-devices__name">${esc(d.name)}</span></th>`).join('')}</tr></thead>
-            <tbody>${DEV_ROWS.map(([label, key]) => `<tr><th scope="row">${label}</th>${D.items.map((d) => `<td>${esc(d[key])}</td>`).join('')}</tr>`).join('')}</tbody>
+            <tbody>${DEV_ROWS.map(([label, key]) => `<tr><th scope="row">${label}</th>${D.items.map((d) => `<td>${esc(d[key]).replace(/ \+ /g, '<br>+ ')}</td>`).join('')}</tr>`).join('')}</tbody>
           </table>
           <ul class="t-devices__cards">${D.items.map((d) => `<li class="t-devices__card" data-verified="${d.verified}">${slot(d.image, '')}<p class="t-devices__name">${esc(d.name)}</p><dl>${DEV_ROWS.map(([label, key]) => `<div><dt>${label}</dt><dd>${esc(d[key])}</dd></div>`).join('')}</dl></li>`).join('')}</ul>
           ${D.note ? `<p class="t-devices__note">${esc(D.note)}</p>` : ''}
@@ -248,6 +249,9 @@ ${photoStrip}
 ${t.steps.map(stepHtml).join('\n')}
           </ol>
         </section>
+
+        <!-- 아래 영역(장치 비교 · 갤러리 · FAQ · 기공센터 · 진료 연결 · 하단 고지): 폭은 본문 칸 그대로, 화면 1025px 이상에서 가로 중심 = 화면 가운데(= 갤러리 중심) — pages.js [data-t-lower] -->
+        <div class="t-lower" data-t-lower>
 ${deviceSection}${caseSection}
         <!-- 6. 많이 묻는 질문 (아코디언 — 첫 번째만 열림, 내용 = 위 FAQPage 구조화 데이터와 같음) -->
         <section class="t-sec" aria-labelledby="t-faq-title">
@@ -271,6 +275,7 @@ ${labBlock}
         <div class="t-notice">
           <p>${esc(DATA.common.notice)}</p>
 ${t.review && t.review.date ? `          <p>${esc(DATA.common.reviewLabel)}: ${esc(t.review.date)}${t.review.reviewer ? ` · ${esc(t.review.reviewer)}` : ''}</p>\n` : ''}        </div>
+        </div>
       </div>
     </div>
   </main>
