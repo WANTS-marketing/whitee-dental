@@ -377,22 +377,30 @@ html[data-fs="xl"] .doc-modal { width: min(680px, 100% - 48px); }
 
 
 
-/* ---------- ② WHY 화이트e — 4가지 약속 (2026-11-09) ----------
-   바로 아래 진료안내가 네이비 면이라 이 섹션은 밝은 면(--color-bg-soft) — 치과소개 'WHY WHITE e' 카드와 같은 톤(흰 카드 + 옅은 그림자 + 옅은 네이비 원 아이콘)
-   [왼쪽 라벨·제목·한 줄 소개·치과소개 더보기 | 오른쪽 약속 카드 4개] — 카드 문구 = site-data.js SITE.promises short (common.js renderSiteBlocks) */
+/* ---------- ② WHY WHITE e — 진료 철학 + 4가지 약속 (2026-11-09) ----------
+   밝은 면(--color-bg-soft, 바로 아래 진료안내가 네이비). 2단 [왼쪽 5 : 오른쪽 7], 묶음 세로 가운데(PC 한 화면)
+   왼쪽: 라벨(accent 14px 자간 넓게) · 제목 48px · 소통·교감·공감(왼쪽 accent 세로선 2px, 단어 28px 네이비 + 한자 16px accent / 풀이 17px #4a5160, 항목 간 24px) · since 문구 · 치과소개 더보기
+   오른쪽: '그래서 지키는 4가지 약속'(16px 굵게 네이비) + 카드 2×2(간격 20px, 왼쪽 정렬, 아이콘 원 → 제목 22px → 설명 16px #4a5160) */
 .why { padding: var(--space-4xl) 0; background: var(--color-bg-soft); }
-.why__inner { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 3fr); gap: clamp(40px, 3.125vw, 60px); align-items: center; }
-.why__head .sec-label { font-size: clamp(0.9375rem, 0.5625rem + 0.46875vw, 1.125rem); }
-.why__title { font-size: clamp(2.5rem, 0.5rem + 2.5vw, 3.5rem); line-height: 1.25; letter-spacing: -0.02em; word-break: keep-all; }
-.why__desc { margin-top: 16px; font-size: clamp(1rem, 0.75rem + 0.3125vw, 1.125rem); color: var(--color-text-sub); word-break: keep-all; text-wrap: balance; }
-.why__more { margin-top: 28px; height: 48px; padding: 0 22px; background: var(--color-accent); color: #fff; font-weight: 600; transition: background var(--dur); }
+.why__inner { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(40px, 4.2vw, 80px); align-items: center; }
+.why__label { display: block; margin-bottom: 14px; font-size: 0.875rem; font-weight: 700; letter-spacing: 0.2em; color: var(--color-accent); }
+.why__title { font-size: clamp(2.25rem, 1rem + 2.2vw, 3rem); font-weight: 800; line-height: 1.25; letter-spacing: -0.03em; word-break: keep-all; }
+.why-philo { display: grid; gap: 24px; margin-top: clamp(28px, 4vh, 40px); }
+.why-philo__item { padding-left: 20px; border-left: 2px solid var(--color-accent); }
+.why-philo__word { display: flex; align-items: baseline; gap: 10px; line-height: 1.2; }
+.why-philo__word strong { font-size: 1.75rem; font-weight: 800; letter-spacing: -0.02em; color: var(--color-point); }
+.why-philo__word span { font-size: 1rem; font-weight: 600; color: var(--color-accent); }
+.why-philo__desc { margin-top: 6px; font-size: 1.0625rem; line-height: 1.5; color: #4a5160; word-break: keep-all; }
+.why__desc { margin-top: clamp(28px, 4vh, 40px); font-size: 1rem; color: var(--color-text-sub); word-break: keep-all; }
+.why__more { margin-top: 16px; height: 48px; padding: 0 22px; background: var(--color-accent); color: #fff; font-weight: 600; transition: background var(--dur); }
 .why__more:hover { background: var(--color-accent-hover); }
-.why__grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; }
-.why-card { padding: clamp(28px, 2.5vw, 44px) clamp(20px, 1.6vw, 28px); border-radius: var(--radius-lg); background: #fff; color: var(--color-text); text-align: center; box-shadow: 0 6px 24px rgba(0, 0, 0, 0.05); }
-.why-card__icon { display: grid; place-items: center; width: 64px; height: 64px; margin: 0 auto 18px; border-radius: 50%; background: var(--color-point-soft); color: var(--color-point); }
-.why-card__icon svg { width: 30px; height: 30px; }
-.why-card__title { font-size: clamp(1.125rem, 0.75rem + 0.47vw, 1.375rem); line-height: 1.35; letter-spacing: -0.02em; word-break: keep-all; }
-.why-card__text { margin-top: 10px; font-size: var(--fs-sm); line-height: 1.6; color: var(--color-text-sub); word-break: keep-all; text-wrap: balance; }
+.why__promise-label { margin-bottom: 16px; font-size: 1rem; font-weight: 700; color: var(--color-point); }
+.why__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+.why-card { padding: clamp(24px, 2.2vw, 36px); border-radius: var(--radius-lg); background: #fff; color: var(--color-text); text-align: left; box-shadow: 0 6px 24px rgba(0, 0, 0, 0.05); }
+.why-card__icon { display: grid; place-items: center; width: 56px; height: 56px; margin-bottom: 18px; border-radius: 50%; background: var(--color-point-soft); color: var(--color-point); }
+.why-card__icon svg { width: 28px; height: 28px; }
+.why-card__title { font-size: 1.375rem; font-weight: 700; line-height: 1.35; letter-spacing: -0.02em; word-break: keep-all; }
+.why-card__text { margin-top: 8px; font-size: 1rem; line-height: 1.6; color: #4a5160; word-break: keep-all; text-wrap: pretty; }
 /* PC: 좌우 여백 = 의료진 섹션과 같은 규칙 (왼쪽 = 헤더 로고 시작선, 오른쪽 = 플로팅 퀵메뉴를 피하는 --quick-edge) */
 @media (min-width: 1025px) {
   .why .why__inner.container { max-width: none; padding-left: max(40px, (100% - 1600px) / 2); padding-right: max(var(--quick-edge), (100% - 1600px) / 2); }
@@ -821,12 +829,14 @@ html.is-fullpage .cases__list { height: max(420px, (100vh - var(--header-h)) * 0
   /* 모바일: 하단 고정 줄 [‹  4 / 5  ›] */
   .doc-profile__name { font-size: 1.875rem; }
 
+  .why__title { font-size: 1.875rem; }
+  .why-philo__word strong { font-size: 1.5rem; }
   .why__grid { grid-template-columns: minmax(0, 1fr); gap: 12px; }
-  .why-card { display: grid; grid-template-columns: 48px minmax(0, 1fr); column-gap: 16px; align-items: center; padding: 18px 20px; text-align: left; }
+  .why-card { display: grid; grid-template-columns: 48px minmax(0, 1fr); column-gap: 16px; align-items: start; padding: 20px; }
   .why-card__icon { grid-row: span 2; width: 48px; height: 48px; margin: 0; }
   .why-card__icon svg { width: 24px; height: 24px; }
-  .why-card__title { font-size: var(--fs-md); }
-  .why-card__text { margin-top: 2px; }
+  .why-card__title { font-size: 1.1875rem; }
+  .why-card__text { margin-top: 4px; }
   .clinic__grid { grid-template-columns: 1fr; grid-template-rows: none; grid-template-areas: none; grid-auto-rows: 180px; }
   .clinic-card { grid-area: auto !important; }
   .clinic { --cl-pad: 20px; }
