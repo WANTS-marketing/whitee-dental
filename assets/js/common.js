@@ -96,8 +96,9 @@
      [data-specialties]            전문의 원(.spec-circle) 줄 — SITE.specialties
      [data-specialty-text]         진료과 목록 글자 '치과교정과 · 치과보철과 …' (data-specialty-text="sep" 로 구분자 지정, 기본 ' · ')
      [data-promises="full|short"]  4가지 약속 카드 — full = 치과소개(.strength), short = 메인(.why-card)
-     [data-partner-highlights]     협력 강조 배지 — full(치과소개 카드) / 메인 띠는 data-partner-highlights="badge"
-     [data-partner-logos]          협력 기관 이름 칸(치과소개) · [data-partner-marquee] 메인 흐르는 띠 */
+     [data-partner-highlights]     협력 강조 — 기본 = 치과소개 카드(.partner-highlight) / ="card" = 메인 WHITE e PARTNERS 카드(.partners-card)
+     [data-partner-logos]          협력 기관 칸(치과소개) · [data-partner-marquee] 메인 2줄 흐르는 타일 · [data-partner-count] 기관 수 'N+'
+     협력 기관 logo 가 있으면 assets/images/partners/ 로고 이미지, 없으면 이름 글자 */
   function renderSiteBlocks() {
     const S = window.SITE;
     if (!S) return;
@@ -114,17 +115,27 @@
         ? `<li class="why-card"><span class="why-card__icon">${icon(p)}</span><h3 class="why-card__title">${esc(p.title)}</h3><p class="why-card__text">${esc(p.short)}</p></li>`
         : `<article class="strength"><span class="strength__icon">${icon(p)}</span><h3 class="strength__title">${esc(p.title)}</h3><p class="strength__text">${esc(p.text.replace('{spec}', specText()))}</p></article>`)).join('');
     });
-    const P = S.partners || { highlights: [], names: [] };
+    const P = S.partners || { highlights: [], list: [] };
+    const list = P.list || [];
+    const root = document.documentElement.dataset.root || '.';
+    // 기관 하나: logo 가 있으면 로고 이미지(alt = 이름), 없으면 이름 글자
+    const partnerInner = (x) => (x.logo ? `<img src="${root}/assets/images/partners/${esc(x.logo)}" alt="${esc(x.name)}" loading="lazy">` : esc(x.name));
     document.querySelectorAll('[data-partner-highlights]').forEach((el) => {
-      el.innerHTML = el.dataset.partnerHighlights === 'badge'
-        ? P.highlights.map((h) => `<li class="partner-badge"><strong>${esc(h.title)}</strong> <span>${esc(h.desc)}</span></li>`).join('')
+      el.innerHTML = el.dataset.partnerHighlights === 'card'
+        ? P.highlights.map((h) => `<li class="partners-card"><span class="partners-card__icon">${icon(h)}</span><strong class="partners-card__title">${esc(h.title)}</strong><span class="partners-card__desc">${esc(h.desc)}</span></li>`).join('')
         : P.highlights.map((h) => `<div class="partner-highlight"><strong>${esc(h.title)}</strong><span>${esc(h.desc)}</span></div>`).join('');
     });
-    document.querySelectorAll('[data-partner-logos]').forEach((el) => { el.innerHTML = P.names.map((n) => `<li>${esc(n)}</li>`).join(''); });
-    // 흐르는 띠: 같은 목록을 두 번 이어 붙여 -50% 만큼 움직이면 끊김 없이 반복 (두 번째 묶음은 화면낭독기에서 숨김). 움직임 줄이기 설정이면 main.css 가 멈춤
+    document.querySelectorAll('[data-partner-logos]').forEach((el) => { el.innerHTML = list.map((x) => `<li${x.logo ? ' class="has-logo"' : ''}>${partnerInner(x)}</li>`).join(''); });
+    document.querySelectorAll('[data-partner-count]').forEach((el) => { el.textContent = `${list.length}+`; });
+    // 흐르는 타일 2줄: 앞 절반(윗줄, 왼쪽으로) · 나머지(아랫줄, 오른쪽으로). 줄마다 같은 묶음을 두 번 이어 붙여 -100% 이동 반복(두 번째는 화면낭독기에서 숨김)
+    // 움직임 줄이기 설정이면 main.css 가 멈추고 두 번째 묶음을 숨겨 줄바꿈 그리드로
     document.querySelectorAll('[data-partner-marquee]').forEach((el) => {
-      const items = P.names.map((n) => `<li>${esc(n)}</li>`).join('');
-      el.innerHTML = `<ul class="partner-marquee__list">${items}</ul><ul class="partner-marquee__list" aria-hidden="true">${items}</ul>`;
+      const half = Math.ceil(list.length / 2);
+      const row = (items, dir) => {
+        const lis = items.map((x) => `<li class="partner-tile${x.logo ? ' has-logo' : ''}">${partnerInner(x)}</li>`).join('');
+        return `<div class="partner-marquee__row partner-marquee__row--${dir}"><ul class="partner-marquee__list">${lis}</ul><ul class="partner-marquee__list" aria-hidden="true">${lis}</ul></div>`;
+      };
+      el.innerHTML = row(list.slice(0, half), 'left') + row(list.slice(half), 'right');
     });
   }
   renderSiteBlocks();
