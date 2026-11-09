@@ -1,6 +1,6 @@
 /* ==========================================================================
    메인 풀스크린 섹션 넘김 — PC(1025px 이상, 화면 높이 700px 이상)에서만 (참고: 경희대병원 메인)
-   - 섹션: 히어로(+퀵바) → 4가지 약속 → 의료진 → 치료사례(+협력기관 띠) → FAQ·상담 → 공지·소식 → 지점 바로가기 바 + 푸터(마지막, 높이 자동)
+   - 섹션: 히어로 → 4가지 약속 → 진료안내 → 의료진 → 치료사례(+협력기관 띠) → FAQ·상담 → 공지·소식 → 지점 바로가기 바 + 푸터(마지막, 높이 자동)
    - 마우스 휠·트랙패드 한 번, 키보드(↓↑ · PageDown/PageUp · Space · Home/End) 한 번에 한 섹션, 0.8s ease-in-out
    - 이동 중·이동 후 약 1s 는 입력 무시 + 휠 입력이 200ms 이상 끊긴 뒤의 새 입력만 받음(트랙패드 관성으로 두 칸 넘어가지 않게)
    - 주소 해시(#why 등) 반영, 새로고침해도 그 섹션에서 시작
@@ -17,6 +17,7 @@
   const SECTIONS = [
     { sel: '.screen-home__first', hash: 'home', label: '홈' },
     { sel: '#screen-why', hash: 'why', label: '4가지 약속' },
+    { sel: '#screen-clinic', hash: 'treatment', label: '진료안내' },
     { sel: '#screen-doctors', hash: 'doctors', label: '의료진' },
     { sel: '#screen-cases', hash: 'cases', label: '치료사례' },
     { sel: '#screen-faq', hash: 'faq', label: '자주 묻는 질문' },
