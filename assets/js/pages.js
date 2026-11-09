@@ -57,7 +57,7 @@ function renderTreatmentPage() {
     el.appendChild(img);
     el.classList.add('is-loaded');
   });
-  document.querySelectorAll('[data-t-gallery]').forEach(initTreatmentGallery);
+  document.querySelectorAll('[data-t-fold]').forEach(initTreatmentFold);
   const sec = document.querySelector('[data-t-connect]');
   const box = sec?.querySelector('[data-t-connect-box]');
   const S = window.SITE;
@@ -96,66 +96,115 @@ function renderTreatmentPage() {
   });
 }
 
-/* ---------- 진료과목 '이런 경우에도 상담해 보세요' 탭 갤러리 ([data-t-gallery] — build-treatments.js) ----------
-   탭 클릭 · ‹ › 화살표(끝에서 다음 = 처음으로) · 탭 위 좌우 방향키(Home·End) · 패널 좌우 스와이프. 자동 넘김 없음
-   패널은 모두 한 칸에 겹쳐 있어 높이 = 가장 긴 패널 — 바꿀 때 .is-active 만 옮김(페이드 + 8px, 0.25s, 동작 줄이기면 즉시: sub.css)
-   선택한 탭이 탭 줄(모바일 가로 스크롤) 밖이면 탭 줄만 가로로 옮겨 보이게 (페이지 세로 위치는 그대로) */
-function initTreatmentGallery(root) {
+/* ---------- 진료과목 '이런 경우에도 상담해 보세요' 펼침형 갤러리 ([data-t-fold] — build-treatments.js, 모양: sub.css) ----------
+   넘기기: 접힌 카드 클릭 · 글자 탭 클릭 · 좌우 방향키(탭 위에서는 Home·End 도). 자동 넘김 없음, 끝에서 처음으로 돌아가지 않음
+   펼침형(화면 1025px 이상 + 본문 폭 760px 이상): 선택 카드만 .is-open. 줄 오른쪽 끝 = 화면 오른쪽 끝(--fold-bleed)
+     줄 이동 --fold-x = 선택 카드 앞 카드들 폭 — 단, 줄 끝이 본문 오른쪽 선보다 안으로 들어오지 않게 (마지막 쪽에서는 거기서 멈춤 — 화면 끝까지 밀면 퀵메뉴가 글을 가림)
+     설명 칸 맞춤(가장 긴 카드 기준, 모든 카드 같은 크기): ① 펼친 폭 = 본문 폭 75%(최대 900px) ② 넘치면 글자 1px씩 2px까지(--fold-shrink)
+       ③ 그래도 넘치면 펼친 폭을 1%씩 90%까지 ④ 마지막으로 글자 4px까지 — 글자가 너무 작아지지 않게(설명 16px → 최소 14px 우선)
+   스와이프(.is-swipe — 1024px 이하, 또는 LNB 때문에 본문이 좁은 1025~1279px 일부): 가로 scroll-snap 카드
+     탭 클릭 = 그 카드로 가로 스크롤, 스와이프 = 가장 가까운 카드로 탭 선택만 따라 바뀜 */
+function initTreatmentFold(root) {
   const tabs = [...root.querySelectorAll('[role="tab"]')];
-  const panels = [...root.querySelectorAll('[role="tabpanel"]')];
+  const cards = [...root.querySelectorAll('.t-fold__card')];
+  const viewport = root.querySelector('[data-t-fold-viewport]');
   const tabList = root.querySelector('[role="tablist"]');
-  const stage = root.querySelector('[data-t-gallery-stage]');
-  const now = root.querySelector('[data-t-gallery-now]');
-  if (!tabs.length) return;
+  if (!tabs.length || !viewport) return;
+  const body = root.closest('.sub-body') || root.parentElement;
+  const mqDesk = window.matchMedia('(min-width: 1025px)');
+  const reduced = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const px = (v) => parseFloat(v) || 0;
   let index = 0;
-  const show = (i, { focus = false } = {}) => {
-    index = (i + tabs.length) % tabs.length;
-    tabs.forEach((t, k) => {
-      const on = k === index;
-      t.setAttribute('aria-selected', String(on));
-      t.tabIndex = on ? 0 : -1;
-      panels[k].classList.toggle('is-active', on);
-      if (on) panels[k].removeAttribute('aria-hidden'); else panels[k].setAttribute('aria-hidden', 'true');
-    });
-    if (now) now.textContent = String(index + 1);
-    const tab = tabs[index];
-    // 탭 줄 가로 스크롤 안에서 선택한 탭이 보이게 (scrollIntoView 는 페이지까지 움직여서 쓰지 않음)
-    if (tabList.scrollWidth > tabList.clientWidth) {
-      const left = tab.offsetLeft - (tabList.clientWidth - tab.offsetWidth) / 2;
-      tabList.scrollTo({ left, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
-    }
-    if (focus) tab.focus();
-    // 모바일(패널 높이 = 내용만큼): 바꾼 뒤 패널 맨 위가 헤더 뒤로 밀려 있으면 탭 줄이 보이게 부드럽게 올림 (이미 보이면 그대로)
-    if (window.matchMedia('(max-width: 768px)').matches && stage) {
-      const headerH = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-h')) || 0;
-      if (stage.getBoundingClientRect().top < headerH) {
-        const y = tabList.getBoundingClientRect().top + window.scrollY - headerH - 12;
-        window.scrollTo({ top: Math.max(0, y), behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
-      }
+  let fold = true;
+  let openW = 0;
+
+  const offset = (k) => cards[k].offsetLeft - cards[0].offsetLeft;
+  const place = () => { // 줄 이동
+    const cs = getComputedStyle(root);
+    const step = px(cs.getPropertyValue('--fold-closed')) + px(cs.getPropertyValue('--fold-gap'));
+    const total = (cards.length - 1) * step + openW;
+    root.style.setProperty('--fold-x', `${Math.max(0, Math.min(index * step, total - body.clientWidth))}px`); // 끝 쪽: 마지막 카드 오른쪽 = 본문 오른쪽 선 (화면 끝까지 가면 오른쪽 고정 버튼(퀵메뉴)이 설명 글을 가려서)
+  };
+  const fit = () => { // 펼친 폭 + 글자 크기
+    const w = body.clientWidth;
+    const h = cards[0].clientHeight;
+    const over = () => cards.some((c) => c.querySelector('.t-fold__inner').offsetHeight + 80 > h);
+    let ratio = 0.75;
+    let shrink = 0;
+    for (;;) {
+      openW = Math.round(Math.min(900, w * ratio));
+      root.style.setProperty('--open-w', `${openW}px`);
+      root.style.setProperty('--fold-shrink', `${shrink}px`);
+      if (!over()) break;
+      if (shrink < 2) shrink += 1;
+      else if (ratio < 0.9 && openW < 900) ratio = Math.round((ratio + 0.01) * 100) / 100;
+      else if (shrink < 4) shrink += 1;
+      else break;
     }
   };
-  tabs.forEach((t, k) => {
-    t.addEventListener('click', () => show(k));
-    t.addEventListener('keydown', (e) => {
-      const go = { ArrowRight: index + 1, ArrowLeft: index - 1, Home: 0, End: tabs.length - 1 }[e.key];
-      if (go === undefined) return;
-      e.preventDefault();
-      show(go, { focus: true });
+  const scrollTabIntoView = () => {
+    const tab = tabs[index];
+    if (tabList.scrollWidth <= tabList.clientWidth) return;
+    tabList.scrollTo({ left: tab.offsetLeft - tabList.firstElementChild.offsetLeft - (tabList.clientWidth - tab.offsetWidth) / 2, behavior: reduced() ? 'auto' : 'smooth' });
+  };
+  const select = (i) => {
+    index = Math.max(0, Math.min(cards.length - 1, i));
+    tabs.forEach((t, k) => { const on = k === index; t.setAttribute('aria-selected', String(on)); t.tabIndex = on ? 0 : -1; });
+    cards.forEach((c, k) => {
+      const on = k === index;
+      c.classList.toggle('is-open', on);
+      const b = c.querySelector('.t-fold__body');
+      if (on || !fold) b.removeAttribute('aria-hidden'); else b.setAttribute('aria-hidden', 'true'); // 스와이프에서는 모든 카드 글이 보이므로 숨기지 않음
     });
+    scrollTabIntoView();
+  };
+  const show = (i, { focus = false } = {}) => {
+    select(i);
+    if (fold) place();
+    else viewport.scrollTo({ left: offset(index), behavior: reduced() ? 'auto' : 'smooth' });
+    if (focus) tabs[index].focus();
+  };
+
+  tabs.forEach((t, k) => t.addEventListener('click', () => show(k)));
+  cards.forEach((c, k) => c.querySelector('.t-fold__hit')?.addEventListener('click', () => show(k)));
+  root.addEventListener('keydown', (e) => {
+    const go = { ArrowRight: index + 1, ArrowLeft: index - 1, Home: 0, End: cards.length - 1 }[e.key];
+    if (go === undefined || ((e.key === 'Home' || e.key === 'End') && !tabs.includes(e.target)) || e.target.closest('.t-fold__body')) return;
+    e.preventDefault();
+    show(go, { focus: tabs.includes(e.target) });
   });
-  root.querySelector('[data-t-gallery-prev]')?.addEventListener('click', () => show(index - 1));
-  root.querySelector('[data-t-gallery-next]')?.addEventListener('click', () => show(index + 1));
-  // 스와이프 (터치·펜): 가로로 48px 이상, 세로보다 크게 움직였을 때만
-  let start = null;
-  stage?.addEventListener('pointerdown', (e) => { if (e.pointerType !== 'mouse') start = { x: e.clientX, y: e.clientY }; });
-  stage?.addEventListener('pointerup', (e) => {
-    if (!start) return;
-    const dx = e.clientX - start.x;
-    const dy = e.clientY - start.y;
-    start = null;
-    if (Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(dy)) show(index + (dx < 0 ? 1 : -1));
-  });
-  stage?.addEventListener('pointercancel', () => { start = null; });
+  // 스와이프 → 스크롤이 멈추면 가장 가까운 카드로 탭 선택
+  let timer = 0;
+  viewport.addEventListener('scroll', () => {
+    if (fold) return;
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      const left = viewport.scrollLeft;
+      let best = 0;
+      cards.forEach((c, k) => { if (Math.abs(offset(k) - left) < Math.abs(offset(best) - left)) best = k; });
+      if (best !== index) select(best);
+    }, 80);
+  }, { passive: true });
+
+  const refresh = () => {
+    root.classList.add('is-measuring'); // 창 크기 바꿀 때는 전환 없이 즉시
+    fold = mqDesk.matches && body.clientWidth >= 760;
+    root.classList.toggle('is-swipe', !fold);
+    if (fold) {
+      root.style.setProperty('--fold-bleed', `${Math.max(0, document.documentElement.clientWidth - body.getBoundingClientRect().right)}px`);
+      fit();
+      place();
+    } else {
+      ['--fold-bleed', '--fold-x', '--fold-shrink', '--open-w'].forEach((v) => root.style.removeProperty(v));
+      viewport.scrollLeft = offset(index);
+    }
+    select(index);
+    requestAnimationFrame(() => requestAnimationFrame(() => root.classList.remove('is-measuring')));
+  };
+  let rt = 0;
+  window.addEventListener('resize', () => { cancelAnimationFrame(rt); rt = requestAnimationFrame(refresh); });
+  document.fonts?.ready.then(refresh);
+  refresh();
 }
 
 /* ---------- 로그인 후 돌아갈 곳 (member/login.html?return=community/case-view.html?id=case-18) ----------

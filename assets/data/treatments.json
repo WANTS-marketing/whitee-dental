@@ -132,8 +132,8 @@
             "image": {
               "file": "treatment/implant/implant-case-immediate",
               "name": "implant-case-immediate",
-              "ratio": "4/3",
-              "size": "1200×900"
+              "ratio": "4/5",
+              "size": "1080×1350"
             },
             "verified": true,
             "text": "치아를 뽑는 날 바로 임플란트를 심는 방법입니다. 누구나 가능한 것은 아니며, 잇몸에 염증이 심한 경우에는 어려울 수 있습니다. 당일 식립 가능 여부는 감염 상태와 잇몸뼈 조건에 따라 결정되며, 당일 식립과 당일 최종 보철은 같은 의미가 아닙니다.",
@@ -154,8 +154,8 @@
             "image": {
               "file": "treatment/implant/implant-case-complex",
               "name": "implant-case-complex",
-              "ratio": "4/3",
-              "size": "1200×900"
+              "ratio": "4/5",
+              "size": "1080×1350"
             },
             "verified": true,
             "text": "여러 가지 이유로 시술이 어려웠던 경우에도 정밀검사와 치료 계획을 통해 임플란트 가능 여부를 검토합니다. 잇몸뼈가 부족하면 뼈이식 등 추가 치료가 필요할 수 있으며, 전신 상태에 따라 진행 방법이 달라질 수 있습니다. 질병이나 복용 중인 약물은 꼭 말씀해 주세요.",
@@ -176,8 +176,8 @@
             "image": {
               "file": "treatment/implant/implant-case-revision",
               "name": "implant-case-revision",
-              "ratio": "4/3",
-              "size": "1200×900"
+              "ratio": "4/5",
+              "size": "1080×1350"
             },
             "verified": true,
             "text": "사고나 외상, 치주염, 음주와 흡연, 관리 부족, 임플란트 재료 문제 등 여러 이유로 임플란트를 다시 해야 하는 경우가 있습니다. 기존 임플란트와 주변 잇몸뼈 상태를 검사해 재수술 여부와 방법을 판단합니다.",
@@ -198,8 +198,8 @@
             "image": {
               "file": "treatment/implant/implant-case-denture",
               "name": "implant-case-denture",
-              "ratio": "4/3",
-              "size": "1200×900"
+              "ratio": "4/5",
+              "size": "1080×1350"
             },
             "verified": true,
             "text": "임플란트를 심은 뒤 틀니를 연결하는 치료 방법입니다. 기존 틀니가 잘 맞지 않거나 불편한 경우 검토할 수 있으며, 필요한 임플란트 개수와 연결 방식은 잇몸뼈 상태에 따라 다릅니다.",
@@ -220,8 +220,8 @@
             "image": {
               "file": "treatment/implant/implant-case-navigation",
               "name": "implant-case-navigation",
-              "ratio": "4/3",
-              "size": "1200×900"
+              "ratio": "4/5",
+              "size": "1080×1350"
             },
             "verified": false,
             "text": "3D 영상과 컴퓨터 모의 수술로 식립 위치와 각도를 미리 계획하고, 이를 바탕으로 만든 가이드를 이용해 진행하는 방법입니다. 모든 환자에게 같은 방식이 적합한 것은 아닙니다. 3차원 정보는 치료 계획에 도움을 주지만 결과를 보장하지는 않습니다.",
@@ -242,8 +242,8 @@
             "image": {
               "file": "treatment/implant/implant-case-prf",
               "name": "implant-case-prf",
-              "ratio": "4/3",
-              "size": "1200×900"
+              "ratio": "4/5",
+              "size": "1080×1350"
             },
             "verified": false,
             "text": "자신의 혈액에서 혈소판 등을 분리해 얻은 성분을 임플란트 치료에 함께 사용하는 방법입니다. 본인의 혈액을 사용하므로 다른 사람이나 동물에서 유래한 재료와 달리 거부 반응에 대한 걱정이 적습니다. 적용 여부와 기대할 수 있는 변화는 개인 상태에 따라 다르므로 상담 시 안내합니다.",

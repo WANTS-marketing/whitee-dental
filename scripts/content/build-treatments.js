@@ -76,35 +76,35 @@ function page(t) {
 ${X.photos.map((p) => `          <figure class="t-photo">${slot(p, "")}<figcaption class="t-photo__cap">${esc(p.caption)}</figcaption></figure>`).join('\n')}
         </div>
 ` : '';
-  /* 이런 경우에도 상담해 보세요 — 탭 갤러리 (2026-11-09): 탭 6개 → 패널 [사진 55% | 글 45%] → ‹ 1 / 6 ›
-     패널은 모두 같은 칸에 겹쳐 두어 높이 = 가장 긴 패널(탭을 바꿔도 아래가 들썩이지 않음). 동작: pages.js initTreatmentGallery
-     게시: 아니요(네비게이션·자가혈)도 화면에 표시하고 안내 문구(note)를 붙임 — 병원 확인 대기(docs/HOSPITAL-CHECK.md #8) */
+  /* 이런 경우에도 상담해 보세요 — 펼침형 갤러리 (2026-11-09, 참고: NHN 메인 'Weaving New Play')
+     데스크톱(1025px~): 카드 6장 한 줄 — 선택 카드 = 넓게 [사진 | 설명 칸], 나머지 = 120px 띠(사진만). 줄은 본문 시작선에서 화면 오른쪽 끝까지,
+       선택 카드가 줄 맨 왼쪽에 오도록 줄 전체가 옆으로 이동(끝 쪽은 오른쪽에 빈칸이 생기지 않게 멈춤). 아래 글자 탭
+     1024px 이하: 가로 스와이프 카드(scroll-snap) — [사진 위 | 설명 아래], 높이 = 내용만큼
+     동작: pages.js initTreatmentFold · 게시: 아니요(네비게이션·자가혈)도 표시 + 안내 문구(note) — 병원 확인 대기(docs/HOSPITAL-CHECK.md #8) */
   const cases = X.cases || [];
   const caseSection = cases.length ? `
         <!-- 추가 · 이런 경우에도 상담해 보세요 (기존 상세 기반, 원고 '추가 블록') -->
         <section class="t-sec" aria-labelledby="t-cases-title">
           <h2 class="t-sec__title t-sec__title--center" id="t-cases-title">이런 경우에도 상담해 보세요</h2>
-          <div class="t-gallery" data-t-gallery>
-            <div class="t-gallery__tabs" role="tablist" aria-label="상담해 볼 경우 선택">
-${cases.map((c, i) => `              <button type="button" class="t-gallery__tab" role="tab" id="t-case-tab-${i + 1}" aria-controls="t-case-panel-${i + 1}" aria-selected="${i === 0}"${i ? ' tabindex="-1"' : ''}>${esc(c.tab)}</button>`).join('\n')}
+          <div class="t-fold" data-t-fold>
+            <div class="t-fold__viewport" data-t-fold-viewport>
+              <div class="t-fold__track" data-t-fold-track>
+${cases.map((c, i) => { const no = String(i + 1).padStart(2, '0'); return `                <div class="t-fold__card${i === 0 ? ' is-open' : ''}" role="tabpanel" id="t-case-panel-${i + 1}" aria-labelledby="t-case-tab-${i + 1}">
+                  <button type="button" class="t-fold__hit" aria-label="${no} ${esc(c.tab)} 보기"></button>
+                  <div class="t-fold__media">${slot(c.image, '')}<span class="t-fold__no" aria-hidden="true">${no}</span></div>
+                  <div class="t-fold__body"${i === 0 ? '' : ' aria-hidden="true"'}><div class="t-fold__inner">
+                    <span class="t-fold__num">${no}</span>
+                    <h3 class="t-fold__title">${esc(c.titleMain)}${c.titleSub ? `<span class="t-fold__sub">${esc(c.titleSub)}</span>` : ''}</h3>
+                    <p class="t-fold__desc">${esc(c.text)}</p>
+                    <p class="t-fold__fits-title">이런 분이라면 상담해 보세요</p>
+                    <ul class="t-fold__fits">${c.fits.map((f) => `<li>${CRIT_ICON.check}<span>${esc(f)}</span></li>`).join('')}</ul>
+                    ${c.note ? `<p class="t-fold__note">${esc(c.note)}</p>` : ''}
+                  </div></div>
+                </div>`; }).join('\n')}
+              </div>
             </div>
-            <div class="t-gallery__stage" data-t-gallery-stage>
-${cases.map((c, i) => `              <div class="t-gallery__panel${i === 0 ? ' is-active' : ''}" role="tabpanel" id="t-case-panel-${i + 1}" aria-labelledby="t-case-tab-${i + 1}"${i ? ' aria-hidden="true"' : ''}>
-                ${slot(c.image, '', 't-gallery__img')}
-                <div class="t-gallery__text">
-                  <span class="t-gallery__no">${String(i + 1).padStart(2, '0')}</span>
-                  <h3 class="t-gallery__title">${esc(c.titleMain)}${c.titleSub ? `<span class="t-gallery__sub">${esc(c.titleSub)}</span>` : ''}</h3>
-                  <p class="t-gallery__desc">${esc(c.text)}</p>
-                  <p class="t-gallery__fits-title">이런 분이라면 상담해 보세요</p>
-                  <ul class="t-gallery__fits">${c.fits.map((f) => `<li>${CRIT_ICON.check}<span>${esc(f)}</span></li>`).join('')}</ul>
-                  ${c.note ? `<p class="t-gallery__note">${esc(c.note)}</p>` : ''}
-                </div>
-              </div>`).join('\n')}
-            </div>
-            <div class="t-gallery__nav">
-              <button type="button" class="t-gallery__arrow" data-t-gallery-prev aria-label="이전 경우 보기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
-              <span class="t-gallery__count" aria-live="polite"><b data-t-gallery-now>1</b> / ${cases.length}</span>
-              <button type="button" class="t-gallery__arrow" data-t-gallery-next aria-label="다음 경우 보기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+            <div class="t-fold__tabs" role="tablist" aria-label="상담해 볼 경우 선택">
+${cases.map((c, i) => `              <button type="button" class="t-fold__tab" role="tab" id="t-case-tab-${i + 1}" aria-controls="t-case-panel-${i + 1}" aria-selected="${i === 0}"${i ? ' tabindex="-1"' : ''}>${esc(c.tab)}</button>`).join('\n')}
             </div>
           </div>
         </section>
