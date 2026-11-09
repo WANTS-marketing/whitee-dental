@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const run = {
     doctors: renderDoctorsPage,
     clinic: renderClinic,
+    treatment: renderTreatmentPage,
     notice: () => window.Board.list('notice'),
     news: () => window.Board.list('news'),
     cases: () => window.Board.list('cases'),
@@ -22,6 +23,61 @@ document.addEventListener('DOMContentLoaded', () => {
   initLoginReturn();
   document.querySelectorAll('[data-kakao-login]').forEach((btn) => btn.addEventListener('click', () => window.API.signInWithKakao(loginReturnUrl())));
 });
+
+/* ---------- 진료과목 6개 (treatment/*.html — scripts/content/build-treatments.js 가 만든 정적 HTML) ----------
+   FAQ 아코디언(첫 번째는 HTML 에서 열린 상태) + '진료 연결' 지점 탭
+   진료 연결: 탭 [창원점 | 마산점](지점 색은 탭 앞 점에만) → 선택 지점의 주소 · 전화(tel:) · 진료시간 · 담당 의료진 · 버튼(상담문의 / 네이버예약 / 전화하기)
+     담당 의료진 = SITE.doctors 중 그 지점 + dept 가 data-t-specs(원고 '관련 진료과')와 맞는 원장
+       맞춤: '치과보철과' → '보철' 처럼 앞의 '치과'·끝의 '과'를 떼고 dept 에 들어 있는지 (보철과 ↔ 치과보철과·보철·보존, 통합치의학과 ↔ 통합치의학과)
+       보류·퇴사(hidden · status 'pending'·'retired') 원장은 빼고, 맞는 원장이 없으면 의료진 줄을 숨김
+     원장을 누르면 about/doctors.html#{지점}-{slug} (의료진 소개의 그 원장 위치) */
+function renderTreatmentPage() {
+  const faq = document.querySelector('[data-t-faq]');
+  if (faq) window.UI.accordion(faq);
+  const sec = document.querySelector('[data-t-connect]');
+  const box = sec?.querySelector('[data-t-connect-box]');
+  const S = window.SITE;
+  if (!box || !S) return;
+  const { esc, telHref, img } = window.UI;
+  let specs = [];
+  try { specs = JSON.parse(sec.dataset.tSpecs || '[]'); } catch (e) { /* 의료진 줄 숨김 */ }
+  const keys = specs.map((s) => s.replace(/^치과/, '').replace(/과$/, ''));
+  const active = (d) => !d.hidden && !['pending', 'retired'].includes(d.status);
+  const docsOf = (b) => (keys.length ? S.getDoctorsByBranch(b.id).filter((d) => active(d) && keys.some((k) => String(d.dept || '').includes(k))) : []);
+  const B = S.branches || [];
+  const tabs = B.map((b, i) => `<button type="button" class="t-connect__tab" role="tab" id="t-tab-${b.id}" aria-controls="t-panel-${b.id}" aria-selected="${i === 0}"${i ? ' tabindex="-1"' : ''}><i class="t-connect__dot t-connect__dot--${b.id}" aria-hidden="true"></i>${esc(b.name)}</button>`).join('');
+  const panel = (b, i) => {
+    const docs = docsOf(b);
+    const booking = b.naverBooking || b.naverMap;
+    return `<div class="t-connect__panel" role="tabpanel" id="t-panel-${b.id}" aria-labelledby="t-tab-${b.id}"${i ? ' hidden' : ''}>
+      <dl class="t-connect__info">
+        <div><dt>주소</dt><dd>${esc(b.address)}</dd></div>
+        <div><dt>전화</dt><dd><a href="${telHref(b.tel)}">${esc(b.tel)}</a></dd></div>
+        <div><dt>진료시간</dt><dd>${(b.hours || []).map((h) => `<span class="t-connect__hour">${esc(h.label)} ${esc(h.time)}</span>`).join('')}</dd></div>
+      </dl>
+      ${docs.length ? `<div class="t-connect__docs"><p class="t-connect__docs-title">담당 의료진</p><ul class="t-docs">${docs.map((d) => `<li><a class="t-doc" href="../about/doctors.html#${b.id}-${S.doctorSlug(d)}"><span class="t-doc__photo"><img src="${img(String(d.photo || '').replace(/\.[a-z]+$/i, '-cut.png'))}" alt="" loading="lazy"></span><span class="t-doc__text"><strong>${esc(d.name)} <small>${esc(d.title)}</small></strong><span>${esc(d.dept)}</span></span></a></li>`).join('')}</ul></div>` : ''}
+      <p class="t-connect__btns">
+        <a class="t-btn t-btn--fill" href="../faq/contact-write.html">상담문의</a>
+        ${booking ? `<a class="t-btn" href="${esc(booking)}" target="_blank" rel="noopener">네이버예약</a>` : ''}
+        <a class="t-btn" href="${telHref(b.tel)}">전화하기</a>
+      </p>
+    </div>`;
+  };
+  box.innerHTML = `<div class="t-connect__tabs" role="tablist" aria-label="지점 선택">${tabs}</div>${B.map(panel).join('')}`;
+  const tabEls = [...box.querySelectorAll('[role="tab"]')];
+  const select = (t, focus) => {
+    tabEls.forEach((x) => { const on = x === t; x.setAttribute('aria-selected', String(on)); x.tabIndex = on ? 0 : -1; document.getElementById(x.getAttribute('aria-controls')).hidden = !on; });
+    if (focus) t.focus();
+  };
+  tabEls.forEach((t, i) => {
+    t.addEventListener('click', () => select(t));
+    t.addEventListener('keydown', (e) => {
+      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+      e.preventDefault();
+      select(tabEls[(i + (e.key === 'ArrowRight' ? 1 : tabEls.length - 1)) % tabEls.length], true);
+    });
+  });
+}
 
 /* ---------- 로그인 후 돌아갈 곳 (member/login.html?return=community/case-view.html?id=case-18) ----------
    치료사례 상세의 '로그인 후 확인해보세요'가 return 을 붙여 보낸다. 사이트 안 주소(폴더/파일.html?…)만 받는다(다른 사이트로 보내기 방지)

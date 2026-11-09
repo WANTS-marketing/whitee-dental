@@ -490,18 +490,9 @@ html[data-fs="xl"] .doc-modal { width: min(680px, 100% - 48px); }
 .clinic__grid {
   display: grid; gap: 20px;
   height: max(460px, (100vh - var(--header-h)) * 0.8);
-  grid-template-columns: 1.25fr 1fr 0.95fr;
-  grid-template-rows: 23fr 4fr 15fr;
-  grid-template-areas:
-    "imp aes wis"
-    "imp gen gen"
-    "ort gen gen";
+  grid-template-columns: repeat(3, minmax(0, 1fr)); /* 2026-11-09 진료과목 6개 → 3×2 (예전 5장 모자이크 배치는 삭제) */
+  grid-template-rows: repeat(2, minmax(0, 1fr));
 }
-.clinic-card--implant { grid-area: imp; }
-.clinic-card--aesthetic { grid-area: aes; }
-.clinic-card--wisdom { grid-area: wis; }
-.clinic-card--ortho { grid-area: ort; }
-.clinic-card--general { grid-area: gen; }
 .clinic-card { position: relative; display: flex; align-items: flex-end; min-height: 0; overflow: hidden; border-radius: 4px; color: #fff; }
 .clinic-card__img { position: absolute; inset: 0; }
 .clinic-card__img img { transition: transform 0.6s var(--ease); }
@@ -511,12 +502,11 @@ html[data-fs="xl"] .doc-modal { width: min(680px, 100% - 48px); }
 .clinic-card__body { --cl-fade: clamp(16px, 1.25vw, 24px); position: relative; z-index: 2; display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 0; padding: calc(var(--cl-fade) + 6px) var(--cl-pad) var(--cl-pad); background: linear-gradient(0deg, rgba(255, 255, 255, 0.96) 0%, rgba(255, 255, 255, 0.9) calc(100% - var(--cl-fade)), rgba(255, 255, 255, 0) 100%); color: var(--color-text); }
 .clinic-card__title { font-size: clamp(1.35rem, 0.45rem + 1.125vw, 1.8rem); line-height: 1.3; letter-spacing: -0.02em; word-break: keep-all; } /* 28.8 (= 32 × 0.9) */
 .clinic-card--implant .clinic-card__img img { object-position: 32% center; } /* 임플란트 사진(3D 그림): 크라운·지대주 기둥이 카드 가운데 오게 */
-.clinic-card--ortho .clinic-card__img img { object-position: center 90%; } /* 치아교정 사진(3D 그림, 왼쪽 흐린 부분 빼고 1.2:1 로 자름): 납작한 카드에서 브래킷·와이어가 글자 바탕 위(카드 위쪽)에 오게 */
-@media (max-width: 768px) { .clinic-card--ortho .clinic-card__img img { object-position: center 40%; } }
-.clinic-card--ortho .clinic-card__body { --cl-fade: 14px; padding-top: calc(var(--cl-fade) + 4px); } /* 치아교정: 카드가 납작해 녹는 구간을 가장 짧게 (공통값보다 조금 더) */
+.clinic-card--orthodontics .clinic-card__img img { object-position: center 90%; } /* 치아교정 사진(3D 그림, 왼쪽 흐린 부분 빼고 1.2:1 로 자름): 납작한 카드에서 브래킷·와이어가 글자 바탕 위(카드 위쪽)에 오게 */
+@media (max-width: 768px) { .clinic-card--orthodontics .clinic-card__img img { object-position: center 40%; } }
+.clinic-card--orthodontics .clinic-card__body { --cl-fade: 14px; padding-top: calc(var(--cl-fade) + 4px); } /* 치아교정: 카드가 납작해 녹는 구간을 가장 짧게 (공통값보다 조금 더) */
 .clinic-card--general .clinic-card__img img { object-position: center 60%; } /* 일반치료 사진(4:3 3D 그림): 넓은 카드에서 충치를 비춘 거울이 글자 바탕 위로 오게 */
-.clinic-card--wisdom .clinic-card__img img { object-position: center 25%; } /* 스케일링 사진(정사각 3D 그림): 가로로 긴 카드(모바일·태블릿)에서도 기구 끝·치아 윗면이 보이게 위쪽 기준 */
-.clinic-card--implant .clinic-card__title { font-size: clamp(1.6875rem, 0.5625rem + 1.40625vw, 2.25rem); } /* 36 (= 40 × 0.9) */
+.clinic-card--scaling .clinic-card__img img { object-position: center 25%; } /* 스케일링 사진(정사각 3D 그림): 가로로 긴 카드(모바일·태블릿)에서도 기구 끝·치아 윗면이 보이게 위쪽 기준 */
 .clinic-card__sub { margin-right: calc(var(--cl-arrow) + 12px); font-size: clamp(0.875rem, 0.45rem + 0.421875vw, 0.95625rem); line-height: 1.5; color: var(--color-text-sub); word-break: keep-all; text-wrap: balance; } /* 15.3 (= 17 × 0.9, 최소 14px) — 오른쪽은 화살표 자리 */
 .clinic-card__sub > span { display: block; }
 .clinic-card__arrow { position: absolute; z-index: 2; right: var(--cl-pad); bottom: var(--cl-pad); display: grid; place-items: center; width: var(--cl-arrow); height: var(--cl-arrow); color: var(--color-point); transition: color var(--dur); } /* 원형 테두리 없이 화살표만 (네이비) */
@@ -832,7 +822,7 @@ html.is-fullpage .cases__list { height: max(420px, (100vh - var(--header-h)) * 0
   /* WHY: 위 줄 세로(제목 → 소통·교감·공감 3열), 카드 2×2 */
   .why__top { grid-template-columns: minmax(0, 1fr); gap: 36px; }
   .why__cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .clinic__grid { height: auto; grid-template-columns: 1fr 1fr; grid-template-rows: 260px 200px 200px; grid-template-areas: "imp aes" "ort wis" "gen gen"; }
+  .clinic__grid { height: auto; grid-template-columns: 1fr 1fr; grid-template-rows: none; grid-auto-rows: 220px; } /* 태블릿: 2×3 */
   /* 치과소식 태블릿·모바일: 공지사항 목록 → 치과소식 카드(오른쪽 화면 끝까지 2.3장) 세로로 */
   .story { --story-per: 2.3; --story-gaps: 2; --story-gap: 20px; --story-end: var(--gutter); }
   .story__inner { grid-template-rows: none; row-gap: 56px; }
@@ -897,11 +887,11 @@ html.is-fullpage .cases__list { height: max(420px, (100vh - var(--header-h)) * 0
   .why__cards::-webkit-scrollbar { display: none; }
   .why-card { height: 360px; scroll-snap-align: start; }
   .why-card__title { font-size: 1.375rem; }
-  .clinic__grid { grid-template-columns: 1fr; grid-template-rows: none; grid-template-areas: none; grid-auto-rows: 180px; }
+  .clinic__grid { grid-template-columns: 1fr; grid-template-rows: none; grid-auto-rows: 180px; }
   .clinic-card { grid-area: auto !important; }
   .clinic { --cl-pad: 20px; }
   .clinic-card__body { --cl-fade: 14px; } /* 카드가 낮아(180px) 흰 그라데이션 녹는 구간을 더 짧게 — 사진이 더 보이게 */
-  .clinic-card__title, .clinic-card--implant .clinic-card__title { font-size: calc(var(--fs-h3) * 0.9); }
+  .clinic-card__title { font-size: calc(var(--fs-h3) * 0.9); }
 
   .cases__list { grid-template-columns: minmax(0, 1fr); gap: 12px; } /* 모바일: 카드 한 줄에 하나 — 사진 두 칸은 좌우 [BEFORE | AFTER] */
   .case-card { grid-template-columns: 1fr 1fr; grid-template-rows: auto auto; aspect-ratio: auto; }

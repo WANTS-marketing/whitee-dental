@@ -8,15 +8,16 @@ window.SITE = {
       id: 'changwon',
       name: '창원점',
       fullName: '화이트e치과의원 창원점',
-      address: '경상남도 창원시 성산구 단정로 7 밀레니엄타워 3층',
+      address: '경상남도 창원시 성산구 단정로 7, 밀레니엄타워 3층', // 원고(docs/content/treatments-6-content.md '지점 정보') 표기
       addressLines: ['경상남도 창원시 성산구 단정로 7', '밀레니엄타워 3층'], // 병원소개 오시는길 표: 의미 단위 줄 나눔 (2번째 줄 뒤에 (addressNote))
       addressNote: '상남동 롯데리아 3층',
       ceo: '이은주',
       bizNo: '566-95-00700',
       tel: '055-716-2884',
       email: 'whitee2018@naver.com',
+      hoursVerified: false, // 원고 '진료시간 [확인 필요]' — 화면에는 표시, 병원 확인 대기 (docs/HOSPITAL-CHECK.md)
       hours: [
-        { label: '평일', time: '10:00–21:00' },
+        { label: '평일', time: '10:00–21:00' }, // 원고: 월~금 10:00~21:00
         { label: '토', time: '10:00–16:00' },
         { label: '일요일', time: '휴진' },
       ],
@@ -32,15 +33,16 @@ window.SITE = {
       id: 'masan',
       name: '마산점',
       fullName: '화이트e치과의원 마산점',
-      address: '경상남도 창원시 마산회원구 3·15대로 686, 9~10층',
+      address: '경상남도 창원시 마산회원구 3·15대로 686, 9~10층', // 원고 '지점 정보'와 같음
       addressLines: ['경상남도 창원시 마산회원구 3·15대로 686', '9~10층'],
       addressNote: '석전동 365병원',
       ceo: '정호석',
       bizNo: '577-91-01943',
       tel: '055-255-2000',
       email: 'whitee2024@naver.com',
+      hoursVerified: false, // 원고 '진료시간 [확인 필요]' — 화면에는 표시, 병원 확인 대기 (docs/HOSPITAL-CHECK.md)
       hours: [
-        { label: '평일', time: '10:00–21:00' },
+        { label: '평일', time: '10:00–21:00' }, // 원고: 월~금 10:00~21:00
         { label: '토', time: '10:00–16:00' },
         { label: '일요일', time: '휴진' },
       ],
@@ -134,16 +136,6 @@ window.SITE = {
       { ko: '공감', hanja: '共感', desc: '내 마음을 살피는 치료' },
     ],
     text: '원인을 파악하고 개인별 맞춤 책임진료를 통해 환자분의 입장에서 한 번 더 생각하여 가족처럼 소중히 치료하겠습니다.',
-  },
-
-  /* 진료과목 페이지 인트로 비주얼 박스 사진 (treatment/*.html .t-visual, common.js renderSiteBlocks)
-       키 = data-treatment-visual 값, image = assets/images/ 안 (지금은 저장소의 진료별 임시 사진 — 병원 사진을 받으면 이 값만 교체), imagePos = object-position(없으면 가운데) */
-  treatmentVisuals: {
-    implant: { image: 'clinic-implant.jpg' },
-    orthodontics: { image: 'clinic-orthodontics.jpg' },
-    general: { image: 'clinic-general.jpg' },
-    'wisdom-scaling': { image: 'clinic-wisdom-scaling.jpg' },
-    aesthetic: { image: 'clinic-aesthetic.jpg' },
   },
 
   /* 화이트e치과 4가지 약속 — 치과소개(about/intro.html WHY WHITE e) · 메인(WHY 화이트e) 공통
