@@ -331,6 +331,10 @@ api.js 안에서 HTTP 상태 코드를 위 오류 코드로 바꿔 주면 됩니
 ) |
 | `categoryName` · `categoryLabel` | string | — | api.js 가 채움(큰 분류 '·' 연결 / 세부 분류 이름) |
 
+- **보안 규칙 (2026-11-09)**
+  - ⚠️ **현재 시안의 로그인 제한은 화면 표시만 가리는 것이며 파일 보호가 아니다.** 저장소·공개 사이트에 올린 파일은 주소만 알면 누구나 열 수 있다 → 실제 환자 사진은 저장소에 두지 않는다(README '환자 사진 규칙'). 기존 14건 사진은 2026-11-09 저장소에서 빼서 저장소 밖 `자료/치료사례/` 로 옮겼고, 데이터의 사진 주소(`beforeImage` · `afterBlur` · `images` · `legacy.image`)는 비워 둠
+  - 서버 연결 시: 전후 사진은 **로그인 확인 후에만** 내려준다 — 비공개 저장소(버킷)에 두고, 인증된 요청에만 발급되는 기한 있는 임시 주소(signed URL)로. 공개 경로(정적 사이트 폴더·공개 버킷)에 두지 않는다. 흐림 미리보기도 실제 사진에서 만든 것이면 같은 규칙
+  - **`consentChecked: true` 인 사례만 일반 회원에게 제공**한다(목록·상세·메인 모두). 동의 확인 전 사례는 관리자 화면에서만
 - 로그인 필요 규칙
   - 비로그인: 목록·메인 카드·상세 모두 BEFORE·AFTER 두 칸 흐림 자리 + '로그인 후 확인하실 수 있습니다' + 로그인. 카드를 누르면 `member/login.html?return=community/case-view.html?id=…` (로그인 후 그 사례로 — `pages.js loginReturnUrl`)
   - 로그인: 두 사진 표시. 사진 주소가 없으면(시안·예시) 회색 '사진 자리'
@@ -339,7 +343,7 @@ api.js 안에서 HTTP 상태 코드를 위 오류 코드로 바꿔 주면 됩니
 - 분류 칩: 치아교정 · 교정 6종 · 보철 · 임플란트 (사례가 없어도 늘 보임). `?category=키` 로 열면 그 칩이 선택된 상태
 - 시안: `?mock=N` → 예시 사례 N개(사진 없음, 교정 6종 돌아가며), `?login=1` → 로그인 상태(sessionStorage) — **서버 연결 때 둘 다 지울 것**
 - 치료 전·후 사진은 환자 동의서가 있는 사진만 (의료광고 심의 기준도 확인). 기존 홈페이지 교정 상세의 전후 사진 14쌍은 저장소 밖 `자료/기존상세/orthodontics/before-after/` 보관 — 동의된 것만 등록(HOSPITAL-CHECK #18)
-- 예전 데이터 필드(`originalTitle` · `afterBlur` · `afterOriginal` · `images` · `legacy`)는 기존 14건 보관용 — 새 사례에는 쓰지 않음
+- 예전 데이터 필드(`originalTitle` · `afterBlur` · `afterOriginal` · `images` · `legacy`)는 기존 14건 보관용 — 새 사례에는 쓰지 않음. 기존 14건은 사진 주소 없이 `consentChecked: false` (scripts/import/build-gallery.js 도 사진을 저장소 밖으로 내보내고 주소를 비움)
 
 ### 4-4. FAQ — `getFaqs({ featured })`
 
