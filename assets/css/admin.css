@@ -65,3 +65,9 @@
   .adm-inq__info { grid-template-columns: minmax(0, 1fr); }
   .adm-inq__bar .btn--point { flex: 1; }
 }
+/* 공지 탭 글이 하나도 없을 때 (admin.js TABS.notice.empty): 안내 문구 + 글쓰기 버튼, 위 '+ 글쓰기' 버튼 강조(파랑 + 옅은 빛) */
+.admin__empty p { margin-bottom: 16px; font-size: 15px; color: var(--color-text-sub); }
+.admin__empty-btn { background: var(--color-accent); }
+.admin__empty-btn:hover { background: var(--color-accent-hover); }
+[data-admin-new].is-attention { background: var(--color-accent); box-shadow: 0 0 0 4px rgba(var(--color-accent-rgb), 0.18); }
+[data-admin-new].is-attention:hover { background: var(--color-accent-hover); }
