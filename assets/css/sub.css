@@ -44,14 +44,19 @@
 .t-point { padding: 32px 28px; border: 1px solid #e3e8f0; border-radius: 16px; background: #fff; }
 .t-point__no { font-size: 0.9375rem; font-weight: 800; letter-spacing: 0.04em; color: var(--color-accent); }
 .t-point__text { margin-top: 14px; font-size: 1.125rem; font-weight: 700; line-height: 1.55; word-break: keep-all; }
-.t-criteria { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
-.t-crit { padding: 28px 24px; border-radius: 16px; background: #f8fafd; }
-.t-crit__title { margin-bottom: 16px; font-size: 1.0625rem; font-weight: 700; color: var(--color-point); }
-.t-chips { display: flex; flex-wrap: wrap; gap: 8px; }
-.t-chip { padding: 6px 12px; border: 1px solid #e3e8f0; border-radius: 999px; background: #fff; font-size: 0.9375rem; line-height: 1.4; word-break: keep-all; }
-.t-crit__note { margin-top: 14px; font-size: 0.9375rem; line-height: 1.6; color: var(--color-text-sub); word-break: keep-all; }
-.t-questions { display: grid; gap: 10px; }
-.t-questions li { padding: 12px 14px; border-radius: 10px; background: #fff; font-size: 0.9375rem; line-height: 1.55; word-break: keep-all; }
+/* 결정 기준 3칸 — 모두 같은 구조 (2026-11-09 통일): 칸 #F8FAFD · 여백 32px · 둥근 16px · 3칸 높이 같게
+   칸 제목 18px 굵게 남색 → 20px → 항목 한 줄씩(흰 줄, 최소 48px, 좌우 16px, 둥근 10px, 줄 간격 8px): [아이콘 18px 파랑] 10px 글자 16px #1A1F2B
+   아이콘은 첫 줄 높이(24px)에 맞춤 → 한 줄이면 세로 가운데. 2번 칸 덧붙임 문장은 목록 아래 16px · 14px #6B7280 */
+.t-criteria { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; align-items: stretch; }
+.t-crit { display: flex; flex-direction: column; padding: 32px; border-radius: 16px; background: #f8fafd; }
+.t-crit__title { margin-bottom: 20px; font-size: 1.125rem; font-weight: 700; color: var(--color-point); }
+.t-crit__list { display: grid; gap: 8px; }
+.t-crit__item { display: flex; align-items: flex-start; gap: 10px; min-height: 48px; padding: 12px 16px; border-radius: 10px; background: #fff; }
+.t-crit__icon { display: grid; flex: none; place-items: center; width: 18px; height: 24px; color: var(--color-accent); }
+.t-crit__icon svg { width: 18px; height: 18px; }
+.t-crit__icon b { font-size: 1rem; font-weight: 800; line-height: 1; }
+.t-crit__text { min-width: 0; font-size: 1rem; line-height: 24px; color: #1a1f2b; word-break: keep-all; }
+.t-crit__note { margin-top: 16px; font-size: 0.875rem; line-height: 1.6; color: #6b7280; word-break: keep-all; }
 /* 4단계 세로 타임라인: 왼쪽 번호 원(48px, 파랑) + 원 사이 세로선(파랑 30%), 오른쪽 제목 20px + 본문 17px */
 .t-steps { display: grid; }
 .t-step { position: relative; display: grid; grid-template-columns: 48px minmax(0, 1fr); gap: 0 24px; padding-bottom: 36px; }
@@ -97,7 +102,7 @@
   .t-points, .t-criteria { grid-template-columns: minmax(0, 1fr); gap: 12px; }
   .t-point { padding: 22px 20px; }
   .t-point__text { margin-top: 8px; font-size: 1.0625rem; }
-  .t-crit { padding: 22px 20px; }
+  .t-crit { padding: 24px; }
   .t-step { grid-template-columns: 40px minmax(0, 1fr); gap: 0 16px; }
   .t-step__no { width: 40px; height: 40px; }
   .t-step:not(:last-child)::before { left: 19px; top: 40px; }
