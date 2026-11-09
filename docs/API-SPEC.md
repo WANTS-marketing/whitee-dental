@@ -296,9 +296,13 @@ api.js 안에서 HTTP 상태 코드를 위 오류 코드로 바꿔 주면 됩니
 | `views` | number | 선택 | 조회수. 없으면 api.js 가 0 → 모두 0 이면 화면에서 조회수 칸 숨김 |
 
 - `getNotice(id)` 반환: `{ post, prev, next }` (prev = 먼저 쓴 글, next = 나중에 쓴 글, 날짜순) 또는 없으면 `null`
+- **빈 배열([])이면 화면은 빈 상태로 처리됩니다** (2026-11-09): 메인 = 공지 칸을 숨기고 소식이 전체 폭(공지·소식 둘 다 0개면 섹션 숨김),  = 빈 상태 박스(진료시간·오시는길 / 상담문의 버튼). 1~4개면 있는 만큼만 표시
+- 지금  의 글은 모두 더미()라 기본 화면에는 나오지 않습니다(실제 공지 0개)
+- ** 파라미터는 시안 테스트용**: 주소에  ·  ·  등을 붙이면 더미 공지를 그 개수만큼 보여줍니다(api.js mockCount·mockRows, 상세 링크에도 이어 붙음). 서버 연결 후에는 지워도 됩니다
 
 ### 4-2. 치과소식 — `getNews({ limit })`, `getNewsPost(id)`
 
+- 소식도 공지와 같은 방식: `_dummy: true` 글은 기본 화면에서 빼고, 빈 배열이면 빈 상태 처리. 시안 테스트용 `?mockNews=N` = 실제 글 중 최신 N개만
 - 더미: `assets/data/news.json`(88개, 기존 사이트 치과스토리에서 가져옴) + 본문 `assets/data/news/{id}.html` · 화면: 메인 캐러셀, `community/news.html`, `news-view.html?id=`
 - 필드: `id`(예 `story-90`), `wrId`·`legacyUrl`(기존 사이트 글 번호·주소 — 404.html 이 옛 주소를 새 주소로 넘김), `title`, `category`(진료안내·치료정보·임플란트·틀니·치아교정·병원소식), `date`, `summary`, `thumbnail`, `imageCount`, `branch`, `views`(선택)
 - `getNewsPost(id)` 반환: `{ post, html, prev, next }` 또는 `null`. `html` 안의 이미지 경로는 현재 페이지 기준으로 바꿔서 돌려줍니다(서버가 전체 URL 을 주면 변환 불필요)

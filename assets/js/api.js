@@ -27,10 +27,41 @@
 
   /* ---------- 게시판 ---------- */
 
+  /* 시안 테스트용 글 수 바꾸기 — 주소에 ?mock=N(공지사항) · ?mockNews=N(치과소식). 없으면 실제 데이터만(더미 '_dummy' 글은 뺌)
+     공지: 더미 글을 N 개가 될 때까지 복제(한 바퀴 넘으면 제목에 (2)… · 날짜 30일씩 앞으로) / 소식: 실제 글 중 N 개
+     빈 배열([])이어도 화면은 빈 상태로 처리한다 (docs/API-SPEC.md '공지사항'). TODO(서버): 서버 연결 후 지워도 됨 */
+  function mockCount(key) {
+    try {
+      const v = new URLSearchParams(location.search).get(key);
+      if (v === null) return null;
+      const n = parseInt(v, 10);
+      return Number.isFinite(n) && n >= 0 ? Math.min(n, 200) : null;
+    } catch (e) { return null; }
+  }
+  function mockRows(base, n) {
+    if (!base.length) return [];
+    const DAY = 86400000;
+    return Array.from({ length: n }, (_, i) => {
+      const src = base[i % base.length];
+      const round = Math.floor(i / base.length);
+      return round === 0 ? { ...src } : { ...src, id: `${src.id}-m${round}`, title: `${src.title} (${round + 1})`, pinned: false, date: new Date(new Date(src.date).getTime() - round * 30 * DAY).toISOString() };
+    });
+  }
+  /** 상세로 넘어가는 링크에 붙일 테스트 파라미터('&mock=2' 등, 없으면 '') — 상세에서도 같은 더미 목록을 보게 */
+  function mockQuery() {
+    const p = new URLSearchParams();
+    ['mock', 'mockNews'].forEach((k) => { const v = mockCount(k); if (v !== null) p.set(k, v); });
+    const s = p.toString();
+    return s ? `&${s}` : '';
+  }
+
   /** 공지사항 — [{ id, title, branch, date, pinned }] */
   async function getNotices({ limit } = {}) {
     // TODO(서버): 공지 목록 — 고정 먼저 + 최신순 (API-SPEC '공지사항')
-    const rows = withViews(await fetchJson('notice')).sort((a, b) => (b.pinned - a.pinned) || byDateDesc(a, b));
+    const all = (await fetchJson('notice')) || [];
+    const n = mockCount('mock');
+    const src = n === null ? all.filter((r) => !r._dummy) : mockRows(all.filter((r) => r._dummy), n); // 기본 = 실제 공지만 (지금 0개)
+    const rows = withViews(src).sort((a, b) => (b.pinned - a.pinned) || byDateDesc(a, b));
     return limit ? rows.slice(0, limit) : rows;
   }
 
@@ -45,7 +76,10 @@
       (기존 사이트 치과스토리 게시판에서 가져온 글 — scripts/import/build-story.js 가 news.json 생성) */
   async function getNews({ limit } = {}) {
     // TODO(서버): 치과소식 목록 최신순 (API-SPEC '치과소식')
-    const rows = withViews(await fetchJson('news')).sort(byDateDesc);
+    const all = (await fetchJson('news')) || [];
+    const n = mockCount('mockNews');
+    const real = all.filter((r) => !r._dummy); // 크롤링한 실제 글은 그대로
+    const rows = withViews(n === null ? real : real.slice().sort(byDateDesc).slice(0, n)).sort(byDateDesc);
     return limit ? rows.slice(0, limit) : rows;
   }
 
@@ -388,7 +422,7 @@
   }
 
   window.API = {
-    getNotices, getNotice, getNews, getNewsPost, getCases, getCase, getFaqs, getFees,
+    getNotices, getNotice, getNews, getNewsPost, mockQuery, getCases, getCase, getFaqs, getFees,
     listInquiries, getInquiry, createInquiry, isDeliveryReady, adminListInquiries, adminGetInquiry, answerInquiry, updateInquiryStatus, deleteInquiry,
     isLoggedIn, getCurrentUser, isAdmin, signInWithKakao, signOut,
   };
