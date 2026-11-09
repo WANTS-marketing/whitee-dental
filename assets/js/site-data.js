@@ -136,6 +136,16 @@ window.SITE = {
     text: '원인을 파악하고 개인별 맞춤 책임진료를 통해 환자분의 입장에서 한 번 더 생각하여 가족처럼 소중히 치료하겠습니다.',
   },
 
+  /* 진료과목 페이지 인트로 비주얼 박스 사진 (treatment/*.html .t-visual, common.js renderSiteBlocks)
+       키 = data-treatment-visual 값, image = assets/images/ 안 (지금은 저장소의 진료별 임시 사진 — 병원 사진을 받으면 이 값만 교체), imagePos = object-position(없으면 가운데) */
+  treatmentVisuals: {
+    implant: { image: 'clinic-implant.jpg' },
+    orthodontics: { image: 'clinic-orthodontics.jpg' },
+    general: { image: 'clinic-general.jpg' },
+    'wisdom-scaling': { image: 'clinic-wisdom-scaling.jpg' },
+    aesthetic: { image: 'clinic-aesthetic.jpg' },
+  },
+
   /* 화이트e치과 4가지 약속 — 치과소개(about/intro.html WHY WHITE e) · 메인(WHY 화이트e) 공통
        icon = svg 안쪽 (viewBox 0 0 24 24, 선), text = 치과소개용 설명, short = 메인용 한 줄 ({spec} = 진료과 목록)
        image = 메인 카드 배경 사진 (assets/images/ 안 — 병원 사진을 받으면 이 값만 교체), imagePos = 세로 카드에서 보일 위치(object-position, 없으면 가운데)

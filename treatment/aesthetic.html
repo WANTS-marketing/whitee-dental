@@ -20,7 +20,6 @@
   <link rel="stylesheet" href="../assets/css/variables.css">
   <link rel="stylesheet" href="../assets/css/common.css">
   <link rel="stylesheet" href="../assets/css/sub.css">
-  <script src="../assets/js/lnb-jump.js"></script> <!-- 같은 대메뉴 안에서 이동하면 본문부터, 그 밖에는 배너 맨 위부터 열기 (defer 아님 — 그리기 전에 실행) -->
   <script src="../assets/js/config.js" defer></script>
   <script src="../assets/js/site-data.js" defer></script>
   <script src="../assets/js/api.js" defer></script>
@@ -28,18 +27,10 @@
   <script src="../assets/js/common.js" defer></script>
   <script src="../assets/js/pages.js" defer></script>
 </head>
-<body class="is-sub has-lnb">
+<body class="is-sub has-lnb no-hero"> <!-- no-hero: 상단 배너 없음 → 처음부터 흰 헤더, 본문은 헤더 아래 56px (common.css) -->
   <div data-include="header"></div>
 
   <main id="main">
-    <section class="sub-visual sub-visual--image">
-      <div class="sub-visual__bg" aria-hidden="true"></div> <!-- 공통 배너 사진 assets/images/banner-sub.jpg (sub.css .sub-visual__bg) -->
-      <div class="container">
-        <p class="sub-visual__label">TREATMENT</p>
-        <p class="sub-visual__slogan">믿을 수 있는 전문의의 협진 진료시스템 1:1 책임진료</p>
-      </div>
-    </section>
-
     <!-- 서브 레이아웃: 왼쪽 LNB(하위 메뉴) + 오른쪽 본문 — 1024px 이하는 본문 위 가로 탭 (common.css '서브 LNB') -->
     <div class="sub-layout container">
       <aside class="lnb">
@@ -68,10 +59,13 @@
 
     <section class="sec ">
       <div class="container">
-        <div class="sec-head">
-          <span class="sec-label">AESTHETIC</span>
-          <h2 class="sec-title">원래 내 치아처럼 자연스럽게</h2>
-          <p class="sec-desc">화이트e치과 심미치료는 자연스러운 아름다움을 추구합니다.</p>
+<!-- 인트로 비주얼 박스: 사진 = site-data.js SITE.treatmentVisuals.aesthetic.image (common.js renderSiteBlocks), 남색 오버레이 왼쪽 진하게 → 오른쪽 옅게 (sub.css .t-visual) -->
+        <div class="t-visual" data-treatment-visual="aesthetic">
+          <img class="t-visual__img" alt="" data-treatment-visual-img>
+          <div class="t-visual__text">
+            <span class="t-visual__label">AESTHETIC</span>
+            <h2 class="t-visual__title">원래 내 치아처럼 자연스럽게</h2>
+          </div>
         </div>
         <nav class="anchor-nav" aria-label="페이지 내 바로가기"><a href="#gum">잇몸성형</a><a href="#allceramic">올세라믹</a><a href="#laminate">라미네이트</a><a href="#whitening">치아미백</a></nav>
         <div class="type-grid">
