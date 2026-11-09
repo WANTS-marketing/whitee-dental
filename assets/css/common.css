@@ -831,16 +831,20 @@ a.article-nav__item:hover .article-nav__title { color: var(--color-accent); }
 /* 아코디언 (FAQ) */
 .accordion__item { border-bottom: 1px solid #ddd; }
 .accordion__item:first-child { border-top: 1px solid #ddd; }
-.accordion__btn { display: flex; align-items: center; gap: 24px; width: 100%; padding: 22px 8px; text-align: left; font-size: var(--fs-md); font-weight: 600; }
+/* 아코디언 (진료과목 FAQ · 메인 FAQ 미리보기 공통, 2026-11-09 글자 키움): 질문 18px 600 #1A1F2B · 위아래 26px / 답변 17px · 1.75 · #4A5160,
+   질문 글자 시작선에 맞춰 들여쓰기, 질문 ↔ 답변 4px, 답변 아래 28px (1280px 이하·모바일 질문 17px / 답변 16px)
+   열기·닫기 아이콘: '+' 하나(20px, 선 1.5px) — 열리면 세로선만 사라짐(0.2s) → '−' 와 크기·굵기 같음 */
+.accordion__btn { display: flex; align-items: center; gap: 24px; width: 100%; padding: 26px 8px; text-align: left; font-size: 1.125rem; font-weight: 600; line-height: 1.5; color: #1a1f2b; }
 .accordion__no { flex: none; width: 24px; font-size: var(--fs-xs); font-weight: 400; color: var(--color-text-muted); }
 .accordion__q { flex: 1; }
-.accordion__icon { position: relative; flex: none; width: 16px; height: 16px; }
-.accordion__icon::before, .accordion__icon::after { content: ""; position: absolute; top: 50%; left: 0; width: 100%; height: 1.5px; background: var(--color-text-sub); transition: transform var(--dur); }
+.accordion__icon { position: relative; flex: none; width: 20px; height: 20px; }
+.accordion__icon::before, .accordion__icon::after { content: ""; position: absolute; top: 50%; left: 0; width: 100%; height: 1.5px; margin-top: -0.75px; border-radius: 1px; background: var(--color-text-sub); transition: transform 0.2s var(--ease), opacity 0.2s; }
 .accordion__icon::after { transform: rotate(90deg); }
 .accordion__btn[aria-expanded="true"] { color: var(--color-point); }
-.accordion__btn[aria-expanded="true"] .accordion__icon::after { transform: rotate(0); }
+.accordion__btn[aria-expanded="true"] .accordion__icon::after { transform: rotate(90deg) scaleX(0); opacity: 0; } /* 세로선만 사라짐 → − */
 .accordion__panel { overflow: hidden; height: 0; transition: height var(--dur) var(--ease); }
-.accordion__a { padding: 0 48px 24px 56px; font-size: var(--fs-sm); color: var(--color-text-sub); white-space: pre-line; }
+.accordion__a { padding: 4px 48px 28px 56px; font-size: 1.0625rem; line-height: 1.75; color: #4a5160; white-space: pre-line; word-break: keep-all; } /* 56px = 버튼 왼쪽 8 + 번호 칸 24 + 간격 24 = 질문 글자 시작선 */
+@media (max-width: 1280px) { .accordion__btn { font-size: 1.0625rem; } .accordion__a { font-size: 1rem; } }
 
 /* 폼 */
 .form { display: grid; gap: 20px; }
@@ -1156,13 +1160,13 @@ html:has(body.has-lnb .page-doctors) { scroll-padding-top: calc(var(--header-h) 
 }
 .faq-list { border-top: 1px solid #e5e5e5; }
 .faq-item { border-bottom: 1px solid #e5e5e5; }
-.faq-list .faq-item__btn { display: grid; grid-template-columns: var(--faq-mark) var(--faq-cat) minmax(0, 1fr) 24px; align-items: center; gap: 0; min-height: 70px; padding: 14px 8px 14px 16px; border-bottom: 1px solid transparent; font-size: 1.0625rem; font-weight: 400; color: var(--color-text); transition: border-color var(--dur); }
+.faq-list .faq-item__btn { display: grid; grid-template-columns: var(--faq-mark) var(--faq-cat) minmax(0, 1fr) 24px; align-items: center; gap: 0; min-height: 70px; padding: 14px 8px 14px 16px; border-bottom: 1px solid transparent; font-size: 1.125rem; font-weight: 600; color: #1a1f2b; transition: border-color var(--dur); }
 .faq-list .faq-item__btn[aria-expanded="true"] { color: var(--color-text); border-bottom-color: #111; } /* 펼친 행: 질문 아래 진한 선 */
 /* Q·A: 사이트 기본 글꼴(Pretendard) 700, Q 검정 · A 포인트 컬러 */
 .faq-item__mark { font-size: 1.125rem; font-weight: 700; line-height: 1; color: #111; }
 .faq-item__answer .faq-item__mark { color: var(--color-point); }
 .faq-item__cat { padding-right: 16px; font-weight: 700; color: #222; word-break: keep-all; }
-.faq-item__text { color: #333; word-break: keep-all; }
+.faq-item__text { color: #1a1f2b; word-break: keep-all; } /* 2026-11-09 질문 18px 600 (진료과목 FAQ 와 같게) */
 .faq-item__arrow { width: 22px; height: 22px; color: #555; transition: transform var(--dur); }
 .faq-item__btn[aria-expanded="true"] .faq-item__arrow { transform: rotate(180deg); }
 /* 답변: 연한 베이지, A 는 Q 와 같은 세로선, 글은 질문 시작선에 맞춤 */
@@ -1170,7 +1174,8 @@ html:has(body.has-lnb .page-doctors) { scroll-padding-top: calc(var(--header-h) 
    답변 글은 질문 글 시작선 그대로라 두 번째 줄부터도 A 아래로 들어가지 않는다 */
 .faq-item__answer { display: grid; grid-template-columns: var(--faq-mark) var(--faq-cat) minmax(0, 1fr) 24px; align-items: baseline; padding: 28px 8px 32px 16px; background: #f4f7fd; } /* 답변 칸: 흰색에 가까운 옅은 파랑 (예전 베이지 #faf8f5) */
 .faq-item__answer .faq-item__mark { grid-column: 2; justify-self: end; width: 40px; }
-.faq-item__a { grid-column: 3; font-size: 1rem; line-height: 1.8; color: #444; white-space: pre-line; word-break: keep-all; }
+.faq-item__a { grid-column: 3; font-size: 1.0625rem; line-height: 1.75; color: #4a5160; white-space: pre-line; word-break: keep-all; } /* 답변 17px */
+@media (max-width: 1280px) { .faq-list .faq-item__btn { font-size: 1.0625rem; } .faq-item__a { font-size: 1rem; } }
 .faq-list__empty { padding: 60px 0; text-align: center; color: var(--color-text-sub); border-bottom: 1px solid #e5e5e5; }
 
 /* ---------- 좁은 본문 (LNB 옆 .sub-body 실제 폭 기준) ----------
@@ -1218,14 +1223,14 @@ html:has(body.has-lnb .page-doctors) { scroll-padding-top: calc(var(--header-h) 
   .faq-board { --faq-mark: 32px; }
   .faq-board__cta { flex-direction: column; align-items: stretch; }
   .faq-board__contact { width: 100%; }
-  .faq-list .faq-item__btn { grid-template-columns: var(--faq-mark) minmax(0, 1fr) 20px; grid-template-areas: "mark cat arrow" "mark text arrow"; row-gap: 2px; min-height: 0; padding: 16px 4px; font-size: var(--fs-sm); }
+  .faq-list .faq-item__btn { grid-template-columns: var(--faq-mark) minmax(0, 1fr) 20px; grid-template-areas: "mark cat arrow" "mark text arrow"; row-gap: 2px; min-height: 0; padding: 16px 4px; font-size: 1.0625rem; }
   .faq-item__btn .faq-item__mark { grid-area: mark; align-self: start; }
   .faq-item__cat { grid-area: cat; padding: 0; font-size: var(--fs-xxs); color: #666; }
   .faq-item__text { grid-area: text; }
   .faq-item__arrow { grid-area: arrow; width: 18px; height: 18px; }
   .faq-item__answer { grid-template-columns: var(--faq-mark) minmax(0, 1fr); padding: 20px 4px 24px; }
   .faq-item__answer .faq-item__mark { grid-column: 1; width: auto; padding-right: 10px; } /* 모바일: 답변 글 바로 왼쪽에 붙임 */
-  .faq-item__a { grid-column: 2; font-size: var(--fs-sm); }
+  .faq-item__a { grid-column: 2; font-size: 1rem; }
   .only-mobile { display: revert !important; }
   .only-desktop { display: none !important; }
 
@@ -1279,8 +1284,8 @@ html:has(body.has-lnb .page-doctors) { scroll-padding-top: calc(var(--header-h) 
   .article__body figure { margin-top: 28px; margin-bottom: 28px; }
   .article-nav__item { grid-template-columns: 52px minmax(0, 1fr); gap: 2px 12px; padding: 14px 4px; }
   .article-nav__date { grid-column: 2; }
-  .accordion__btn { gap: 12px; padding: 18px 4px; font-size: var(--fs-sm); }
-  .accordion__a { padding: 0 8px 20px 40px; }
+  .accordion__btn { gap: 12px; padding: 20px 4px; font-size: 1.0625rem; } /* 모바일 질문 17px (예전 16px) */
+  .accordion__a { padding: 4px 8px 24px 40px; font-size: 1rem; } /* 답변 16px · 40px = 4 + 24 + 12 = 질문 글자 시작선 */
   .form__row--2 { grid-template-columns: 1fr; }
   .branch-cards { grid-template-columns: 1fr; }
   .branch-card__tel { font-size: 1.625rem; }

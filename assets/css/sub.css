@@ -46,17 +46,17 @@
 .t-point__text { margin-top: 14px; font-size: 1.125rem; font-weight: 700; line-height: 1.55; word-break: keep-all; }
 /* 결정 기준 3칸 — 모두 같은 구조 (2026-11-09 통일): 칸 #F8FAFD · 여백 32px · 둥근 16px · 3칸 높이 같게
    칸 제목 18px 굵게 남색 → 20px → 항목 한 줄씩(흰 줄, 최소 48px, 좌우 16px, 둥근 10px, 줄 간격 8px): [아이콘 18px 파랑] 10px 글자 16px #1A1F2B
-   아이콘은 첫 줄 높이(24px)에 맞춤 → 한 줄이면 세로 가운데. 2번 칸 덧붙임 문장은 목록 아래 16px · 14px #6B7280 */
+   아이콘은 첫 줄 높이(24px)에 맞춤 → 한 줄이면 세로 가운데. 2번 칸 덧붙임 문장은 목록 아래 16px · 14px #6B7280. 칸 안 글자(제목·항목·덧붙임) 가운데 정렬 — 항목 아이콘은 왼쪽 끝 고정, 글자는 아이콘 오른쪽 남은 칸의 가운데(줄 안 여백에 닿지 않으면 한 줄) */
 .t-criteria { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; align-items: stretch; }
 .t-crit { display: flex; flex-direction: column; padding: 32px; border-radius: 16px; background: #f8fafd; }
-.t-crit__title { margin-bottom: 20px; font-size: 1.125rem; font-weight: 700; color: var(--color-point); }
+.t-crit__title { margin-bottom: 20px; text-align: center; font-size: 1.125rem; font-weight: 700; color: var(--color-point); }
 .t-crit__list { display: grid; gap: 8px; }
-.t-crit__item { display: flex; align-items: flex-start; gap: 10px; min-height: 48px; padding: 12px 16px; border-radius: 10px; background: #fff; }
+.t-crit__item { display: flex; align-items: flex-start; gap: 8px; min-height: 48px; padding: 12px 12px 12px 14px; border-radius: 10px; background: #fff; }
 .t-crit__icon { display: grid; flex: none; place-items: center; width: 18px; height: 24px; color: var(--color-accent); }
 .t-crit__icon svg { width: 18px; height: 18px; }
 .t-crit__icon b { font-size: 1rem; font-weight: 800; line-height: 1; }
-.t-crit__text { min-width: 0; font-size: 1rem; line-height: 24px; color: #1a1f2b; word-break: keep-all; }
-.t-crit__note { margin-top: 16px; font-size: 0.875rem; line-height: 1.6; color: #6b7280; word-break: keep-all; }
+.t-crit__text { flex: 1; min-width: 0; text-align: center; font-size: 1rem; line-height: 24px; color: #1a1f2b; word-break: keep-all; }
+.t-crit__note { margin-top: 16px; text-align: center; font-size: 0.875rem; line-height: 1.6; color: #6b7280; word-break: keep-all; }
 /* 4단계 세로 타임라인: 왼쪽 번호 원(48px, 파랑) + 원 사이 세로선(파랑 30%), 오른쪽 제목 20px + 본문 17px */
 .t-steps { display: grid; }
 .t-step { position: relative; display: grid; grid-template-columns: 48px minmax(0, 1fr); gap: 0 24px; padding-bottom: 36px; }
@@ -66,8 +66,8 @@
 .t-step__title { padding-top: 10px; font-size: 1.25rem; font-weight: 700; line-height: 1.4; word-break: keep-all; }
 .t-step__body { margin-top: 8px; font-size: 1.0625rem; line-height: 1.75; color: var(--color-text-sub); word-break: keep-all; }
 /* FAQ: 공통 아코디언 + 번호 자리에 Q(파랑) */
-.t-faq .accordion__no { font-size: 1rem; font-weight: 800; color: var(--color-accent); }
-.t-faq .accordion__a { font-size: 1rem; line-height: 1.7; }
+.t-faq .accordion__no { font-size: 1.125rem; font-weight: 800; line-height: 1.5; color: var(--color-accent); } /* Q = 질문과 같은 18px */
+@media (max-width: 1280px) { .t-faq .accordion__no { font-size: 1.0625rem; } }
 /* 진료 연결 */
 .t-connect { padding: 40px; border-radius: 20px; background: #f8fafd; }
 .t-connect .t-sec__title { margin-bottom: 12px; }
