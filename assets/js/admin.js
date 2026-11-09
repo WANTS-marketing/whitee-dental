@@ -23,10 +23,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const statusBadge = (s) => `<span class="inq-status inq-status--${esc(s)}">${STATUS_LABEL[s] || esc(s)}</span>`;
   const short = (s, n = 40) => { const t = String(s || '').replace(/\s+/g, ' ').trim(); return t.length > n ? `${t.slice(0, n)}…` : t; };
 
-  // 목록만 보는 탭: 제목, 데이터 함수, 컬럼 [머리글, 셀 렌더러]
+  // 목록만 보는 탭: 제목, 데이터 함수, 컬럼 [머리글, 셀 렌더러], empty(글이 하나도 없을 때 문구 — 있으면 글쓰기 버튼 강조)
   const TABS = {
     notice: {
-      title: '공지사항', load: () => window.API.getNotices(),
+      title: '공지사항', load: () => window.API.getNotices(), // 기본 0개(더미 숨김) — 주소에 ?mock=N 이면 더미 N개 (api.js)
+      empty: "등록된 공지사항이 없습니다. '글쓰기'로 첫 공지를 등록해 보세요.",
       cols: [['고정', (r) => (r.pinned ? '📌' : '')], ['지점', (r) => branchBadge(r.branch)], ['제목', (r) => esc(r.title), 'is-wrap'], ['작성일', (r) => formatDate(r.date)], ['관리', () => actions]],
     },
     news: {
@@ -141,9 +142,13 @@ document.addEventListener('DOMContentLoaded', () => {
     countEl.innerHTML = `총 <b>${filtered.length}</b>건`;
     pagerEl.innerHTML = '';
     thead.innerHTML = `<tr>${tab.cols.map(([h]) => `<th scope="col">${h}</th>`).join('')}</tr>`;
+    const none = !rows.length && tab.empty; // 글이 하나도 없음(검색·지점 결과 0개와 구분)
+    newBtn.classList.toggle('is-attention', !!none); // 글쓰기 버튼 강조
     tbody.innerHTML = filtered.length
       ? filtered.map((r) => `<tr>${tab.cols.map(([, fn, cls]) => `<td${cls ? ` class="${cls}"` : ''}>${fn(r)}</td>`).join('')}</tr>`).join('')
-      : `<tr><td colspan="${tab.cols.length}" class="empty">데이터가 없습니다.</td></tr>`;
+      : none
+        ? `<tr><td colspan="${tab.cols.length}" class="empty admin__empty"><p>${esc(tab.empty)}</p><button class="btn btn--point admin__empty-btn" type="button" data-admin-new>+ 글쓰기</button></td></tr>`
+        : `<tr><td colspan="${tab.cols.length}" class="empty">데이터가 없습니다.</td></tr>`;
   }
   const draw = () => (current === 'inquiries' ? drawInquiries() : drawList());
 
@@ -154,6 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('[data-tab]').forEach((b) => b.classList.toggle('is-active', b.dataset.tab === key));
     statusSel.hidden = key !== 'inquiries';
     newBtn.hidden = key === 'inquiries'; // 상담은 홈페이지 폼으로만 들어온다
+    newBtn.classList.remove('is-attention');
     searchInput.placeholder = key === 'inquiries' ? '이름·연락처 검색' : '검색';
     if (key !== 'inquiries') {
       try { rows = await TABS[key].load(); } catch (err) { console.error(err); rows = []; }
