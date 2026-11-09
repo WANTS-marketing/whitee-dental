@@ -647,7 +647,7 @@ function initDoctors() {
 /* ---------- ⑥ 치료사례 (최신 3건) ----------
    카드: 위 BEFORE / 아래 AFTER + 분류·제목 → 상세. 2026-11-09: 치료 전·후 사진 모두 로그인 회원만(api.js getCases)
      로그인 전 = 두 칸 모두 흐림 자리 + 자물쇠 '로그인 후 확인' (카드 → 로그인, 로그인 후 그 사례로) / 로그인 후 사진 없으면(시안·예시) 회색 칸
-   게시 동의 확인된 사례만 나오므로 지금은 0건 → '등록된 치료사례가 없습니다' 한 줄 */
+   게시 동의 확인된 사례만 나오므로 지금은 0건 → 섹션 전체 숨김 */
 async function initCases() {
   const list = document.querySelector('[data-cases]');
   if (!list || !window.API) return;
@@ -657,7 +657,11 @@ async function initCases() {
   try {
     const rows = await window.API.getCases({ limit: 3 });
     const loggedIn = window.API.isLoggedIn();
-    if (!rows.length) { list.innerHTML = '<li class="cases__empty">등록된 치료사례가 없습니다. 환자분의 게시 동의를 받은 사례를 순서대로 올려 드립니다.</li>'; return; }
+    if (!rows.length) { // 사례 0건(게시 동의 확인된 사례 없음): 섹션 전체 숨김 — 공지·소식 0개와 같은 방식(PC 한 화면 넘김에서 건너뛰고 오른쪽 점도 줄어듦). ?mock=N 으로 미리보기
+      const section = document.getElementById('screen-cases');
+      if (section) { section.hidden = true; window.Fullpage?.refresh?.(); }
+      return;
+    }
     const half = (src, tag, alt) => `<span class="case-card__half img-ph${loggedIn ? '' : ' is-locked'}">${src ? `<img src="${img(src)}" alt="${alt}" loading="lazy" decoding="async">` : ''}<span class="case-card__tag">${tag}</span>${loggedIn ? '' : `<span class="case-card__lock">${lock}로그인 후 확인</span>`}</span>`;
     list.innerHTML = rows.map((r) => {
       const href = loggedIn ? `./community/case-view.html?id=${encodeURIComponent(r.id)}` : `./member/login.html?return=${encodeURIComponent(`community/case-view.html?id=${r.id}`)}`;
