@@ -121,28 +121,6 @@ html::-webkit-scrollbar { display: none; }
 /* 풀스크린 넘김: 흰 헤더가 될 때(마우스·키보드 포커스) 구분선 대신 옅은 그림자 — 메가메뉴는 아래 패널이 그림자를 맡는다 */
 html.is-fullpage .header:is(.is-hover, :has(:focus-visible)):not(.is-mega):not(.is-closing) { box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08); }
 
-/* ---------- ② 빠른 진료 안내 ---------- */
-.clinic-bar { padding: 64px 0 0; }
-.clinic-bar__inner { display: flex; align-items: center; gap: 12px; padding-bottom: 32px; border-bottom: 1px solid var(--color-line); }
-.clinic-bar__head, .clinic-bar__faq { flex: none; }
-.clinic-bar__head { width: 190px; }
-.clinic-bar__head .sec-label { margin-bottom: 2px; text-transform: none; }
-.clinic-bar__title { font-size: 1.625rem; margin-bottom: 12px; letter-spacing: -0.02em; }
-/* 카드 칸 = 남은 폭을 5등분 (minmax(0, 1fr): 글자·아이콘 최소 폭 때문에 목록 칸 밖으로 밀려나지 않게) */
-.clinic-bar__list { flex: 1; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
-.clinic-bar__list > li { min-width: 0; }
-.clinic-bar__card { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; min-width: 0; padding: 8px 6px; aspect-ratio: 1; word-break: keep-all; overflow-wrap: break-word; text-align: center; border: 1px solid var(--color-line); border-radius: var(--radius-md); background: #fff; font-size: var(--fs-md); font-weight: 600; transition: border-color var(--dur), box-shadow var(--dur), transform var(--dur); }
-/* hover 시 테두리 1px → 2px: border 대신 안쪽 그림자 1px 를 더해 내용이 밀리지 않게 */
-.clinic-bar__card:hover { border-color: var(--color-point); box-shadow: inset 0 0 0 1px var(--color-point), 0 5px 15px rgba(0, 0, 0, 0.08); transform: translateY(-2px); } /* 떠오름·그림자 = 공통 카드(--shadow-card 0 10px 30px, -4px)의 50% */
-/* 아이콘(PNG): 디자이너가 준 원본 크기 비율을 그대로 유지 — 높이 = 원본 높이(--h, HTML style) × 배율(--ic-k)
-   가장 큰 아이콘(임플란트 73px) 높이의 칸 안에 세로 가운데로 놓아(위아래 padding) 아래 글자 줄을 맞춘다 */
-.clinic-bar__card img { --ic-k: 0.85; flex: none; box-sizing: content-box; width: auto; max-width: 100%; object-fit: contain; height: calc(var(--h) * var(--ic-k) * 1px); padding-block: calc((73 - var(--h)) / 2 * var(--ic-k) * 1px); }
-.clinic-bar__faq { width: 280px; padding-left: 40px; border-left: 1px solid var(--color-line); }
-.clinic-bar__faq .clinic-bar__title { margin: 4px 0 4px; }
-.clinic-bar__faq-desc { margin-bottom: 12px; font-size: var(--fs-xs); color: var(--color-text-sub); }
-/* 퀵바 전체보기 버튼: 포인트 컬러(.btn--point, hover 조금 밝게) — 지점과 무관해 지점 색은 쓰지 않는다 */
-.clinic-bar__faq-desc br { display: none; } /* 홈 퀵바 카드(좁은 FAQ 열)에서만 줄바꿈 */
-
 /* ---------- ④ 의료진 ---------- */
 .doctors { position: relative; overflow: hidden; padding: 60px 0; }
 /* 섹션 배경: 기본 = 아주 옅은 웜그레이 #f7f5f2 단색
@@ -399,20 +377,18 @@ html[data-fs="xl"] .doc-modal { width: min(680px, 100% - 48px); }
 
 
 
-/* ---------- ③ WHY 화이트e — 4가지 약속 (2026-11-09, 예전 '진료안내' 사진 카드 자리) ----------
-   네이비 면(예전 진료안내와 같은 배경 — 유리 곡선 사진 multiply) + [왼쪽 라벨·제목·한 줄 소개·치과소개 더보기 | 오른쪽 약속 카드 4개]
-   카드 = 흰 면 + 옅은 네이비 원 아이콘 + 제목 + 한 줄 (site-data.js SITE.promises short, common.js renderSiteBlocks) */
-.why { position: relative; isolation: isolate; padding: var(--space-4xl) 0; background: var(--color-point); color: #fff; }
-.why::before { content: ""; position: absolute; inset: 0; z-index: -1; background: url("../images/clinic-bg.jpg") center / cover no-repeat; mix-blend-mode: multiply; opacity: 0.7; pointer-events: none; }
+/* ---------- ② WHY 화이트e — 4가지 약속 (2026-11-09) ----------
+   바로 아래 진료안내가 네이비 면이라 이 섹션은 밝은 면(--color-bg-soft) — 치과소개 'WHY WHITE e' 카드와 같은 톤(흰 카드 + 옅은 그림자 + 옅은 네이비 원 아이콘)
+   [왼쪽 라벨·제목·한 줄 소개·치과소개 더보기 | 오른쪽 약속 카드 4개] — 카드 문구 = site-data.js SITE.promises short (common.js renderSiteBlocks) */
+.why { padding: var(--space-4xl) 0; background: var(--color-bg-soft); }
 .why__inner { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 3fr); gap: clamp(40px, 3.125vw, 60px); align-items: center; }
-.why__head .sec-label { font-size: clamp(0.9375rem, 0.5625rem + 0.46875vw, 1.125rem); color: rgba(255, 255, 255, 0.72); } /* 네이비 위라 라벨은 흰색 반투명 */
-.why__title { font-size: clamp(2.5rem, 0.5rem + 2.5vw, 3.5rem); line-height: 1.25; letter-spacing: -0.02em; color: #fff; word-break: keep-all; }
-.why__desc { margin-top: 16px; font-size: clamp(1rem, 0.75rem + 0.3125vw, 1.125rem); color: rgba(255, 255, 255, 0.82); word-break: keep-all; text-wrap: balance; }
+.why__head .sec-label { font-size: clamp(0.9375rem, 0.5625rem + 0.46875vw, 1.125rem); }
+.why__title { font-size: clamp(2.5rem, 0.5rem + 2.5vw, 3.5rem); line-height: 1.25; letter-spacing: -0.02em; word-break: keep-all; }
+.why__desc { margin-top: 16px; font-size: clamp(1rem, 0.75rem + 0.3125vw, 1.125rem); color: var(--color-text-sub); word-break: keep-all; text-wrap: balance; }
 .why__more { margin-top: 28px; height: 48px; padding: 0 22px; background: var(--color-accent); color: #fff; font-weight: 600; transition: background var(--dur); }
 .why__more:hover { background: var(--color-accent-hover); }
-.why :focus-visible { outline-color: #fff; } /* 네이비 배경 위 키보드 초점 */
 .why__grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; }
-.why-card { padding: clamp(28px, 2.5vw, 44px) clamp(20px, 1.6vw, 28px); border-radius: var(--radius-lg); background: #fff; color: var(--color-text); text-align: center; }
+.why-card { padding: clamp(28px, 2.5vw, 44px) clamp(20px, 1.6vw, 28px); border-radius: var(--radius-lg); background: #fff; color: var(--color-text); text-align: center; box-shadow: 0 6px 24px rgba(0, 0, 0, 0.05); }
 .why-card__icon { display: grid; place-items: center; width: 64px; height: 64px; margin: 0 auto 18px; border-radius: 50%; background: var(--color-point-soft); color: var(--color-point); }
 .why-card__icon svg { width: 30px; height: 30px; }
 .why-card__title { font-size: clamp(1.125rem, 0.75rem + 0.47vw, 1.375rem); line-height: 1.35; letter-spacing: -0.02em; word-break: keep-all; }
@@ -420,6 +396,64 @@ html[data-fs="xl"] .doc-modal { width: min(680px, 100% - 48px); }
 /* PC: 좌우 여백 = 의료진 섹션과 같은 규칙 (왼쪽 = 헤더 로고 시작선, 오른쪽 = 플로팅 퀵메뉴를 피하는 --quick-edge) */
 @media (min-width: 1025px) {
   .why .why__inner.container { max-width: none; padding-left: max(40px, (100% - 1600px) / 2); padding-right: max(var(--quick-edge), (100% - 1600px) / 2); }
+}
+
+/* ---------- ③ 진료안내 (카드 5개 — 2026-11-09 잠깐 지웠다가 예전 그대로 복원) ---------- */
+/* PC: 왼쪽 글 : 카드 그리드 = 1 : 3, 그리드 높이 = 헤더 아래 한 화면의 약 80%
+   글자·여백 = 1920px 기준 값, 1280px 까지 비례해서 줄어든다(clamp, rem 이라 글자 크게 보기도 따라 커짐)
+   카드: 사진 선명하게 + 아래 약 45%만 어두운 그라데이션, 글자·화살표 흰색 */
+.clinic {
+  --cl-pad: clamp(24px, 8px + 1.25vw, 32px);         /* 카드 안쪽 여백 32 */
+  --cl-arrow: clamp(40px, 16px + 1.875vw, 52px);     /* 화살표 버튼 52 */
+  padding: var(--space-4xl) 0; background: var(--color-point); color: #fff; /* 포인트 컬러(네이비) — 글자는 밝은 색, 투명 헤더는 흰 글자(data-header-theme="dark") */
+  position: relative; isolation: isolate;
+}
+/* 배경 사진(유리 곡선, 세로 원본을 가로로 돌린 clinic-bg.jpg)을 네이비에 곱하기(multiply), 불투명도 70%(--clinic-bg-opacity) — 사진의 밝은 곳은 네이비 그대로, 어두운 곳만 더 깊게 */
+.clinic::before { content: ""; position: absolute; inset: 0; z-index: -1; background: url("../images/clinic-bg.jpg") center / cover no-repeat; mix-blend-mode: multiply; opacity: var(--clinic-bg-opacity, 0.7); pointer-events: none; }
+.clinic__inner { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 3fr); gap: clamp(40px, 3.125vw, 60px); align-items: center; }
+.clinic__head .sec-label { font-size: clamp(0.9375rem, 0.5625rem + 0.46875vw, 1.125rem); color: rgba(255, 255, 255, 0.72); }   /* 18 — 네이비 위라 라벨은 흰색 반투명 */
+.clinic__title { font-size: clamp(2.5rem, 0.5rem + 2.5vw, 3.5rem); line-height: 1.25; letter-spacing: -0.02em; color: #fff; } /* 56 */
+.clinic__head .sec-desc { margin-top: 16px; font-size: clamp(1rem, 0.75rem + 0.3125vw, 1.125rem); word-break: keep-all; text-wrap: balance; color: rgba(255, 255, 255, 0.82); } /* 18 */
+.clinic__head .sec-desc br { display: none; } /* 칸 폭이 화면마다 달라 고정 줄바꿈 대신 균형 줄바꿈 */
+.clinic__grid {
+  display: grid; gap: 20px;
+  height: max(460px, (100vh - var(--header-h)) * 0.8);
+  grid-template-columns: 1.25fr 1fr 0.95fr;
+  grid-template-rows: 23fr 4fr 15fr;
+  grid-template-areas:
+    "imp aes wis"
+    "imp gen gen"
+    "ort gen gen";
+}
+.clinic-card--implant { grid-area: imp; }
+.clinic-card--aesthetic { grid-area: aes; }
+.clinic-card--wisdom { grid-area: wis; }
+.clinic-card--ortho { grid-area: ort; }
+.clinic-card--general { grid-area: gen; }
+.clinic-card { position: relative; display: flex; align-items: flex-end; min-height: 0; overflow: hidden; border-radius: 4px; color: #fff; }
+.clinic-card__img { position: absolute; inset: 0; }
+.clinic-card__img img { transition: transform 0.6s var(--ease); }
+.clinic-card:hover .clinic-card__img img { transform: scale(1.05); }
+/* 글자 뒤 흰 그라데이션(아래 → 위, 2026-11-06 낮춤: 녹는 구간 16~24px · 글자 위 여백 6px — PC 카드의 약 32~39%, 모바일 50~62%): 글자 묶음(.clinic-card__body)이 카드 폭 전체를 차지하고, 글자가 있는 높이만큼 흰색 + 그 위 --cl-fade 만큼 투명으로 녹는다
+   사진이 밝고 색이 진해 흰 글자가 묻혀서 → 글자는 어두운 색 */
+.clinic-card__body { --cl-fade: clamp(16px, 1.25vw, 24px); position: relative; z-index: 2; display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 0; padding: calc(var(--cl-fade) + 6px) var(--cl-pad) var(--cl-pad); background: linear-gradient(0deg, rgba(255, 255, 255, 0.96) 0%, rgba(255, 255, 255, 0.9) calc(100% - var(--cl-fade)), rgba(255, 255, 255, 0) 100%); color: var(--color-text); }
+.clinic-card__title { font-size: clamp(1.35rem, 0.45rem + 1.125vw, 1.8rem); line-height: 1.3; letter-spacing: -0.02em; word-break: keep-all; } /* 28.8 (= 32 × 0.9) */
+.clinic-card--implant .clinic-card__img img { object-position: 32% center; } /* 임플란트 사진(3D 그림): 크라운·지대주 기둥이 카드 가운데 오게 */
+.clinic-card--ortho .clinic-card__img img { object-position: center 90%; } /* 치아교정 사진(3D 그림, 왼쪽 흐린 부분 빼고 1.2:1 로 자름): 납작한 카드에서 브래킷·와이어가 글자 바탕 위(카드 위쪽)에 오게 */
+@media (max-width: 768px) { .clinic-card--ortho .clinic-card__img img { object-position: center 40%; } }
+.clinic-card--ortho .clinic-card__body { --cl-fade: 14px; padding-top: calc(var(--cl-fade) + 4px); } /* 치아교정: 카드가 납작해 녹는 구간을 가장 짧게 (공통값보다 조금 더) */
+.clinic-card--general .clinic-card__img img { object-position: center 60%; } /* 일반치료 사진(4:3 3D 그림): 넓은 카드에서 충치를 비춘 거울이 글자 바탕 위로 오게 */
+.clinic-card--wisdom .clinic-card__img img { object-position: center 25%; } /* 스케일링 사진(정사각 3D 그림): 가로로 긴 카드(모바일·태블릿)에서도 기구 끝·치아 윗면이 보이게 위쪽 기준 */
+.clinic-card--implant .clinic-card__title { font-size: clamp(1.6875rem, 0.5625rem + 1.40625vw, 2.25rem); } /* 36 (= 40 × 0.9) */
+.clinic-card__sub { margin-right: calc(var(--cl-arrow) + 12px); font-size: clamp(0.875rem, 0.45rem + 0.421875vw, 0.95625rem); line-height: 1.5; color: var(--color-text-sub); word-break: keep-all; text-wrap: balance; } /* 15.3 (= 17 × 0.9, 최소 14px) — 오른쪽은 화살표 자리 */
+.clinic-card__sub > span { display: block; }
+.clinic-card__arrow { position: absolute; z-index: 2; right: var(--cl-pad); bottom: var(--cl-pad); display: grid; place-items: center; width: var(--cl-arrow); height: var(--cl-arrow); color: var(--color-point); transition: color var(--dur); } /* 원형 테두리 없이 화살표만 (네이비) */
+.clinic :focus-visible { outline-color: #fff; } /* 네이비 배경 위 키보드 초점 */
+.clinic-card__arrow svg { width: 35.2%; height: 35.2%; } /* 32% × 1.1 */
+.clinic-card:is(:hover, :focus-visible) .clinic-card__arrow { color: var(--color-accent); } /* #194ebf */
+/* PC: 좌우 여백 = 의료진 섹션과 같은 규칙 (왼쪽 = 헤더 로고 시작선, 오른쪽 = 플로팅 퀵메뉴를 피하는 --quick-edge) */
+@media (min-width: 1025px) {
+  .clinic .clinic__inner.container { max-width: none; padding-left: max(40px, (100% - 1600px) / 2); padding-right: max(var(--quick-edge), (100% - 1600px) / 2); }
 }
 
 /* 분야별 전문의 머리말 '의료진 소개 보기' (치료사례 더보기와 같은 모양) */
@@ -683,16 +717,9 @@ html.is-fullpage .cases__list { height: max(420px, (100vh - var(--header-h)) * 0
    반응형
    ========================================================================== */
 
-@media (max-width: 1200px) {
-  .clinic-bar__inner { flex-wrap: wrap; }
-  .clinic-bar__list { order: 3; flex-basis: 100%; }
-  .clinic-bar__head { width: auto; flex: 1; }
-  .clinic-bar__faq { width: auto; }
-}
-
 @media (max-width: 1024px) {
 
-  .doctors__inner, .why__inner, .cases__inner, .faq-preview__inner, .story__inner { grid-template-columns: minmax(0, 1fr); gap: 40px; }
+  .doctors__inner, .why__inner, .clinic__inner, .cases__inner, .faq-preview__inner, .story__inner { grid-template-columns: minmax(0, 1fr); gap: 40px; }
   .doctors__head { align-items: stretch; } /* 모바일: 탭이 전체 폭 */
   .doctors__controls { justify-content: center; } /* 태블릿: 탭은 제목 아래 가운데 (모바일은 전체 폭) */
   /* 태블릿: 3명씩 가로 스와이프, 줄은 화면 끝까지 */
@@ -700,6 +727,7 @@ html.is-fullpage .cases__list { height: max(420px, (100vh - var(--header-h)) * 0
   .doc-cards { margin: 0 calc(var(--gutter) * -1); padding: 0 var(--gutter); scroll-padding-inline: var(--gutter); }
   .doctors__main { --doc-photo-h: 380px; }
   .why__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .clinic__grid { height: auto; grid-template-columns: 1fr 1fr; grid-template-rows: 260px 200px 200px; grid-template-areas: "imp aes" "ort wis" "gen gen"; }
   /* 치과소식 태블릿·모바일: 공지사항 목록 → 치과소식 카드(오른쪽 화면 끝까지 2.3장) 세로로 */
   .story { --story-per: 2.3; --story-gaps: 2; --story-gap: 20px; --story-end: var(--gutter); }
   .story__inner { grid-template-rows: none; row-gap: 56px; }
@@ -726,20 +754,6 @@ html.is-fullpage .cases__list { height: max(420px, (100vh - var(--header-h)) * 0
   .quick { transition: opacity var(--dur), visibility var(--dur), transform var(--dur); }
   .quick.is-hero-visible { opacity: 0; visibility: hidden; transform: translateY(12px); pointer-events: none; }
 
-  .clinic-bar { padding-top: 40px; }
-  .clinic-bar__inner { gap: 20px; }
-  .clinic-bar__head { flex-basis: 100%; }
-  .clinic-bar__head .btn { position: absolute; right: var(--gutter); }
-  .clinic-bar__head { position: relative; display: flex; flex-direction: column; }
-  .clinic-bar__head .btn { top: 22px; }
-  /* 아이콘 카드 가로 스크롤 */
-  .clinic-bar__list { display: flex; gap: 10px; margin: 0 calc(var(--gutter) * -1); padding: 4px var(--gutter) 8px; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
-  .clinic-bar__list::-webkit-scrollbar { display: none; }
-  .clinic-bar__list li { flex: none; width: 112px; scroll-snap-align: start; }
-  .clinic-bar__card { font-size: var(--fs-xs); gap: 8px; }
-  .clinic-bar__card img { --ic-k: 0.6; }
-  .clinic-bar__faq { order: 4; flex-basis: 100%; padding: 20px; border: 0; border-radius: var(--radius-md); background: var(--color-bg-warm); }
-  .clinic-bar__title { font-size: var(--fs-h3); }
 
 
   .doctors { padding: 56px 0; }
@@ -775,6 +789,11 @@ html.is-fullpage .cases__list { height: max(420px, (100vh - var(--header-h)) * 0
   .why-card__title { font-size: var(--fs-md); }
   .why-card__text { margin-top: 2px; }
   .partners-strip__inner { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .clinic__grid { grid-template-columns: 1fr; grid-template-rows: none; grid-template-areas: none; grid-auto-rows: 180px; }
+  .clinic-card { grid-area: auto !important; }
+  .clinic { --cl-pad: 20px; }
+  .clinic-card__body { --cl-fade: 14px; } /* 카드가 낮아(180px) 흰 그라데이션 녹는 구간을 더 짧게 — 사진이 더 보이게 */
+  .clinic-card__title, .clinic-card--implant .clinic-card__title { font-size: calc(var(--fs-h3) * 0.9); }
 
   .cases__list { grid-template-columns: minmax(0, 1fr); gap: 12px; } /* 모바일: 카드 한 줄에 하나 — 사진 두 칸은 좌우 [BEFORE | AFTER] */
   .case-card { grid-template-columns: 1fr 1fr; grid-template-rows: auto auto; aspect-ratio: auto; }
@@ -839,85 +858,16 @@ html.is-fullpage .cases__list { height: max(420px, (100vh - var(--header-h)) * 0
     scroll-snap-align: start;
   }
 
-  /* 홈 첫 화면(풀스크린 한 장) = 히어로(100vh) 안에 [헤더 → 문구 → 조작 버튼 → 퀵바] 가 모두 들어간다
-     퀵바 카드 전체를 히어로 안쪽 하단에 올림: 카드 아래 끝 = 화면 아래 끝에서 --qb-gap(40px, 낮은 화면 24px) 위
-     --qb-h = 퀵바 카드 실제 높이(main.js initQuickbarOverlap 이 넣음, 2줄 모드·글자 크기에 따라 바뀜)
-     --qb-top = 히어로 아래에서 퀵바 윗선까지. 문구는 '헤더 아래 ~ 퀵바 위'의 세로 가운데, 조작 버튼은 퀵바 바로 위 오른쪽 */
-  .screen-home__first { --qb-gap: 40px; --qb-top: calc(var(--qb-h, 150px) + var(--qb-gap)); }
-  /* 문구 세로 위치: main.js layoutHomeHero 가 --hero-center 로 넣는다 ('헤더 아래 ~ 퀵바·재생바 위' 공간의 57.5% 지점, 아래와 최소 48px)
-     JS 가 없을 때는 같은 공간의 가운데 */
-  .screen-home .hero__content { top: var(--hero-center, calc((100% - var(--qb-top) + var(--header-h)) / 2)); }
-  /* 재생바(‹ 1/4 › ▶ ❚❚): 왼쪽 아래 = 문구 시작선, 아래 끝 = 퀵바 아래 끝과 같은 줄
-     퀵바와 가로로 24px 이상 떨어지지 않으면(좁은 화면·2줄 모드·큰 글자) 퀵바 위 왼쪽으로 (.is-ctrl-up — main.js) */
+  /* 홈 첫 화면(풀스크린 한 장) = 히어로(100vh) 안에 [헤더 → 문구 → 조작 버튼] (2026-11-09 히어로 안 '빠른 진료 안내' 퀵바 삭제)
+     --qb-gap = 재생바 아래 끝 ~ 화면 아래 끝 (40px, 낮은 화면 24px)
+     문구 세로 위치: main.js initHeroLayout 이 --hero-center 로 넣는다 ('헤더 아래 ~ 재생바 위' 공간의 57.5% 지점, 아래와 최소 48px). JS 가 없을 때는 같은 공간의 가운데 */
+  .screen-home__first { --qb-gap: 40px; }
+  .screen-home .hero__content { top: var(--hero-center, calc((100% - var(--qb-gap) + var(--header-h)) / 2)); }
+  /* 재생바(‹ 1/4 › ▶ ❚❚): 왼쪽 아래 = 문구 시작선 */
   .screen-home .hero__controls { left: var(--hero-x); right: auto; bottom: var(--qb-gap); }
-  .screen-home__first.is-ctrl-up .hero__controls { bottom: calc(var(--qb-top) + 16px); }
-  /* 퀵바: 오른쪽 아래, 오른쪽 끝 = 헤더 유틸(회원가입) 끝선 = 화면 끝에서 max(40px, (화면 - 1600px) / 2) */
-  .screen-home .clinic-bar { position: relative; z-index: 5; margin-top: calc(var(--qb-top) * -1); padding: 0 0 var(--qb-gap); container-type: inline-size; pointer-events: none; } /* 빈 왼쪽 영역은 아래 재생바가 클릭되게 */
-  .screen-home .clinic-bar > .container {
-    width: var(--qb-w); max-width: none; margin: 0 max(40px, (100cqw - 1600px) / 2) 0 auto; padding: 0; pointer-events: auto;
-    /* 너비 = 예전 가운데 정렬 퀵바 너비(컨테이너 - 좌우 margin 48px)의 80% */
-    --qb-w: calc((min(100cqw, var(--container) + var(--gutter) * 2) - var(--gutter) * 2 - 48px) * 0.8);
-  }
-  /* 퀵바 크기 80% (transform 없이 값 자체를 0.8배). 카드 라벨·FAQ 문구·버튼 글자는 최소 14px */
-  .screen-home .clinic-bar__inner { margin: 0; border-bottom: 0; border-radius: var(--radius-xl); background: #fff; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12); }
-  .screen-home .clinic-bar__card { aspect-ratio: auto; height: 100%; min-height: clamp(86px, 12vh, 112px); gap: 11px; padding: 6px 5px; border-radius: 10px; } /* min-height: 글자가 두 줄이 돼도 카드 밖으로 넘치지 않게, height 100%: 한 장만 두 줄일 때도 다섯 장 높이를 같게 */
-  /* 퀵바 카드 정렬: [빠른 진료 안내 | 아이콘 5개 | FAQ]
-     왼쪽: 카드 끝 ↔ 글자 = 글자 끝 ↔ 첫 아이콘 = --qb-pad(40px), 글자 블록 너비 = 타이틀 길이(max-content)
-     오른쪽: 아이콘 ↔ 구분선 = 구분선 ↔ FAQ 글자 = FAQ 글자 끝 ↔ 카드 끝 = --qb-r
-     두 타이틀(빠른 진료 안내 / 자주 묻는 질문) 폭이 같아서 --qb-r = (40×2 − 구분선 1px) ÷ 3 ≈ 26px 이면
-     왼쪽 묶음 폭 = 오른쪽 묶음 폭 → 가운데 아이콘(일반치료) 중심선 = 카드 중심선. 남는 폭은 아이콘 묶음이 가져간다 */
-  .screen-home .clinic-bar__inner {
-    --qb-pad: 32px; --qb-r: calc((var(--qb-pad) * 2 - 1px) / 3);
-    display: grid; grid-template-columns: max-content minmax(0, 1fr) max-content; align-items: center; column-gap: 0;
-    padding: 19px var(--qb-r) 19px var(--qb-pad);
-  }
-  .screen-home .clinic-bar__head .sec-label { font-size: max(14px, 0.8rem); }
-  .screen-home .clinic-bar__title { font-size: 1.3rem; margin-bottom: 10px; }
-  .screen-home .clinic-bar .btn--sm { height: 26px; padding: 0 13px; gap: 6px; font-size: max(14px, 0.7rem); }
-  .screen-home .clinic-bar .btn--sm svg { width: 13px; height: 13px; }
-  .screen-home .clinic-bar__list { gap: 10px; }
-  .screen-home .clinic-bar__faq .clinic-bar__title { margin: 3px 0; }
-  .screen-home .clinic-bar__faq-desc { margin-bottom: 10px; font-size: max(14px, 0.7rem); }
-  .screen-home .clinic-bar__head { width: auto; margin-right: var(--qb-pad); }
-  .screen-home .clinic-bar__list { order: 0; }
-  .screen-home .clinic-bar__faq { width: auto; display: grid; justify-items: start; align-self: stretch; align-content: center; margin-left: var(--qb-r); padding-left: var(--qb-r); }
-  .screen-home .clinic-bar__faq-desc br { display: inline; }
-  .screen-home .clinic-bar__title { white-space: nowrap; }
-  .screen-home .clinic-bar__card { font-size: max(14px, 0.8rem); }
-  .screen-home .clinic-bar__card img { --ic-k: 0.6; }
-
-  /* 폭이 모자랄 때 1단계: 목록 칸이 좁으면 카드 안쪽 여백·아이콘·간격을 줄인다 (목록 칸 기준 container query) */
-  .screen-home .clinic-bar__list { container: qb-list / inline-size; }
-  @container qb-list (max-width: 512px) {
-    .screen-home .clinic-bar__card { gap: 6px; padding-inline: 3px; }
-    .screen-home .clinic-bar__card img { --ic-k: 0.48; }
-  }
 }
 @media (min-width: 1025px) and (min-height: 700px) and (max-height: 800px) {
-  .screen-home__first { --qb-gap: 24px; } /* 낮은 화면: 퀵바를 화면 아래 끝에 더 붙인다 */
-}
-/* 폭이 모자랄 때 2단계: 퀵바를 2줄로 — 윗줄 [빠른 진료 안내 | FAQ], 아랫줄 진료 카드 5개
-   기준 = 퀵바 칸(.clinic-bar > .container) 실제 너비. 1단계로 줄여도 카드 글자(4글자 낱말)가 한 줄에 안 들어가는 너비에서 전환
-   - 필요한 너비는 글자 크기에 비례하는 부분(타이틀·FAQ·카드 글자 = 30rem)과 고정 부분(여백·아이콘 = 495px)의 합
-     → container query 안의 rem 은 html 글자 크기(보통 16 / 크게 18 / 아주 크게 20px)를 따르므로 글자 단계별 분기가 필요 없다
-   - 최소 1035px: 보통 글자도 크게와 같은 너비에서 2줄 (보통은 계산상 975px까지 들어가지만 카드가 너무 좁아져서)
-   - 1025~1359px(좌우 여백 52px) 기준 화면 폭으로: 보통·크게 1139px · 아주 크게 1199px 이하에서 2줄
-   첫 화면 높이를 지키려고 2줄일 때는 낮게: 윗줄은 [타이틀 + 버튼] 한 줄(FAQ 설명 문구 생략), 카드는 [아이콘 + 글자] 가로 배치 */
-@media (min-width: 1025px) and (min-height: 700px) {
-  .screen-home .clinic-bar > .container { container: qb / inline-size; }
-  /* 퀵바 80% 이후: 기준 = 퀵바 카드 자체 너비(.clinic-bar > .container = 카드 폭), 예전 기준(카드 = 칸 - 48px)의 80% + 최소 글자 14px 여유 */
-  @container qb (max-width: max(800px, 24rem + 370px)) {
-    .screen-home .clinic-bar__inner { grid-template-columns: minmax(0, 1fr) max-content; row-gap: 10px; padding-top: 13px; padding-bottom: 13px; }
-    .screen-home .clinic-bar__head { grid-area: 1 / 1; margin-right: 0; display: flex; flex-wrap: wrap; align-items: center; column-gap: 16px; }
-    .screen-home .clinic-bar__head .sec-label { flex-basis: 100%; }
-    .screen-home .clinic-bar__title { margin-bottom: 0; }
-    .screen-home .clinic-bar__faq { grid-area: 1 / 2; display: flex; align-items: center; align-self: end; gap: 16px; }
-    .screen-home .clinic-bar__faq .clinic-bar__title { margin: 0; }
-    .screen-home .clinic-bar__faq-desc { display: none; }
-    .screen-home .clinic-bar__list { grid-area: 2 / 1 / 3 / 3; }
-    .screen-home .clinic-bar__card { flex-direction: row; gap: 8px; min-height: 48px; padding: 5px 8px; line-height: 1.3; }
-    .screen-home .clinic-bar__card img { --ic-k: 0.4; }
-  }
+  .screen-home__first { --qb-gap: 24px; } /* 낮은 화면: 재생바를 화면 아래 끝에 더 붙인다 */
 }
 
 /* 좁은 데스크톱(1360px 미만) 좌우 안쪽 여백 52px (예전 왼쪽 섹션 표시기 자리 — 표시기는 삭제했지만 레이아웃이 바뀌지 않게 여백은 유지) */
@@ -954,7 +904,6 @@ html.is-fullpage .cases__list { height: max(420px, (100vh - var(--header-h)) * 0
   .is-intro .hero__slide.is-shown .hero__content > :nth-child(n+4) { animation-delay: 1.6s; }
   .is-intro .hero__controls { animation: intro-fade 0.5s ease 1.3s both; }
   .is-intro .quick--float { animation: intro-fade 0.5s ease 1.6s both; }
-  .is-intro .clinic-bar { animation: intro-rise 0.7s var(--ease) 1.9s both; }
 }
 /* 모바일: 펼침 대신 짧은 fade-in */
 @media (prefers-reduced-motion: no-preference) and (max-width: 768px) {

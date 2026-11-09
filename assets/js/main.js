@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initStory();
   initReveal();
   initQuickReveal();
-  initQuickbarOverlap();
+  initHeroLayout();
 });
 
 /* ---------- 모바일: 히어로가 보이는 동안 SNS 플로팅 버튼(+) 숨김 ----------
@@ -31,45 +31,27 @@ function initQuickReveal() {
   mobile.addEventListener('change', apply);
 }
 
-/* ---------- 퀵바 카드 높이 → --qb-h ----------
-   데스크톱(1025px 이상·높이 700px 이상)에서 퀵바 카드를 히어로 아래 끝에 절반 걸치기 위한 값 (main.css '홈 묶음')
-   2줄 모드·글자 크기·창 크기에 따라 높이가 바뀌므로 ResizeObserver 로 계속 맞춘다 */
 /* 첫 화면 배치 (PC·높이 700px 이상, main.css '홈 첫 화면')
-   1) --qb-h: 퀵바 카드 높이
-   2) .is-ctrl-up: 재생바(왼쪽 아래)와 퀵바(오른쪽 아래)가 같은 줄에서 24px 이상 떨어지지 않으면 재생바를 퀵바 위 왼쪽으로
-   3) --hero-center: 문구 묶음 중심 = '헤더 아래 ~ 퀵바·재생바 위' 공간의 57.5% 지점, 단 버튼 아래 끝과 그 아래 요소 사이 최소 48px
-      (슬라이드마다 문구 길이가 달라도 위치가 흔들리지 않게 가장 긴 슬라이드 기준)
-   4) --quick-bottom: 플로팅 퀵메뉴가 퀵바와 가로로 겹치면 퀵바 위 끝보다 24px 위로 (첫 화면 맨 위에서만, 스크롤하면 기본 120px) */
-function initQuickbarOverlap() {
+   2026-11-09 히어로 안 '빠른 진료 안내' 퀵바 삭제 — 퀵바 관련(--qb-h · .is-ctrl-up · 플로팅 퀵메뉴 --quick-bottom 올리기)은 지움
+   --hero-center: 문구 묶음 중심 = '헤더 아래 ~ 재생바 위' 공간의 57.5% 지점, 단 버튼 아래 끝과 그 아래 요소 사이 최소 48px
+      (슬라이드마다 문구 길이가 달라도 위치가 흔들리지 않게 가장 긴 슬라이드 기준), 공간이 모자라면 서브 문구 숨김(.is-hero-tight) */
+function initHeroLayout() {
   const box = document.querySelector('.screen-home__first');
-  const bar = box?.querySelector('.clinic-bar__inner');
   const slider = box?.querySelector('.hero__slider');
-  if (!bar || !slider || !('ResizeObserver' in window)) return;
+  if (!slider || !('ResizeObserver' in window)) return;
   const ctrl = slider.querySelector('.hero__controls');
   const contents = [...slider.querySelectorAll('.hero__content')];
   const desk = window.matchMedia('(min-width: 1025px) and (min-height: 700px)');
   const GAP = 50; // 요청 기준 48px + 반올림 여유
   let raf = 0;
-  // 퀵바 윗선(화면 기준) — 첫 진입 올라오기 애니메이션(transform) 영향을 받지 않게 히어로 높이·간격·카드 높이로 계산
-  const barTop = () => {
-    const s = slider.getBoundingClientRect();
-    const gap = parseFloat(getComputedStyle(box).getPropertyValue('--qb-gap')) || 0;
-    return s.bottom - gap - bar.offsetHeight;
-  };
 
   function layout() {
     raf = 0;
-    box.style.setProperty('--qb-h', Math.round(bar.offsetHeight) + 'px');
-    if (!desk.matches) { box.classList.remove('is-ctrl-up', 'is-hero-tight'); slider.style.removeProperty('--hero-center'); placeQuick(); return; }
+    if (!desk.matches) { box.classList.remove('is-hero-tight'); slider.style.removeProperty('--hero-center'); return; }
     const s = slider.getBoundingClientRect();
-    const b = bar.getBoundingClientRect();
-    // 2) 재생바: 가로 위치는 위·아래 어느 쪽이든 같으므로 그대로 비교
-    const c = ctrl.getBoundingClientRect();
-    box.classList.toggle('is-ctrl-up', b.left - c.right < 24);
-    // 3) 문구 위치
     const c2 = ctrl.getBoundingClientRect();
     const header = document.getElementById('header')?.offsetHeight || 0;
-    const limit = Math.min(barTop(), c2.top) - s.top; // 문구 아래 끝이 넘으면 안 되는 선 (히어로 기준)
+    const limit = c2.top - s.top; // 문구 아래 끝이 넘으면 안 되는 선 = 재생바 위 (히어로 기준)
     // 공간이 모자라면 서브 문구 숨김(.is-hero-tight, main.css) — 제목 축소(낮은 화면 CSS) 다음 단계
     const tallest = () => Math.max(...contents.map((el) => el.offsetHeight));
     box.classList.remove('is-hero-tight');
@@ -79,26 +61,12 @@ function initQuickbarOverlap() {
     center = Math.min(center, limit - GAP - h / 2);
     center = Math.max(center, header + 16 + h / 2); // 공간이 모자라면 헤더에 붙지 않는 쪽을 우선
     slider.style.setProperty('--hero-center', Math.round(center) + 'px');
-    placeQuick();
-  }
-
-  function placeQuick() {
-    const quick = document.querySelector('.quick--float');
-    if (!quick) return;
-    const q = quick.getBoundingClientRect(); // 가로 위치는 --quick-bottom 과 무관
-    const b = bar.getBoundingClientRect();
-    const BASE = 120; // common.css .quick--float 기본 아래 여백
-    const top = barTop();
-    const lift = desk.matches && window.scrollY <= 40 && q.left < b.right && q.right > b.left && window.innerHeight - BASE > top - 24;
-    if (lift) quick.style.setProperty('--quick-bottom', Math.round(window.innerHeight - top + 24) + 'px');
-    else quick.style.removeProperty('--quick-bottom');
   }
 
   const schedule = () => { if (!raf) raf = requestAnimationFrame(layout); };
   const ro = new ResizeObserver(schedule);
-  [bar, slider, ...contents].forEach((el) => ro.observe(el));
+  [slider, ...contents].forEach((el) => ro.observe(el));
   window.addEventListener('resize', schedule);
-  window.addEventListener('scroll', placeQuick, { passive: true });
   document.addEventListener('components:loaded', schedule); // 헤더·퀵메뉴가 들어온 뒤 다시
   document.addEventListener('hero:introend', schedule);
   layout();
@@ -849,8 +817,8 @@ async function initStory() {
    의료진 섹션부터 적용. 섹션 타이틀은 fade-up, 카드 묶음은 자식이 0.08s 간격으로 순차 등장 (간격은 main.css). 움직임 줄이기 설정이면 끔 */
 function initReveal() {
   if (!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  const singles = '.doctors__head, .why__head, .cases__head, .faq-preview__head, .faq-preview__box, .faq-quick, .story-notice, .story__body';
-  const groups = '.why__grid, .cases__list'; // 치과소식 카드는 탭으로 다시 그려지므로 묶음(.story__body)째로 등장
+  const singles = '.why__head, .clinic__head, .doctors__head, .cases__head, .faq-preview__head, .faq-preview__box, .faq-quick, .story-notice, .story__body';
+  const groups = '.why__grid, .clinic__grid, .cases__list'; // 치과소식 카드는 탭으로 다시 그려지므로 묶음(.story__body)째로 등장
   const targets = [
     // 의료진 인물 줄: 줄 전체가 아니라 사진·이름 하나하나 등장 (main.css .reveal-photos — 흰 배경 사진 multiply 가 끊기지 않게)
     ...[...document.querySelectorAll('.doctors__main')].map((el) => { el.classList.add('reveal-photos'); return el; }),

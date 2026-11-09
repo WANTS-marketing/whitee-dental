@@ -25,19 +25,9 @@
       allowClick: true,
       title: '글씨가 작게 보이시나요?',
       text: '여기를 누르면 홈페이지 글씨를 크게 볼 수 있어요.',
-    },
-    {
-      // 퀵바 왼쪽 '빠른 진료 안내' 블록 + 진료 아이콘 카드
-      // 카드도 따로 넣는다 — 좁은 화면·큰 글자에서 카드가 목록 칸 밖으로 넘칠 때도 다 감싸도록
-      targets: () => [document.querySelector('.clinic-bar__head'), document.querySelector('.clinic-bar__list'), ...document.querySelectorAll('.clinic-bar__card')],
-      arrowTo: () => document.querySelector('.clinic-bar__head'),
-      pad: 12,
-      place: 'top',
-      allowClick: false,
-      title: '진료가 급하신가요?',
-      text: '원하시는 진료를 바로 선택하거나, 빠른 상담을 남겨주시면 확인 후 바로 연락드립니다.',
       last: true,
     },
+    // (2026-11-09 2단계 '진료가 급하신가요?'(히어로 안 빠른 진료 안내 퀵바) 삭제 — 퀵바를 메인에서 뺌)
   ];
 
   let el = null;       // 오버레이 루트
@@ -163,8 +153,8 @@
     count.innerHTML = `<span class="sr-only">전체 ${STEPS.length}단계 중 </span><strong>${i + 1}</strong><span aria-hidden="true"> / ${STEPS.length}</span><span class="sr-only">단계</span>`;
     el.querySelector('.coach__skip').hidden = !!s.last; // 마지막 단계는 '확인'이 곧 닫기
     el.querySelector('.coach__btns').innerHTML = s.last
-      ? `<a class="coach__btn coach__btn--line" href="${root}/faq/contact-write.html" data-coach-done>빠른 상담 신청</a>
-         <button type="button" class="coach__btn" data-coach-close>확인</button>`
+      ? `${s.consult ? `<a class="coach__btn coach__btn--line" href="${root}/faq/contact-write.html" data-coach-done>빠른 상담 신청</a>` : ''}
+         <button type="button" class="coach__btn" data-coach-close>확인</button>` // '빠른 상담 신청'은 상담 안내 단계(consult: true)에만 — 지금은 없음
       : '<button type="button" class="coach__btn" data-coach-next>다음</button>';
     el.querySelector('[data-coach-done]')?.addEventListener('click', () => close({ keepPage: true }));
 
