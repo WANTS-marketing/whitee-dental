@@ -141,6 +141,7 @@
 .partner-highlight strong { display: block; font-size: var(--fs-h4); }
 .partner-highlight span { font-size: var(--fs-sm); color: var(--color-text-sub); }
 .partner-logos { display: grid; grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr)); gap: 10px; } /* rem: 글자 크게 단계에서 긴 이름(중소기업융합경남연합회)이 칸을 넘지 않게 */
+.partner-logos li img { display: block; max-height: 40px; width: auto; } /* 로고(site-data.js partners.list logo)가 있으면 이미지 */
 .partner-logos li { display: grid; place-items: center; min-height: 64px; padding: 10px; border: 1px solid var(--color-line); border-radius: var(--radius-sm); background: #fff; font-size: var(--fs-xs); color: var(--color-text-sub); text-align: center; word-break: keep-all; }
 
 /* ---------- 병원 둘러보기 (갤러리 + 라이트박스) ---------- */

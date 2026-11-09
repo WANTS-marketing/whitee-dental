@@ -138,18 +138,50 @@ window.SITE = {
       icon: '<path d="M20 14.5A8.5 8.5 0 019.5 4a8.5 8.5 0 1010.5 10.5z"/>' },
   ],
 
-  /* 협력 기관 — 치과소개(PARTNERS) · 메인(협력기관 띠) 공통. TODO: 협력업체 로고 이미지(29개) 병원에 요청 — 지금은 이름만 */
+  /* 협력 기관 — 메인 'WHITE e PARTNERS' · 치과소개(about/intro.html #partners) 공통 (common.js renderSiteBlocks)
+       출처: 2026-11-02 커밋 bd5b31e(디자인 2차)에서 처음 입력 — 출처 기록 없음. 기존 홈페이지(메인·의료진소개 이미지)·자료 폴더에서도 확인 못 함
+       → 모두 verified: false (병원 확인 필요 목록: docs/PARTNERS-CHECK.md). 지우지 않고 유지
+       highlights 강조 카드: icon = svg 안쪽(viewBox 0 0 24 24, 선)
+       list 협력 기관: logo = assets/images/partners/ 안 파일 이름 — 있으면 로고 이미지, 비어 있으면 글자 타일 (로고를 받으면 logo 만 채우면 됨) */
   partners: {
     highlights: [
-      { title: '부산대학병원 협력', desc: '협력 의료기관' }, // TODO: 협력 내용 확인
-      { title: '경찰 자문', desc: '자문 활동' }, // TODO: 자문 내용 확인
-      { title: '방송 출연', desc: '‘세상에 이런일이’' },
+      { title: '부산대학병원 협력', desc: '협력 의료기관', verified: false, // TODO: 협력 내용 확인
+        icon: '<path d="M4 21V8l8-5 8 5v13"/><path d="M9 21v-5h6v5M12 8v5M9.5 10.5h5"/>' },
+      { title: '경찰 자문', desc: '자문 활동', verified: false, // TODO: 자문 내용 확인
+        icon: '<path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6z"/><path d="M9 12l2 2 4-4"/>' },
+      { title: '방송 출연', desc: '‘세상에 이런일이’', verified: false,
+        icon: '<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 3l4 4 4-4"/>' },
     ],
-    names: [
-      '전국금속노동조합', 'DOOSAN', '한화디펜스', '경상남도 대한미용협회', '창원대학교', '창원시 배드민턴협회', '마산 어시장상인회',
-      '한국실버경찰봉사대 의창구지회', '웨딩드림', '라라한방병원', '미시안 안과의원', '미시안 여성의원', '창원시 사회인 야구단', '(주)창원청과시장',
-      '탑골프아카데미', '효성중공업', '경남 자율방재단연합회', '창원시 소프트볼협회', '바르게살기운동 경남협의회', '창원 LG 세이커스', '경남FC',
-      '창원 시청축구단', '창원 성산소방서', '엔디티 엔지니어링(주)', '중소기업융합경남연합회', '가온내과', '365병원', '강추한방병원', '창원메트로시티석전 아파트',
+    list: [
+      { name: "전국금속노동조합", logo: '', verified: false },
+      { name: "DOOSAN", logo: '', verified: false },
+      { name: "한화디펜스", logo: '', verified: false },
+      { name: "경상남도 대한미용협회", logo: '', verified: false },
+      { name: "창원대학교", logo: '', verified: false },
+      { name: "창원시 배드민턴협회", logo: '', verified: false },
+      { name: "마산 어시장상인회", logo: '', verified: false },
+      { name: "한국실버경찰봉사대 의창구지회", logo: '', verified: false },
+      { name: "웨딩드림", logo: '', verified: false },
+      { name: "라라한방병원", logo: '', verified: false },
+      { name: "미시안 안과의원", logo: '', verified: false },
+      { name: "미시안 여성의원", logo: '', verified: false },
+      { name: "창원시 사회인 야구단", logo: '', verified: false },
+      { name: "(주)창원청과시장", logo: '', verified: false },
+      { name: "탑골프아카데미", logo: '', verified: false },
+      { name: "효성중공업", logo: '', verified: false },
+      { name: "경남 자율방재단연합회", logo: '', verified: false },
+      { name: "창원시 소프트볼협회", logo: '', verified: false, note: "처음 넣을 때부터 '로고 확인' 표시가 있던 항목" },
+      { name: "바르게살기운동 경남협의회", logo: '', verified: false },
+      { name: "창원 LG 세이커스", logo: '', verified: false },
+      { name: "경남FC", logo: '', verified: false },
+      { name: "창원 시청축구단", logo: '', verified: false },
+      { name: "창원 성산소방서", logo: '', verified: false },
+      { name: "엔디티 엔지니어링(주)", logo: '', verified: false },
+      { name: "중소기업융합경남연합회", logo: '', verified: false },
+      { name: "가온내과", logo: '', verified: false },
+      { name: "365병원", logo: '', verified: false, note: "마산점 건물(석전동 365병원)과 이름이 같음 — 주소 정보에서 잘못 들어온 것인지 확인" },
+      { name: "강추한방병원", logo: '', verified: false },
+      { name: "창원메트로시티석전 아파트", logo: '', verified: false, note: "마산점 주소 동네(석전동)와 겹침 — 주소 정보에서 잘못 들어온 것인지 확인" },
     ],
   },
 
