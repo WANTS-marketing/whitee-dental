@@ -15,7 +15,7 @@
    스타일: main.css '풀스크린 섹션 넘김' (html.is-fullpage 일 때만)
    ========================================================================== */
 (function () {
-  const SECTIONS = [
+  const ALL_SECTIONS = [
     { sel: '.screen-home__first', hash: 'home', label: '홈' },
     { sel: '#screen-why', hash: 'why', label: '4가지 약속' },
     { sel: '#screen-clinic', hash: 'treatment', label: '진료안내' },
@@ -26,6 +26,7 @@
     { sel: '#screen-story', hash: 'news', label: '치과소식' },
     { sel: '.branch-bar', hash: 'location', label: '지점·오시는길' }, // 푸터 include 가 들어오면 자리 요소가 바뀌므로 지점 바로가기 바 기준
   ];
+  let SECTIONS = ALL_SECTIONS; // 실제 쓰는 목록 = 숨김(hidden) 아닌 섹션만 (enable 에서 다시 고름 — 공지·소식이 모두 0개면 공지·소식 섹션 빠짐)
   const DURATION = 800;
   const LOCK_MS = 1000;
   const GESTURE_GAP = 200;
@@ -226,6 +227,7 @@
 
   function enable() {
     if (active) return;
+    SECTIONS = ALL_SECTIONS.filter((s) => { const el = document.querySelector(s.sel); return !el || !el.closest('[hidden]'); });
     els = SECTIONS.map((s) => document.querySelector(s.sel));
     if (els.some((el) => !el)) return;
     active = true;
@@ -264,7 +266,16 @@
   });
 
   // 다른 스크립트(플로팅 TOP 버튼 등)가 쓰는 입구
-  window.Fullpage = { go: (i) => (active ? go(i) : null), isActive: () => active };
+  // 섹션을 숨기거나 다시 보일 때(main.js initStory) 목록·점을 다시 만든다
+  function refresh() {
+    if (!active) return;
+    disable();
+    nav?.remove();
+    nav = null;
+    arrived = -1;
+    enable();
+  }
+  window.Fullpage = { go: (i) => (active ? go(i) : null), isActive: () => active, refresh };
 
   // 헤더·푸터(include)가 들어온 뒤 시작 — 마지막 섹션이 푸터라서
   document.addEventListener('components:loaded', sync);

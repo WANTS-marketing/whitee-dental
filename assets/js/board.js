@@ -49,6 +49,10 @@
       defaultView: 'list',
       pinned: true,
       listPlain: true, // 목록형: 썸네일·요약 없이 제목·날짜
+      lines: true, // 2026-11-09: 메인과 같은 한 줄 목록 [번호 | 지점 | 제목 | 날짜] (UI.noticeLine) — 보기 방식 버튼 없음
+      perPage: 10, // 10개 넘을 때만 페이지 번호
+      allCats: true, // 지점 칩(전체·창원점·마산점)은 글이 없어도 늘 보임 → 결과 0개면 빈 상태 박스
+      emptyBox: { title: '등록된 공지사항이 없습니다', desc: '진료시간·휴진 안내는 아래에서 확인하실 수 있어요' },
       thumb: (r) => r.thumbnail,
       summary: (r) => r.summary || '',
       search: (r) => `${r.title} ${r.summary || ''} ${r.body || ''}`,
@@ -120,7 +124,7 @@
 
     // 보기 방식 (localStorage)
     let view = cfg.defaultView;
-    try { const v = localStorage.getItem(viewKey(board)); if (['card3', 'card4', 'list'].includes(v)) view = v; } catch (e) { /* 기본 보기 */ }
+    if (!cfg.lines) { try { const v = localStorage.getItem(viewKey(board)); if (['card3', 'card4', 'list'].includes(v)) view = v; } catch (e) { /* 기본 보기 */ } }
 
     root.innerHTML = `
       <nav class="board-cats" aria-label="${esc(cfg.name)} ${esc(cfg.catLabel)}"><ul class="board-cats__list" data-b-cats></ul></nav>
@@ -128,9 +132,9 @@
         <p class="board-tools__count" data-b-count aria-live="polite"></p>
         <div class="board-tools__right">
           ${cfg.sortable ? `<div class="board-sort" role="group" aria-label="정렬" data-b-sort>${SORTS.map((s) => `<button type="button" class="board-sort__btn" data-b-sort-val="${s.v}">${s.label}</button>`).join('')}</div>` : ''}
-          <div class="board-tools__views" role="group" aria-label="보기 방식">
+          ${cfg.lines ? '' : `<div class="board-tools__views" role="group" aria-label="보기 방식">
             ${['card3', 'card4', 'card', 'list'].map((v) => `<button type="button" class="board-tools__view board-tools__view--${v}" data-b-view="${v}" aria-label="${VIEW_LABEL[v]}" title="${VIEW_LABEL[v]}">${ICON[v]}</button>`).join('')}
-          </div>
+          </div>`}
         </div>
         <form class="board-search" role="search" data-b-search>
           <input class="board-search__input" type="search" name="q" placeholder="제목·내용 검색" aria-label="${esc(cfg.name)} 제목·내용 검색" enterkeyhint="search">
@@ -165,11 +169,15 @@
       const s = p.toString();
       return location.pathname + (s ? `?${s}` : '');
     };
-    const perPage = () => (view === 'card4' && !isMobile() ? PER_PAGE_CARD4 : PER_PAGE);
+    const perPage = () => cfg.perPage || (view === 'card4' && !isMobile() ? PER_PAGE_CARD4 : PER_PAGE);
 
     const tagsOf = (r) => `${cfg.pinned && r.pinned ? '<span class="board-tag">공지</span>' : ''}${r.branch && board !== 'news' ? branchBadge(r.branch) : ''}`;
     const metaOf = (r) => `<time datetime="${esc(r.date)}">${fullDate(r.date)}</time>${hasViews ? `<span class="board-views">조회 ${r.views.toLocaleString('ko-KR')}</span>` : ''}`;
-    const href = (r) => `${cfg.view}?id=${encodeURIComponent(r.id)}`;
+    const href = (r) => `${cfg.view}?id=${encodeURIComponent(r.id)}${window.API.mockQuery ? window.API.mockQuery() : ''}`;
+    // 빈 상태 박스 (공지사항 0개 · 지점 필터 결과 0개) — 버튼: 진료시간·오시는길 / 상담문의
+    const EMPTY_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10v4a1 1 0 001 1h2l5 4V5L7 9H5a1 1 0 00-1 1z"/><path d="M16 9a4 4 0 010 6M18.5 6.5a7.5 7.5 0 010 11"/></svg>';
+    const emptyBoxHtml = () => `<li class="board-empty"><span class="board-empty__icon">${EMPTY_ICON}</span><p class="board-empty__title">${esc(cfg.emptyBox.title)}</p><p class="board-empty__desc">${esc(cfg.emptyBox.desc)}</p><p class="board-empty__btns"><a class="board-empty__btn board-empty__btn--fill" href="../about/clinic.html">진료시간·오시는길</a><a class="board-empty__btn" href="../faq/contact.html">상담문의</a></p></li>`;
+    const lineHtml = (r, no) => `<li id="${cfg.idPrefix}-${esc(r.id)}">${window.UI.noticeLine(r, { href: href(r), no, table: true })}</li>`;
     const thumbHtml = (r, cls) => (cfg.pair ? `<span class="${cls} case-pair">${casePair(r, locked)}</span>`
       : `<span class="${cls} img-ph${locked ? ' is-locked' : ''}"><img src="${img(cfg.thumb(r))}" alt="" loading="lazy" decoding="async">${locked ? '<span class="board-lock">로그인 후 확인</span>' : ''}</span>`);
 
@@ -238,7 +246,7 @@
       const base = filtered({ ...st, cat: '' });
       const all = [...base.pinned, ...base.rest];
       const n = (c) => (c ? all.filter((r) => cfg.catsOf(r).includes(c)).length : all.length);
-      catsEl.innerHTML = ['', ...cats].filter((c) => !c || n(c) || c === st.cat).map((c) => `
+      catsEl.innerHTML = ['', ...cats].filter((c) => !c || n(c) || c === st.cat || cfg.allCats).map((c) => `
         <li><a class="board-cats__btn" href="${esc(urlOf({ ...st, cat: c, page: 1 }))}" data-b-cat="${esc(c)}"${c === st.cat ? ' aria-current="true"' : ''}>${c ? esc(c) : '전체'} <span class="board-cats__n">${n(c)}</span></a></li>`).join('');
 
       countEl.innerHTML = `총 <b>${(pinned.length + rest.length).toLocaleString('ko-KR')}</b>건${st.q ? ` <span class="board-tools__q">‘${esc(st.q)}’ 검색 결과</span> <a class="board-tools__clear" href="${esc(urlOf({ ...st, q: '', page: 1 }))}" data-b-clear>검색 지우기</a>` : ''}`;
@@ -253,9 +261,18 @@
         b.setAttribute('aria-pressed', String(v === 'card' ? view !== 'list' : v === view));
       });
 
-      listEl.innerHTML = shown.length
-        ? shown.map(view === 'list' ? rowHtml : cardHtml).join('')
-        : `<li class="board-list__empty">${st.q ? `‘${esc(st.q)}’ 검색 결과가 없습니다.` : esc(cfg.empty)}</li>`;
+      if (cfg.lines) {
+        // 한 줄 표: 번호 = 고정 공지 빼고 최신 글이 큰 번호 (전체 rest 기준)
+        listEl.classList.add('notice-lines', 'notice-lines--table');
+        const head = '<li class="notice-lines__head" aria-hidden="true"><span>번호</span><span>지점</span><span>제목</span><span>작성일</span></li>';
+        listEl.innerHTML = shown.length
+          ? head + shown.map((r) => lineHtml(r, r.pinned ? '' : String(rest.length - rest.indexOf(r)))).join('')
+          : (st.q ? `<li class="board-list__empty">‘${esc(st.q)}’ 검색 결과가 없습니다.</li>` : emptyBoxHtml());
+      } else {
+        listEl.innerHTML = shown.length
+          ? shown.map(view === 'list' ? rowHtml : cardHtml).join('')
+          : `<li class="board-list__empty">${st.q ? `‘${esc(st.q)}’ 검색 결과가 없습니다.` : esc(cfg.empty)}</li>`;
+      }
       listEl.querySelectorAll('img').forEach((im) => im.addEventListener('error', () => im.classList.add('is-missing'), { once: true }));
       pagerEl.innerHTML = pagerHtml(page, pages, st);
       if (animate) { fade(listEl); fade(pagerEl); }
@@ -312,7 +329,7 @@
     try {
       rows = await cfg.load();
       hasViews = rows.some((r) => r.views > 0);
-      cats = cfg.catOrder ? cfg.catOrder.filter((c) => rows.some((r) => cfg.catsOf(r).includes(c))) : [...new Set(rows.flatMap(cfg.catsOf))];
+      cats = cfg.allCats ? cfg.catOrder.slice() : cfg.catOrder ? cfg.catOrder.filter((c) => rows.some((r) => cfg.catsOf(r).includes(c))) : [...new Set(rows.flatMap(cfg.catsOf))];
       // 예전 주소(#news-story-89 · #notice-nt7 — 메인 카드)로 들어오면 상세로
       const m = location.hash.match(/^#(news|notice|case)-(.+)$/);
       if (m) { const id = decodeURIComponent(m[2]); if (rows.some((r) => r.id === id)) { location.replace(`${cfg.view}?id=${encodeURIComponent(id)}`); return; } }

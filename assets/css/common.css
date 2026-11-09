@@ -594,6 +594,55 @@ html.is-lnb-hold body { min-height: calc(100vh + 2000px); }
 [data-board="cases"] { --b-ratio: 3 / 4; }
 .board-list__empty { padding: 72px 0; text-align: center; color: var(--color-text-muted); }
 
+/* ---------- 공지 한 줄 목록 (메인 공지 · community/notice.html 공통 — common.js UI.noticeLine) ----------
+   카드 없이 위아래 1px 선(#E3E8F0), 한 줄 64px: [지점 태그(있을 때만)] 제목 17px(넘치면 …) …… 날짜(오른쪽 끝, 회색 14px). hover = 제목 파랑
+   표 보기(공지사항 페이지): [번호 | 지점 | 제목 | 날짜] + 위 머리줄. 고정 공지 = 번호 칸 '공지' + 옅은 네이비 면 */
+.notice-lines { border-top: 1px solid #e3e8f0; }
+.notice-lines > li { min-width: 0; border-bottom: 1px solid #e3e8f0; }
+.notice-line { display: flex; align-items: center; gap: 12px; min-width: 0; min-height: 64px; padding: 0 4px; }
+.notice-line__tag { flex: none; padding: 1px 8px; border-radius: 4px; font-size: var(--fs-xxs); font-weight: 600; line-height: 1.6; color: #fff; } /* 지점 구분 = 지점 색 그대로 */
+.notice-line__tag--changwon { background: var(--color-changwon); }
+.notice-line__tag--masan { background: var(--color-masan); }
+.notice-line__title { flex: 1; min-width: 0; overflow: hidden; font-size: 1.0625rem; font-weight: 500; line-height: 1.5; white-space: nowrap; text-overflow: ellipsis; transition: color var(--dur); }
+.notice-line__date { flex: none; font-size: 0.875rem; color: #999; white-space: nowrap; }
+.notice-line:is(:hover, :focus-visible) .notice-line__title { color: var(--color-accent); }
+/* 표 보기 */
+.notice-lines--table .notice-line { gap: 16px; padding: 0 16px; }
+.notice-line__no { flex: none; width: 56px; text-align: center; font-size: 0.875rem; color: #999; }
+.notice-line__branch { display: flex; flex: none; justify-content: center; width: 64px; }
+.notice-line__common { font-size: var(--fs-xxs); color: #999; }
+.notice-line.is-pinned { background: var(--color-point-soft); }
+.notice-lines__head { display: flex; align-items: center; gap: 16px; min-height: 48px; padding: 0 16px; background: #f8fafd; font-size: 0.875rem; font-weight: 600; color: var(--color-text-sub); }
+.notice-lines__head span:nth-child(1) { width: 56px; text-align: center; }
+.notice-lines__head span:nth-child(2) { width: 64px; text-align: center; }
+.notice-lines__head span:nth-child(3) { flex: 1; text-align: center; }
+.notice-lines__head span:nth-child(4) { width: 80px; text-align: center; }
+.notice-lines--table .notice-line__date { width: 80px; text-align: center; }
+@media (max-width: 768px) {
+  .notice-lines--table .notice-line { gap: 10px; padding: 0 4px; }
+  .notice-line__no, .notice-lines__head { display: none; } /* 모바일: 번호·머리줄 숨김 — [지점] 제목 날짜 */
+  .notice-line__branch { width: auto; }
+  .notice-line__common { display: none; }
+  .notice-lines--table .notice-line__date { width: auto; }
+  .notice-line__title { font-size: 1rem; }
+}
+
+/* ---------- 게시판 빈 상태 박스 (공지사항 0개·지점 필터 결과 0개 — board.js) ----------
+   가운데, 옅은 면 #f8fafd, 둥근 16px, 위아래 72px: 선 아이콘 → 제목 18px 굵게 → 설명 15px 회색 → 버튼 2개(진료시간·오시는길 = 파랑 면, 상담문의 = 파랑 선) */
+.board-empty { display: grid; justify-items: center; gap: 8px; padding: 72px 24px; border-radius: 16px; background: #f8fafd; text-align: center; }
+.board-list .board-empty { grid-column: 1 / -1; }
+.board-empty__icon { display: grid; place-items: center; width: 56px; height: 56px; margin-bottom: 8px; border-radius: 50%; background: #fff; color: var(--color-accent); }
+.board-empty__icon svg { width: 26px; height: 26px; }
+.board-empty__title { font-size: 1.125rem; font-weight: 700; }
+.board-empty__desc { font-size: 0.9375rem; color: var(--color-text-sub); word-break: keep-all; }
+.board-empty__btns { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 16px; }
+.board-empty__btn { display: inline-flex; align-items: center; height: 44px; padding: 0 20px; border: 1px solid var(--color-accent); border-radius: var(--radius-btn); background: #fff; font-size: 0.9375rem; font-weight: 600; color: var(--color-accent); transition: background var(--dur), color var(--dur); }
+.board-empty__btn:hover { background: rgba(var(--color-accent-rgb), 0.06); }
+.board-empty__btn--fill { background: var(--color-accent); color: #fff; }
+.board-empty__btn--fill:hover { background: var(--color-accent-hover); }
+.notice-lines > .board-empty { border-bottom: 0; }
+.notice-lines:has(> .board-empty) { border-top: 0; }
+
 /* 분류 칩: 현재 = 네이비 면. 넘치면 가로 스크롤 */
 .board-cats { margin-bottom: 20px; overflow-x: auto; scrollbar-width: none; }
 .board-cats::-webkit-scrollbar { display: none; }

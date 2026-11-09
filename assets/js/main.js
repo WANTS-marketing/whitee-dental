@@ -827,18 +827,19 @@ async function initStory() {
   track.addEventListener('click', (e) => { if (dragged) { e.preventDefault(); e.stopPropagation(); dragged = false; } }, true);
   track.addEventListener('dragstart', (e) => e.preventDefault());
 
-  /* ---------- 공지사항 목록 (왼쪽) ---------- */
-  const BRANCH_TAG = { changwon: '창원점', masan: '마산점' }; // 두 지점 공통(both)은 태그 없음
-  const dot = (iso) => { const d = new Date(iso); const p = (n) => String(n).padStart(2, '0'); return `${d.getFullYear()}. ${p(d.getMonth() + 1)}. ${p(d.getDate())}`; };
+  /* ---------- 공지사항 목록 (왼쪽) — 한 줄 목록 최대 4개 (UI.noticeLine, common.css '공지 한 줄 목록') ----------
+     1~4개: 있는 만큼만(빈 칸 채우지 않음) / 0개: 공지 칸 숨김 → 소식이 전체 폭(.story.is-no-notice) / 공지·소식 둘 다 0개: 섹션 숨김 */
+  const section = document.getElementById('screen-story');
+  const noticeCol = document.querySelector('.story-notice');
+  if (!data.notice.length && !data.news.length) {
+    if (section) { section.hidden = true; window.Fullpage?.refresh?.(); } // PC 한 화면 넘김 목록에서도 빠지게
+    return;
+  }
+  section?.classList.toggle('is-no-notice', !data.notice.length);
+  if (noticeCol) noticeCol.hidden = !data.notice.length; // '전체보기'도 함께 숨김 = 공지 1개 이상일 때만 보임
   if (noticeEl) {
-    noticeEl.innerHTML = data.notice.length ? data.notice.map((r) => {
-      const t = BRANCH_TAG[r.branch];
-      return `
-      <li><a class="notice-item" href="./community/notice-view.html?id=${encodeURIComponent(r.id)}">
-        <span class="notice-item__title">${t ? `<span class="notice-item__tag notice-item__tag--${r.branch}">${t}</span>` : ''}<span class="notice-item__text">${esc(String(r.title).replace(/\s*\n\s*/g, ' '))}</span></span>
-        <time class="notice-item__date" datetime="${esc(r.date)}">${dot(r.date)}</time>
-      </a></li>`;
-    }).join('') : '<li class="empty">등록된 공지사항이 없습니다.</li>';
+    const mq = window.API.mockQuery ? window.API.mockQuery() : '';
+    noticeEl.innerHTML = data.notice.map((r) => `<li>${window.UI.noticeLine(r, { href: `./community/notice-view.html?id=${encodeURIComponent(r.id)}${mq}` })}</li>`).join('');
   }
 
   /* ---------- 치과소식 카드 (오른쪽) ---------- */

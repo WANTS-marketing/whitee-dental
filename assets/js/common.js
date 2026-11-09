@@ -23,6 +23,20 @@
     return `<span class="badge badge--${cls}">${label}</span>`;
   };
 
+  /** 공지 한 줄 (메인 공지 · community/notice.html 공통, 스타일 common.css '공지 한 줄 목록')
+      [번호(표 보기만)] [지점 태그 — 지점 공통이면 없음(표 보기는 '공통')] 제목(말줄임) …… 날짜
+      opts: href(링크), no(번호 칸 글자 — 있으면 표 보기), pinned(번호 칸에 '공지' 태그) */
+  const NOTICE_BRANCH = { changwon: '창원점', masan: '마산점' };
+  const noticeLine = (r, { href, no, table = false } = {}) => {
+    const d = new Date(r.date);
+    const p = (n) => String(n).padStart(2, '0');
+    const date = `${d.getFullYear()}.${p(d.getMonth() + 1)}.${p(d.getDate())}`;
+    const t = NOTICE_BRANCH[r.branch];
+    const tag = t ? `<span class="notice-line__tag notice-line__tag--${r.branch}">${t}</span>` : (table ? '<span class="notice-line__common">공통</span>' : '');
+    const noCell = table ? `<span class="notice-line__no">${r.pinned ? '<span class="board-tag">공지</span>' : esc(no)}</span>` : '';
+    return `<a class="notice-line${r.pinned && table ? ' is-pinned' : ''}" href="${href}">${noCell}${table ? `<span class="notice-line__branch">${tag}</span>` : tag}<span class="notice-line__title">${esc(String(r.title).replace(/\s*\n\s*/g, ' '))}</span><time class="notice-line__date" datetime="${esc(r.date)}">${date}</time></a>`;
+  };
+
   /** 아코디언: 하나 열면 나머지는 닫힘 */
   function accordion(container) {
     container.addEventListener('click', (e) => {
@@ -472,7 +486,7 @@
   function initSelects(scope = document) { scope.querySelectorAll('select').forEach(enhanceSelect); }
   initSelects();
 
-  window.UI = { esc, telHref, img, bg, formatDate, branchBadge, accordion, faqItem, rollText, inquiryForm, initSelects, deliveryReady, demoText, demoHtml, dialog, confirm: confirmDialog, alert: alertDialog };
+  window.UI = { esc, telHref, img, bg, formatDate, branchBadge, noticeLine, accordion, faqItem, rollText, inquiryForm, initSelects, deliveryReady, demoText, demoHtml, dialog, confirm: confirmDialog, alert: alertDialog };
 
   /* ---------- 이미지 대체 ----------
      1) assets/images/파일명 이 없으면 → assets/images/temp/파일명 (임시 스톡 이미지)
