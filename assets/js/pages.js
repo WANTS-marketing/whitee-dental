@@ -52,10 +52,10 @@ function fadeIn(el) {
    위: 소개 블록(doctors.html 에 직접 — 왼쪽 네이비 문구 | 오른쪽 원내 사진 흑백)
    지점별 묶음: [지점 색 작은 라벨 + '창원점 의료진'] 아래 원장 — 겸직 원장(김영우)은 두 지점 모두, 이름 아래 [창원점][마산점] 지점 색 태그 두 개
    원장(원장 사이 가는 가로선, 위아래 간격 일정): 모두 같은 방향(사진 왼쪽) — 2026-11-09 구조 변경
-     [사진(크기 고정, 아래 끝 = 상자 아래 끝, 상자보다 높으면 위로 솟음) | 옅은 파랑 상자(내용만큼, 최소 300px)
+     [사진(크기 고정, 아래 끝 = 상자 아래 끝, 상자보다 높으면 위로 솟음) | 옅은 파랑 상자(높이 480px 고정, 넘치면 내용만큼)
         상자 안 위에서부터: 이름 52px 굵게 + 직함 ······ 학회·학교 로고(site-data.js logos)
                          진료과 태그(지점 색 면) + 주요 진료(site-data.js focus) + 겸직 지점 태그
-                         (28px) 약력 1열(항목 8개 이상 = 2열)]
+                         (28~36px) 약력 1열(항목 4개 이상 = 2열, 왼쪽 열 먼저) — [이름~약력] 묶음 세로 가운데]
    약력: 지금 데이터 순서 그대로가 아니라 분류 순서 — 전문의 → 학력 → 경력 → 연수·학회 활동, 색·굵기는 모두 같음 (site-data.js SITE.classifyCareer · isTraining)
    사진: 원장별 보정값(site-data.js photoScale·photoOffsetY·photoOffsetX → --ps·--py·--px), 흰 배경 사진(photoBlend 켜진 원장)도 이 페이지에서는 multiply 를 쓰지 않음 — 흰 가운·얼굴로 상자 색이 비쳐서. 대신 .is-whitebg 가장자리만 녹임 (메인 의료진은 그대로 multiply)
      스타일: common.css '의료진 소개'. 1024px 이하 = 사진 위 · 정보 아래, 이름 36px, 약력 1열
@@ -70,16 +70,18 @@ function renderDoctorsPage() {
   const groups = S.branches.map((b) => ({ b, docs: S.getDoctorsByBranch(b.id) }));
   /* 약력: 순서는 분류 순서 — 전문의 → 학력 → 경력 → 연수 → 학회 활동. 글자 색·굵기는 모두 같음
      (2026-11-09 예전 '전문의·학력·경력 = 네이비 굵게 / 연수·학회 = 기본' 구분 삭제)
-     항목 8개 이상 = 2열(.is-2col): 두 묶음(앞 절반 올림 / 나머지)을 왼쪽부터 나란히, 열 사이 56px (common.css). 7개 이하 = 1열 */
-  const CAREER_2COL_MIN = 8;
+     항목 4개 이상 = 2열(.is-2col): 왼쪽 열을 위→아래로 먼저 채우고 오른쪽 열로 (행 수 = 올림(항목 ÷ 2) → --career-rows, grid-auto-flow: column). 3개 이하 = 1열
+     행 수(1열 = 항목 수, 2열 = 왼쪽 열 항목 수)로 크기 단계: 3행 이하 rows-s · 4~5행 rows-m · 6행 이상 rows-l (article 클래스, common.css) */
+  const CAREER_2COL_MIN = 4;
   const careerOf = (d) => {
     const by = { cert: [], edu: [], career: [], training: [], society: [] };
     (d.career || []).forEach((c) => { const k = S.classifyCareer(c); by[k === 'career' && S.isTraining(c) ? 'training' : k].push(c); });
     const all = [...by.cert, ...by.edu, ...by.career, ...by.training, ...by.society].map((c) => `<li>${esc(c)}</li>`);
-    if (all.length < CAREER_2COL_MIN) return `<div class="doctor-profile__career"><ul class="doctor-profile__col">${all.join('')}</ul></div>`;
-    const half = Math.ceil(all.length / 2);
-    return `<div class="doctor-profile__career is-2col"><ul class="doctor-profile__col">${all.slice(0, half).join('')}</ul><ul class="doctor-profile__col">${all.slice(half).join('')}</ul></div>`;
+    const two = all.length >= CAREER_2COL_MIN;
+    const rows = two ? Math.ceil(all.length / 2) : all.length;
+    return { rows, html: `<div class="doctor-profile__career${two ? ' is-2col' : ''}"><ul class="doctor-profile__list" style="--career-rows:${rows}">${all.join('')}</ul></div>` };
   };
+  const rowsClass = (rows) => (rows <= 3 ? 'rows-s' : rows <= 5 ? 'rows-m' : 'rows-l');
   box.innerHTML = groups.map(({ b, docs }) => `
     <section class="doctor-group" id="${b.id}" data-branch="${b.id}" aria-labelledby="doctor-group-${b.id}">
       <div class="doctor-group__head">
@@ -95,8 +97,9 @@ function renderDoctorsPage() {
           const fix = `--cs:${Number(c.scale) || (1 / (1 - ht)).toFixed(4)};--cx:${Number(c.x) || 0.5};--cy:${ht}`;
           const both = d.branches.length > 1;
           const logos = (d.logos || []).filter((l) => l && l.src);
+          const car = (d.career || []).length ? careerOf(d) : null;
           return `
-          <article class="doctor-profile" id="${b.id}-${S.doctorSlug(d)}" style="${fix}">
+          <article class="doctor-profile ${rowsClass(car ? car.rows : 0)}" id="${b.id}-${S.doctorSlug(d)}" style="${fix}">
             <div class="doctor-profile__box">
             <div class="doctor-profile__head">
               <div class="doctor-profile__id">
@@ -105,7 +108,7 @@ function renderDoctorsPage() {
               </div>
               ${logos.length ? `<ul class="doctor-profile__logos">${logos.map((l) => `<li><img src="${img(l.src)}" alt="${esc(l.alt || '')}" loading="lazy"></li>`).join('')}</ul>` : ''}
             </div>
-            ${(d.career || []).length ? careerOf(d) : ''}
+            ${car ? car.html : ''}
             </div>
             <div class="doctor-profile__photo${d.photoBlend === false ? '' : ' is-whitebg'}"><img class="doctor-profile__img" src="${img(String(d.photo || '').replace(/\.[a-z]+$/i, '-cut.png'))}" alt="${esc(d.name)} ${esc(d.title)} 사진" loading="lazy"></div>
           </article>`;
