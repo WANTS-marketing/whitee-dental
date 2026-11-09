@@ -5,7 +5,7 @@
    만드는 것 (모두 같은 데이터, 순서 = treatments.json 순서)
    1) treatment/{slug}.html 6개 — 원고 문장(h1·요약·포인트·기준·단계·FAQ)을 HTML 에 그대로 넣는다(검색엔진·AI 가 JS 없이 읽게)
       + title · description · canonical · og + FAQPage · Dentist(창원점·마산점) 구조화 데이터
-      '진료 연결'(지점 탭·주소·전화·진료시간·담당 의료진)만 화면에서 site-data.js 로 그린다(pages.js renderTreatmentConnect)
+      '진료 연결'(지점 탭·주소·전화·진료시간)만 화면에서 site-data.js 로 그린다(pages.js renderTreatmentConnect)
    2) treatment/wisdom-scaling.html — 예전 주소 → wisdom-tooth.html 로 이동 (스케일링·사랑니 두 링크도 표시)
    3) components/header.html 진료과목 하위 메뉴(PC·모바일) — <!-- treatments:menu --> 표시 사이
    4) index.html 메인 진료안내 카드 — <!-- treatments:cards --> 표시 사이
@@ -127,16 +127,16 @@ ${lnb}
           <img class="t-visual__img" src="../assets/images/${esc(t.image)}" alt="">
           <div class="t-visual__text">
             <span class="t-visual__label">${esc(t.labelEn)}</span>
-            <h1 class="t-visual__title">${esc(t.h1)}</h1>
+            <h1 class="t-visual__title">${t.h1Break && t.h1.startsWith(t.h1Break) ? `${esc(t.h1Break)}<br>${esc(t.h1.slice(t.h1Break.length).trim())}` : esc(t.h1)}</h1>
           </div>
         </div>
 
         <!-- 2. 요약 문단 -->
-        <p class="t-summary">${esc(t.summary)}</p>
+        <p class="t-summary${t.summaryCenter ? ' t-summary--center' : ''}">${(t.summaryBreaks || []).reduce((h, br) => h.replace(esc(br), `${esc(br)}<br class="only-desktop">`), esc(t.summary))}</p>
 
         <!-- 3. 화이트e치과 진료 포인트 -->
         <section class="t-sec" aria-labelledby="t-points-title">
-          <h2 class="t-sec__title" id="t-points-title">화이트e치과 진료 포인트</h2>
+          <h2 class="t-sec__title t-sec__title--center" id="t-points-title">화이트e치과 진료 포인트</h2>
           <ol class="t-points">
 ${t.points.map((p, i) => `            <li class="t-point"><span class="t-point__no">${String(i + 1).padStart(2, '0')}</span><p class="t-point__text">${esc(p)}</p></li>`).join('\n')}
           </ol>
@@ -144,7 +144,7 @@ ${t.points.map((p, i) => `            <li class="t-point"><span class="t-point__
 
         <!-- 4. 치료를 결정하기 전 알아야 할 기준 -->
         <section class="t-sec" aria-labelledby="t-criteria-title">
-          <h2 class="t-sec__title" id="t-criteria-title">치료를 결정하기 전 알아야 할 기준</h2>
+          <h2 class="t-sec__title t-sec__title--center" id="t-criteria-title">치료를 결정하기 전 알아야 할 기준</h2>
           <div class="t-criteria">
             <div class="t-crit"><h3 class="t-crit__title">검사에서 확인할 것</h3>${chips(t.criteria.check)}</div>
             <div class="t-crit"><h3 class="t-crit__title">치료 선택지</h3>${chips(t.criteria.options)}${t.criteria.optionsNote ? `<p class="t-crit__note">${esc(t.criteria.optionsNote)}</p>` : ''}</div>
@@ -171,9 +171,8 @@ ${t.faq.map((f, i) => `            <li class="accordion__item">
           </ul>
         </section>
 
-        <!-- 7. 진료 연결 | 창원점 · 마산점 — 지점 탭·주소·전화·진료시간·담당 의료진은 pages.js renderTreatmentConnect 가 site-data.js 에서 그림
-             담당 의료진 = 의료진 dept 가 아래 data-t-specs(원고 '관련 진료과')와 맞는 원장 (보류·퇴사 원장 제외, 없으면 줄 숨김) -->
-        <section class="t-sec t-connect" aria-labelledby="t-connect-title" data-t-connect data-t-specs="${esc(JSON.stringify(t.specialties))}">
+        <!-- 7. 진료 연결 | 창원점 · 마산점 — 지점 탭·주소·전화·진료시간은 pages.js renderTreatmentPage 가 site-data.js 에서 그림 (담당 의료진 줄은 2026-11-09 뺌) -->
+        <section class="t-sec t-connect" aria-labelledby="t-connect-title" data-t-connect>
           <h2 class="t-sec__title" id="t-connect-title">진료 연결 <span class="t-connect__sub">창원점 · 마산점</span></h2>
           <p class="t-connect__text">${esc(DATA.common.connectText)}</p>
           <div class="t-connect__box" data-t-connect-box></div>

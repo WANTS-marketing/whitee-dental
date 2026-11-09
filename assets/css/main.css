@@ -56,19 +56,22 @@ html::-webkit-scrollbar { display: none; }
   @supports ((backdrop-filter: blur(12px)) or (-webkit-backdrop-filter: blur(12px))) {
     .hero-hours { background: rgba(255, 255, 255, 0.1); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
   }
-  .hero-hours__label { font-size: 0.875rem; font-weight: 700; letter-spacing: 0.2em; color: var(--color-accent-light); }
-  .hero-hours__big { margin-top: 10px; font-size: 1.25rem; font-weight: 600; line-height: 1.1; }
-  .hero-hours__big strong { font-size: 3.5rem; font-weight: 800; letter-spacing: -0.02em; }
+  /* 위 묶음 [진료시간 / 평일 21:00까지] = 가운데 정렬, 라벨 ↔ 큰 시간 12px. 라벨 색은 유리(어두운) 면 위에서 읽히는 밝은 파랑(accent 계열) */
+  .hero-hours__label { font-size: 1.0625rem; font-weight: 700; letter-spacing: 0.08em; text-align: center; color: var(--color-accent-light); }
+  /* 평일 · 까지(24px) = 숫자(56px, 줄 높이 1)의 세로 가운데 (기준선 정렬 아님) */
+  .hero-hours__big { display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 12px; }
+  .hero-hours__big span { font-size: 1.5rem; font-weight: 700; line-height: 1; color: rgba(255, 255, 255, 0.85); }
+  .hero-hours__big strong { font-size: 3.5rem; font-weight: 800; line-height: 1; letter-spacing: 0; font-variant-numeric: tabular-nums; }
   .hero-hours__line { margin: 24px 0 20px; border: 0; border-top: 1px solid rgba(255, 255, 255, 0.2); }
   .hero-hours__branch { display: flex; align-items: center; gap: 8px; margin: 16px 0 8px; font-size: 0.9375rem; font-weight: 700; }
   .hero-hours__branch:first-of-type { margin-top: 0; }
   .hero-hours__dot { width: 6px; height: 6px; border-radius: 50%; }
   .hero-hours__dot--changwon { background: var(--color-changwon); }
   .hero-hours__dot--masan { background: var(--color-masan); }
-  .hero-hours__list { display: grid; gap: 12px; }
+  .hero-hours__list { display: grid; gap: 16px; }
   .hero-hours__row { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
-  .hero-hours__row dt { font-size: 1rem; color: rgba(255, 255, 255, 0.7); }
-  .hero-hours__row dd { font-size: 1.0625rem; font-weight: 700; color: #fff; }
+  .hero-hours__row dt { font-size: 1rem; letter-spacing: 0.02em; color: rgba(255, 255, 255, 0.7); }
+  .hero-hours__row dd { font-size: 1.0625rem; font-weight: 700; letter-spacing: 0.02em; font-variant-numeric: tabular-nums; color: #fff; }
   .hero-hours__note { margin-top: 20px; font-size: 0.8125rem; color: rgba(255, 255, 255, 0.6); }
   .hero__slide.is-shown .hero-hours { animation: hero-hours-up 0.4s var(--ease) 0.15s both; }
   .is-intro .hero__slide.is-shown .hero-hours { animation-delay: 1.45s; } /* 첫 진입: 글 블록(1.3s~) 뒤에 */

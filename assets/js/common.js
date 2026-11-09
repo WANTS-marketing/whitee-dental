@@ -137,7 +137,7 @@
     document.querySelectorAll('[data-hero-hours]').forEach((el) => {
       const B = S.branches || [];
       if (!B.length) return;
-      // 표의 줄 = 평일 · 토요일 · 점심시간 · 일요일(공휴일). 데이터에 없는 줄은 '—' (지어내지 않음)
+      // 표의 줄 = 평일 · 토요일 · 점심시간 · 일요일(공휴일). 데이터에 없는 줄은 숨김 (지어내지 않음)
       const rowsOf = (b) => {
         const H = b.hours || [];
         const find = (re) => H.find((h) => re.test(h.label));
@@ -149,7 +149,9 @@
           [sun && /공휴일/.test(sun.label) ? '일요일·공휴일' : '일요일', sun?.time],
         ];
       };
-      const list = (rows) => `<dl class="hero-hours__list">${rows.map(([k, v]) => `<div class="hero-hours__row"><dt>${esc(k)}</dt><dd>${v ? esc(v) : '—'}</dd></div>`).join('')}</dl>`;
+      // 값이 없는 줄(점심시간 등)은 숨김. 시간 '10:00–21:00' → '10:00 – 21:00' (대시 앞뒤 얇은 공백 U+2009)
+      const fmt = (v) => String(v).replace(/\s*[–~-]\s*/g, '\u2009–\u2009');
+      const list = (rows) => `<dl class="hero-hours__list">${rows.filter(([, v]) => v).map(([k, v]) => `<div class="hero-hours__row"><dt>${esc(k)}</dt><dd>${esc(fmt(v))}</dd></div>`).join('')}</dl>`;
       const same = B.every((b) => JSON.stringify(b.hours) === JSON.stringify(B[0].hours));
       const weekday = (B[0].hours || []).find((h) => /^평일/.test(h.label));
       const close = weekday ? weekday.time.split(/[–~-]/).pop().trim() : '';

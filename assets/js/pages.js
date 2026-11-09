@@ -26,11 +26,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 /* ---------- 진료과목 6개 (treatment/*.html — scripts/content/build-treatments.js 가 만든 정적 HTML) ----------
    FAQ 아코디언(첫 번째는 HTML 에서 열린 상태) + '진료 연결' 지점 탭
-   진료 연결: 탭 [창원점 | 마산점](지점 색은 탭 앞 점에만) → 선택 지점의 주소 · 전화(tel:) · 진료시간 · 담당 의료진 · 버튼(상담문의 / 네이버예약 / 전화하기)
-     담당 의료진 = SITE.doctors 중 그 지점 + dept 가 data-t-specs(원고 '관련 진료과')와 맞는 원장
-       맞춤: '치과보철과' → '보철' 처럼 앞의 '치과'·끝의 '과'를 떼고 dept 에 들어 있는지 (보철과 ↔ 치과보철과·보철·보존, 통합치의학과 ↔ 통합치의학과)
-       보류·퇴사(hidden · status 'pending'·'retired') 원장은 빼고, 맞는 원장이 없으면 의료진 줄을 숨김
-     원장을 누르면 about/doctors.html#{지점}-{slug} (의료진 소개의 그 원장 위치) */
+   진료 연결: 탭 [창원점 | 마산점](지점 색은 탭 앞 점에만) → 선택 지점의 주소 · 전화(tel:) · 진료시간 · 버튼(상담문의 / 네이버예약 / 전화하기)
+     담당 의료진 줄은 2026-11-09 뺌 (treatments.json specialties 는 데이터로만 남김) */
 function renderTreatmentPage() {
   const faq = document.querySelector('[data-t-faq]');
   if (faq) window.UI.accordion(faq);
@@ -38,16 +35,10 @@ function renderTreatmentPage() {
   const box = sec?.querySelector('[data-t-connect-box]');
   const S = window.SITE;
   if (!box || !S) return;
-  const { esc, telHref, img } = window.UI;
-  let specs = [];
-  try { specs = JSON.parse(sec.dataset.tSpecs || '[]'); } catch (e) { /* 의료진 줄 숨김 */ }
-  const keys = specs.map((s) => s.replace(/^치과/, '').replace(/과$/, ''));
-  const active = (d) => !d.hidden && !['pending', 'retired'].includes(d.status);
-  const docsOf = (b) => (keys.length ? S.getDoctorsByBranch(b.id).filter((d) => active(d) && keys.some((k) => String(d.dept || '').includes(k))) : []);
+  const { esc, telHref } = window.UI;
   const B = S.branches || [];
   const tabs = B.map((b, i) => `<button type="button" class="t-connect__tab" role="tab" id="t-tab-${b.id}" aria-controls="t-panel-${b.id}" aria-selected="${i === 0}"${i ? ' tabindex="-1"' : ''}><i class="t-connect__dot t-connect__dot--${b.id}" aria-hidden="true"></i>${esc(b.name)}</button>`).join('');
   const panel = (b, i) => {
-    const docs = docsOf(b);
     const booking = b.naverBooking || b.naverMap;
     return `<div class="t-connect__panel" role="tabpanel" id="t-panel-${b.id}" aria-labelledby="t-tab-${b.id}"${i ? ' hidden' : ''}>
       <dl class="t-connect__info">
@@ -55,7 +46,6 @@ function renderTreatmentPage() {
         <div><dt>전화</dt><dd><a href="${telHref(b.tel)}">${esc(b.tel)}</a></dd></div>
         <div><dt>진료시간</dt><dd>${(b.hours || []).map((h) => `<span class="t-connect__hour">${esc(h.label)} ${esc(h.time)}</span>`).join('')}</dd></div>
       </dl>
-      ${docs.length ? `<div class="t-connect__docs"><p class="t-connect__docs-title">담당 의료진</p><ul class="t-docs">${docs.map((d) => `<li><a class="t-doc" href="../about/doctors.html#${b.id}-${S.doctorSlug(d)}"><span class="t-doc__photo"><img src="${img(String(d.photo || '').replace(/\.[a-z]+$/i, '-cut.png'))}" alt="" loading="lazy"></span><span class="t-doc__text"><strong>${esc(d.name)} <small>${esc(d.title)}</small></strong><span>${esc(d.dept)}</span></span></a></li>`).join('')}</ul></div>` : ''}
       <p class="t-connect__btns">
         <a class="t-btn t-btn--fill" href="../faq/contact-write.html">상담문의</a>
         ${booking ? `<a class="t-btn" href="${esc(booking)}" target="_blank" rel="noopener">네이버예약</a>` : ''}
