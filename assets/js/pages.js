@@ -33,7 +33,7 @@ function renderTreatmentPage() {
   if (faq) window.UI.accordion(faq);
   /* 이미지 칸(추가 블록): [data-slot="treatment/implant/implant-photo-01"] → assets/images/ 아래 .webp → .jpg → .png 순서로 찾아 있으면 사진을 넣고,
      없으면 자리표시('파일명 · 권장 크기') 그대로 — 깨진 이미지 아이콘이 생기지 않게 미리 불러 본 뒤에만 넣는다
-     [data-icon-slot] = 상담 카드 아이콘 .svg (없으면 사이트 선 아이콘 그대로). 파일 목록: docs/IMAGE-SLOTS.md */
+     파일 목록: docs/IMAGE-SLOTS.md */
   const root = document.documentElement.dataset.root || '.';
   const findImage = (base, exts) => new Promise((resolve) => {
     let i = 0;
@@ -57,12 +57,7 @@ function renderTreatmentPage() {
     el.appendChild(img);
     el.classList.add('is-loaded');
   });
-  document.querySelectorAll('[data-icon-slot]').forEach(async (el) => {
-    const src = await findImage(el.dataset.iconSlot, ['svg']);
-    if (!src) return;
-    el.innerHTML = `<img src="${src}" alt="">`;
-    el.classList.add('is-loaded');
-  });
+  document.querySelectorAll('[data-t-gallery]').forEach(initTreatmentGallery);
   const sec = document.querySelector('[data-t-connect]');
   const box = sec?.querySelector('[data-t-connect-box]');
   const S = window.SITE;
@@ -99,6 +94,60 @@ function renderTreatmentPage() {
       select(tabEls[(i + (e.key === 'ArrowRight' ? 1 : tabEls.length - 1)) % tabEls.length], true);
     });
   });
+}
+
+/* ---------- 진료과목 '이런 경우에도 상담해 보세요' 탭 갤러리 ([data-t-gallery] — build-treatments.js) ----------
+   탭 클릭 · ‹ › 화살표(끝에서 다음 = 처음으로) · 탭 위 좌우 방향키(Home·End) · 패널 좌우 스와이프. 자동 넘김 없음
+   패널은 모두 한 칸에 겹쳐 있어 높이 = 가장 긴 패널 — 바꿀 때 .is-active 만 옮김(페이드 + 8px, 0.25s, 동작 줄이기면 즉시: sub.css)
+   선택한 탭이 탭 줄(모바일 가로 스크롤) 밖이면 탭 줄만 가로로 옮겨 보이게 (페이지 세로 위치는 그대로) */
+function initTreatmentGallery(root) {
+  const tabs = [...root.querySelectorAll('[role="tab"]')];
+  const panels = [...root.querySelectorAll('[role="tabpanel"]')];
+  const tabList = root.querySelector('[role="tablist"]');
+  const now = root.querySelector('[data-t-gallery-now]');
+  if (!tabs.length) return;
+  let index = 0;
+  const show = (i, { focus = false } = {}) => {
+    index = (i + tabs.length) % tabs.length;
+    tabs.forEach((t, k) => {
+      const on = k === index;
+      t.setAttribute('aria-selected', String(on));
+      t.tabIndex = on ? 0 : -1;
+      panels[k].classList.toggle('is-active', on);
+      if (on) panels[k].removeAttribute('aria-hidden'); else panels[k].setAttribute('aria-hidden', 'true');
+    });
+    if (now) now.textContent = String(index + 1);
+    const tab = tabs[index];
+    // 탭 줄 가로 스크롤 안에서 선택한 탭이 보이게 (scrollIntoView 는 페이지까지 움직여서 쓰지 않음)
+    if (tabList.scrollWidth > tabList.clientWidth) {
+      const left = tab.offsetLeft - (tabList.clientWidth - tab.offsetWidth) / 2;
+      tabList.scrollTo({ left, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+    }
+    if (focus) tab.focus();
+  };
+  tabs.forEach((t, k) => {
+    t.addEventListener('click', () => show(k));
+    t.addEventListener('keydown', (e) => {
+      const go = { ArrowRight: index + 1, ArrowLeft: index - 1, Home: 0, End: tabs.length - 1 }[e.key];
+      if (go === undefined) return;
+      e.preventDefault();
+      show(go, { focus: true });
+    });
+  });
+  root.querySelector('[data-t-gallery-prev]')?.addEventListener('click', () => show(index - 1));
+  root.querySelector('[data-t-gallery-next]')?.addEventListener('click', () => show(index + 1));
+  // 스와이프 (터치·펜): 가로로 48px 이상, 세로보다 크게 움직였을 때만
+  const stage = root.querySelector('[data-t-gallery-stage]');
+  let start = null;
+  stage?.addEventListener('pointerdown', (e) => { if (e.pointerType !== 'mouse') start = { x: e.clientX, y: e.clientY }; });
+  stage?.addEventListener('pointerup', (e) => {
+    if (!start) return;
+    const dx = e.clientX - start.x;
+    const dy = e.clientY - start.y;
+    start = null;
+    if (Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(dy)) show(index + (dx < 0 ? 1 : -1));
+  });
+  stage?.addEventListener('pointercancel', () => { start = null; });
 }
 
 /* ---------- 로그인 후 돌아갈 곳 (member/login.html?return=community/case-view.html?id=case-18) ----------

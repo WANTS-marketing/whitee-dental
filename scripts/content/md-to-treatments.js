@@ -83,14 +83,22 @@ const treatments = blocks.map((b) => {
   }
   const caseSec = optSection('추가 블록 — 이런 경우에도 상담해 보세요');
   if (caseSec) {
-    extras.cases = caseSec.split(/\n#### /).slice(1).map((c) => ({
-      title: c.split('\n')[0].trim(),
-      source: lineOf(c, '근거'),
-      icon: lineOf(c, '아이콘'),
-      verified: lineOf(c, '게시') === '예', // 아니요 = 데이터에만, 화면에 숨김
-      text: lineOf(c, '설명'),
-      fits: lineOf(c, '이런 분이라면 상담해 보세요').split(/\s+\/\s+/).filter(Boolean),
-    }));
+    extras.cases = caseSec.split(/\n#### /).slice(1).map((c) => {
+      const title = c.split('\n')[0].trim();
+      const m = title.match(/^(.*?)\s*\(([^)]+)\)$/); // '발치 후 바로 심는 경우 (즉시 식립)' → 제목 + 진료명
+      return {
+        title,
+        titleMain: m ? m[1] : title,
+        titleSub: m ? m[2] : '',
+        tab: lineOf(c, '탭') || (m ? m[2] : title),
+        source: lineOf(c, '근거'),
+        image: slotOf(lineOf(c, '이미지')),
+        verified: lineOf(c, '게시') === '예', // 아니요 = 병원 확인 전 (화면에는 표시 + note 안내)
+        text: lineOf(c, '설명'),
+        fits: lineOf(c, '이런 분이라면 상담해 보세요').split(/\s+\/\s+/).filter(Boolean),
+        note: lineOf(c, '안내'),
+      };
+    });
   }
   const labSec = optSection('추가 블록 — 기공센터');
   if (labSec) extras.lab = { label: lineOf(labSec, '라벨'), title: lineOf(labSec, '제목'), ...slotOf(lineOf(labSec, '이미지')), text: lineOf(labSec, '본문') };
