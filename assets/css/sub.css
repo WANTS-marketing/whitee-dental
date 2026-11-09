@@ -109,7 +109,6 @@
    1280px 이하: 값 17px, 그림 사이 20px / 768px 이하: 장치별 카드 세로 쌓기 [그림 → 이름 → 항목(왼쪽 회색) · 값(오른쪽)] */
 .t-step__link { display: inline-block; margin-top: 10px; font-size: 0.9375rem; font-weight: 600; color: var(--color-accent); }
 .t-step__link:hover { text-decoration: underline; text-underline-offset: 3px; }
-.t-devices { position: relative; left: var(--dev-shift, 0px); } /* 화면 가운데로(pages.js) */
 .t-devices__table { width: 100%; border-collapse: collapse; table-layout: fixed; }
 /* 표 왼쪽 위 칸 = 섹션 제목(다른 섹션 제목과 같은 크기), 왼쪽 정렬 · 한 줄 · 아래 장치 이름 줄과 같은 높이(세로 가운데 일치: 칸 아래 24px - (제목 줄 37.8 - 이름 줄 29.7)/2 ≈ 20px) */
 .t-devices__head { padding: 0 12px 20px 0; vertical-align: bottom; text-align: left; }
@@ -236,6 +235,8 @@
   .t-lab__title { font-size: 1.25rem; }
 }
 
+/* 아래 영역(장치 비교 · 갤러리 · FAQ · 기공센터 · 진료 연결 · 하단 고지): 폭 = 본문 칸, 1025px 이상에서 화면 가운데로(pages.js --lower-shift) */
+.t-lower { position: relative; left: var(--lower-shift, 0px); }
 /* 하단 고지 */
 .t-notice { margin-top: 64px; padding-top: 24px; border-top: 1px solid #e3e8f0; font-size: 0.875rem; line-height: 1.7; color: #888; word-break: keep-all; }
 @container sub (max-width: 55rem) {

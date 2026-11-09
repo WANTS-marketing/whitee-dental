@@ -249,6 +249,9 @@ ${photoStrip}
 ${t.steps.map(stepHtml).join('\n')}
           </ol>
         </section>
+
+        <!-- 아래 영역(장치 비교 · 갤러리 · FAQ · 기공센터 · 진료 연결 · 하단 고지): 폭은 본문 칸 그대로, 화면 1025px 이상에서 가로 중심 = 화면 가운데(= 갤러리 중심) — pages.js [data-t-lower] -->
+        <div class="t-lower" data-t-lower>
 ${deviceSection}${caseSection}
         <!-- 6. 많이 묻는 질문 (아코디언 — 첫 번째만 열림, 내용 = 위 FAQPage 구조화 데이터와 같음) -->
         <section class="t-sec" aria-labelledby="t-faq-title">
@@ -272,6 +275,7 @@ ${labBlock}
         <div class="t-notice">
           <p>${esc(DATA.common.notice)}</p>
 ${t.review && t.review.date ? `          <p>${esc(DATA.common.reviewLabel)}: ${esc(t.review.date)}${t.review.reviewer ? ` · ${esc(t.review.reviewer)}` : ''}</p>\n` : ''}        </div>
+        </div>
       </div>
     </div>
   </main>
