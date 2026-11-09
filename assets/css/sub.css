@@ -112,7 +112,7 @@
      설명 칸 글자: 제목 28 / 진료명 19 / 설명 18 / 체크 목록(+ 제목) 17 / 안내 15px
      펼친 카드 = --open-w(콘텐츠 폭 75%, 최대 900px — JS) → [사진 | 설명 칸 #F8FAFD 여백 40px 세로 가운데] 1:1
      접힌 카드 = 120px, 사진만 + 남색 덮개 25%(hover 옅게) + 아래 번호 흰색 14px
-     전환: 폭·줄 이동 600ms cubic-bezier(0.22, 1, 0.36, 1) / 설명 글은 다 펼친 뒤(400ms 지연) 페이드 + 위로 8px 250ms, 접힐 때는 즉시 숨김 / 동작 줄이기 = 즉시
+     전환: 폭·줄 이동 600ms cubic-bezier(0.22, 1, 0.36, 1) / 설명 글은 다 펼친 뒤(400ms 지연) 페이드 + 왼쪽에서 오른쪽으로 24px 350ms(카드가 펼쳐지는 방향), 접힐 때는 즉시 숨김 / 동작 줄이기 = 즉시
    글자 탭: 갤러리 아래 32px · 화면 가운데 · 순서 1~6 고정 · 20px 굵게 #B5BCC8(hover #6B7280) · 선택 = 남색 + 오른쪽 위 파랑 점 6px · 사이 40px
    1024px 이하: 가로 스와이프 카드(scroll-snap) 폭 88% — [사진(4:5 중 위쪽 4:3) 위 | 설명 아래], 높이 = 내용만큼, 탭은 가로 스크롤 */
 .t-fold { --fold-h-base: 560px; --fold-gap: 16px; --fold-closed: 120px; --open-w: 680px; --fold-ease: cubic-bezier(0.22, 1, 0.36, 1); }
@@ -133,8 +133,8 @@
 .t-fold__card.is-open .t-fold__media::after { opacity: 0; }
 .t-fold__no { position: absolute; z-index: 1; left: 0; right: 0; bottom: 24px; font-size: 0.875rem; font-weight: 700; letter-spacing: 0.04em; text-align: center; color: #fff; transition: opacity 0.2s ease; }
 .t-fold__card.is-open .t-fold__no { opacity: 0; }
-.t-fold__body { position: absolute; top: 0; bottom: 0; left: calc(var(--open-w) / 2); width: calc(var(--open-w) / 2); display: flex; flex-direction: column; justify-content: center; padding: 40px; visibility: hidden; opacity: 0; transform: translateY(8px); transition: none; }
-.t-fold__card.is-open .t-fold__body { visibility: visible; opacity: 1; transform: none; transition: opacity 250ms ease 400ms, transform 250ms ease 400ms, visibility 0s 400ms; }
+.t-fold__body { position: absolute; top: 0; bottom: 0; left: calc(var(--open-w) / 2); width: calc(var(--open-w) / 2); display: flex; flex-direction: column; justify-content: center; padding: 40px; visibility: hidden; opacity: 0; transform: translateX(-24px); transition: none; }
+.t-fold__card.is-open .t-fold__body { visibility: visible; opacity: 1; transform: none; transition: opacity 350ms ease 400ms, transform 350ms var(--fold-ease) 400ms, visibility 0s 400ms; }
 .t-fold__num { font-size: 0.875rem; font-weight: 700; letter-spacing: 0.04em; color: var(--color-accent); }
 .t-fold__title { margin-top: 8px; font-size: 28px; font-weight: 700; line-height: 1.4; word-break: keep-all; }
 .t-fold__sub { display: block; margin-top: 4px; font-size: 19px; font-weight: 700; color: var(--color-accent); }
