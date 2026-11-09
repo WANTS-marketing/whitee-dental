@@ -96,7 +96,7 @@
      [data-specialties]            전문의 원(.spec-circle) 줄 — SITE.specialties
      [data-specialty-text]         진료과 목록 글자 '치과교정과 · 치과보철과 …' (data-specialty-text="sep" 로 구분자 지정, 기본 ' · ')
      [data-philosophy="hanja|sub|text|list"] 진료 철학 — 치과소개 인트로(hanja·sub·text) / 메인 WHY 왼쪽 목록(list)
-     [data-promises="full|short"]  4가지 약속 카드 — full = 치과소개(.strength), short = 메인 사진 카드(.why-card — image 배경, '약속 0N', href 링크)
+     [data-promises="full|short"]  4가지 약속 카드 — full = 치과소개(.strength), short = 메인 사진 카드(.why-card — image 배경, 사진·제목·설명만, 링크 없음)
      [data-partner-highlights]     협력 강조 — 기본 = 치과소개 카드(.partner-highlight) / ="card" = 메인 WHITE e PARTNERS 카드(.partners-card)
      [data-partner-logos]          협력 기관 칸(치과소개) · [data-partner-marquee] 메인 2줄 흐르는 타일 · [data-partner-count] 기관 수 'N+'
      협력 기관 logo 가 있으면 assets/images/partners/ 로고 이미지, 없으면 이름 글자 */
@@ -122,7 +122,7 @@
     document.querySelectorAll('[data-promises]').forEach((el) => {
       const short = el.dataset.promises === 'short';
       el.innerHTML = (S.promises || []).map((p, i) => (short
-        ? `<li class="why-card"><a class="why-card__link" href="${root}/${esc(p.href || 'about/intro.html#why')}"><span class="why-card__media"><img src="${root}/assets/images/${esc(p.image || '')}" alt="" loading="lazy" draggable="false"></span><span class="why-card__no">약속 ${String(i + 1).padStart(2, '0')}</span><h3 class="why-card__title">${esc(p.title)}</h3><p class="why-card__text">${esc(p.short)}</p><span class="why-card__more">자세히 보기 <span aria-hidden="true">→</span></span></a></li>`
+        ? `<li class="why-card"><div class="why-card__body"><span class="why-card__media"><img src="${root}/assets/images/${esc(p.image || '')}" alt="" loading="lazy" draggable="false"${p.imagePos ? ` style="object-position:${esc(p.imagePos)}"` : ''}></span><h3 class="why-card__title">${esc(p.title)}</h3><p class="why-card__text">${esc(p.short)}</p><span class="why-card__glare" aria-hidden="true"></span></div></li>`
         : `<article class="strength"><span class="strength__icon">${icon(p)}</span><h3 class="strength__title">${esc(p.title)}</h3><p class="strength__text">${esc(p.text.replace('{spec}', specText()))}</p></article>`)).join('');
     });
     const P = S.partners || { highlights: [], list: [] };
