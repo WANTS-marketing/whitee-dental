@@ -410,7 +410,7 @@ function initDoctors() {
     branch = branchId;
     panel.dataset.branch = branchId; // 진료과·약력 보기 버튼 색 = 지점 색 (common.css --doc-color)
     modal.dataset.branch = branchId;
-    const ds = window.SITE.getDoctorsByBranch(branchId);
+    const ds = window.SITE.getDoctorsByBranch(branchId).filter((d) => !d.pending); // 자료 대기 원장(site-data.js pending)은 메인에서 뺌
     const head = ds.findIndex((d) => d.title === '대표원장');
     if (head > 0) ds.unshift(...ds.splice(head, 1));
     // 지점별 나열 순서 지정(site-data.js mainDoctorOrder) — 목록에 없는 원장은 뒤에 데이터 순서대로

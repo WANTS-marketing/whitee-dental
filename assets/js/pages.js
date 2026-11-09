@@ -50,7 +50,7 @@ function fadeIn(el) {
 
 /* ---------- 의료진 소개 (about/doctors.html) ----------
    위: 소개 블록(doctors.html 에 직접 — 왼쪽 네이비 문구 | 오른쪽 원내 사진 흑백)
-   지점별 묶음: [지점 색 작은 라벨 + '창원점 의료진'] 아래 원장 — 겸직 원장(김영우)은 두 지점 모두, 이름 아래 '창원·마산 겸직' 태그
+   지점별 묶음: [지점 색 작은 라벨 + '창원점 의료진'] 아래 원장 — 겸직 원장(김영우·안재진)은 두 지점 모두, 이름 아래 [창원점][마산점] 지점 색 태그 두 개
    원장(카드 상자 없음, 원장 사이 가는 가로선 + 위아래 100px): 모두 같은 방향(사진 왼쪽)
      [이름 52px 굵게 + 직함 52px 400 같은 줄 ······ 학회·학교 로고(site-data.js logos)]
      [진료과 태그(네이비 면) + 주요 진료(site-data.js focus)]
@@ -66,6 +66,8 @@ function renderDoctorsPage() {
   const { esc, img } = window.UI;
   const S = window.SITE;
   const EN = { changwon: 'CHANGWON', masan: 'MASAN' };
+  // 자료 대기 원장(site-data.js pending): 사진 대신 인물 실루엣 (메인 의료진과 같은 모양), 약력 대신 '약력 준비 중'
+  const SILHOUETTE = '<svg class="doctor-profile__ph" viewBox="0 0 200 260" aria-hidden="true"><circle cx="100" cy="78" r="44"/><path d="M14 260c0-62 38-100 86-100s86 38 86 100z"/></svg>';
   const groups = S.branches.map((b) => ({ b, docs: S.getDoctorsByBranch(b.id) }));
   /* 약력: 순서는 분류 순서 — 전문의 → 학력 → 경력 → 연수 → 학회 활동. 글자 색·굵기는 모두 같음
      (2026-11-09 예전 '전문의·학력·경력 = 네이비 굵게 / 연수·학회 = 기본' 구분 삭제)
@@ -88,7 +90,8 @@ function renderDoctorsPage() {
       <div class="doctor-profiles">
         ${docs.map((d) => {
           /* 사진 크롭 (site-data.js staffCrop — 김영우 원장 구도 기준, 메인 의료진 값과 따로)
-             사진 칸 = 상자 위 --pop ~ 상자 아래 끝. 사진 높이 = 칸 × scale, 정수리(y)를 칸 위 끝에, 얼굴 가운데(x)를 칸 가운데에. 아래는 상자 아래 끝에서 잘림 */
+             기준 틀 = 높이 --ph0(상자 기본 높이 + --pop), 칸 아래 끝에 붙음. 사진 높이 = 틀 × scale, 정수리(y)를 틀 위 끝에, 얼굴 가운데(x)를 칸 가운데에. 아래는 상자 아래 끝에서 잘림
+             상자가 길어져도 틀은 그대로 아래에 붙어 있어 사진 크기·위치(아래 기준)가 같다 */
           const c = d.staffCrop || {};
           const ht = Math.min(0.4, Math.max(0, Number(c.y ?? d.photoHeadTop) || 0));
           const fix = `--cs:${Number(c.scale) || (1 / (1 - ht)).toFixed(4)};--cx:${Number(c.x) || 0.5};--cy:${ht}`;
@@ -99,13 +102,13 @@ function renderDoctorsPage() {
             <div class="doctor-profile__head">
               <div class="doctor-profile__id">
                 <h3 class="doctor-profile__name"><strong>${esc(d.name)}</strong> <span>${esc(d.title)}</span></h3>
-                <p class="doctor-profile__tags"><span class="doctor-profile__dept">${esc(d.dept)}</span>${d.focus ? `<span class="doctor-profile__focus">${esc(d.focus)}</span>` : ''}${both ? '<span class="doctor-profile__both">창원·마산 겸직</span>' : ''}</p>
+                <p class="doctor-profile__tags">${d.dept ? `<span class="doctor-profile__dept">${esc(d.dept)}</span>` : ''}${d.focus ? `<span class="doctor-profile__focus">${esc(d.focus)}</span>` : ''}${both ? `<span class="doctor-profile__both">${d.branches.map((id) => `<span class="doctor-profile__branch" data-branch="${id}">${esc(S.branches.find((x) => x.id === id)?.name || id)}</span>`).join('')}<span class="sr-only">겸직</span></span>` : ''}</p>
               </div>
               ${logos.length ? `<ul class="doctor-profile__logos">${logos.map((l) => `<li><img src="${img(l.src)}" alt="${esc(l.alt || '')}" loading="lazy"></li>`).join('')}</ul>` : ''}
             </div>
             <div class="doctor-profile__box">
-              <div class="doctor-profile__photo${d.photoBlend === false ? '' : ' is-whitebg'}"><img class="doctor-profile__img" src="${img(String(d.photo || '').replace(/\.[a-z]+$/i, '-cut.png'))}" alt="${esc(d.name)} ${esc(d.title)} 사진" loading="lazy"></div>
-              ${(d.career || []).length ? careerOf(d) : ''}
+              <div class="doctor-profile__photo${d.photoBlend === false || d.pending ? '' : ' is-whitebg'}">${d.pending ? SILHOUETTE : `<img class="doctor-profile__img" src="${img(String(d.photo || '').replace(/\.[a-z]+$/i, '-cut.png'))}" alt="${esc(d.name)} ${esc(d.title)} 사진" loading="lazy">`}</div>
+              ${(d.career || []).length ? careerOf(d) : d.pending ? '<div class="doctor-profile__career"><p class="doctor-profile__pending">약력 준비 중입니다.</p></div>' : ''}
             </div>
           </article>`;
         }).join('')}
@@ -125,15 +128,9 @@ function renderDoctorsPage() {
       root.style.setProperty('--doc-side', `${Math.round(Math.max(cw - qr.left + 32, (cw - DOC_MAX) / 2))}px`);
     } else root.style.removeProperty('--doc-side');
   };
-  /* 약력이 길면 상자는 내용대로 길어지고 사진 칸(상자 위 --pop ~ 상자 아래 끝)도 따라 길어진다.
-     사진 크기는 기본 칸 높이(--ph0) 기준이라 그대로 — 원장마다 얼굴 크기·정수리 높이가 같게 (staffCrop, 2026-11-08 예전 fitBoxes 의 사진 키우기 삭제) */
-  // 상자가 사진보다 길어지면(좁은 폭 + 글자 크게 → 약력 1열) 사진 아래 끝이 상자 안에서 보이므로, 그 원장만 사진 아래 64px 를 녹인다(.is-short)
-  const markShort = () => box.querySelectorAll('.doctor-profile__photo').forEach((c) => {
-    const im = c.querySelector('.doctor-profile__img');
-    c.classList.remove('is-short');
-    if (im) c.classList.toggle('is-short', c.getBoundingClientRect().bottom - im.getBoundingClientRect().bottom > 1);
-  });
-  const layout = () => { setDocRight(); markShort(); };
+  /* 약력이 길면 상자는 내용대로 길어지고 사진 칸도 따라 길어지지만, 사진은 크기 고정(--ph0 기준) + 칸 아래 끝에 붙음 — 늘어난 만큼 위가 빈다 (common.css)
+     (2026-11-09 예전 .is-short 사진 아래 녹이기 삭제 — 사진이 항상 상자 아래 끝까지 닿아 필요 없음) */
+  const layout = () => { setDocRight(); };
   layout();
   window.addEventListener('resize', layout);
   new MutationObserver(layout).observe(root, { attributes: true, attributeFilter: ['data-fs'] }); // 글자 크기 단계 → 퀵메뉴 폭·약력 길이가 바뀜
