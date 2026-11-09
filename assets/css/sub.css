@@ -66,8 +66,8 @@
 .t-step__title { padding-top: 10px; font-size: 1.25rem; font-weight: 700; line-height: 1.4; word-break: keep-all; }
 .t-step__body { margin-top: 8px; font-size: 1.0625rem; line-height: 1.75; color: var(--color-text-sub); word-break: keep-all; }
 /* FAQ: 공통 아코디언 + 번호 자리에 Q(파랑) */
-.t-faq .accordion__no { font-size: 1rem; font-weight: 800; color: var(--color-accent); }
-.t-faq .accordion__a { font-size: 1rem; line-height: 1.7; }
+.t-faq .accordion__no { font-size: 1.125rem; font-weight: 800; line-height: 1.5; color: var(--color-accent); } /* Q = 질문과 같은 18px */
+@media (max-width: 1280px) { .t-faq .accordion__no { font-size: 1.0625rem; } }
 /* 진료 연결 */
 .t-connect { padding: 40px; border-radius: 20px; background: #f8fafd; }
 .t-connect .t-sec__title { margin-bottom: 12px; }
