@@ -45,6 +45,41 @@ html::-webkit-scrollbar { display: none; }
   .is-intro .hero__slide.is-shown .hero__caption { animation-delay: 1.7s; } /* 첫 진입: 문구 뒤에 */
 }
 @media (prefers-reduced-motion: reduce) { .hero__caption { opacity: 1; } }
+/* ---------- 히어로 3번 진료시간 카드 (.hero__hours — 데이터 = site-data.js branches[].hours, common.js) ----------
+   PC(1025px 이상)만. 오른쪽 세로 가운데 = 글 블록(.hero__content)과 같은 top + translateY(-50%) → 세로 중심이 같음
+   오른쪽 끝 = 헤더 오른쪽 끝선(--hero-x)과 퀵메뉴 앞(--quick-edge + 24px) 중 안쪽. 반투명 유리 카드 380px(1280px 이하 340px)
+   글 블록보다 0.15s 늦게 opacity + 아래 16px → 제자리(0.4s). 움직임 줄이기면 바로 표시. 1024px 이하 숨김(글 블록에 '평일 오후 9시' 문구 있음) */
+.hero__hours { display: none; }
+@media (min-width: 1025px) {
+  .hero__hours { position: absolute; z-index: 2; display: block; top: calc(50% + var(--header-h) / 2); right: max(var(--hero-x), calc(var(--quick-edge) + 24px)); width: 380px; transform: translateY(-50%); }
+  .hero-hours { padding: 36px; border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 20px; background: rgba(22, 35, 63, 0.6); color: #fff; opacity: 0; }
+  @supports ((backdrop-filter: blur(12px)) or (-webkit-backdrop-filter: blur(12px))) {
+    .hero-hours { background: rgba(255, 255, 255, 0.1); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
+  }
+  .hero-hours__label { font-size: 0.875rem; font-weight: 700; letter-spacing: 0.2em; color: var(--color-accent-light); }
+  .hero-hours__big { margin-top: 10px; font-size: 1.25rem; font-weight: 600; line-height: 1.1; }
+  .hero-hours__big strong { font-size: 3.5rem; font-weight: 800; letter-spacing: -0.02em; }
+  .hero-hours__line { margin: 24px 0 20px; border: 0; border-top: 1px solid rgba(255, 255, 255, 0.2); }
+  .hero-hours__branch { display: flex; align-items: center; gap: 8px; margin: 16px 0 8px; font-size: 0.9375rem; font-weight: 700; }
+  .hero-hours__branch:first-of-type { margin-top: 0; }
+  .hero-hours__dot { width: 6px; height: 6px; border-radius: 50%; }
+  .hero-hours__dot--changwon { background: var(--color-changwon); }
+  .hero-hours__dot--masan { background: var(--color-masan); }
+  .hero-hours__list { display: grid; gap: 12px; }
+  .hero-hours__row { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
+  .hero-hours__row dt { font-size: 1rem; color: rgba(255, 255, 255, 0.7); }
+  .hero-hours__row dd { font-size: 1.0625rem; font-weight: 700; color: #fff; }
+  .hero-hours__note { margin-top: 20px; font-size: 0.8125rem; color: rgba(255, 255, 255, 0.6); }
+  .hero__slide.is-shown .hero-hours { animation: hero-hours-up 0.4s var(--ease) 0.15s both; }
+  .is-intro .hero__slide.is-shown .hero-hours { animation-delay: 1.45s; } /* 첫 진입: 글 블록(1.3s~) 뒤에 */
+  .hero__slide.is-leaving .hero-hours { animation: hero-out 0.3s ease both; }
+}
+@media (min-width: 1025px) and (max-width: 1280px) {
+  .hero__hours { width: 340px; }
+  .hero-hours__big strong { font-size: 3rem; }
+}
+@keyframes hero-hours-up { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .hero-hours { opacity: 1; animation: none !important; } }
 /* 세로 위치: 헤더에 가려지지 않는 부분(헤더 아래 ~ 히어로 끝)의 가운데 */
 .hero__content { --hero-shift: 100px; position: absolute; z-index: 2; top: calc(50% + var(--header-h) / 2); left: calc(var(--hero-x) + var(--hero-shift)); right: calc(var(--hero-x) + 160px); transform: translateY(-50%); } /* 왼쪽: 로고 시작선 + 100px(--hero-shift, PC) · 오른쪽 160px: 플로팅 퀵메뉴 자리 */
 @media (max-width: 1024px) { .hero__content { --hero-shift: 0px; } } /* 태블릿·모바일은 그대로 */
@@ -944,7 +979,7 @@ html.is-fullpage .cases__list { height: max(420px, (100vh - var(--header-h)) * 0
      --qb-gap = 재생바 아래 끝 ~ 화면 아래 끝 (40px, 낮은 화면 24px)
      문구 세로 위치: main.js initHeroLayout 이 --hero-center 로 넣는다 ('헤더 아래 ~ 재생바 위' 공간의 57.5% 지점, 아래와 최소 48px). JS 가 없을 때는 같은 공간의 가운데 */
   .screen-home__first { --qb-gap: 40px; }
-  .screen-home .hero__content { top: var(--hero-center, calc((100% - var(--qb-gap) + var(--header-h)) / 2)); }
+  .screen-home :is(.hero__content, .hero__hours) { top: var(--hero-center, calc((100% - var(--qb-gap) + var(--header-h)) / 2)); } /* 진료시간 카드(3번 슬라이드)도 글 블록과 같은 세로 중심 */
   /* 재생바(‹ 1/4 › ▶ ❚❚): 왼쪽 아래 = 문구 시작선 */
   .screen-home .hero__controls { left: var(--hero-x); right: auto; bottom: var(--qb-gap); }
 }
