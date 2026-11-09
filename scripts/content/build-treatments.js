@@ -64,6 +64,60 @@ function page(t) {
     question: '<b aria-hidden="true">Q</b>',
   };
   const critList = (items, kind) => `<ul class="t-crit__list">${items.map((x) => `<li class="t-crit__item"><span class="t-crit__icon t-crit__icon--${kind}">${CRIT_ICON[kind]}</span><span class="t-crit__text">${esc(x)}</span></li>`).join('')}</ul>`;
+
+  /* ---------- 추가 블록 (기존 상세 기반, treatments.json extras) ---------- */
+  const X = t.extras || {};
+  /* 이미지 칸: 자리표시(연한 회색 + '파일명 · 권장 크기')를 먼저 그리고, pages.js 가 assets/images/{file}.webp → .jpg → .png 를 찾아
+     있으면 그 사진으로 바꾼다(없으면 자리표시 그대로 — 깨진 이미지 아이콘 없음). 파일 목록: docs/IMAGE-SLOTS.md */
+  const slot = (s, alt = '', cls = '') => `<div class="t-slot${cls ? ` ${cls}` : ''}" style="aspect-ratio: ${s.ratio}" data-slot="${esc(s.file)}" data-slot-alt="${esc(alt)}"><span class="t-slot__ph" aria-hidden="true">${esc(s.name)} · ${esc(s.size)}</span></div>`;
+  // 상담 카드 아이콘: 지금은 사이트 선 아이콘(아이콘 이름 끝 단어로 고름), assets/images/treatment/{slug}/{icon}.svg 가 있으면 pages.js 가 그 파일로 바꿈
+  const CASE_ICON = {
+    immediate: '<path d="M8 3v3M16 3v3M4 9h16M5 5h14a1 1 0 011 1v13a1 1 0 01-1 1H5a1 1 0 01-1-1V6a1 1 0 011-1z"/><path d="M9 14.5l2 2 4-4"/>',
+    complex: '<path d="M12 20s-7-4.4-7-10a4 4 0 017-2.6A4 4 0 0119 10c0 5.6-7 10-7 10z"/><path d="M8.5 12h2l1-2 1.5 4 1-2h1.5"/>',
+    revision: '<path d="M20 11a8 8 0 00-14.3-4.9L4 8M4 4v4h4"/><path d="M4 13a8 8 0 0014.3 4.9L20 16M20 20v-4h-4"/>',
+    denture: '<path d="M4 10c0-3 3.6-5 8-5s8 2 8 5c0 4-2 9-4 9-1.5 0-2-3-4-3s-2.5 3-4 3c-2 0-4-5-4-9z"/><path d="M8 10.5h8"/>',
+    guide: '<circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2.5"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>',
+    prf: '<path d="M12 3s6 6.5 6 11a6 6 0 01-12 0c0-4.5 6-11 6-11z"/><path d="M9.5 14.5a2.5 2.5 0 002.5 2.5"/>',
+  };
+  const caseIcon = (name) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${CASE_ICON[String(name).split('-').pop()] || CASE_ICON.complex}</svg>`;
+  const photoStrip = X.photos ? `
+        <!-- 추가 · 사진 띠 (기존 상세 기반, 원고 '추가 블록 — 사진 띠') -->
+        <div class="t-photos">
+${X.photos.map((p) => `          <figure class="t-photo">${slot(p, "")}<figcaption class="t-photo__cap">${esc(p.caption)}</figcaption></figure>`).join('\n')}
+        </div>
+` : '';
+  const cases = (X.cases || []).filter((c) => c.verified);
+  const caseSection = cases.length ? `
+        <!-- 추가 · 이런 경우에도 상담해 보세요 (기존 상세 기반, 원고 '추가 블록'). 게시: 아니요(가이드·자가혈)는 데이터에만 -->
+        <section class="t-sec" aria-labelledby="t-cases-title">
+          <h2 class="t-sec__title t-sec__title--center" id="t-cases-title">이런 경우에도 상담해 보세요</h2>
+          <div class="t-cases">
+${cases.map((c) => `            <article class="t-case">
+              <span class="t-case__icon" data-icon-slot="treatment/${esc(t.slug)}/${esc(c.icon)}">${caseIcon(c.icon)}</span>
+              <h3 class="t-case__title">${esc(c.title)}</h3>
+              <p class="t-case__text">${esc(c.text)}</p>
+              <p class="t-case__fits-title">이런 분이라면 상담해 보세요</p>
+              <ul class="t-case__fits">${c.fits.map((f) => `<li>${CRIT_ICON.check}<span>${esc(f)}</span></li>`).join('')}</ul>
+            </article>`).join('\n')}
+          </div>
+        </section>
+` : '';
+  const labBlock = X.lab ? `
+        <!-- 추가 · 기공센터 (기존 상세 공통 블록 F-02 기반, 원고 '추가 블록 — 기공센터') -->
+        <section class="t-sec t-lab" aria-labelledby="t-lab-title">
+          ${slot(X.lab, "", 't-lab__img')}
+          <div class="t-lab__text">
+            <span class="t-lab__label">${esc(X.lab.label)}</span>
+            <h2 class="t-lab__title" id="t-lab-title">${esc(X.lab.title)}</h2>
+            <p class="t-lab__body">${esc(X.lab.text)}</p>
+          </div>
+        </section>
+` : '';
+  const stepHtml = (s, i) => {
+    const img = X.stepImage && X.stepImage.step === i + 1 ? X.stepImage : null;
+    const text = `<h3 class="t-step__title">${esc(s.title)}</h3><p class="t-step__body">${esc(s.body)}</p>`;
+    return `            <li class="t-step${img ? ' t-step--media' : ''}"><span class="t-step__no" aria-hidden="true">${i + 1}</span><div${img ? ' class="t-step__media"' : ''}>${img ? `<div>${text}</div>${slot(img, img.alt)}` : text}</div></li>`;
+  };
   const ld = {
     '@context': 'https://schema.org',
     '@graph': [
@@ -147,7 +201,7 @@ ${lnb}
 ${t.points.map((p, i) => `            <li class="t-point"><span class="t-point__no">${String(i + 1).padStart(2, '0')}</span><p class="t-point__text">${esc(p)}${/[.?!]$/.test(p) ? '' : '.'}</p></li>`).join('\n')}
           </ol>
         </section>
-
+${photoStrip}
         <!-- 4. 치료를 결정하기 전 알아야 할 기준 -->
         <section class="t-sec" aria-labelledby="t-criteria-title">
           <h2 class="t-sec__title t-sec__title--center" id="t-criteria-title">치료를 결정하기 전 알아야 할 기준</h2>
@@ -162,10 +216,10 @@ ${t.points.map((p, i) => `            <li class="t-point"><span class="t-point__
         <section class="t-sec" aria-labelledby="t-steps-title">
           <h2 class="t-sec__title" id="t-steps-title">검사부터 관리까지</h2>
           <ol class="t-steps">
-${t.steps.map((s, i) => `            <li class="t-step"><span class="t-step__no" aria-hidden="true">${i + 1}</span><div><h3 class="t-step__title">${esc(s.title)}</h3><p class="t-step__body">${esc(s.body)}</p></div></li>`).join('\n')}
+${t.steps.map(stepHtml).join('\n')}
           </ol>
         </section>
-
+${caseSection}
         <!-- 6. 많이 묻는 질문 (아코디언 — 첫 번째만 열림, 내용 = 위 FAQPage 구조화 데이터와 같음) -->
         <section class="t-sec" aria-labelledby="t-faq-title">
           <h2 class="t-sec__title" id="t-faq-title">많이 묻는 질문</h2>
@@ -176,7 +230,7 @@ ${t.faq.map((f, i) => `            <li class="accordion__item">
             </li>`).join('\n')}
           </ul>
         </section>
-
+${labBlock}
         <!-- 7. 진료 연결 | 창원점 · 마산점 — 지점 탭·주소·전화·진료시간은 pages.js renderTreatmentPage 가 site-data.js 에서 그림 (담당 의료진 줄은 2026-11-09 뺌) -->
         <section class="t-sec t-connect" aria-labelledby="t-connect-title" data-t-connect>
           <h2 class="t-sec__title" id="t-connect-title">진료 연결 <span class="t-connect__sub">창원점 · 마산점</span></h2>

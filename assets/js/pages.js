@@ -31,6 +31,38 @@ document.addEventListener('DOMContentLoaded', () => {
 function renderTreatmentPage() {
   const faq = document.querySelector('[data-t-faq]');
   if (faq) window.UI.accordion(faq);
+  /* 이미지 칸(추가 블록): [data-slot="treatment/implant/implant-photo-01"] → assets/images/ 아래 .webp → .jpg → .png 순서로 찾아 있으면 사진을 넣고,
+     없으면 자리표시('파일명 · 권장 크기') 그대로 — 깨진 이미지 아이콘이 생기지 않게 미리 불러 본 뒤에만 넣는다
+     [data-icon-slot] = 상담 카드 아이콘 .svg (없으면 사이트 선 아이콘 그대로). 파일 목록: docs/IMAGE-SLOTS.md */
+  const root = document.documentElement.dataset.root || '.';
+  const findImage = (base, exts) => new Promise((resolve) => {
+    let i = 0;
+    const next = () => {
+      if (i >= exts.length) { resolve(null); return; }
+      const src = `${root}/assets/images/${base}.${exts[i++]}`;
+      const probe = new Image();
+      probe.onload = () => resolve(src);
+      probe.onerror = next;
+      probe.src = src;
+    };
+    next();
+  });
+  document.querySelectorAll('[data-slot]').forEach(async (el) => {
+    const src = await findImage(el.dataset.slot, ['webp', 'jpg', 'png']);
+    if (!src) return;
+    const img = document.createElement('img');
+    img.src = src;
+    img.alt = el.dataset.slotAlt || '';
+    img.loading = 'lazy';
+    el.appendChild(img);
+    el.classList.add('is-loaded');
+  });
+  document.querySelectorAll('[data-icon-slot]').forEach(async (el) => {
+    const src = await findImage(el.dataset.iconSlot, ['svg']);
+    if (!src) return;
+    el.innerHTML = `<img src="${src}" alt="">`;
+    el.classList.add('is-loaded');
+  });
   const sec = document.querySelector('[data-t-connect]');
   const box = sec?.querySelector('[data-t-connect-box]');
   const S = window.SITE;
