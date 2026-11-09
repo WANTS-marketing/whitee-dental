@@ -399,3 +399,4 @@
   .fee-table__title { display: inline; }
   .fee-foot { font-size: 8.5pt; color: #444; }
 }
+.sec[hidden] { display: none !important; } /* 치과소개 PARTNERS 숨김(2026-11-09) 등 */

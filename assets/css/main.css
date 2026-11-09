@@ -474,6 +474,7 @@ html[data-fs="xl"] .doc-modal { width: min(680px, 100% - 48px); }
    네이비 면 전체 폭, 위아래 120px(모바일 72px). 지점 색은 쓰지 않음 — 강조 글자는 네이비 위에서 읽히는 밝은 파랑(--color-accent-light, accent 계열)
    [왼쪽 라벨·제목·설명 | 오른쪽 큰 숫자(기관 수 자동)] → 강조 카드 3개 → 기관 타일 2줄 흐름(윗줄 ←, 아랫줄 →, 느리게, hover 멈춤) → 치과소개에서 전체 보기
    타일: 흰 면 높이 72px · 좌우 32px · 둥근 12px · 18px 굵게 #1a1f2b (모바일 56px · 16px). 로고(logo)가 있으면 이미지 */
+.partners[hidden] { display: none !important; } /* 2026-11-09 숨김 — .screen 의 display: flex 보다 우선 */
 .partners { position: relative; padding: 120px 0; background: var(--color-point); color: #fff; overflow: hidden; }
 .partners :focus-visible { outline-color: #fff; }
 .partners__head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px 40px; flex-wrap: wrap; }
