@@ -122,7 +122,7 @@
     document.querySelectorAll('[data-promises]').forEach((el) => {
       const short = el.dataset.promises === 'short';
       el.innerHTML = (S.promises || []).map((p, i) => (short
-        ? `<li class="why-card"><div class="why-card__body"><span class="why-card__media"><img src="${root}/assets/images/${esc(p.image || '')}" alt="" loading="lazy" draggable="false"${p.imagePos ? ` style="object-position:${esc(p.imagePos)}"` : ''}></span><h3 class="why-card__title">${esc(p.title)}</h3><p class="why-card__text">${esc(p.short)}</p></div></li>`
+        ? `<li class="why-card"><div class="why-card__body"><span class="why-card__media"><img src="${root}/assets/images/${esc(p.image || '')}" alt="" loading="lazy" draggable="false"${p.imagePos ? ` style="object-position:${esc(p.imagePos)}"` : ''}></span><h3 class="why-card__title">${esc(p.title)}</h3><p class="why-card__text">${esc(p.short)}</p><span class="why-card__glare" aria-hidden="true"></span></div></li>`
         : `<article class="strength"><span class="strength__icon">${icon(p)}</span><h3 class="strength__title">${esc(p.title)}</h3><p class="strength__text">${esc(p.text.replace('{spec}', specText()))}</p></article>`)).join('');
     });
     const P = S.partners || { highlights: [], list: [] };

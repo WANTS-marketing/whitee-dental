@@ -397,16 +397,36 @@ html[data-fs="xl"] .doc-modal { width: min(680px, 100% - 48px); }
 .why-philo__word strong { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.02em; color: #fff; }
 .why-philo__word span { font-size: 0.9375rem; font-weight: 600; color: var(--color-accent-light); }
 .why-philo__desc { margin-top: 6px; font-size: 1rem; line-height: 1.5; color: rgba(255, 255, 255, 0.7); word-break: keep-all; }
-/* 카드: 4장 한 줄(콘텐츠 폭 안), 높이 380px(1280px 이하 340px), 사진 + 아래 네이비 그라데이션. 글자 묶음 = 왼쪽 아래에 붙임(제목·설명 고정 칸 없음, 제목↔설명 2px). 링크 없음(hover 효과 없음) */
+/* 카드: 4장 한 줄(콘텐츠 폭 안), 높이 380px(1280px 이하 340px), 사진 + 아래 네이비 그라데이션. 글자 묶음 = 왼쪽 아래에 붙임(제목·설명 고정 칸 없음, 제목↔설명 2px). 링크 없음
+   li.why-card = 등장 연출(.reveal-group 이 transform 사용) + 원근(perspective), 보이는 카드 면 = .why-card__body (둥근 모서리·테두리·기울기) */
 .why__cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; margin-top: 56px; }
-.why-card { position: relative; height: 380px; border-radius: 16px; overflow: hidden; background: linear-gradient(160deg, #24365e, var(--color-point)); }
-.why-card__body { position: relative; z-index: 1; display: flex; flex-direction: column; height: 100%; padding: 28px; color: #fff; }
+.why-card { position: relative; height: 380px; }
+.why-card__body { position: relative; z-index: 1; display: flex; flex-direction: column; height: 100%; padding: 28px; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; overflow: hidden; background: linear-gradient(160deg, #24365e, var(--color-point)); color: #fff; }
 .why-card__media { position: absolute; inset: 0; z-index: -1; }
 .why-card__media img { width: 100%; height: 100%; object-fit: cover; }
 .why-card__media::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(22, 35, 63, 0.25) 0%, rgba(22, 35, 63, 0.35) 40%, rgba(22, 35, 63, 0.92) 100%); }
 .why-card__title { margin-top: auto; font-size: 1.625rem; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; word-break: keep-all; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; } /* 최대 2줄 */
 .why-card__text { margin-top: 2px; font-size: 1rem; line-height: 1.5; color: rgba(255, 255, 255, 0.8); word-break: keep-all; }
 @media (max-width: 1280px) { .why-card { height: 340px; } .why-card__title { font-size: 1.375rem; } .why-card__body { padding: 24px; } }
+/* Tilt effect adapted from uiverse.io/00Kubi/cowardly-eagle-56 (MIT)
+   카드에 마우스를 올리면: 마우스 위치 따라 3D 기울기(rotateX ±6° · rotateY ±8°, main.js initWhyTilt 가 --rx --ry --mx --my 를 넣음)
+   + 빛 반사(.why-card__glare 흰색 최대 0.15, 마우스 따라감) + 테두리 accent 반투명·은은한 빛 + 사진 1.05배
+   마우스(hover 가능한 정밀 포인터)에서만 — 터치 기기는 효과 없음·JS 이벤트도 없음. 동작 줄이기 설정이면 테두리 빛만 */
+.why-card__glare { position: absolute; inset: 0; z-index: 2; opacity: 0; pointer-events: none; background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0) 55%), linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0) 45%); transition: opacity 400ms ease-out; }
+@media (hover: hover) and (pointer: fine) {
+  .why-card { perspective: 1000px; }
+  .why-card__body { transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transform-style: preserve-3d; transition: transform 400ms ease-out, border-color var(--dur), box-shadow var(--dur); }
+  .why-card.is-tilting .why-card__body { transition: transform 120ms ease-out, border-color var(--dur), box-shadow var(--dur); }
+  .why-card__media img { transition: transform 1.2s var(--ease); }
+  .why-card:hover .why-card__body { border-color: color-mix(in srgb, var(--color-accent-light) 60%, transparent); box-shadow: 0 0 28px color-mix(in srgb, var(--color-accent) 25%, transparent); }
+  .why-card:hover .why-card__glare { opacity: 1; }
+  .why-card:hover .why-card__media img { transform: scale(1.05); }
+}
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: reduce) {
+  .why-card__body { transform: none; transition: border-color var(--dur), box-shadow var(--dur); }
+  .why-card:hover .why-card__glare { opacity: 0; }
+  .why-card:hover .why-card__media img { transform: none; }
+}
 /* PC: 좌우 여백 = 의료진 섹션과 같은 규칙 (왼쪽 = 헤더 로고 시작선, 오른쪽 = 플로팅 퀵메뉴를 피하는 --quick-edge) */
 @media (min-width: 1025px) {
   .why .why__inner.container { max-width: none; padding-left: max(40px, (100% - 1600px) / 2); padding-right: max(var(--quick-edge), (100% - 1600px) / 2); }

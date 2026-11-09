@@ -11,7 +11,45 @@ document.addEventListener('DOMContentLoaded', () => {
   initReveal();
   initQuickReveal();
   initHeroLayout();
+  initWhyTilt();
 });
+
+/* ---------- ② WHY WHITE e — 카드 3D 기울기 (Tilt effect adapted from uiverse.io/00Kubi/cowardly-eagle-56, MIT) ----------
+   카드 안 마우스 위치(-0.5~0.5) → CSS 변수 --rx(±6deg) --ry(±8deg), 빛 반사 중심 --mx --my. requestAnimationFrame 으로 한 프레임에 한 번
+   마우스(hover 가능한 정밀 포인터)에서만 이벤트 등록 — 터치 기기·모바일 스와이프와 무관. 동작 줄이기 설정이면 기울기 없음(CSS 는 테두리 빛만)
+   카드는 common.js 가 그리므로 목록(.why__cards)에 이벤트 위임 */
+function initWhyTilt() {
+  const grid = document.querySelector('.why__cards');
+  if (!grid || !window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let card = null, last = null, raf = 0;
+  const reset = (c) => { c.classList.remove('is-tilting'); ['--rx', '--ry', '--mx', '--my'].forEach((v) => c.style.removeProperty(v)); };
+  const frame = () => {
+    raf = 0;
+    if (!card || !last) return;
+    const r = card.getBoundingClientRect();
+    const x = Math.min(Math.max((last.clientX - r.left) / r.width, 0), 1) - 0.5; // -0.5 ~ 0.5
+    const y = Math.min(Math.max((last.clientY - r.top) / r.height, 0), 1) - 0.5;
+    card.style.setProperty('--mx', `${(x + 0.5) * 100}%`);
+    card.style.setProperty('--my', `${(y + 0.5) * 100}%`);
+    if (reduce.matches) return;
+    card.classList.add('is-tilting');
+    card.style.setProperty('--rx', `${(-y * 12).toFixed(2)}deg`); // 위쪽에 마우스 → 위가 뒤로 (±6deg)
+    card.style.setProperty('--ry', `${(x * 16).toFixed(2)}deg`); //  오른쪽에 마우스 → 오른쪽이 뒤로 (±8deg)
+  };
+  grid.addEventListener('pointermove', (e) => {
+    if (e.pointerType !== 'mouse') return;
+    const c = e.target.closest('.why-card');
+    if (c !== card) { if (card) reset(card); card = c; }
+    if (!card) return;
+    last = e;
+    if (!raf) raf = requestAnimationFrame(frame);
+  });
+  grid.addEventListener('pointerout', (e) => {
+    if (!card || card.contains(e.relatedTarget)) return;
+    reset(card); card = null; last = null; // 카드 밖으로 → 0 으로 (CSS transition 400ms)
+  });
+}
 
 /* ---------- 모바일: 히어로가 보이는 동안 SNS 플로팅 버튼(+) 숨김 ----------
    첫 화면에서 히어로 조작 버튼을 가리지 않게. 히어로를 완전히 지나 스크롤하면 나타난다 (main.css .is-hero-visible)
