@@ -106,14 +106,15 @@
 /* 단계 이미지: 단계 본문 오른쪽(최대 520px), 좁은 본문·모바일은 본문 아래 100% */
 .t-step__media { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, min(520px, 46%)); gap: 16px 32px; align-items: start; }
 /* 이런 경우에도 상담해 보세요 — 펼침형 갤러리 (pages.js initTreatmentFold, 참고: NHN 메인 'Weaving New Play')
-   데스크톱(1025px~): 줄 = 화면 전체 폭(좌우 --fold-bleed-l/-r, JS — 화면 밖은 잘림). 펼친 카드가 항상 화면 가로 가운데(--fold-x, JS)
-     무한 순환: JS 가 카드 6장 앞뒤에 복제 6장씩([data-clone], 화면낭독기·탭 이동에서 제외) → 어느 카드를 골라도 양옆이 비지 않음
+   데스크톱(1025px~): 카드 6장(01~06 한 번씩) 한 줄, 화면 전체 폭 안에서 움직임(좌우 --fold-bleed-l/-r, JS — 화면 밖은 잘림)
+     줄이 다 들어가면 화면 가운데, 넘치면 펼친 카드를 가운데로 두되 양 끝이 여백(왼쪽 40px · 오른쪽 퀵메뉴 앞)보다 안으로 들어오지 않게(--fold-x, JS)
      카드 높이 560px(1280px 이하 520px) — 설명 칸 글이 넘치면 글자는 그대로 두고 높이를 늘림(--fold-h, JS) · 사이 16px · 둥근 20px
+     설명 칸 글자: 제목 28 / 진료명 19 / 설명 18 / 체크 목록(+ 제목) 17 / 안내 15px
      펼친 카드 = --open-w(콘텐츠 폭 75%, 최대 900px — JS) → [사진 | 설명 칸 #F8FAFD 여백 40px 세로 가운데] 1:1
      접힌 카드 = 120px, 사진만 + 남색 덮개 25%(hover 옅게) + 아래 번호 흰색 14px
      전환: 폭·줄 이동 600ms cubic-bezier(0.22, 1, 0.36, 1) / 설명 글은 다 펼친 뒤(400ms 지연) 페이드 + 위로 8px 250ms, 접힐 때는 즉시 숨김 / 동작 줄이기 = 즉시
    글자 탭: 갤러리 아래 32px · 화면 가운데 · 순서 1~6 고정 · 20px 굵게 #B5BCC8(hover #6B7280) · 선택 = 남색 + 오른쪽 위 파랑 점 6px · 사이 40px
-   1024px 이하: 가로 스와이프 카드(scroll-snap) 폭 88% — [사진(4:5 중 위쪽 4:3) 위 | 설명 아래], 높이 = 내용만큼, 탭은 가로 스크롤 (복제 카드 숨김) */
+   1024px 이하: 가로 스와이프 카드(scroll-snap) 폭 88% — [사진(4:5 중 위쪽 4:3) 위 | 설명 아래], 높이 = 내용만큼, 탭은 가로 스크롤 */
 .t-fold { --fold-h-base: 560px; --fold-gap: 16px; --fold-closed: 120px; --open-w: 680px; --fold-ease: cubic-bezier(0.22, 1, 0.36, 1); }
 .t-fold__viewport { overflow: hidden; margin-left: calc(var(--fold-bleed-l, 0px) * -1); margin-right: calc(var(--fold-bleed-r, 0px) * -1); }
 .t-fold__track { display: flex; gap: var(--fold-gap); height: var(--fold-h, var(--fold-h-base)); transform: translateX(calc(var(--fold-x, 0px) * -1)); transition: transform 600ms var(--fold-ease); }
@@ -135,14 +136,14 @@
 .t-fold__body { position: absolute; top: 0; bottom: 0; left: calc(var(--open-w) / 2); width: calc(var(--open-w) / 2); display: flex; flex-direction: column; justify-content: center; padding: 40px; visibility: hidden; opacity: 0; transform: translateY(8px); transition: none; }
 .t-fold__card.is-open .t-fold__body { visibility: visible; opacity: 1; transform: none; transition: opacity 250ms ease 400ms, transform 250ms ease 400ms, visibility 0s 400ms; }
 .t-fold__num { font-size: 0.875rem; font-weight: 700; letter-spacing: 0.04em; color: var(--color-accent); }
-.t-fold__title { margin-top: 8px; font-size: 24px; font-weight: 700; line-height: 1.4; word-break: keep-all; }
-.t-fold__sub { display: block; margin-top: 2px; font-size: 17px; font-weight: 700; color: var(--color-accent); }
-.t-fold__desc { margin-top: 14px; font-size: 16px; line-height: 1.7; color: #4a5160; word-break: keep-all; }
-.t-fold__fits-title { margin-top: 18px; padding-top: 16px; border-top: 1px solid #e3e8f0; font-size: 15px; font-weight: 700; color: var(--color-text); }
+.t-fold__title { margin-top: 8px; font-size: 28px; font-weight: 700; line-height: 1.4; word-break: keep-all; }
+.t-fold__sub { display: block; margin-top: 4px; font-size: 19px; font-weight: 700; color: var(--color-accent); }
+.t-fold__desc { margin-top: 16px; font-size: 18px; line-height: 1.7; color: #4a5160; word-break: keep-all; }
+.t-fold__fits-title { margin-top: 18px; padding-top: 16px; border-top: 1px solid #e3e8f0; font-size: 17px; font-weight: 700; color: var(--color-text); }
 .t-fold__fits { display: grid; gap: 6px; margin-top: 10px; }
-.t-fold__fits li { display: flex; align-items: flex-start; gap: 8px; font-size: 15px; line-height: 1.6; word-break: keep-all; }
+.t-fold__fits li { display: flex; align-items: flex-start; gap: 8px; font-size: 17px; line-height: 1.6; word-break: keep-all; }
 .t-fold__fits svg { flex: none; width: 16px; height: 1.6em; color: var(--color-accent); }
-.t-fold__note { margin-top: 12px; font-size: 13px; line-height: 1.6; color: #6b7280; word-break: keep-all; }
+.t-fold__note { margin-top: 12px; font-size: 15px; line-height: 1.6; color: #6b7280; word-break: keep-all; }
 .t-fold__tabs { display: flex; justify-content: safe center; gap: 40px; margin: 32px calc(var(--fold-bleed-r, 0px) * -1) 0 calc(var(--fold-bleed-l, 0px) * -1); padding: 4px var(--gutter) 0; overflow-x: auto; scrollbar-width: none; }
 .t-fold__tabs::-webkit-scrollbar { display: none; }
 .t-fold__tab { position: relative; flex: none; padding: 4px 10px 4px 0; font-size: 1.25rem; font-weight: 700; color: #b5bcc8; white-space: nowrap; transition: color var(--dur); }
@@ -154,7 +155,6 @@
 /* 스와이프 (.is-swipe — pages.js: 1024px 이하 또는 본문 폭 760px 미만) */
 .t-fold.is-swipe .t-fold__viewport { margin: 0 calc(var(--gutter) * -1); padding: 0 var(--gutter); overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding: 0 var(--gutter); scrollbar-width: none; overscroll-behavior-x: contain; }
 .t-fold.is-swipe .t-fold__viewport::-webkit-scrollbar { display: none; }
-.t-fold.is-swipe .t-fold__card[data-clone] { display: none; }
 .t-fold.is-swipe .t-fold__track { align-items: flex-start; height: auto; transform: none; transition: none; }
 .t-fold.is-swipe .t-fold__card, .t-fold.is-swipe .t-fold__card.is-open { display: flex; flex-direction: column; width: 88%; scroll-snap-align: start; transition: none; }
 .t-fold.is-swipe .t-fold__track::after { content: ""; flex: none; width: 1px; } /* 마지막 카드 오른쪽 여백 */
@@ -166,6 +166,8 @@
 .t-fold.is-swipe .t-fold__title { font-size: 1.25rem; }
 .t-fold.is-swipe .t-fold__sub { font-size: 1rem; }
 .t-fold.is-swipe .t-fold__desc { font-size: 0.9375rem; }
+.t-fold.is-swipe :is(.t-fold__fits-title, .t-fold__fits li) { font-size: 0.9375rem; } /* 모바일은 이전 크기 그대로 */
+.t-fold.is-swipe .t-fold__note { font-size: 0.8125rem; }
 .t-fold.is-swipe .t-fold__tabs { justify-content: flex-start; gap: 28px; margin: 24px calc(var(--gutter) * -1) 0; padding: 0 var(--gutter); overflow-x: auto; scrollbar-width: none; }
 .t-fold.is-swipe .t-fold__tabs::-webkit-scrollbar { display: none; }
 .t-fold.is-swipe .t-fold__tabs::after { content: ""; flex: none; width: 1px; }
