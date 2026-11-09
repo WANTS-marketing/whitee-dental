@@ -83,9 +83,9 @@ ${X.photos.map((p) => `          <figure class="t-photo">${slot(p, "")}<figcapti
      동작: pages.js initTreatmentFold · 게시: 아니요(네비게이션·자가혈)도 표시 + 안내 문구(note) — 병원 확인 대기(docs/HOSPITAL-CHECK.md #8) */
   const cases = X.cases || [];
   const caseSection = cases.length ? `
-        <!-- 추가 · 이런 경우에도 상담해 보세요 (기존 상세 기반, 원고 '추가 블록') -->
+        <!-- 추가 · ${esc(X.casesTitle || '이런 경우에도 상담해 보세요')} (기존 상세 기반, 원고 '추가 블록') -->
         <section class="t-sec" aria-labelledby="t-cases-title">
-          <h2 class="sr-only" id="t-cases-title">이런 경우에도 상담해 보세요</h2><!-- 화면 제목은 2026-11-09 삭제 — 화면낭독기용으로만 남김 -->
+          <h2 class="sr-only" id="t-cases-title">${esc(X.casesTitle || '이런 경우에도 상담해 보세요')}</h2><!-- 화면 제목은 2026-11-09 삭제(임플란트) — 두 페이지 같은 모양으로 화면낭독기용으로만 남김. 제목 문구는 원고 '### 추가 블록 — 이런 … 상담해 보세요' -->
           <div class="t-fold" data-t-fold>
             <div class="t-fold__viewport" data-t-fold-viewport>
               <div class="t-fold__track" data-t-fold-track>
@@ -120,9 +120,24 @@ ${cases.map((c, i) => `              <button type="button" class="t-fold__tab" r
           </div>
         </section>
 ` : '';
+  /* 장치 비교 표 (치아교정 단계 2 아래, 2026-11-09 — 기존 상세 16 표 중 유형 · 겉보기 · 방문 간격만)
+     넓을 때 = 표(맨 위 줄에 장치 그림 4:3 + 이름), 좁을 때(본문 704px 이하) = 장치별 카드 세로 쌓기 — 둘 중 하나만 보임(sub.css)
+     data-verified="false" = 병원 확인 전(docs/HOSPITAL-CHECK.md) — 화면에는 표시 */
+  const DEV_ROWS = [['유형', 'type'], ['겉보기', 'look'], ['방문 간격', 'visit']];
+  const deviceBlock = X.devices ? `
+              <div class="t-devices">
+                <table class="t-devices__table">
+                  <caption class="sr-only">교정 장치 비교 — ${DEV_ROWS.map((r) => r[0]).join(' · ')}</caption>
+                  <thead><tr><td></td>${X.devices.items.map((d) => `<th scope="col" data-verified="${d.verified}">${slot(d.image, '')}<span class="t-devices__name">${esc(d.name)}</span></th>`).join('')}</tr></thead>
+                  <tbody>${DEV_ROWS.map(([label, key]) => `<tr><th scope="row">${label}</th>${X.devices.items.map((d) => `<td>${esc(d[key])}</td>`).join('')}</tr>`).join('')}</tbody>
+                </table>
+                <ul class="t-devices__cards">${X.devices.items.map((d) => `<li class="t-devices__card" data-verified="${d.verified}">${slot(d.image, '')}<div class="t-devices__card-body"><p class="t-devices__name">${esc(d.name)}</p><dl>${DEV_ROWS.map(([label, key]) => `<div><dt>${label}</dt><dd>${esc(d[key])}</dd></div>`).join('')}</dl></div></li>`).join('')}</ul>
+                ${X.devices.note ? `<p class="t-devices__note">${esc(X.devices.note)}</p>` : ''}
+              </div>` : '';
   const stepHtml = (s, i) => {
     const img = X.stepImage && X.stepImage.step === i + 1 ? X.stepImage : null;
-    const text = `<h3 class="t-step__title">${esc(s.title)}</h3><p class="t-step__body">${esc(s.body)}</p>`;
+    const dev = X.devices && X.devices.step === i + 1 ? deviceBlock : '';
+    const text = `<h3 class="t-step__title">${esc(s.title)}</h3><p class="t-step__body">${esc(s.body)}</p>${dev}`;
     return `            <li class="t-step${img ? ' t-step--media' : ''}"><span class="t-step__no" aria-hidden="true">${i + 1}</span><div${img ? ' class="t-step__media"' : ''}>${img ? `<div>${text}</div>${slot(img, img.alt)}` : text}</div></li>`;
   };
   const ld = {

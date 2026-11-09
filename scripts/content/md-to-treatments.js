@@ -81,8 +81,27 @@ const treatments = blocks.map((b) => {
     const [stepPart, slot, altPart] = stepImgSec.replace(/^- /, '').split(/\s+\/\s+/);
     extras.stepImage = { step: Number(stepPart.replace(/\D/g, '')), ...slotOf(slot), alt: altPart.replace(/^alt:\s*/, '').trim() };
   }
-  const caseSec = optSection('추가 블록 — 이런 경우에도 상담해 보세요');
+  /* 장치 비교 표 (치아교정 단계 2 아래, 2026-11-09): '#### 장치 이름' 마다 이미지 · 게시 · 유형 · 겉보기 · 방문 간격 */
+  const devSec = optSection('추가 블록 — 장치 비교');
+  if (devSec) {
+    extras.devices = {
+      step: Number(lineOf(devSec, '단계')),
+      note: lineOf(devSec, '안내'),
+      items: devSec.split(/\n#### /).slice(1).map((d) => ({
+        name: d.split('\n')[0].trim(),
+        image: slotOf(lineOf(d, '이미지')),
+        verified: lineOf(d, '게시') === '예', // 아니요 = 병원 확인 전 (화면에는 표시, docs/HOSPITAL-CHECK.md)
+        type: lineOf(d, '유형'),
+        look: lineOf(d, '겉보기'),
+        visit: lineOf(d, '방문 간격'),
+      })),
+    };
+  }
+  /* 펼침형 갤러리: 섹션 제목은 진료마다 다름 — '### 추가 블록 — 이런 경우에도 상담해 보세요'(임플란트) · '… 이런 고민이 있다면 상담해 보세요'(치아교정) */
+  const caseHead = b.match(/### 추가 블록 — (이런 [^\n]*상담해 보세요)/);
+  const caseSec = caseHead ? optSection(`추가 블록 — ${caseHead[1]}`) : '';
   if (caseSec) {
+    extras.casesTitle = caseHead[1];
     extras.cases = caseSec.split(/\n#### /).slice(1).map((c) => {
       const title = c.split('\n')[0].trim();
       const m = title.match(/^(.*?)\s*\(([^)]+)\)$/); // '발치 후 바로 심는 경우 (발치 당일 임플란트)' → 제목 + 진료명

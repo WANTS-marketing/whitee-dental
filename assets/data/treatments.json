@@ -114,6 +114,7 @@
             "caption": "진료실 모습"
           }
         ],
+        "casesTitle": "이런 경우에도 상담해 보세요",
         "cases": [
           {
             "title": "발치 후 바로 심는 경우 (발치 당일 임플란트)",
@@ -346,6 +347,217 @@
         "verified": false,
         "date": "",
         "reviewer": ""
+      },
+      "extras": {
+        "photos": [
+          {
+            "file": "treatment/orthodontics/ortho-photo-01",
+            "name": "ortho-photo-01",
+            "ratio": "4/3",
+            "size": "1200×900",
+            "caption": "사진과 검사 자료를 함께 보며 교정 계획을 설명합니다"
+          },
+          {
+            "file": "treatment/orthodontics/ortho-photo-02",
+            "name": "ortho-photo-02",
+            "ratio": "4/3",
+            "size": "1200×900",
+            "caption": "진료실 모습"
+          }
+        ],
+        "devices": {
+          "step": 2,
+          "note": "방문 간격과 치료 기간은 치아 상태와 치료 계획에 따라 다를 수 있습니다.",
+          "items": [
+            {
+              "name": "클리피씨",
+              "image": {
+                "file": "treatment/orthodontics/ortho-device-clippyc",
+                "name": "ortho-device-clippyc",
+                "ratio": "4/3",
+                "size": "800×600"
+              },
+              "verified": true,
+              "type": "자가결찰",
+              "look": "치아색 브라켓 + 은색 뚜껑",
+              "visit": "4~8주"
+            },
+            {
+              "name": "클리피엠",
+              "image": {
+                "file": "treatment/orthodontics/ortho-device-clippym",
+                "name": "ortho-device-clippym",
+                "ratio": "4/3",
+                "size": "800×600"
+              },
+              "verified": true,
+              "type": "자가결찰",
+              "look": "메탈 브라켓",
+              "visit": "4~8주"
+            },
+            {
+              "name": "메탈",
+              "image": {
+                "file": "treatment/orthodontics/ortho-device-metal",
+                "name": "ortho-device-metal",
+                "ratio": "4/3",
+                "size": "800×600"
+              },
+              "verified": false,
+              "type": "비자가결찰",
+              "look": "메탈 브라켓",
+              "visit": "4~8주"
+            },
+            {
+              "name": "투명 교정장치",
+              "image": {
+                "file": "treatment/orthodontics/ortho-device-clear",
+                "name": "ortho-device-clear",
+                "ratio": "4/3",
+                "size": "800×600"
+              },
+              "verified": false,
+              "type": "탈부착식",
+              "look": "투명 장치(브라켓 없음)",
+              "visit": "4~8주 점검 방문"
+            }
+          ]
+        },
+        "casesTitle": "이런 고민이 있다면 상담해 보세요",
+        "cases": [
+          {
+            "title": "치아가 겹치거나 튀어나와 있는 경우 (덧니교정)",
+            "titleMain": "치아가 겹치거나 튀어나와 있는 경우",
+            "titleSub": "덧니교정",
+            "tab": "덧니교정",
+            "source": "기존 상세 07",
+            "image": {
+              "file": "treatment/orthodontics/ortho-case-crowding",
+              "name": "ortho-case-crowding",
+              "ratio": "4/5",
+              "size": "1080×1350"
+            },
+            "verified": true,
+            "text": "덧니는 치아가 배열되는 턱뼈가 작거나 치아 사이 공간이 부족할 때 생길 수 있습니다. 가장 늦게 나는 송곳니가 덧니로 나기 쉽고, 앞니가 회전하여 서로 겹쳐 배열되기도 합니다. 치아가 겹친 부위는 플라그나 치석이 생기기 쉬워 관리가 어려울 수 있습니다.",
+            "fits": [
+              "송곳니가 튀어나와 보이는 경우",
+              "치아가 겹쳐 양치질이 어려운 경우",
+              "웃을 때 치아 배열이 신경 쓰이는 경우",
+              "발치가 필요한지 궁금한 경우"
+            ],
+            "note": ""
+          },
+          {
+            "title": "입이 앞으로 나와 보이는 경우 (돌출입교정)",
+            "titleMain": "입이 앞으로 나와 보이는 경우",
+            "titleSub": "돌출입교정",
+            "tab": "돌출입교정",
+            "source": "기존 상세 08",
+            "image": {
+              "file": "treatment/orthodontics/ortho-case-protrusion",
+              "name": "ortho-case-protrusion",
+              "ratio": "4/5",
+              "size": "1080×1350"
+            },
+            "verified": true,
+            "text": "위턱뼈가 앞으로 나와 있거나 앞니가 앞쪽으로 기울어져 입이 나와 보이는 경우입니다. 입술의 돌출은 코와 턱을 잇는 선을 기준으로 평가하며, 치아가 기울어진 정도에 따라 교정으로 개선할 수 있는지 검토합니다. 턱뼈의 영향이 큰 경우에는 교정만으로 가능한 범위를 따로 평가합니다.",
+            "fits": [
+              "입이 앞으로 나와 보이는 경우",
+              "입을 다물 때 입술에 힘이 들어가는 경우",
+              "옆모습이 신경 쓰이는 경우",
+              "치아 때문인지 턱 때문인지 궁금한 경우"
+            ],
+            "note": ""
+          },
+          {
+            "title": "어금니는 닿는데 앞니가 닿지 않는 경우 (개방교합)",
+            "titleMain": "어금니는 닿는데 앞니가 닿지 않는 경우",
+            "titleSub": "개방교합",
+            "tab": "개방교합",
+            "source": "기존 상세 09",
+            "image": {
+              "file": "treatment/orthodontics/ortho-case-openbite",
+              "name": "ortho-case-openbite",
+              "ratio": "4/5",
+              "size": "1080×1350"
+            },
+            "verified": true,
+            "text": "윗니와 아랫니가 서로 맞물리지 않고 틈이 벌어진 상태입니다. 앞니로 음식을 끊어 먹기 어렵거나 일부 발음이 샐 수 있으며, 치료 방법은 원인과 상태에 따라 다릅니다.",
+            "fits": [
+              "앞니로 음식을 끊기 어려운 경우",
+              "일부 발음이 새는 것 같은 경우",
+              "혀를 앞니 사이로 내미는 습관이 있는 경우",
+              "입을 다물어도 앞니 사이가 뜨는 경우"
+            ],
+            "note": ""
+          },
+          {
+            "title": "아랫니가 윗니에 깊게 가려지는 경우 (과개교합)",
+            "titleMain": "아랫니가 윗니에 깊게 가려지는 경우",
+            "titleSub": "과개교합",
+            "tab": "과개교합",
+            "source": "기존 상세 10",
+            "image": {
+              "file": "treatment/orthodontics/ortho-case-deepbite",
+              "name": "ortho-case-deepbite",
+              "ratio": "4/5",
+              "size": "1080×1350"
+            },
+            "verified": true,
+            "text": "어금니는 맞물려 있지만 윗니가 아랫니를 과도하게 덮고 있는 상태입니다. 아랫니가 윗니에 가려져 턱 끝이 들어가 보이는 '무턱'처럼 보이기도 합니다. 턱뼈의 영향이 큰 경우에는 교정만으로 가능한 범위를 따로 평가합니다.",
+            "fits": [
+              "아랫니가 윗니에 많이 가려지는 경우",
+              "아랫니가 입천장 쪽 잇몸에 닿는 경우",
+              "턱 끝이 들어가 보이는 경우",
+              "앞니가 안쪽으로 기울어져 보이는 경우"
+            ],
+            "note": ""
+          },
+          {
+            "title": "아랫니가 윗니보다 앞에 나와 있는 경우 (반대교합)",
+            "titleMain": "아랫니가 윗니보다 앞에 나와 있는 경우",
+            "titleSub": "반대교합",
+            "tab": "반대교합",
+            "source": "기존 상세 11",
+            "image": {
+              "file": "treatment/orthodontics/ortho-case-crossbite",
+              "name": "ortho-case-crossbite",
+              "ratio": "4/5",
+              "size": "1080×1350"
+            },
+            "verified": true,
+            "text": "정상 교합과 반대로 아랫니가 윗니를 덮는 상태로, 골격적으로 주걱턱의 특징을 띠기도 합니다. 아래턱이 수술이 필요할 정도로 돌출되지 않은 경우에는 교정으로 개선할 수 있는지 검토합니다. 턱뼈의 영향이 큰 경우에는 교정만으로 가능한 범위를 따로 평가합니다.",
+            "fits": [
+              "아랫니가 윗니보다 앞에 있는 경우",
+              "앞니로 씹기 불편한 경우",
+              "아래턱이 나와 보이는 경우",
+              "자녀의 아래턱이 앞으로 나와 보이는 경우"
+            ],
+            "note": ""
+          },
+          {
+            "title": "일부 치아만 고르거나 틈이 있는 경우 (부분·틈새교정)",
+            "titleMain": "일부 치아만 고르거나 틈이 있는 경우",
+            "titleSub": "부분·틈새교정",
+            "tab": "부분·틈새교정",
+            "source": "기존 상세 12",
+            "image": {
+              "file": "treatment/orthodontics/ortho-case-partial",
+              "name": "ortho-case-partial",
+              "ratio": "4/5",
+              "size": "1080×1350"
+            },
+            "verified": true,
+            "text": "치아 사이의 틈은 여러 이유로 생기며, 발음이 새는 등 불편할 수 있습니다. 앞니나 특정 어금니처럼 일부 치아에만 문제가 있는 경우 부분교정을 검토할 수 있으며, 가능 여부는 전체 맞물림 상태에 따라 다릅니다.",
+            "fits": [
+              "앞니에만 틈이 있거나 삐뚤어진 경우",
+              "어금니가 빠진 뒤 주위 치아가 움직인 경우",
+              "치아 개수가 선천적으로 모자란 경우(결손치)",
+              "성인이 되면서 잇몸이 나빠져 치아가 움직인 경우"
+            ],
+            "note": ""
+          }
+        ]
       }
     },
     {
