@@ -1,0 +1,258 @@
+/* ==========================================================================
+   진료과목 6개 페이지·메뉴 만들기 — 데이터: assets/data/treatments.json (원고에서 생성: md-to-treatments.js)
+   node scripts/content/build-treatments.js
+
+   만드는 것 (모두 같은 데이터, 순서 = treatments.json 순서)
+   1) treatment/{slug}.html 6개 — 원고 문장(h1·요약·포인트·기준·단계·FAQ)을 HTML 에 그대로 넣는다(검색엔진·AI 가 JS 없이 읽게)
+      + title · description · canonical · og + FAQPage · Dentist(창원점·마산점) 구조화 데이터
+      '진료 연결'(지점 탭·주소·전화·진료시간·담당 의료진)만 화면에서 site-data.js 로 그린다(pages.js renderTreatmentConnect)
+   2) treatment/wisdom-scaling.html — 예전 주소 → wisdom-tooth.html 로 이동 (스케일링·사랑니 두 링크도 표시)
+   3) components/header.html 진료과목 하위 메뉴(PC·모바일) — <!-- treatments:menu --> 표시 사이
+   4) index.html 메인 진료안내 카드 — <!-- treatments:cards --> 표시 사이
+   5) sitemap.xml 진료과목 주소 — <!-- treatments:sitemap --> 표시 사이
+   ========================================================================== */
+const fs = require('fs');
+const path = require('path');
+const vm = require('vm');
+
+const ROOT = path.resolve(__dirname, '../..');
+const SITE_URL = 'https://wants-marketing.github.io/whitee-dental';
+const TODAY = new Date().toISOString().slice(0, 10);
+const read = (p) => fs.readFileSync(path.join(ROOT, p), 'utf8');
+const write = (p, s) => fs.writeFileSync(path.join(ROOT, p), s);
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const jsonLd = (o) => `<script type="application/ld+json">\n${JSON.stringify(o, null, 2).replace(/</g, '\\u003c')}\n</script>`;
+
+const DATA = JSON.parse(read('assets/data/treatments.json'));
+const T = DATA.treatments;
+// 지점 정보(주소·전화·진료시간) — site-data.js 를 그대로 읽는다(푸터·오시는길·히어로 진료시간 카드와 같은 값)
+const sandbox = { window: {} };
+vm.runInNewContext(read('assets/js/site-data.js'), sandbox);
+const BRANCHES = sandbox.window.SITE.branches;
+
+/** 표시 사이 내용 바꾸기 */
+function replaceBetween(s, name, inner, file) {
+  const re = new RegExp(`(<!-- ${name} -->)[\\s\\S]*?(\\s*<!-- /${name} -->)`, 'g');
+  if (!re.test(s)) throw new Error(`${file}: <!-- ${name} --> 표시 없음`);
+  return s.replace(re, (m, a, b) => `${a}\n${inner}${b}`);
+}
+
+/* ---------- 1) 페이지 ---------- */
+const ICON_HOME = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5.5 9v11h13V9"/></svg>';
+
+const dentistLd = () => BRANCHES.map((b) => ({
+  '@type': 'Dentist',
+  '@id': `${SITE_URL}/about/clinic.html#${b.id}`,
+  name: b.fullName,
+  url: `${SITE_URL}/about/clinic.html`,
+  telephone: b.tel,
+  address: { '@type': 'PostalAddress', streetAddress: b.address.replace(/^경상남도 창원시 /, ''), addressLocality: '창원시', addressRegion: '경상남도', addressCountry: 'KR' },
+  openingHoursSpecification: (b.hours || []).filter((h) => /\d/.test(h.time)).map((h) => {
+    const [opens, closes] = h.time.split(/[–~-]/).map((x) => x.trim());
+    const days = /^평일|월/.test(h.label) ? ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'] : /^토/.test(h.label) ? ['Saturday'] : [];
+    return { '@type': 'OpeningHoursSpecification', dayOfWeek: days, opens, closes };
+  }).filter((o) => o.dayOfWeek.length),
+}));
+
+function page(t) {
+  const url = `${SITE_URL}/treatment/${t.slug}.html`;
+  const lnb = T.map((x) => `            <li><a href="${x.slug}.html"${x.slug === t.slug ? ' aria-current="page"' : ''}>${esc(x.nameKo)}</a></li>`).join('\n');
+  const chips = (items) => `<ul class="t-chips">${items.map((x) => `<li class="t-chip">${esc(x)}</li>`).join('')}</ul>`;
+  const ld = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      { '@type': 'MedicalWebPage', '@id': `${url}#page`, url, name: t.seoTitle, description: t.description, inLanguage: 'ko-KR', about: { '@type': 'MedicalProcedure', name: t.nameKo } },
+      { '@type': 'FAQPage', '@id': `${url}#faq`, mainEntity: t.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) },
+      ...dentistLd(),
+    ],
+  };
+  return `<!DOCTYPE html>
+<html lang="ko" data-root="..">
+<head>
+  <!-- 이 파일은 scripts/content/build-treatments.js 가 만든다 — 문구는 docs/content/treatments-6-content.md(원고) → assets/data/treatments.json 에서 고칠 것 -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>${esc(t.seoTitle)}</title>
+  <meta name="description" content="${esc(t.description)}">
+  <meta name="naver-site-verification" content="9bc82b586e6aa173ce4c34f00fa7825fdf2832b1">
+  <link rel="canonical" href="${url}">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="화이트e치과">
+  <meta property="og:title" content="${esc(t.seoTitle)}">
+  <meta property="og:description" content="${esc(t.description)}">
+  <meta property="og:url" content="${url}">
+  <meta property="og:image" content="${SITE_URL}/assets/images/og-image.jpg">
+  <meta property="og:locale" content="ko_KR">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+  <link rel="stylesheet" href="../assets/css/variables.css">
+  <link rel="stylesheet" href="../assets/css/common.css">
+  <link rel="stylesheet" href="../assets/css/sub.css">
+  <script src="../assets/js/config.js" defer></script>
+  <script src="../assets/js/site-data.js" defer></script>
+  <script src="../assets/js/api.js" defer></script>
+  <script src="../assets/js/include.js" defer></script>
+  <script src="../assets/js/common.js" defer></script>
+  <script src="../assets/js/pages.js" defer></script>
+  ${jsonLd(ld)}
+</head>
+<body class="is-sub has-lnb no-hero" data-page="treatment"> <!-- no-hero: 상단 배너 없음 → 처음부터 흰 헤더, 본문은 헤더 아래 56px (common.css) -->
+  <div data-include="header"></div>
+
+  <main id="main">
+    <!-- 서브 레이아웃: 왼쪽 LNB(하위 메뉴) + 오른쪽 본문 — 1024px 이하는 본문 위 가로 탭 (common.css '서브 LNB') -->
+    <div class="sub-layout container">
+      <aside class="lnb">
+        <nav class="lnb__nav" aria-label="진료과목 하위 메뉴">
+          <div class="lnb__head"><p class="lnb__title">진료과목</p><p class="lnb__en">TREATMENT</p></div>
+          <ul class="lnb__list">
+${lnb}
+          </ul>
+        </nav>
+      </aside>
+      <div class="sub-body t-page">
+        <div class="sub-head">
+          <ol class="breadcrumb" aria-label="현재 위치">
+            <li><a class="breadcrumb__home" href="../index.html" aria-label="홈">${ICON_HOME}</a></li>
+            <li>진료과목</li>
+            <li aria-current="page">${esc(t.nameKo)}</li>
+          </ol>
+          <p class="sub-head__title">${esc(t.nameKo)}</p><!-- 페이지 이름(제목 글자) — h1 은 아래 비주얼 박스 원고 문장 하나 -->
+          <p class="sub-head__desc">${esc(t.description)}</p>
+        </div>
+
+        <!-- 1. 비주얼 박스: 영문 라벨 + h1(원고 H1). 사진 = treatments.json image -->
+        <div class="t-visual">
+          <img class="t-visual__img" src="../assets/images/${esc(t.image)}" alt="">
+          <div class="t-visual__text">
+            <span class="t-visual__label">${esc(t.labelEn)}</span>
+            <h1 class="t-visual__title">${esc(t.h1)}</h1>
+          </div>
+        </div>
+
+        <!-- 2. 요약 문단 -->
+        <p class="t-summary">${esc(t.summary)}</p>
+
+        <!-- 3. 화이트e치과 진료 포인트 -->
+        <section class="t-sec" aria-labelledby="t-points-title">
+          <h2 class="t-sec__title" id="t-points-title">화이트e치과 진료 포인트</h2>
+          <ol class="t-points">
+${t.points.map((p, i) => `            <li class="t-point"><span class="t-point__no">${String(i + 1).padStart(2, '0')}</span><p class="t-point__text">${esc(p)}</p></li>`).join('\n')}
+          </ol>
+        </section>
+
+        <!-- 4. 치료를 결정하기 전 알아야 할 기준 -->
+        <section class="t-sec" aria-labelledby="t-criteria-title">
+          <h2 class="t-sec__title" id="t-criteria-title">치료를 결정하기 전 알아야 할 기준</h2>
+          <div class="t-criteria">
+            <div class="t-crit"><h3 class="t-crit__title">검사에서 확인할 것</h3>${chips(t.criteria.check)}</div>
+            <div class="t-crit"><h3 class="t-crit__title">치료 선택지</h3>${chips(t.criteria.options)}${t.criteria.optionsNote ? `<p class="t-crit__note">${esc(t.criteria.optionsNote)}</p>` : ''}</div>
+            <div class="t-crit"><h3 class="t-crit__title">이런 질문을 많이 하세요</h3><ul class="t-questions">${t.criteria.questions.map((q) => `<li>"${esc(q)}"</li>`).join('')}</ul></div>
+          </div>
+        </section>
+
+        <!-- 5. 검사부터 관리까지 (4단계 세로 타임라인) -->
+        <section class="t-sec" aria-labelledby="t-steps-title">
+          <h2 class="t-sec__title" id="t-steps-title">검사부터 관리까지</h2>
+          <ol class="t-steps">
+${t.steps.map((s, i) => `            <li class="t-step"><span class="t-step__no" aria-hidden="true">${i + 1}</span><div><h3 class="t-step__title">${esc(s.title)}</h3><p class="t-step__body">${esc(s.body)}</p></div></li>`).join('\n')}
+          </ol>
+        </section>
+
+        <!-- 6. 많이 묻는 질문 (아코디언 — 첫 번째만 열림, 내용 = 위 FAQPage 구조화 데이터와 같음) -->
+        <section class="t-sec" aria-labelledby="t-faq-title">
+          <h2 class="t-sec__title" id="t-faq-title">많이 묻는 질문</h2>
+          <ul class="accordion t-faq" data-t-faq>
+${t.faq.map((f, i) => `            <li class="accordion__item">
+              <button class="accordion__btn" type="button" id="t-faq-q${i}" aria-expanded="${i === 0}" aria-controls="t-faq-a${i}"><span class="accordion__no" aria-hidden="true">Q</span><span class="accordion__q">${esc(f.q)}</span><span class="accordion__icon" aria-hidden="true"></span></button>
+              <div class="accordion__panel" id="t-faq-a${i}" role="region" aria-labelledby="t-faq-q${i}"${i === 0 ? ' style="height: auto"' : ''}><p class="accordion__a">${esc(f.a)}</p></div>
+            </li>`).join('\n')}
+          </ul>
+        </section>
+
+        <!-- 7. 진료 연결 | 창원점 · 마산점 — 지점 탭·주소·전화·진료시간·담당 의료진은 pages.js renderTreatmentConnect 가 site-data.js 에서 그림
+             담당 의료진 = 의료진 dept 가 아래 data-t-specs(원고 '관련 진료과')와 맞는 원장 (보류·퇴사 원장 제외, 없으면 줄 숨김) -->
+        <section class="t-sec t-connect" aria-labelledby="t-connect-title" data-t-connect data-t-specs="${esc(JSON.stringify(t.specialties))}">
+          <h2 class="t-sec__title" id="t-connect-title">진료 연결 <span class="t-connect__sub">창원점 · 마산점</span></h2>
+          <p class="t-connect__text">${esc(DATA.common.connectText)}</p>
+          <div class="t-connect__box" data-t-connect-box></div>
+        </section>
+
+        <!-- 8. 하단 고지 (원고 공통 문구) — 의료진 검수일은 값이 있을 때만 -->
+        <div class="t-notice">
+          <p>${esc(DATA.common.notice)}</p>
+${t.review && t.review.date ? `          <p>${esc(DATA.common.reviewLabel)}: ${esc(t.review.date)}${t.review.reviewer ? ` · ${esc(t.review.reviewer)}` : ''}</p>\n` : ''}        </div>
+      </div>
+    </div>
+  </main>
+
+  <div class="quick quick--float" data-include="quick" data-keep></div>
+  <div data-include="footer"></div>
+</body>
+</html>
+`;
+}
+T.forEach((t) => write(`treatment/${t.slug}.html`, page(t)));
+
+/* ---------- 2) 예전 주소 wisdom-scaling.html → wisdom-tooth.html ---------- */
+write('treatment/wisdom-scaling.html', `<!DOCTYPE html>
+<html lang="ko" data-root="..">
+<head>
+  <!-- 예전 주소(사랑니·스케일링 한 페이지) — 2026-11-09 두 페이지로 나눔. scripts/content/build-treatments.js 가 만든다 -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>사랑니 발치 | 화이트e치과</title>
+  <meta name="robots" content="noindex, follow">
+  <link rel="canonical" href="${SITE_URL}/treatment/wisdom-tooth.html">
+  <meta http-equiv="refresh" content="0; url=wisdom-tooth.html">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../assets/css/variables.css">
+  <link rel="stylesheet" href="../assets/css/common.css">
+  <style>.moved { max-width: 520px; margin: 120px auto; padding: 0 24px; text-align: center; line-height: 1.8; } .moved a { color: var(--color-accent); font-weight: 600; text-decoration: underline; } .moved ul { margin-top: 16px; display: flex; justify-content: center; gap: 24px; }</style>
+  <script>location.replace('wisdom-tooth.html' + location.hash);</script>
+</head>
+<body>
+  <main class="moved">
+    <p>사랑니·스케일링 안내가 두 페이지로 나뉘었습니다. 잠시 후 사랑니 발치 페이지로 이동합니다.</p>
+    <ul>
+      <li><a href="wisdom-tooth.html">사랑니 발치</a></li>
+      <li><a href="scaling.html">스케일링</a></li>
+    </ul>
+  </main>
+</body>
+</html>
+`);
+
+/* ---------- 3) 헤더 진료과목 하위 메뉴 (PC·모바일) ---------- */
+{
+  let s = read('components/header.html');
+  const items = (indent) => T.map((t) => `${indent}<li><a href="{{ROOT}}/treatment/${t.slug}.html">${esc(t.nameKo)}</a></li>`).join('\n');
+  s = replaceBetween(s, 'treatments:menu', items('            '), 'header.html');
+  s = replaceBetween(s, 'treatments:mnav', items('          '), 'header.html');
+  write('components/header.html', s);
+}
+
+/* ---------- 4) 메인 진료안내 카드 ---------- */
+{
+  let s = read('index.html');
+  const ARROW = '<span class="clinic-card__arrow" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg></span>';
+  const cards = T.map((t) => `          <a class="clinic-card clinic-card--${t.slug}" href="./treatment/${t.slug}.html">
+            <span class="clinic-card__img img-ph"><img src="./assets/images/${esc(t.image)}" alt="${esc(t.imageAlt)}" loading="lazy"></span>
+            <span class="clinic-card__body">
+              <strong class="clinic-card__title">${esc(t.nameKo)}</strong>
+              <span class="clinic-card__sub">${esc(t.cardSub)}</span>
+            </span>
+            ${ARROW}
+          </a>`).join('\n');
+  s = replaceBetween(s, 'treatments:cards', cards, 'index.html');
+  write('index.html', s);
+}
+
+/* ---------- 5) sitemap ---------- */
+{
+  let s = read('sitemap.xml');
+  s = replaceBetween(s, 'treatments:sitemap', T.map((t) => `  <url><loc>${SITE_URL}/treatment/${t.slug}.html</loc><lastmod>${TODAY}</lastmod></url>`).join('\n'), 'sitemap.xml');
+  write('sitemap.xml', s);
+}
+console.log(`진료과목 ${T.length}개 페이지 + 예전 주소 이동 + 헤더 메뉴 + 메인 카드 + sitemap`);

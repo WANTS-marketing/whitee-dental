@@ -110,7 +110,6 @@
      [data-specialties]            전문의 원(.spec-circle) 줄 — SITE.specialties
      [data-specialty-text]         진료과 목록 글자 '치과교정과 · 치과보철과 …' (data-specialty-text="sep" 로 구분자 지정, 기본 ' · ')
      [data-philosophy="hanja|sub|text|list"] 진료 철학 — 치과소개 인트로(hanja·sub·text) / 메인 WHY 왼쪽 목록(list)
-     [data-treatment-visual="키"]  진료과목 인트로 비주얼 박스 사진 (SITE.treatmentVisuals[키].image → 안의 img[data-treatment-visual-img])
      [data-hero-hours]             메인 히어로 3번 진료시간 카드 (SITE.branches[].hours — 두 지점이 같으면 표 하나 + '창원점·마산점 동일', 다르면 지점별)
      [data-promises="full|short"]  4가지 약속 카드 — full = 치과소개(.strength), short = 메인 사진 카드(.why-card — image 배경, 사진·제목·설명만, 링크 없음)
      [data-partner-highlights]     협력 강조 — 기본 = 치과소개 카드(.partner-highlight) / ="card" = 메인 WHITE e PARTNERS 카드(.partners-card)
@@ -135,13 +134,6 @@
       else if (kind === 'list') el.innerHTML = PH.words.map((w) => `<li class="why-philo__item"><p class="why-philo__word"><strong>${esc(w.ko)}</strong> <span lang="zh-Hant">${esc(w.hanja)}</span></p><p class="why-philo__desc">${esc(w.desc)}</p></li>`).join('');
     });
     const icon = (p) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">${p.icon}</svg>`;
-    document.querySelectorAll('[data-treatment-visual]').forEach((el) => {
-      const v = (S.treatmentVisuals || {})[el.dataset.treatmentVisual];
-      const img = el.querySelector('[data-treatment-visual-img]');
-      if (!v || !img) return;
-      img.src = `${root}/assets/images/${v.image}`;
-      if (v.imagePos) img.style.objectPosition = v.imagePos;
-    });
     document.querySelectorAll('[data-hero-hours]').forEach((el) => {
       const B = S.branches || [];
       if (!B.length) return;

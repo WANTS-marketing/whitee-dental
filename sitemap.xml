@@ -5,11 +5,15 @@
   <url><loc>https://wants-marketing.github.io/whitee-dental/about/intro.html</loc><lastmod>2026-11-02</lastmod></url>
   <url><loc>https://wants-marketing.github.io/whitee-dental/about/doctors.html</loc><lastmod>2026-11-02</lastmod></url>
   <url><loc>https://wants-marketing.github.io/whitee-dental/about/clinic.html</loc><lastmod>2026-11-04</lastmod></url>
-  <url><loc>https://wants-marketing.github.io/whitee-dental/treatment/implant.html</loc><lastmod>2026-11-02</lastmod></url>
-  <url><loc>https://wants-marketing.github.io/whitee-dental/treatment/orthodontics.html</loc><lastmod>2026-11-02</lastmod></url>
-  <url><loc>https://wants-marketing.github.io/whitee-dental/treatment/general.html</loc><lastmod>2026-11-02</lastmod></url>
-  <url><loc>https://wants-marketing.github.io/whitee-dental/treatment/wisdom-scaling.html</loc><lastmod>2026-11-02</lastmod></url>
-  <url><loc>https://wants-marketing.github.io/whitee-dental/treatment/aesthetic.html</loc><lastmod>2026-11-02</lastmod></url>
+  <!-- 진료과목 — scripts/content/build-treatments.js 가 만든다 -->
+  <!-- treatments:sitemap -->
+  <url><loc>https://wants-marketing.github.io/whitee-dental/treatment/implant.html</loc><lastmod>2026-11-09</lastmod></url>
+  <url><loc>https://wants-marketing.github.io/whitee-dental/treatment/orthodontics.html</loc><lastmod>2026-11-09</lastmod></url>
+  <url><loc>https://wants-marketing.github.io/whitee-dental/treatment/aesthetic.html</loc><lastmod>2026-11-09</lastmod></url>
+  <url><loc>https://wants-marketing.github.io/whitee-dental/treatment/general.html</loc><lastmod>2026-11-09</lastmod></url>
+  <url><loc>https://wants-marketing.github.io/whitee-dental/treatment/scaling.html</loc><lastmod>2026-11-09</lastmod></url>
+  <url><loc>https://wants-marketing.github.io/whitee-dental/treatment/wisdom-tooth.html</loc><lastmod>2026-11-09</lastmod></url>
+  <!-- /treatments:sitemap -->
   <url><loc>https://wants-marketing.github.io/whitee-dental/community/notice.html</loc><lastmod>2026-11-02</lastmod></url>
   <url><loc>https://wants-marketing.github.io/whitee-dental/community/news.html</loc><lastmod>2026-11-02</lastmod></url>
   <url><loc>https://wants-marketing.github.io/whitee-dental/community/cases.html</loc><lastmod>2026-11-02</lastmod></url>

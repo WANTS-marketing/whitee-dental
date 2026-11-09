@@ -30,6 +30,95 @@
 /* LNB 옆 본문(.sub-body) 안: 섹션 위아래 여백 대신 섹션 사이 간격, 배경색 섹션은 화면 끝까지가 아니라 본문 폭의 둥근 면 */
 .sub-body .sec { padding: 0; }
 .sub-body .sec + .sec { margin-top: var(--space-4xl); }
+/* ---------- 진료과목 6개 공통 템플릿 (treatment/*.html — scripts/content/build-treatments.js, 2026-11-09) ----------
+   [비주얼 박스(h1)] → 요약(18px · 1.8 · 최대 760px) → 진료 포인트 카드 3개 → 결정 기준 3칸(#F8FAFD) → 4단계 세로 타임라인 → FAQ 아코디언 → 진료 연결 → 하단 고지
+   색: 남색(--color-point) = 칸 제목·탭 / 파랑(--color-accent) = 번호·Q·세로선·주 버튼 / 지점 색 = 탭 앞 점만 */
+.t-page .t-visual { margin-bottom: 0; }
+.t-page .t-visual__title { font-size: 2.25rem; text-wrap: balance; }
+.t-summary { max-width: 760px; margin-top: 40px; font-size: 1.125rem; line-height: 1.8; color: var(--color-text); word-break: keep-all; }
+.t-sec { margin-top: 80px; }
+.t-sec__title { margin-bottom: 28px; font-size: 1.75rem; font-weight: 700; line-height: 1.35; letter-spacing: -0.02em; word-break: keep-all; }
+.t-points { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+.t-point { padding: 32px 28px; border: 1px solid #e3e8f0; border-radius: 16px; background: #fff; }
+.t-point__no { font-size: 0.9375rem; font-weight: 800; letter-spacing: 0.04em; color: var(--color-accent); }
+.t-point__text { margin-top: 14px; font-size: 1.125rem; font-weight: 700; line-height: 1.55; word-break: keep-all; }
+.t-criteria { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.t-crit { padding: 28px 24px; border-radius: 16px; background: #f8fafd; }
+.t-crit__title { margin-bottom: 16px; font-size: 1.0625rem; font-weight: 700; color: var(--color-point); }
+.t-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.t-chip { padding: 6px 12px; border: 1px solid #e3e8f0; border-radius: 999px; background: #fff; font-size: 0.9375rem; line-height: 1.4; word-break: keep-all; }
+.t-crit__note { margin-top: 14px; font-size: 0.9375rem; line-height: 1.6; color: var(--color-text-sub); word-break: keep-all; }
+.t-questions { display: grid; gap: 10px; }
+.t-questions li { padding: 12px 14px; border-radius: 10px; background: #fff; font-size: 0.9375rem; line-height: 1.55; word-break: keep-all; }
+/* 4단계 세로 타임라인: 왼쪽 번호 원(48px, 파랑) + 원 사이 세로선(파랑 30%), 오른쪽 제목 20px + 본문 17px */
+.t-steps { display: grid; }
+.t-step { position: relative; display: grid; grid-template-columns: 48px minmax(0, 1fr); gap: 0 24px; padding-bottom: 36px; }
+.t-step:last-child { padding-bottom: 0; }
+.t-step:not(:last-child)::before { content: ""; position: absolute; left: 23px; top: 48px; bottom: 0; width: 2px; background: rgba(var(--color-accent-rgb), 0.3); }
+.t-step__no { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; background: var(--color-accent); font-size: 1rem; font-weight: 700; color: #fff; }
+.t-step__title { padding-top: 10px; font-size: 1.25rem; font-weight: 700; line-height: 1.4; word-break: keep-all; }
+.t-step__body { margin-top: 8px; font-size: 1.0625rem; line-height: 1.75; color: var(--color-text-sub); word-break: keep-all; }
+/* FAQ: 공통 아코디언 + 번호 자리에 Q(파랑) */
+.t-faq .accordion__no { font-size: 1rem; font-weight: 800; color: var(--color-accent); }
+.t-faq .accordion__a { font-size: 1rem; line-height: 1.7; }
+/* 진료 연결 */
+.t-connect { padding: 40px; border-radius: 20px; background: #f8fafd; }
+.t-connect .t-sec__title { margin-bottom: 12px; }
+.t-connect__sub { margin-left: 8px; font-size: 1.125rem; font-weight: 600; color: var(--color-text-sub); }
+.t-connect__text { max-width: 760px; font-size: 1rem; line-height: 1.7; color: var(--color-text-sub); word-break: keep-all; }
+.t-connect__tabs { display: flex; gap: 8px; margin: 28px 0 20px; }
+.t-connect__tab { display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 20px; border: 1px solid #d6dde8; border-radius: var(--radius-btn); background: #fff; font-size: 0.9375rem; font-weight: 600; color: var(--color-text-sub); transition: background var(--dur), color var(--dur), border-color var(--dur); }
+.t-connect__tab[aria-selected="true"] { border-color: var(--color-point); background: var(--color-point); color: #fff; }
+.t-connect__dot { width: 6px; height: 6px; border-radius: 50%; }
+.t-connect__dot--changwon { background: var(--color-changwon); }
+.t-connect__dot--masan { background: var(--color-masan); }
+.t-connect__panel { padding: 28px; border-radius: 16px; background: #fff; }
+.t-connect__info { display: grid; gap: 12px; }
+.t-connect__info > div { display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 16px; }
+.t-connect__info dt { font-size: 0.9375rem; font-weight: 700; color: var(--color-point); }
+.t-connect__info dd { font-size: 1rem; line-height: 1.6; word-break: keep-all; }
+.t-connect__info a { font-weight: 600; color: var(--color-accent); }
+.t-connect__hour { display: inline-block; margin-right: 14px; }
+.t-connect__docs { margin-top: 24px; padding-top: 24px; border-top: 1px solid #e3e8f0; }
+.t-connect__docs-title { margin-bottom: 14px; font-size: 0.9375rem; font-weight: 700; color: var(--color-point); }
+.t-docs { display: flex; flex-wrap: wrap; gap: 12px; }
+.t-doc { display: flex; align-items: center; gap: 12px; padding: 8px 18px 8px 8px; border: 1px solid #e3e8f0; border-radius: 999px; background: #fff; transition: border-color var(--dur); }
+.t-doc:is(:hover, :focus-visible) { border-color: var(--color-accent); }
+.t-doc__photo { flex: none; width: 52px; height: 52px; overflow: hidden; border-radius: 50%; background: #eef2f8; }
+.t-doc__photo img { width: 100%; height: 100%; object-fit: cover; object-position: center 12%; transform: scale(1.5); transform-origin: center 20%; }
+.t-doc__text { display: grid; gap: 2px; line-height: 1.35; }
+.t-doc__text strong { font-size: 1rem; }
+.t-doc__text small { font-size: 0.8125rem; font-weight: 500; color: var(--color-text-sub); }
+.t-doc__text > span { font-size: 0.8125rem; color: var(--color-text-sub); }
+.t-connect__btns { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+.t-btn { display: inline-flex; align-items: center; height: 48px; padding: 0 22px; border: 1px solid var(--color-accent); border-radius: var(--radius-btn); background: #fff; font-size: 0.9375rem; font-weight: 600; color: var(--color-accent); transition: background var(--dur), color var(--dur); }
+.t-btn:hover { background: rgba(var(--color-accent-rgb), 0.06); }
+.t-btn--fill { background: var(--color-accent); color: #fff; }
+.t-btn--fill:hover { background: var(--color-accent-hover); }
+/* 하단 고지 */
+.t-notice { margin-top: 64px; padding-top: 24px; border-top: 1px solid #e3e8f0; font-size: 0.875rem; line-height: 1.7; color: #888; word-break: keep-all; }
+@container sub (max-width: 55rem) { .t-criteria { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 768px) {
+  .t-page .t-visual__title { font-size: 1.375rem; }
+  .t-summary { margin-top: 28px; font-size: 1.0625rem; }
+  .t-sec { margin-top: 56px; }
+  .t-sec__title { margin-bottom: 20px; font-size: 1.375rem; }
+  .t-points, .t-criteria { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  .t-point { padding: 22px 20px; }
+  .t-point__text { margin-top: 8px; font-size: 1.0625rem; }
+  .t-crit { padding: 22px 20px; }
+  .t-step { grid-template-columns: 40px minmax(0, 1fr); gap: 0 16px; }
+  .t-step__no { width: 40px; height: 40px; }
+  .t-step:not(:last-child)::before { left: 19px; top: 40px; }
+  .t-step__title { padding-top: 7px; font-size: 1.125rem; }
+  .t-step__body { font-size: 1rem; }
+  .t-connect { margin-left: calc(var(--gutter) * -1); margin-right: calc(var(--gutter) * -1); padding: 32px var(--gutter); border-radius: 0; }
+  .t-connect__sub { display: block; margin: 4px 0 0; font-size: 1rem; }
+  .t-connect__panel { padding: 20px; }
+  .t-connect__info > div { grid-template-columns: 1fr; gap: 2px; }
+  .t-btn { flex: 1 1 auto; justify-content: center; }
+}
+
 /* ---------- 진료과목 인트로 비주얼 박스 (treatment/*.html .t-visual, 2026-11-09 — 상단 배너 대신) ----------
    본문 폭 100% · 높이 360px(1280px 이하 320px, 768px 이하 240px) · 둥근 16px. 사진 = site-data.js treatmentVisuals(common.js) + 남색 오버레이(왼쪽 진하게 → 오른쪽 옅게)
    글자 왼쪽 아래, 안쪽 여백 48px(768px 이하 24px): 영문 라벨(밝은 파랑 14px 자간 넓게 — 남색 위에서 읽히는 accent) + 헤드라인(흰색 40px 굵게 · 1280px 이하 34px · 768px 이하 24px). 지점 색 없음 */
