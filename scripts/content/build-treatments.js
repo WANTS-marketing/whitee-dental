@@ -120,23 +120,30 @@ ${cases.map((c, i) => `              <button type="button" class="t-fold__tab" r
           </div>
         </section>
 ` : '';
-  /* 장치 비교 표 (치아교정 단계 2 아래, 2026-11-09 — 기존 상세 16 표 중 유형 · 겉보기 · 방문 간격만)
-     넓을 때 = 표(맨 위 줄에 장치 그림 4:3 + 이름), 좁을 때(본문 704px 이하) = 장치별 카드 세로 쌓기 — 둘 중 하나만 보임(sub.css)
-     data-verified="false" = 병원 확인 전(docs/HOSPITAL-CHECK.md) — 화면에는 표시 */
+  /* 교정 장치 비교 — '검사부터 관리까지' 다음 독립 섹션 (치아교정, 2026-11-09 — 기존 상세 16 표 중 유형 · 겉보기 · 방문 간격만)
+     표 하나로 [항목 열 160px | 장치 4열]: 맨 위 줄 = 장치 그림 4:3 + 이름 → 그림과 값 칸이 같은 세로줄
+     768px 이하 = 표를 숨기고 장치별 카드 세로 쌓기(그림 → 이름 → 항목 3줄) — 둘 중 하나만 보임(sub.css)
+     단계 '링크 단계' 본문 끝에 '장치별 비교 보기 ↓' (pages.js: 부드럽게 스크롤)
+     data-verified="false" = 병원 확인 전(docs/HOSPITAL-CHECK.md #14) — 화면에는 표시 */
   const DEV_ROWS = [['유형', 'type'], ['겉보기', 'look'], ['방문 간격', 'visit']];
-  const deviceBlock = X.devices ? `
-              <div class="t-devices">
-                <table class="t-devices__table">
-                  <caption class="sr-only">교정 장치 비교 — ${DEV_ROWS.map((r) => r[0]).join(' · ')}</caption>
-                  <thead><tr><td></td>${X.devices.items.map((d) => `<th scope="col" data-verified="${d.verified}">${slot(d.image, '')}<span class="t-devices__name">${esc(d.name)}</span></th>`).join('')}</tr></thead>
-                  <tbody>${DEV_ROWS.map(([label, key]) => `<tr><th scope="row">${label}</th>${X.devices.items.map((d) => `<td>${esc(d[key])}</td>`).join('')}</tr>`).join('')}</tbody>
-                </table>
-                <ul class="t-devices__cards">${X.devices.items.map((d) => `<li class="t-devices__card" data-verified="${d.verified}">${slot(d.image, '')}<div class="t-devices__card-body"><p class="t-devices__name">${esc(d.name)}</p><dl>${DEV_ROWS.map(([label, key]) => `<div><dt>${label}</dt><dd>${esc(d[key])}</dd></div>`).join('')}</dl></div></li>`).join('')}</ul>
-                ${X.devices.note ? `<p class="t-devices__note">${esc(X.devices.note)}</p>` : ''}
-              </div>` : '';
+  const D = X.devices;
+  const deviceSection = D ? `
+        <!-- 추가 · ${esc(D.title)} (기존 상세 16 기반, 원고 '추가 블록 — 장치 비교') -->
+        <section class="t-sec t-devices" id="t-devices" aria-labelledby="t-devices-title">
+          <h2 class="t-sec__title" id="t-devices-title">${esc(D.title)}</h2>
+          <table class="t-devices__table">
+            <caption class="sr-only">${esc(D.title)} — ${DEV_ROWS.map((r) => r[0]).join(' · ')}</caption>
+            <colgroup><col class="t-devices__col-label">${D.items.map(() => '<col>').join('')}</colgroup>
+            <thead><tr><td></td>${D.items.map((d) => `<th scope="col" data-verified="${d.verified}">${slot(d.image, '')}<span class="t-devices__name">${esc(d.name)}</span></th>`).join('')}</tr></thead>
+            <tbody>${DEV_ROWS.map(([label, key]) => `<tr><th scope="row">${label}</th>${D.items.map((d) => `<td>${esc(d[key])}</td>`).join('')}</tr>`).join('')}</tbody>
+          </table>
+          <ul class="t-devices__cards">${D.items.map((d) => `<li class="t-devices__card" data-verified="${d.verified}">${slot(d.image, '')}<p class="t-devices__name">${esc(d.name)}</p><dl>${DEV_ROWS.map(([label, key]) => `<div><dt>${label}</dt><dd>${esc(d[key])}</dd></div>`).join('')}</dl></li>`).join('')}</ul>
+          ${D.note ? `<p class="t-devices__note">${esc(D.note)}</p>` : ''}
+        </section>
+` : '';
   const stepHtml = (s, i) => {
     const img = X.stepImage && X.stepImage.step === i + 1 ? X.stepImage : null;
-    const dev = X.devices && X.devices.step === i + 1 ? deviceBlock : '';
+    const dev = D && D.linkStep === i + 1 ? `<a class="t-step__link" href="#t-devices" data-t-jump>${esc(D.link)}</a>` : '';
     const text = `<h3 class="t-step__title">${esc(s.title)}</h3><p class="t-step__body">${esc(s.body)}</p>${dev}`;
     return `            <li class="t-step${img ? ' t-step--media' : ''}"><span class="t-step__no" aria-hidden="true">${i + 1}</span><div${img ? ' class="t-step__media"' : ''}>${img ? `<div>${text}</div>${slot(img, img.alt)}` : text}</div></li>`;
   };
@@ -241,7 +248,7 @@ ${photoStrip}
 ${t.steps.map(stepHtml).join('\n')}
           </ol>
         </section>
-${caseSection}
+${deviceSection}${caseSection}
         <!-- 6. 많이 묻는 질문 (아코디언 — 첫 번째만 열림, 내용 = 위 FAQPage 구조화 데이터와 같음) -->
         <section class="t-sec" aria-labelledby="t-faq-title">
           <h2 class="t-sec__title" id="t-faq-title">많이 묻는 질문</h2>
