@@ -51,10 +51,11 @@ function fadeIn(el) {
 /* ---------- 의료진 소개 (about/doctors.html) ----------
    위: 소개 블록(doctors.html 에 직접 — 왼쪽 네이비 문구 | 오른쪽 원내 사진 흑백)
    지점별 묶음: [지점 색 작은 라벨 + '창원점 의료진'] 아래 원장 — 겸직 원장(김영우)은 두 지점 모두, 이름 아래 [창원점][마산점] 지점 색 태그 두 개
-   원장(카드 상자 없음, 원장 사이 가는 가로선 + 위아래 100px): 모두 같은 방향(사진 왼쪽)
-     [이름 52px 굵게 + 직함 52px 400 같은 줄 ······ 학회·학교 로고(site-data.js logos)]
-     [진료과 태그(네이비 면) + 주요 진료(site-data.js focus)]
-     [옅은 파랑 약력 상자 — 왼쪽에 사진(아래 끝 = 상자 아래 끝, 머리가 상자 위로 100px) | 약력 1열(항목 8개 이상 = 2열)]
+   원장(원장 사이 가는 가로선, 위아래 간격 일정): 모두 같은 방향(사진 왼쪽) — 2026-11-09 구조 변경
+     [사진(크기 고정, 아래 끝 = 상자 아래 끝, 상자보다 높으면 위로 솟음) | 옅은 파랑 상자(내용만큼, 최소 300px)
+        상자 안 위에서부터: 이름 52px 굵게 + 직함 ······ 학회·학교 로고(site-data.js logos)
+                         진료과 태그(지점 색 면) + 주요 진료(site-data.js focus) + 겸직 지점 태그
+                         (28px) 약력 1열(항목 8개 이상 = 2열)]
    약력: 지금 데이터 순서 그대로가 아니라 분류 순서 — 전문의 → 학력 → 경력 → 연수·학회 활동, 색·굵기는 모두 같음 (site-data.js SITE.classifyCareer · isTraining)
    사진: 원장별 보정값(site-data.js photoScale·photoOffsetY·photoOffsetX → --ps·--py·--px), 흰 배경 사진(photoBlend 켜진 원장)도 이 페이지에서는 multiply 를 쓰지 않음 — 흰 가운·얼굴로 상자 색이 비쳐서. 대신 .is-whitebg 가장자리만 녹임 (메인 의료진은 그대로 multiply)
      스타일: common.css '의료진 소개'. 1024px 이하 = 사진 위 · 정보 아래, 이름 36px, 약력 1열
@@ -88,8 +89,7 @@ function renderDoctorsPage() {
       <div class="doctor-profiles">
         ${docs.map((d) => {
           /* 사진 크롭 (site-data.js staffCrop — 김영우 원장 구도 기준, 메인 의료진 값과 따로)
-             기준 틀 = 높이 --ph0(상자 기본 높이 + --pop), 칸 아래 끝에 붙음. 사진 높이 = 틀 × scale, 정수리(y)를 틀 위 끝에, 얼굴 가운데(x)를 칸 가운데에. 아래는 상자 아래 끝에서 잘림
-             상자가 길어져도 틀은 그대로 아래에 붙어 있어 사진 크기·위치(아래 기준)가 같다 */
+             사진 틀 = 높이 --ph0 고정, 상자 아래 끝에 붙음. 사진 높이 = 틀 × scale, 정수리(y)를 틀 위 끝에, 얼굴 가운데(x)를 틀 가운데에. 아래는 틀 아래 끝에서 잘림 */
           const c = d.staffCrop || {};
           const ht = Math.min(0.4, Math.max(0, Number(c.y ?? d.photoHeadTop) || 0));
           const fix = `--cs:${Number(c.scale) || (1 / (1 - ht)).toFixed(4)};--cx:${Number(c.x) || 0.5};--cy:${ht}`;
@@ -97,6 +97,7 @@ function renderDoctorsPage() {
           const logos = (d.logos || []).filter((l) => l && l.src);
           return `
           <article class="doctor-profile" id="${b.id}-${S.doctorSlug(d)}" style="${fix}">
+            <div class="doctor-profile__box">
             <div class="doctor-profile__head">
               <div class="doctor-profile__id">
                 <h3 class="doctor-profile__name"><strong>${esc(d.name)}</strong> <span>${esc(d.title)}</span></h3>
@@ -104,10 +105,9 @@ function renderDoctorsPage() {
               </div>
               ${logos.length ? `<ul class="doctor-profile__logos">${logos.map((l) => `<li><img src="${img(l.src)}" alt="${esc(l.alt || '')}" loading="lazy"></li>`).join('')}</ul>` : ''}
             </div>
-            <div class="doctor-profile__box">
-              <div class="doctor-profile__photo${d.photoBlend === false ? '' : ' is-whitebg'}"><img class="doctor-profile__img" src="${img(String(d.photo || '').replace(/\.[a-z]+$/i, '-cut.png'))}" alt="${esc(d.name)} ${esc(d.title)} 사진" loading="lazy"></div>
-              ${(d.career || []).length ? careerOf(d) : ''}
+            ${(d.career || []).length ? careerOf(d) : ''}
             </div>
+            <div class="doctor-profile__photo${d.photoBlend === false ? '' : ' is-whitebg'}"><img class="doctor-profile__img" src="${img(String(d.photo || '').replace(/\.[a-z]+$/i, '-cut.png'))}" alt="${esc(d.name)} ${esc(d.title)} 사진" loading="lazy"></div>
           </article>`;
         }).join('')}
       </div>
