@@ -941,33 +941,39 @@ html:has(body.has-lnb .page-doctors) { scroll-padding-top: calc(var(--header-h) 
 .doctor-profile__tags { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin-top: 18px; }
 .doctor-profile__dept { display: inline-flex; align-items: center; height: 2.25rem; padding: 0 14px; border-radius: var(--radius-btn); background: var(--doc-color, var(--color-point)); color: #fff; font-size: 1rem; font-weight: 700; white-space: nowrap; } /* 지점 색 면 = 묶음(.doctor-group[data-branch])의 --doc-color → 겸직 원장도 보고 있는 지점 색 */
 .doctor-profile__focus { font-size: 1.125rem; font-weight: 600; color: var(--color-text); word-break: keep-all; }
-.doctor-profile__both { display: inline-flex; align-items: center; height: 2rem; padding: 0 12px; border: 1px solid var(--color-line); border-radius: var(--radius-btn); font-size: var(--fs-xs); font-weight: 600; color: var(--color-text-sub); white-space: nowrap; }
+/* 겸직 원장: [창원점][마산점] 지점 색 태그 두 개 (옅은 지점 색 면 + 지점 색 글자) */
+.doctor-profile__both { display: inline-flex; gap: 6px; }
+.doctor-profile__branch { --bc: var(--color-changwon); --bcb: var(--color-changwon-bg); display: inline-flex; align-items: center; height: 2rem; padding: 0 12px; border-radius: var(--radius-btn); background: var(--bcb); color: var(--bc); font-size: var(--fs-xs); font-weight: 700; white-space: nowrap; }
+.doctor-profile__branch[data-branch="masan"] { --bc: var(--color-masan); --bcb: var(--color-masan-bg); }
 .doctor-profile__logos { display: flex; flex: none; align-items: center; gap: 16px; }
 .doctor-profile__logos img { display: block; height: 56px; width: auto; }
-.doctor-profile__box { grid-column: 1 / -1; position: relative; display: flex; align-items: center; min-height: var(--box-h); padding: 64px 72px 64px calc(var(--doc-pw) + 72px); overflow: visible; border-radius: var(--radius-md); background: var(--color-doctor-box); } /* 약력은 사진 오른쪽 48px 부터 */
-/* 사진 칸: 상자 위 --pop ~ 상자 아래 끝 (상자가 길어지면 칸도 같이 길어짐), 칸 밖은 잘라냄 */
+.doctor-profile__box { grid-column: 1 / -1; position: relative; display: flex; align-items: center; min-height: var(--box-h); padding: 64px 56px 64px calc(var(--doc-pw) + 72px); overflow: visible; border-radius: var(--radius-md); background: var(--color-doctor-box); } /* 약력은 사진 오른쪽 72px 부터 ~ 상자 오른쪽 안쪽 56px 까지 */
+/* 사진 칸: 상자 위 --pop ~ 상자 아래 끝 (상자가 길어지면 칸도 같이 길어짐), 칸 밖은 잘라냄
+   사진은 크기 고정 + 칸 아래 끝 기준(align-self: end 와 같음) — 높이 --ph0 기준 틀이 칸 아래에 붙고, 상자가 길어진 만큼 위가 빈다 */
 .doctor-profile__photo { position: absolute; left: 0; top: calc(var(--pop) * -1); bottom: 0; width: var(--doc-pw); overflow: hidden; pointer-events: none; }
 .doctor-profile__photo > .doctor-profile__img { /* 칸 공통 규칙(.img-ph > img)보다 우선 */
-  /* 크롭: 사진 높이 = --ph0 × scale, 정수리(y) = 칸 위 끝, 얼굴 가운데(x) = 칸 가운데. 사진 비율 400:664(0.6024) */
+  /* 크롭: 사진 높이 = --ph0 × scale, 정수리(y) = 틀 위 끝, 얼굴 가운데(x) = 칸 가운데. 사진 비율 400:664(0.6024)
+     아래 기준: 사진 아래 끝 = 칸 아래에서 --ph0 × (scale × (1 - y) - 1) 만큼 아래 (잘림) */
   position: absolute; max-width: none; object-fit: cover;
   height: calc(var(--ph0) * var(--cs)); width: calc(var(--ph0) * var(--cs) * 0.6024);
-  top: calc(var(--ph0) * var(--cs) * var(--cy) * -1); left: calc(50% - var(--ph0) * var(--cs) * 0.6024 * var(--cx));
+  bottom: calc(var(--ph0) * (1 - var(--cs) * (1 - var(--cy)))); left: calc(50% - var(--ph0) * var(--cs) * 0.6024 * var(--cx));
 }
 /* 흰 배경 사진: 칸 좌우 끝 24px 만 흰색→투명 (상자 위에서 흰 사각형 경계가 보이지 않게). 위는 정수리 = 칸 위 끝이라 녹이지 않음 */
 .doctor-profile__photo.is-whitebg { -webkit-mask-image: linear-gradient(90deg, transparent, #000 24px, #000 calc(100% - 24px), transparent); mask-image: linear-gradient(90deg, transparent, #000 24px, #000 calc(100% - 24px), transparent); }
-/* 상자가 사진보다 길어진 원장(pages.js .is-short): 사진 아래 끝 64px 를 녹여 상자 안에서 사진 끝 선이 보이지 않게 */
-.doctor-profile__photo.is-short > .doctor-profile__img { -webkit-mask-image: linear-gradient(180deg, #000 calc(100% - 64px), transparent); mask-image: linear-gradient(180deg, #000 calc(100% - 64px), transparent); }
 .doctor-profile__img.is-missing { display: none; }
+/* 자료 대기 원장(site-data.js pending): 사진 대신 실루엣 — 높이 --ph0 틀, 아래 = 칸 아래 */
+.doctor-profile__ph { position: absolute; left: 50%; bottom: 0; height: calc(var(--ph0) * 0.92); transform: translateX(-50%); fill: rgba(var(--color-point-rgb), 0.08); }
+.doctor-profile__pending { font-size: 1.0625rem; color: var(--color-text-sub); }
 /* 약력: 19px · 500 · 줄 간격 1.5 · #1a1f2b, 항목 사이 14px, 점(4px)과 글자 사이 10px — 모든 항목 같은 색·굵기
    시작선 = 이름 왼쪽 끝 (상자 왼쪽 안쪽 여백 = 사진 칸 + 72px = 이름 열 시작). 상자 안에서 세로 가운데(상자 align-items: center)
-   1열 기본. 항목 8개 이상 원장만 2열(.is-2col, pages.js careerOf) — 두 묶음을 왼쪽부터 붙이고 열 사이 56px 고정(상자 폭에 맞춰 벌어지지 않음).
-   열 너비 = 글자 길이(max-content), 상자보다 길면 그 열만 줄바꿈(minmax 0) — 상자 밖으로 넘치지 않게. 768px 이하는 항상 1열 */
-.doctor-profile__career { --career-gap: 14px; width: 100%; display: flex; flex-direction: column; gap: var(--career-gap); font-size: 1.1875rem; font-weight: 500; line-height: 1.5; color: #1a1f2b; }
-.doctor-profile__career.is-2col { display: grid; grid-template-columns: repeat(2, minmax(0, max-content)); justify-content: start; column-gap: 56px; }
+   1열 기본. 항목 8개 이상 원장만 2열(.is-2col, pages.js careerOf) — 두 묶음을 같은 폭(1fr)으로, 열 사이 48px, 상자 오른쪽 안쪽 56px 까지 다 씀(최대 폭 제한 없음).
+   2열만 글자 18px(1280px 이하 17px). 줄바꿈: keep-all + text-wrap: pretty(한 단어만 다음 줄로 떨어지지 않게), 둘째 줄은 글머리표 뒤 글자 시작선. 768px 이하는 항상 1열 */
+.doctor-profile__career { --career-gap: 14px; flex: 1; min-width: 0; max-width: none; width: 100%; display: flex; flex-direction: column; gap: var(--career-gap); font-size: 1.1875rem; font-weight: 500; line-height: 1.5; color: #1a1f2b; }
+.doctor-profile__career.is-2col { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 48px; font-size: 1.125rem; }
 .doctor-profile__col { display: flex; flex-direction: column; gap: var(--career-gap); min-width: 0; }
-.doctor-profile__career li { position: relative; padding-left: 14px; word-break: keep-all; }
+.doctor-profile__career li { position: relative; padding-left: 14px; word-break: keep-all; text-wrap: pretty; }
 .doctor-profile__career li::before { content: ""; position: absolute; left: 0; top: calc(0.75em - 2px); width: 4px; height: 4px; border-radius: 50%; background: currentColor; }
-@media (max-width: 1280px) { .doctor-profile__career { font-size: 1.125rem; } }
+@media (max-width: 1280px) { .doctor-profile__career { font-size: 1.125rem; } .doctor-profile__career.is-2col { font-size: 1.0625rem; } }
 /* 좁은 본문 (1366 이하 노트북 · 글자 크게·아주 크게 — .sub-body 880px 이하) */
 @container sub (max-width: 55rem) {
   .doctor-profile { --box-h: 400px; }
