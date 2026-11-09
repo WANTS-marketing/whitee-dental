@@ -81,6 +81,16 @@ const treatments = blocks.map((b) => {
     const [stepPart, slot, altPart] = stepImgSec.replace(/^- /, '').split(/\s+\/\s+/);
     extras.stepImage = { step: Number(stepPart.replace(/\D/g, '')), ...slotOf(slot), alt: altPart.replace(/^alt:\s*/, '').trim() };
   }
+  /* 3D 디지털 진단 (치아교정 '치료를 결정하기 전 알아야 할 기준' 다음, 2026-11-09): 라벨 · 제목 · 본문 + '#### 장비 이름' 마다 이미지 · 설명 */
+  const digSec = optSection('추가 블록 — 3D 디지털 진단');
+  if (digSec) {
+    extras.digital = {
+      label: lineOf(digSec, '라벨'),
+      title: lineOf(digSec, '제목'),
+      text: lineOf(digSec, '본문'),
+      items: digSec.split(/\n#### /).slice(1).map((d) => ({ name: d.split('\n')[0].trim(), image: slotOf(lineOf(d, '이미지')), text: lineOf(d, '설명') })),
+    };
+  }
   /* 장치 비교 표 (치아교정 '검사부터 관리까지' 다음 독립 섹션, 2026-11-09): 제목 · 링크 단계(그 단계 본문 끝에 섹션으로 가는 링크) · 링크 글자 · 안내
      '#### 장치 이름' 마다 이미지 · 게시 · 유형 · 겉보기 · 방문 간격 */
   const devSec = optSection('추가 블록 — 장치 비교');

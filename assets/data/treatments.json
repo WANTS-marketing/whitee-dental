@@ -371,6 +371,43 @@
             "caption": "진료실 모습"
           }
         ],
+        "digital": {
+          "label": "3D DIGITAL",
+          "title": "3D 디지털 진단",
+          "text": "3D 얼굴 스캔, CT, 구강 스캐너 등의 검사 자료를 바탕으로 치아교정 계획을 세웁니다.",
+          "items": [
+            {
+              "name": "3D 얼굴 스캔",
+              "image": {
+                "file": "treatment/orthodontics/ortho-3d-face",
+                "name": "ortho-3d-face",
+                "ratio": "4/3",
+                "size": "800×600"
+              },
+              "text": "얼굴과 옆모습을 3D 영상으로 확인하며 교정 계획을 설명합니다"
+            },
+            {
+              "name": "CT",
+              "image": {
+                "file": "treatment/orthodontics/ortho-3d-ct",
+                "name": "ortho-3d-ct",
+                "ratio": "4/3",
+                "size": "800×600"
+              },
+              "text": "치아 뿌리와 턱뼈 상태를 3차원으로 확인합니다"
+            },
+            {
+              "name": "구강 스캐너",
+              "image": {
+                "file": "treatment/orthodontics/ortho-3d-scanner",
+                "name": "ortho-3d-scanner",
+                "ratio": "4/3",
+                "size": "800×600"
+              },
+              "text": "치아 모양을 디지털 자료로 본떠 기록합니다"
+            }
+          ]
+        },
         "devices": {
           "title": "교정장치 비교",
           "sub": "",
