@@ -85,7 +85,7 @@ ${X.photos.map((p) => `          <figure class="t-photo">${slot(p, "")}<figcapti
   const caseSection = cases.length ? `
         <!-- 추가 · 이런 경우에도 상담해 보세요 (기존 상세 기반, 원고 '추가 블록') -->
         <section class="t-sec" aria-labelledby="t-cases-title">
-          <h2 class="t-sec__title t-sec__title--center" id="t-cases-title">이런 경우에도 상담해 보세요</h2>
+          <h2 class="sr-only" id="t-cases-title">이런 경우에도 상담해 보세요</h2><!-- 화면 제목은 2026-11-09 삭제 — 화면낭독기용으로만 남김 -->
           <div class="t-fold" data-t-fold>
             <div class="t-fold__viewport" data-t-fold-viewport>
               <div class="t-fold__track" data-t-fold-track>
