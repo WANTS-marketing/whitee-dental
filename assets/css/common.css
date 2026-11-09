@@ -591,7 +591,7 @@ html.is-lnb-hold body { min-height: calc(100vh + 2000px); }
 @media (max-width: 1440px) { .board-ui { --b-pad: 24px; } }
 @media (max-width: 768px) { .board-ui { --b-pad: 16px; } }
 [data-board="notice"] { --b-ratio: 4 / 3; }
-[data-board="cases"] { --b-ratio: 3 / 4; }
+[data-board="cases"] { --b-ratio: 4 / 3; } /* 2026-11-09: BEFORE | AFTER 나란히 → 칸 하나 2:3 */
 .board-list__empty { padding: 72px 0; text-align: center; color: var(--color-text-muted); }
 
 /* ---------- 공지 한 줄 목록 (메인 공지 · community/notice.html 공통 — common.js UI.noticeLine) ----------
@@ -714,6 +714,7 @@ html.is-lnb-hold body { min-height: calc(100vh + 2000px); }
 .board-card__cat { font-size: var(--fs-xs); font-weight: 600; color: var(--color-point); }
 .board-card__title { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; margin-top: 4px; font-size: 1.125rem; line-height: 1.45; word-break: keep-all; transition: color var(--dur); }
 .board-card__link:is(:hover, :focus-visible) .board-card__title { color: var(--color-accent); }
+.board-card__note, .board-row__note { display: block; margin-top: 10px; font-size: 0.875rem; line-height: 1.5; color: #6b7280; word-break: keep-all; } /* 치료사례 카드 아래 고지 */
 .board-card__sum { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; margin-top: 8px; font-size: var(--fs-sm); line-height: 1.6; color: var(--color-text-sub); word-break: keep-all; }
 .board-card__meta { display: block; margin-top: 12px; font-size: var(--fs-xs); color: var(--color-text-muted); }
 /* 카드 4개: 사진 비율 그대로, 제목 조금 작게, 요약 1줄 */
@@ -745,18 +746,31 @@ html.is-lnb-hold body { min-height: calc(100vh + 2000px); }
 .article__cats { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px; }
 .article__cats .badge { margin: 0; }
 .article__cat-sep { color: var(--color-text-muted); }
-/* 치료사례 목록 썸네일 = 두 칸 [BEFORE 선명 / AFTER 로그인 전 흐림 미리보기 + 자물쇠] (board.js casePair) — 카드 3:4 는 위아래, 목록형 정사각도 위아래 */
-.case-pair { display: grid; grid-template-rows: 1fr 1fr; gap: 2px; background: #fff; }
+/* 치료사례 목록 썸네일 = [BEFORE | AFTER] 나란히 (board.js casePair, 2026-11-09)
+   로그인 전: 두 칸 모두 흐림 자리(회색) + 가운데 덮개 [자물쇠 · '로그인 후 확인하실 수 있습니다' · 로그인 알약] — 목록형 작은 썸네일은 자물쇠만
+   로그인 후 사진이 없으면(시안·예시) 회색 '사진 자리' */
+.case-pair { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 2px; background: #fff; }
+.case-pair__ph { position: absolute; inset: 0; display: grid; place-items: center; font-size: var(--fs-xxs); color: #9aa3b2; }
+.case-pair__half.is-locked .case-pair__ph { background: #dfe3ea; filter: blur(2px); }
+.case-pair__lock-text { display: block; }
+.case-pair__login { display: inline-block; margin-top: 2px; padding: 4px 14px; border-radius: var(--radius-pill); background: #fff; font-size: var(--fs-xxs); font-weight: 700; color: var(--color-point); }
 .case-pair__half { position: relative; display: block; overflow: hidden; }
 .case-pair__half.is-locked img { filter: blur(6px); transform: scale(1.12); } /* 미리 흐리게 만든 그림 + 가장자리 정리 */
 .case-pair__tag { position: absolute; z-index: 1; left: 8px; top: 8px; padding: 2px 8px; border-radius: var(--radius-btn); background: rgba(0, 0, 0, 0.55); color: #fff; font-size: var(--fs-xxs); font-weight: 700; letter-spacing: 0.05em; line-height: 1.4; }
-.case-pair__lock { position: absolute; z-index: 1; left: 50%; top: 50%; display: inline-flex; align-items: center; gap: 4px; width: max-content; padding: 4px 10px; border-radius: var(--radius-pill); background: rgba(0, 0, 0, 0.55); color: #fff; font-size: var(--fs-xxs); font-weight: 600; white-space: nowrap; transform: translate(-50%, -50%); }
-.case-pair__lock svg { flex: none; width: 14px; height: 14px; }
+.case-pair__lock { position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; padding: 12px; background: rgba(22, 35, 63, 0.45); color: #fff; font-size: var(--fs-xs); font-weight: 600; line-height: 1.4; text-align: center; word-break: keep-all; }
+.case-pair__lock svg { flex: none; width: 20px; height: 20px; }
 .board-row__thumb.case-pair .case-pair__tag { left: 4px; top: 4px; padding: 1px 5px; }
-.board-row__thumb.case-pair .case-pair__lock { padding: 3px; font-size: 0; gap: 0; } /* 작은 목록형 썸네일: 자물쇠만 */
+.board-row__thumb.case-pair .case-pair__lock { padding: 3px; gap: 0; } /* 작은 목록형 썸네일: 자물쇠만 */
+.board-row__thumb.case-pair :is(.case-pair__lock-text, .case-pair__login) { display: none; }
 .board-row__thumb.case-pair .case-pair__lock svg { width: 16px; height: 16px; }
-/* 치료사례 상세: BEFORE | AFTER 나란히 (모바일 위아래). AFTER 는 로그인 전 흐림 미리보기 + 로그인 버튼 */
-.case-view { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+/* 치료사례 상세: BEFORE | AFTER 나란히 (모바일 위아래). 로그인 전 = 두 칸 모두 흐림 자리 + 가운데 덮개(문구 + 로그인 버튼) · 아래 치료 정보 표 */
+.case-view { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.case-view.is-locked .case-pair__ph { background: #dfe3ea; }
+.case-view > .case-view__lock { border-radius: var(--radius-md); }
+.case-view__info { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 24px; border-top: 2px solid var(--color-point); }
+.case-view__info > div { padding: 14px 16px; border-bottom: 1px solid var(--color-line); }
+.case-view__info dt { font-size: var(--fs-xs); color: #6b7280; }
+.case-view__info dd { margin-top: 4px; font-size: var(--fs-sm); font-weight: 600; color: var(--color-text); }
 .case-view__fig { margin: 0 !important; }
 .case-view__img { position: relative; display: block; overflow: hidden; aspect-ratio: 430 / 254; border-radius: var(--radius-md); } /* 기존 사진 비율 */
 .case-view__fig.is-locked img { filter: blur(8px); transform: scale(1.15); } /* 미리 흐리게 만든 그림(case-*-after-blur.jpg) — 원본은 로그인 전에는 불러오지 않음 */

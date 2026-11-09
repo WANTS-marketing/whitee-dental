@@ -55,9 +55,9 @@
 
     <section class="sub-content">
       <div class="container">
-        <p class="notice-box" data-cases-login>치료 후(AFTER) 사진은 <a href="../member/login.html"><strong>로그인</strong></a> 후 확인하실 수 있습니다. 치료 결과는 개인에 따라 다를 수 있으며, 부작용이 발생할 수 있습니다.</p>
-        <!-- 치료사례 (assets/data/cases.json — 기존 사이트 시술 전후 14건, scripts/import/build-gallery.js) — 진료 칩 · 도구 줄 · 목록 · 페이지 번호
-             썸네일 = BEFORE 선명 / AFTER 로그인 전 흐림 미리보기 + 자물쇠 (board.js casePair) -->
+        <p class="notice-box" data-cases-login>치료 전·후 사진은 <a href="../member/login.html"><strong>로그인</strong></a> 후 확인하실 수 있습니다. 치료 결과는 개인의 구강 상태에 따라 다를 수 있으며 부작용이 발생할 수 있습니다.</p>
+        <!-- 치료사례 (assets/data/cases.json — 게시 동의 확인된 사례만(consentChecked) · 기존 사이트 14건은 동의 확인 전이라 숨김, ?mock=N = 예시 사례) — 진료 칩(교정 6종 포함, ?category=ortho-crowding 등) · 도구 줄 · 목록 · 페이지 번호
+             썸네일 = [BEFORE | AFTER] 나란히, 로그인 전 두 칸 모두 흐림 + 로그인 (board.js casePair) · 카드 아래 고지 -->
         <div class="board-ui" data-board="cases"><p class="board-list__empty">불러오는 중입니다.</p></div>
       </div>
     </section>

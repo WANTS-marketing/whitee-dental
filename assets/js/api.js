@@ -110,14 +110,42 @@
       AFTER 원본 14장은 공개 저장소에 두지 않는다(저장소 밖 자료/기존사이트-치료사례/after/ 보관) → 시안은 로그인 상태에서도 afterImage = null
         → 화면은 흐림 미리보기 + '시안: 실제 운영 시 원본 공개' (로그인 전이면 '로그인 후 확인')
       TODO(서버): AFTER 원본을 서버 저장소(비공개)에 올리고, 로그인 확인 후에만 기한 있는 주소를 afterImage 에 담아 줄 것 (API-SPEC '치료사례') */
+  /* 2026-11-09 규칙 (docs/API-SPEC.md '치료사례')
+     - 게시 동의 확인된 사례만(consentChecked: true) — 기존 14건은 동의 확인 전이라 화면에서 숨김(데이터는 그대로, HOSPITAL-CHECK #20)
+     - 치료 전·후 사진 모두 로그인 회원만: 비로그인이면 beforeImage · afterImage = null (화면은 흐림 자리 + '로그인 후 확인하실 수 있습니다')
+     - 환자 이름(성씨 포함) 필드는 두지 않는다
+     - category = 세부 분류 키(교정 6종 — CASE_CATEGORIES), period = 치료 기간, extraction = '발치' | '비발치'
+     - 시안: ?mock=N → 예시 사례 N개(사진 없음 = 회색 자리표시) */
+  const CASE_CATEGORIES = {
+    'ortho-crowding': '덧니교정', 'ortho-protrusion': '돌출입교정', 'ortho-openbite': '개방교합',
+    'ortho-deepbite': '과개교합', 'ortho-crossbite': '반대교합', 'ortho-partial': '부분·틈새교정',
+  };
+  function mockCases(n) {
+    const keys = Object.keys(CASE_CATEGORIES);
+    const PERIOD = ['1년 8개월', '2년 1개월', '1년 4개월', '2년 6개월', '2년 10개월', '8개월'];
+    const DAY = 86400000;
+    return Array.from({ length: n }, (_, i) => {
+      const k = keys[i % keys.length];
+      return {
+        id: `mock-case-${i + 1}`, no: i + 1, title: `${CASE_CATEGORIES[k]} 사례 (예시 ${i + 1})`,
+        categories: ['치아교정'], category: k, date: new Date(Date.parse('2026-10-30T09:00:00+09:00') - i * 20 * DAY).toISOString(),
+        branch: i % 2 ? 'masan' : 'changwon', beforeImage: null, afterImage: null,
+        period: PERIOD[i % PERIOD.length], extraction: i % 3 === 0 ? '발치' : '비발치', consentChecked: true, body: '', _mock: true,
+      };
+    });
+  }
   async function getCases({ limit } = {}) {
     const login = isLoggedIn();
-    const rows = withViews(await fetchJson('cases')).sort(byDateDesc).map((r) => ({
+    const n = mockCount('mock');
+    const src = n === null ? (await fetchJson('cases')).filter((r) => r.consentChecked === true) : mockCases(n);
+    const rows = withViews(src).sort(byDateDesc).map((r) => ({
       ...r,
       categories: r.categories || (r.categoryName ? [r.categoryName] : []),
       categoryName: (r.categories || [r.categoryName]).filter(Boolean).join('·'),
+      categoryLabel: CASE_CATEGORIES[r.category] || '',
+      beforeImage: login ? r.beforeImage || null : null, // 치료 전·후 모두 로그인 회원만
       afterImage: login ? r.afterImage || null : null, // 지금 데이터에는 원본 주소가 없음 — 서버 연결 후 로그인 시에만 값
-      images: (r.images || []).filter((im) => login || !im.loginOnly),
+      images: (r.images || []).filter(() => login),
     }));
     return limit ? rows.slice(0, limit) : rows;
   }
@@ -430,7 +458,7 @@
   }
 
   window.API = {
-    getNotices, getNotice, getNews, getNewsPost, mockQuery, getCases, getCase, getFaqs, getFees,
+    getNotices, getNotice, getNews, getNewsPost, mockQuery, getCases, getCase, CASE_CATEGORIES, getFaqs, getFees,
     listInquiries, getInquiry, createInquiry, isDeliveryReady, adminListInquiries, adminGetInquiry, answerInquiry, updateInquiryStatus, deleteInquiry,
     isLoggedIn, getCurrentUser, isAdmin, signInWithKakao, signOut,
   };

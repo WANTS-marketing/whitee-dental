@@ -198,6 +198,9 @@
 .t-fold__fits li { display: flex; align-items: flex-start; gap: 8px; font-size: 17px; line-height: 1.6; word-break: keep-all; }
 .t-fold__fits svg { flex: none; width: 16px; height: 1.6em; color: var(--color-accent); }
 .t-fold__note { margin-top: 12px; font-size: 15px; line-height: 1.6; color: #6b7280; word-break: keep-all; }
+/* 치료사례 연결(치아교정 — 원고 '사례' 키가 있는 카드만): 15px 굵게 파랑, 밑줄 없는 글자 버튼 */
+.t-fold__cases { display: inline-block; margin-top: 18px; font-size: 0.9375rem; font-weight: 700; color: var(--color-accent); text-decoration: none; transition: color var(--dur); }
+.t-fold__cases:hover { color: var(--color-point); }
 .t-fold__tabs { display: flex; justify-content: safe center; gap: 40px; margin: 32px calc(var(--fold-bleed-r, 0px) * -1) 0 calc(var(--fold-bleed-l, 0px) * -1); padding: 4px var(--gutter) 0; overflow-x: auto; scrollbar-width: none; }
 .t-fold__tabs::-webkit-scrollbar { display: none; }
 .t-fold__tab { position: relative; flex: none; padding: 4px 10px 4px 0; font-size: 1.25rem; font-weight: 700; color: #b5bcc8; white-space: nowrap; transition: color var(--dur); }
