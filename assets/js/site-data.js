@@ -137,15 +137,21 @@ window.SITE = {
   },
 
   /* 화이트e치과 4가지 약속 — 치과소개(about/intro.html WHY WHITE e) · 메인(WHY 화이트e) 공통
-       icon = svg 안쪽 (viewBox 0 0 24 24, 선), text = 치과소개용 설명, short = 메인용 한 줄 ({spec} = 진료과 목록) */
+       icon = svg 안쪽 (viewBox 0 0 24 24, 선), text = 치과소개용 설명, short = 메인용 한 줄 ({spec} = 진료과 목록)
+       image = 메인 카드 배경 사진 (assets/images/ 안, 지금은 저장소 사진 중 어울리는 것 — 병원 사진을 받으면 이 값만 교체)
+       href = 메인 카드 '자세히 보기' (사이트 루트 기준) */
   promises: [
     { title: '분야별 협진 진료시스템', text: '{spec} 전문의가 함께 진료합니다.', short: '분야별 전문의가 함께 진단하고 계획합니다',
+      image: 'banner-clinic.jpg', href: 'about/intro.html#collaboration',
       icon: '<circle cx="8" cy="8" r="3"/><circle cx="16" cy="8" r="3"/><path d="M2 20c0-3.3 2.7-6 6-6 1.5 0 2.9.6 4 1.5A6 6 0 0122 20"/>' },
     { title: '전지점 공동운영 기공센터', text: '창원점·마산점이 기공센터를 함께 운영합니다.', short: '창원점·마산점이 기공센터를 함께 운영합니다', // TODO: 기공센터 설명 병원 확인
+      image: 'clinic-implant.jpg', href: 'about/intro.html#why',
       icon: '<path d="M3 21h18M5 21V10l7-5 7 5v11M9 21v-6h6v6"/>' },
     { title: '합리적인 치료비용', text: '상담과 정확한 진단을 바탕으로 합리적인 비용의 치료를 계획합니다.', short: '정확한 진단으로 꼭 필요한 치료만 계획합니다',
+      image: 'tour-changwon-02.jpg', href: 'about/intro.html#why',
       icon: '<circle cx="12" cy="12" r="9"/><path d="M8 9l2 6 2-4 2 4 2-6M7 12h10"/>' },
     { title: '전지점 평일 야간진료', text: '창원점·마산점 모두 평일 저녁 9시까지 진료합니다.', short: '창원점·마산점 모두 평일 저녁 9시까지',
+      image: 'hero-03-night.jpg', href: 'about/clinic.html#loc-title-changwon', // 병원 오시는길 — 창원점 오시는길(진료시간) 블록
       icon: '<path d="M20 14.5A8.5 8.5 0 019.5 4a8.5 8.5 0 1010.5 10.5z"/>' },
   ],
 
