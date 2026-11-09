@@ -114,14 +114,6 @@
             "caption": "진료실 모습"
           }
         ],
-        "stepImage": {
-          "step": 2,
-          "file": "treatment/implant/implant-3d",
-          "name": "implant-3d",
-          "ratio": "16/10",
-          "size": "1200×750",
-          "alt": "3D 영상으로 임플란트 식립 위치를 검토하는 화면"
-        },
         "cases": [
           {
             "title": "발치 후 바로 심는 경우 (발치 당일 임플란트)",
