@@ -117,7 +117,7 @@ function initHeroLayout() {
    조작: ‹ › · 재생/정지 · 키보드 ←→(히어로에 포커스가 있을 때) · 터치 스와이프(손가락을 따라 움직이다 놓으면 넘김)
    자동재생 6초(4번 → 1번 반복), 마우스가 히어로 위에 있으면 잠시 멈춤, 전환 중 추가 입력 무시. 움직임 줄이기면 짧은 fade 만
    손으로(‹ › · ←→ · 스와이프 · 휠·키보드) 한 번이라도 넘기면 자동재생 정지 — ▶ 로 다시 켠다
-   PC 풀스크린 넘김(fullpage.js)은 window.HeroSlider 로 휠·↓↑ 를 슬라이드 넘김에 쓴다 (1→4, 4 다음은 다음 섹션)
+   PC 풀스크린 넘김(fullpage.js)은 window.HeroSlider 로 휠·↓↑ 를 슬라이드 넘김에 쓴다 (1→3, 3 다음은 다음 섹션)
    진행 표시: 재생바 '1 / 4' 옆 진행 바(--hero-progress) · 섹션 점의 히어로 4칸(fullpage.js, 'hero:change' 이벤트)
    스타일: main.css '① 히어로' (.is-active / .is-shown / .is-moving / .is-leaving / .is-entering) */
 function initHero() {
@@ -855,7 +855,7 @@ async function initStory() {
    의료진 섹션부터 적용. 섹션 타이틀은 fade-up, 카드 묶음은 자식이 0.08s 간격으로 순차 등장 (간격은 main.css). 움직임 줄이기 설정이면 끔 */
 function initReveal() {
   if (!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  const singles = '.why__head, .clinic__head, .doctors__head, .cases__head, .faq-preview__head, .faq-preview__box, .faq-quick, .story-notice, .story__body';
+  const singles = '.why__head, .why-philo, .clinic__head, .doctors__head, .cases__head, .faq-preview__head, .faq-preview__box, .faq-quick, .story-notice, .story__body';
   const groups = '.why__cards, .clinic__grid, .cases__list'; // 치과소식 카드는 탭으로 다시 그려지므로 묶음(.story__body)째로 등장
   const targets = [
     // 의료진 인물 줄: 줄 전체가 아니라 사진·이름 하나하나 등장 (main.css .reveal-photos — 흰 배경 사진 multiply 가 끊기지 않게)
@@ -863,12 +863,20 @@ function initReveal() {
     ...[...document.querySelectorAll(singles)].map((el) => { el.classList.add('reveal'); return el; }),
     ...[...document.querySelectorAll(groups)].map((el) => { el.classList.add('reveal-group'); return el; }),
   ];
+  // 일반 스크롤(모바일·태블릿·낮은 화면): 화면에 들어오면 한 번만 등장
   const io = new IntersectionObserver((entries) => {
+    if (window.Fullpage?.isActive()) return; // PC 한 화면 넘김 중에는 아래 도착 알림이 맡음
     entries.forEach((e) => {
       if (!e.isIntersecting) return;
       e.target.classList.add('is-in');
-      io.unobserve(e.target); // 한 번만 등장
+      io.unobserve(e.target);
     });
   }, { rootMargin: '0px 0px -10% 0px', threshold: 0.1 });
   targets.forEach((el) => io.observe(el));
+  // PC 한 화면 넘김(fullpage.js): 넘김이 끝나 섹션에 도착한 뒤 그 섹션 요소가 서서히 나타남(.reveal 0.8s, 묶음은 차례로).
+  // 다른 섹션 요소는 다시 숨겨 두어(화면 밖이라 보이지 않음) 돌아오면 다시 나타남
+  window.addEventListener('fullpage:arrive', (e) => {
+    const sec = e.detail.el;
+    targets.forEach((el) => el.classList.toggle('is-in', !!sec && sec.contains(el)));
+  });
 }
