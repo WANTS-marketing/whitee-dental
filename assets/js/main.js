@@ -645,8 +645,9 @@ function initDoctors() {
 }
 
 /* ---------- ⑥ 치료사례 (최신 3건) ----------
-   카드: 위 BEFORE(선명) / 아래 AFTER(로그인 전 = 미리 흐리게 만든 미리보기 + 자물쇠 '로그인 후 확인', 로그인 후 = 원본) + 분류·제목 → 상세
-   AFTER 원본 주소는 로그인일 때만 데이터에 들어온다(api.js getCases) */
+   카드: 위 BEFORE / 아래 AFTER + 분류·제목 → 상세. 2026-11-09: 치료 전·후 사진 모두 로그인 회원만(api.js getCases)
+     로그인 전 = 두 칸 모두 흐림 자리 + 자물쇠 '로그인 후 확인' (카드 → 로그인, 로그인 후 그 사례로) / 로그인 후 사진 없으면(시안·예시) 회색 칸
+   게시 동의 확인된 사례만 나오므로 지금은 0건 → '등록된 치료사례가 없습니다' 한 줄 */
 async function initCases() {
   const list = document.querySelector('[data-cases]');
   if (!list || !window.API) return;
@@ -656,13 +657,14 @@ async function initCases() {
   try {
     const rows = await window.API.getCases({ limit: 3 });
     const loggedIn = window.API.isLoggedIn();
+    if (!rows.length) { list.innerHTML = '<li class="cases__empty">등록된 치료사례가 없습니다. 환자분의 게시 동의를 받은 사례를 순서대로 올려 드립니다.</li>'; return; }
+    const half = (src, tag, alt) => `<span class="case-card__half img-ph${loggedIn ? '' : ' is-locked'}">${src ? `<img src="${img(src)}" alt="${alt}" loading="lazy" decoding="async">` : ''}<span class="case-card__tag">${tag}</span>${loggedIn ? '' : `<span class="case-card__lock">${lock}로그인 후 확인</span>`}</span>`;
     list.innerHTML = rows.map((r) => {
-      const open = !!r.afterImage;
-      const label = loggedIn ? '<span class="nowrap">시안: 실제 운영 시</span> <span class="nowrap">원본 공개</span>' : '로그인 후 확인'; // 로그인했는데 원본 주소가 없으면(시안) 안내
+      const href = loggedIn ? `./community/case-view.html?id=${encodeURIComponent(r.id)}` : `./member/login.html?return=${encodeURIComponent(`community/case-view.html?id=${r.id}`)}`;
       return `
-        <li><a class="case-card${open ? ' is-unlocked' : ''}" href="./community/case-view.html?id=${encodeURIComponent(r.id)}">
-          <span class="case-card__half img-ph"><img src="${img(r.beforeImage)}" alt="${esc(r.title)} 치료 전 사진" loading="lazy" decoding="async"><span class="case-card__tag">BEFORE</span></span>
-          <span class="case-card__half img-ph${open ? '' : ' is-locked'}"><img src="${img(open ? r.afterImage : r.afterBlur)}" alt="${open ? `${esc(r.title)} 치료 후 사진` : ''}" loading="lazy" decoding="async"><span class="case-card__tag">AFTER</span>${open ? '' : `<span class="case-card__lock${loggedIn ? ' is-demo' : ''}">${lock}${label}</span>`}</span>
+        <li><a class="case-card${loggedIn ? ' is-unlocked' : ''}" href="${href}">
+          ${half(r.beforeImage, 'BEFORE', `${esc(r.title)} 치료 전 사진`)}
+          ${half(r.afterImage, 'AFTER', `${esc(r.title)} 치료 후 사진`)}
           <span class="case-card__info"><span class="case-card__cat">${esc(r.categoryName)}</span><strong class="case-card__title">${esc(r.title)}</strong>${arrow}</span>
         </a></li>`;
     }).join('');

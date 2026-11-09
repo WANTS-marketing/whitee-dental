@@ -81,6 +81,16 @@ const treatments = blocks.map((b) => {
     const [stepPart, slot, altPart] = stepImgSec.replace(/^- /, '').split(/\s+\/\s+/);
     extras.stepImage = { step: Number(stepPart.replace(/\D/g, '')), ...slotOf(slot), alt: altPart.replace(/^alt:\s*/, '').trim() };
   }
+  /* 3D 디지털 진단 (치아교정 '치료를 결정하기 전 알아야 할 기준' 다음, 2026-11-09): 라벨 · 제목 · 본문 + '#### 장비 이름' 마다 이미지 · 설명 */
+  const digSec = optSection('추가 블록 — 3D 디지털 진단');
+  if (digSec) {
+    extras.digital = {
+      label: lineOf(digSec, '라벨'),
+      title: lineOf(digSec, '제목'),
+      text: lineOf(digSec, '본문'),
+      items: digSec.split(/\n#### /).slice(1).map((d) => ({ name: d.split('\n')[0].trim(), image: slotOf(lineOf(d, '이미지')), text: lineOf(d, '설명') })),
+    };
+  }
   /* 장치 비교 표 (치아교정 '검사부터 관리까지' 다음 독립 섹션, 2026-11-09): 제목 · 링크 단계(그 단계 본문 끝에 섹션으로 가는 링크) · 링크 글자 · 안내
      '#### 장치 이름' 마다 이미지 · 게시 · 유형 · 겉보기 · 방문 간격 */
   const devSec = optSection('추가 블록 — 장치 비교');
@@ -120,6 +130,7 @@ const treatments = blocks.map((b) => {
         text: lineOf(c, '설명'),
         fits: lineOf(c, '이런 분이라면 상담해 보세요').split(/\s+\/\s+/).filter(Boolean),
         note: lineOf(c, '안내'),
+        caseKey: lineOf(c, '사례'), // 치료사례 세부 분류 키(예: ortho-crowding) → 카드 아래 '{진료명} 치료사례 보기 →'
         illustrative: lineOf(c, '예시') !== '아니요', // 기본 = 예시 이미지(펼친 카드 사진에 '이해를 돕기 위한 예시' 안내). 병원 실제 사진이면 원고에 '- 예시: 아니요'
       };
     });

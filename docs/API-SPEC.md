@@ -307,37 +307,39 @@ api.js 안에서 HTTP 상태 코드를 위 오류 코드로 바꿔 주면 됩니
 - 필드: `id`(예 `story-90`), `wrId`·`legacyUrl`(기존 사이트 글 번호·주소 — 404.html 이 옛 주소를 새 주소로 넘김), `title`, `category`(진료안내·치료정보·임플란트·틀니·치아교정·병원소식), `date`, `summary`, `thumbnail`, `imageCount`, `branch`, `views`(선택)
 - `getNewsPost(id)` 반환: `{ post, html, prev, next }` 또는 `null`. `html` 안의 이미지 경로는 현재 페이지 기준으로 바꿔서 돌려줍니다(서버가 전체 URL 을 주면 변환 불필요)
 
-### 4-3. 치료사례 — `getCases({ limit })`, `getCase(id)` (BEFORE 공개 · AFTER 로그인 회원만)
+### 4-3. 치료사례 — `getCases({ limit })`, `getCase(id)` (치료 전·후 사진 모두 로그인 회원만 — 2026-11-09)
 
-- 데이터: `assets/data/cases.json` (기존 사이트 시술 전후 14건 — `scripts/import/build-gallery.js` 가 생성) · 화면: 메인 최신 3건 카드, `community/cases.html`, `case-view.html?id=case-18`
+- 데이터: `assets/data/cases.json` · 화면: `community/cases.html`(목록), `case-view.html?id=…`(상세), 메인 최신 3건 카드, 치아교정 갤러리 '{진료명} 치료사례 보기 →'(`cases.html?category=ortho-crowding` 등)
+- **게시 동의가 확인된 사례만 내보낸다(`consentChecked: true`).** 기존 사이트 14건(`scripts/import/build-gallery.js` 가 만든 것)은 동의 확인 전이라 이 값이 없어 화면에 나오지 않는다(데이터는 보관 — HOSPITAL-CHECK #20)
+- **환자 이름(성씨 포함)은 데이터에 두지 않는다** — 이름 필드 없음. 제목·본문에도 쓰지 않을 것
 
 | 필드 | 타입 | 필수 | 설명 |
 |---|---|---|---|
 | `id` | string | 필수 | `case-{번호}` |
-| `no` | number | 필수 | 번호 (기존 글 wr_id) |
-| `title` | string | 필수 | 목록 제목 — 원래 제목의 괄호 안 ('덧니 교정') |
-| `originalTitle` | string | 선택 | 원래 제목 ('화이트e치과 시술 전후(덧니 교정)') — 상세 제목 |
-| `categories` | string[] | 필수 | 진료 분류 (복수 가능: '치아교정' · '보철' · '임플란트') |
-| `categoryName` | string | — | api.js 가 `categories.join('·')` 로 채움 |
-| `date` | 날짜 | 필수 | 작성일 |
-| `branch` | string \| null | 선택 | 지점 (기존 글에는 없음) |
-| `beforeImage` | string | 필수 | BEFORE 사진 — 누구나 |
-| `afterBlur` | string | 필수 | AFTER 흐림 미리보기(작게 줄였다 흐리게 키운 그림) — 누구나 |
-| `afterImage` | string \| null | 로그인 시 | **AFTER 원본 주소 — 서버가 로그인 확인 후에만 값을 담을 것.** 지금(시안)은 원본이 저장소 밖이라 로그인 상태에서도 항상 null |
-| `afterOriginal` | string | 선택 | AFTER 원본 파일 이름 (`case-{번호}-after.jpg`) — 서버 저장소에 올릴 때 짝을 맞추는 용도. 화면에서 쓰지 않음 |
-| `images` | [{ role: 'before'\|'after', file, w, h, loginOnly? }] | 선택 | 이미지 목록 (비로그인이면 loginOnly 항목 빠짐) |
-| `body` | string | 선택 | 본문 (줄바꿈 \n) |
-| `legacy` | { wrId, url, image } | 선택 | 기존 사이트 원본 글·이미지 주소 |
+| `no` | number | 필수 | 번호 |
+| `title` | string | 필수 | 목록 제목 (예: '덧니교정 — 비발치') |
+| `categories` | string[] | 필수 | 큰 분류 (복수 가능: '치아교정' · '보철' · '임플란트') |
+| `category` | string | 선택 | 세부 분류 키 — 교정 6종: `ortho-crowding`(덧니교정) · `ortho-protrusion`(돌출입교정) · `ortho-openbite`(개방교합) · `ortho-deepbite`(과개교합) · `ortho-crossbite`(반대교합) · `ortho-partial`(부분·틈새교정). 이름은 api.js `CASE_CATEGORIES` |
+| `beforeImage` | string | null | 로그인 시 | 치료 전 사진 — **서버가 로그인 확인 후에만 값을 담을 것** (비로그인 응답에는 주소·파일 이름 모두 넣지 않음) |
+| `afterImage` | string | null | 로그인 시 | 치료 후 사진 — 같은 규칙 |
+| `period` | string | 필수 | 치료 기간 (예: '1년 8개월') |
+| `extraction` | '발치' | '비발치' | 선택 | 발치 여부 |
+| `consentChecked` | boolean | 필수 | 환자 게시 동의 확인 여부 — `true` 인 사례만 목록·상세·메인에 나옴 |
+| `date` | 날짜 | 필수 | 등록일 |
+| `branch` | 'changwon' | 'masan' | null | 선택 | 지점 |
+| `body` | string | 선택 | 설명 (줄바꿈 
+) |
+| `categoryName` · `categoryLabel` | string | — | api.js 가 채움(큰 분류 '·' 연결 / 세부 분류 이름) |
 
-- 화면 동작
-  - 목록·메인 카드: BEFORE 선명 + AFTER 자리 = `afterBlur` + 자물쇠 '로그인 후 확인' (로그인이고 `afterImage` 가 있으면 원본)
-  - 로그인 상태인데 `afterImage` 가 없으면(지금 시안): `afterBlur` + '시안: 실제 운영 시 원본 공개' — 서버가 원본 주소를 주기 시작하면 자동으로 원본이 보인다
-  - 상세: BEFORE | AFTER 나란히(모바일 위아래). 비로그인 AFTER = `afterBlur` + '로그인 후 확인해보세요' → `member/login.html?return=community/case-view.html?id=…` (로그인 후 그 글로 돌아오기 — 서버 연결 때 구현, `pages.js loginReturnUrl`)
-  - 모든 상세 하단 고지: '치료 결과는 개인에 따라 다를 수 있으며, 부작용이 발생할 수 있습니다.'
-- 시안 확인용 로그인: 주소에 `?login=1` 을 붙이면 그 탭에서 로그인 상태(`isLoggedIn()` = true, sessionStorage `witee-demo-login`), `?login=0` 해제 — **서버 연결 때 지울 것**
-- ⚠️ **AFTER 원본 14장은 저장소 밖 보관, 서버 저장소에 올려 로그인 회원에게만 제공.** 공개 저장소·공개 사이트에는 AFTER 원본이 없다 (2026-11-06 — `assets/images/cases/case-*-after.jpg` 는 `.gitignore`, 보관본 `자료/기존사이트-치료사례/after/`).
-  서버 연결 때: ① 14장을 비공개 저장소(버킷)에 올린다 ② 로그인 세션을 확인한 요청에만 기한 있는 주소(signed URL)를 `afterImage` 에 담는다 ③ 비로그인 응답에는 원본 주소·파일 이름 모두 넣지 않는다. 흐림 미리보기·BEFORE 는 공개 저장소로 충분
-- 치료 전·후 사진은 환자 동의서가 있는 사진만 (의료광고 심의 기준도 확인)
+- 로그인 필요 규칙
+  - 비로그인: 목록·메인 카드·상세 모두 BEFORE·AFTER 두 칸 흐림 자리 + '로그인 후 확인하실 수 있습니다' + 로그인. 카드를 누르면 `member/login.html?return=community/case-view.html?id=…` (로그인 후 그 사례로 — `pages.js loginReturnUrl`)
+  - 로그인: 두 사진 표시. 사진 주소가 없으면(시안·예시) 회색 '사진 자리'
+  - 서버: 사진은 비공개 저장소(버킷)에 두고, 로그인 세션을 확인한 요청에만 기한 있는 주소(signed URL)를 담는다
+- 화면: 카드 = [BEFORE | AFTER] 나란히 + 진료 분류 · 치료 기간 · 발치 여부 + 아래 고지 '치료 결과는 개인의 구강 상태에 따라 다를 수 있으며 부작용이 발생할 수 있습니다.'(모든 카드·상세)
+- 분류 칩: 치아교정 · 교정 6종 · 보철 · 임플란트 (사례가 없어도 늘 보임). `?category=키` 로 열면 그 칩이 선택된 상태
+- 시안: `?mock=N` → 예시 사례 N개(사진 없음, 교정 6종 돌아가며), `?login=1` → 로그인 상태(sessionStorage) — **서버 연결 때 둘 다 지울 것**
+- 치료 전·후 사진은 환자 동의서가 있는 사진만 (의료광고 심의 기준도 확인). 기존 홈페이지 교정 상세의 전후 사진 14쌍은 저장소 밖 `자료/기존상세/orthodontics/before-after/` 보관 — 동의된 것만 등록(HOSPITAL-CHECK #18)
+- 예전 데이터 필드(`originalTitle` · `afterBlur` · `afterOriginal` · `images` · `legacy`)는 기존 14건 보관용 — 새 사례에는 쓰지 않음
 
 ### 4-4. FAQ — `getFaqs({ featured })`
 

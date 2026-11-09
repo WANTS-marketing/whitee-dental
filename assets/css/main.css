@@ -601,6 +601,9 @@ html[data-fs="xl"] .doc-modal { width: min(680px, 100% - 48px); }
    카드 비율 3:4 (풀스크린 PC 는 목록 높이에 맞춤), 사진 두 칸은 같은 높이 */
 .case-card { position: relative; display: grid; grid-template-rows: minmax(0, 1fr) minmax(0, 1fr) auto; aspect-ratio: 3 / 4; overflow: hidden; border: 1px solid var(--color-line); border-radius: 8px; background: #fff; color: var(--color-text); }
 .case-card__half { position: relative; display: block; overflow: hidden; background: #f3e7e7; }
+.case-card__half.is-locked:not(:has(img)) { background: #dfe3ea; } /* 로그인 전 사진 없는 흐림 자리 */
+.cases__list:has(.cases__empty) { align-content: center; } /* 빈 안내 한 줄은 오른쪽 칸 세로 가운데 */
+.cases__empty { grid-column: 1 / -1; padding: 40px 24px; border-radius: 16px; background: rgba(255, 255, 255, 0.7); font-size: var(--fs-sm); line-height: 1.6; text-align: center; color: var(--color-text-sub); word-break: keep-all; } /* 게시 동의된 사례가 없을 때 */
 .case-card__half + .case-card__half { border-top: 2px solid #fff; }
 .case-card__half img { transition: transform 0.6s var(--ease); }
 .case-card:is(:hover, :focus-visible) .case-card__half:not(.is-locked) img { transform: scale(1.04); }
