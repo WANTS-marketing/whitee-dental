@@ -150,6 +150,20 @@
     return limit ? rows.slice(0, limit) : rows;
   }
 
+  /** 관리자 치료사례 목록 — 게시 동의 확인 전 사례까지 모두(관리자만), 사진 주소는 데이터 그대로(로그인 가림 없음). 최신순
+      TODO(서버): 관리자 인증 확인 후 전체 목록 + 게시 동의 변경 API(consentChecked) — 시안은 화면 안에서만 바뀜(admin.js) */
+  async function adminListCases() {
+    const n = mockCount('mock');
+    const src = n === null ? await fetchJson('cases') : mockCases(n);
+    return withViews(src).sort(byDateDesc).map((r) => ({
+      ...r,
+      categories: r.categories || (r.categoryName ? [r.categoryName] : []),
+      categoryName: (r.categories || [r.categoryName]).filter(Boolean).join('·'),
+      categoryLabel: CASE_CATEGORIES[r.category] || '',
+      consentChecked: r.consentChecked === true,
+    }));
+  }
+
   /** 치료사례 하나 — { post, prev, next } (getCases 와 같은 규칙: 비로그인이면 afterImage = null) */
   async function getCase(id) {
     return pick(await getCases(), id);
@@ -458,7 +472,7 @@
   }
 
   window.API = {
-    getNotices, getNotice, getNews, getNewsPost, mockQuery, getCases, getCase, CASE_CATEGORIES, getFaqs, getFees,
+    getNotices, getNotice, getNews, getNewsPost, mockQuery, getCases, getCase, CASE_CATEGORIES, adminListCases, getFaqs, getFees,
     listInquiries, getInquiry, createInquiry, isDeliveryReady, adminListInquiries, adminGetInquiry, answerInquiry, updateInquiryStatus, deleteInquiry,
     isLoggedIn, getCurrentUser, isAdmin, signInWithKakao, signOut,
   };

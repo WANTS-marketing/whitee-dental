@@ -4,6 +4,9 @@
      행을 누르면 상세 팝업 → 문의 내용 + 답변 작성칸 + '답변 등록'(상태 자동 답변완료) + 상태 변경 + 삭제(사이트 확인 팝업)
      데이터는 api.js 함수만: adminListInquiries · adminGetInquiry · answerInquiry · updateInquiryStatus · deleteInquiry
    나머지 탭(공지·소식·사례·FAQ): 목록 보기만 — 등록·수정·삭제는 서버 연결 때 (API-SPEC '그 밖의 데이터')
+   치료사례 탭(2026-11-09): 게시 동의 확인 전 사례까지 모두(api.js adminListCases) + 동의 상태 배지(확인 = 파랑 / 미확인 = 회색 — 지점색 쓰지 않음)
+     '게시 동의 확인' 체크 → 확인 팝업('환자의 게시 동의서를 확인하셨나요?') 후 consentChecked 변경 — 시안은 이 화면 안에서만(새로고침하면 처음대로), 저장은 API 연결 후
+     사진(전·후)이 비어 있으면 '사진 등록 필요'
    ========================================================================== */
 document.addEventListener('DOMContentLoaded', () => {
   const { esc, formatDate, branchBadge } = window.UI;
@@ -35,8 +38,13 @@ document.addEventListener('DOMContentLoaded', () => {
       cols: [['지점', (r) => branchBadge(r.branch)], ['제목', (r) => esc(r.title), 'is-wrap'], ['썸네일', (r) => esc(r.thumbnail)], ['작성일', (r) => formatDate(r.date, true)], ['관리', () => actions]],
     },
     cases: {
-      title: '치료사례', load: () => window.API.getCases(),
-      cols: [['분류', (r) => esc(r.categoryName)], ['지점', (r) => branchBadge(r.branch)], ['제목', (r) => esc(r.title), 'is-wrap'], ['작성일', (r) => formatDate(r.date)], ['관리', () => actions]],
+      title: '치료사례', load: () => window.API.adminListCases(), // 동의 확인 전까지 모두 — 주소에 ?mock=N 이면 예시 사례 N개
+      cols: [
+        ['게시 동의', (r) => `<span class="case-consent case-consent--${r.consentChecked ? 'on' : 'off'}">${r.consentChecked ? '동의 확인' : '동의 미확인'}</span><label class="case-consent__check"><input type="checkbox" data-case-consent="${esc(r.id)}"${r.consentChecked ? ' checked' : ''}> 게시 동의 확인</label>`],
+        ['분류', (r) => esc([r.categoryName, r.categoryLabel].filter(Boolean).join(' · '))], ['지점', (r) => branchBadge(r.branch)], ['제목', (r) => esc(r.title), 'is-wrap'],
+        ['사진', (r) => (r.beforeImage && r.afterImage ? '전·후 등록' : '<span class="case-consent case-consent--need">사진 등록 필요</span>')],
+        ['작성일', (r) => formatDate(r.date)], ['관리', () => actions],
+      ],
     },
     faq: {
       title: 'FAQ', load: () => window.API.getFaqs(),
@@ -139,7 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const filtered = rows.filter((r) =>
       (!branch || !r.branch || r.branch === branch || r.branch === 'both') &&
       (!q || JSON.stringify(r).includes(q)));
-    countEl.innerHTML = `총 <b>${filtered.length}</b>건`;
+    countEl.innerHTML = `총 <b>${filtered.length}</b>건${current === 'cases' ? ` · 동의 확인 <b>${filtered.filter((r) => r.consentChecked).length}</b> · 동의 미확인 <b>${filtered.filter((r) => !r.consentChecked).length}</b> <span class="admin__demo">(시안: 동의 체크는 이 화면 안에서만 바뀝니다)</span>` : ''}`;
     pagerEl.innerHTML = '';
     thead.innerHTML = `<tr>${tab.cols.map(([h]) => `<th scope="col">${h}</th>`).join('')}</tr>`;
     const none = !rows.length && tab.empty; // 글이 하나도 없음(검색·지점 결과 0개와 구분)
@@ -172,6 +180,19 @@ document.addEventListener('DOMContentLoaded', () => {
   searchInput.addEventListener('input', () => { page = 1; draw(); });
   pagerEl.addEventListener('click', (e) => { const b = e.target.closest('[data-admin-page]'); if (b) { page = Number(b.dataset.adminPage); draw(); } });
   tbody.addEventListener('click', (e) => { const tr = e.target.closest('[data-inq]'); if (tr && !e.target.closest('a')) openInquiry(Number(tr.dataset.inq)); });
+  // 치료사례 게시 동의 체크 — 켤 때만 확인 팝업, 시안은 이 화면의 목록만 바꿈 (TODO(서버): 동의 변경 API)
+  tbody.addEventListener('change', async (e) => {
+    const box = e.target.closest('[data-case-consent]');
+    if (!box) return;
+    const row = rows.find((r) => r.id === box.dataset.caseConsent);
+    if (!row) return;
+    if (box.checked) {
+      const yes = await window.UI.confirm('환자의 게시 동의서를 확인하셨나요?', { title: '게시 동의 확인', okLabel: '확인했습니다' });
+      if (!yes) { box.checked = false; return; }
+    }
+    row.consentChecked = box.checked;
+    drawList();
+  });
   tbody.addEventListener('keydown', (e) => { const tr = e.target.closest('[data-inq]'); if (tr && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); openInquiry(Number(tr.dataset.inq)); } });
   document.addEventListener('click', (e) => {
     if (e.target.closest('[data-todo], [data-admin-new]')) window.UI.alert('등록·수정·삭제는 서버 연결 후 제공됩니다. (docs/API-SPEC.md)');
