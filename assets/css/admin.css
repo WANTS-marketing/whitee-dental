@@ -71,3 +71,12 @@
 .admin__empty-btn:hover { background: var(--color-accent-hover); }
 [data-admin-new].is-attention { background: var(--color-accent); box-shadow: 0 0 0 4px rgba(var(--color-accent-rgb), 0.18); }
 [data-admin-new].is-attention:hover { background: var(--color-accent-hover); }
+
+/* 치료사례 게시 동의 (admin.js — 2026-11-09): 확인 = 파랑 / 미확인 · 사진 등록 필요 = 회색 (지점색 쓰지 않음) */
+.case-consent { display: inline-flex; align-items: center; height: 26px; padding: 0 10px; border-radius: var(--radius-btn); font-size: var(--fs-xs); font-weight: 600; white-space: nowrap; }
+.case-consent--on { background: var(--color-accent); color: #fff; }
+.case-consent--off { background: #efefef; color: #555; }
+.case-consent--need { background: #f2f3f5; color: #6b7280; border: 1px dashed #c4c9d2; }
+.case-consent__check { display: flex; align-items: center; gap: 6px; margin-top: 6px; font-size: var(--fs-xs); color: var(--color-text-sub); white-space: nowrap; cursor: pointer; }
+.case-consent__check input { width: 16px; height: 16px; accent-color: var(--color-accent); }
+.admin__demo { margin-left: 6px; font-size: var(--fs-xs); color: #888; }
