@@ -113,7 +113,7 @@
 .t-devices__table { width: 100%; border-collapse: collapse; table-layout: fixed; }
 /* 표 왼쪽 위 칸 = 섹션 제목(다른 섹션 제목과 같은 크기) + 부제 14px 회색, 왼쪽 정렬 · 그림 높이 기준 세로 가운데(아래 여백 = 이름 줄 + 24px) */
 .t-devices__head { padding: 0 12px 68px 0; vertical-align: middle; text-align: left; }
-.t-devices__head .t-sec__title { margin-bottom: 0; }
+.t-devices__head .t-sec__title { margin-bottom: 0; white-space: nowrap; } /* 한 줄 */
 .t-devices__sub { margin-top: 8px; font-size: 0.875rem; line-height: 1.5; color: #6b7280; word-break: keep-all; }
 .t-devices__col-label { width: 160px; }
 .t-devices__table thead th { padding: 0 12px 24px; vertical-align: bottom; text-align: center; }
