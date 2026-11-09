@@ -52,7 +52,7 @@ html::-webkit-scrollbar { display: none; }
 .hero__hours { display: none; }
 @media (min-width: 1025px) {
   .hero__hours { position: absolute; z-index: 2; display: block; top: calc(50% + var(--header-h) / 2); right: max(var(--hero-x), calc(var(--quick-edge) + 24px)); width: 380px; transform: translateY(-50%); }
-  .hero-hours { padding: 36px; border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 20px; background: rgba(22, 35, 63, 0.6); color: #fff; opacity: 0; }
+  .hero-hours { padding: 36px; border: 2px solid rgba(255, 255, 255, 0.2); border-radius: 20px; background: rgba(22, 35, 63, 0.6); color: #fff; opacity: 0; }
   @supports ((backdrop-filter: blur(12px)) or (-webkit-backdrop-filter: blur(12px))) {
     .hero-hours { background: rgba(255, 255, 255, 0.1); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
   }
