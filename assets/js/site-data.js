@@ -145,13 +145,13 @@ window.SITE = {
       image: 'banner-clinic.jpg', href: 'about/intro.html#collaboration',
       icon: '<circle cx="8" cy="8" r="3"/><circle cx="16" cy="8" r="3"/><path d="M2 20c0-3.3 2.7-6 6-6 1.5 0 2.9.6 4 1.5A6 6 0 0122 20"/>' },
     { title: '전지점 공동운영 기공센터', text: '창원점·마산점이 기공센터를 함께 운영합니다.', short: '창원점·마산점이 기공센터를 함께 운영합니다', // TODO: 기공센터 설명 병원 확인
-      image: 'clinic-implant.jpg', href: 'about/intro.html#why',
+      image: 'promise-lab.jpg', imagePos: '34% center', href: 'about/intro.html#why', // 기공 작업 손·세라믹 치아 (자료/메인페이지/pc0040586614.jpg → 1600px)
       icon: '<path d="M3 21h18M5 21V10l7-5 7 5v11M9 21v-6h6v6"/>' },
     { title: '합리적인 치료비용', text: '상담과 정확한 진단을 바탕으로 합리적인 비용의 치료를 계획합니다.', short: '정확한 진단으로 꼭 필요한 치료만 계획합니다',
       image: 'promise-cost.jpg', imagePos: '64% center', href: 'about/intro.html#why', // 치아 저금통·동전 (자료/메인페이지/cm080938973.jpg → 1600px)
       icon: '<circle cx="12" cy="12" r="9"/><path d="M8 9l2 6 2-4 2 4 2-6M7 12h10"/>' },
     { title: '전지점 평일 야간진료', text: '창원점·마산점 모두 평일 저녁 9시까지 진료합니다.', short: '창원점·마산점 모두 평일 저녁 9시까지',
-      image: 'promise-night.jpg', imagePos: '36% center', href: 'about/clinic.html#loc-title-changwon', // 화이트이(e)치과의원 간판 야경 (자료/a89d35c7-….png) // 병원 오시는길 — 창원점 오시는길(진료시간) 블록
+      image: 'promise-night.jpg', href: 'about/clinic.html#loc-title-changwon', // 마산점 입구 — 화이트e치과 간판·평일 야간진료 안내 (공유폴더 권혜빈/클라이언트2/[화이트E치과 창원마산점]/마산점/인테리어/240307_MED_0003.jpeg → 1600px) // 병원 오시는길 — 창원점 오시는길(진료시간) 블록
       icon: '<path d="M20 14.5A8.5 8.5 0 019.5 4a8.5 8.5 0 1010.5 10.5z"/>' },
   ],
 
