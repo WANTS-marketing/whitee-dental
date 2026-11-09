@@ -152,9 +152,9 @@ ${t.points.map((p, i) => `            <li class="t-point"><span class="t-point__
         <section class="t-sec" aria-labelledby="t-criteria-title">
           <h2 class="t-sec__title t-sec__title--center" id="t-criteria-title">치료를 결정하기 전 알아야 할 기준</h2>
           <div class="t-criteria">
-            <div class="t-crit"><h3 class="t-crit__title">검사에서 확인할 것</h3>${critList(t.criteria.check, 'check')}</div>
-            <div class="t-crit"><h3 class="t-crit__title">치료 선택지</h3>${critList(t.criteria.options, 'option')}${t.criteria.optionsNote ? `<p class="t-crit__note">${esc(t.criteria.optionsNote)}</p>` : ''}</div>
-            <div class="t-crit"><h3 class="t-crit__title">이런 질문을 많이 하세요</h3>${critList(t.criteria.questions, 'question')}</div>
+            <div class="t-crit"><h3 class="t-crit__title">검사에서 확인할 것</h3><div class="t-crit__body">${critList(t.criteria.check, 'check')}</div></div>
+            <div class="t-crit"><h3 class="t-crit__title">치료 선택지</h3><div class="t-crit__body">${critList(t.criteria.options, 'option')}${t.criteria.optionsNote ? `<p class="t-crit__note">${esc(t.criteria.optionsNote)}</p>` : ''}</div></div>
+            <div class="t-crit"><h3 class="t-crit__title">이런 질문을 많이 하세요</h3><div class="t-crit__body">${critList(t.criteria.questions, 'question')}</div></div>
           </div>
         </section>
 
