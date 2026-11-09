@@ -167,7 +167,7 @@
       <form class="inq-pw" novalidate>
         <p class="inq-pw__desc">글을 쓸 때 입력한 <b>비밀번호 4자리</b>를 입력해 주세요.</p>
         <label class="sr-only" for="inq-pw-input">비밀번호 (숫자 4자리)</label>
-        <input class="form__input inq-pw__input" id="inq-pw-input" name="pw" type="password" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="숫자 4자리" aria-describedby="inq-pw-msg">
+        <input class="form__input inq-pw__input" id="inq-pw-input" name="pw" type="password" inputmode="numeric" maxlength="4" autocomplete="off" aria-describedby="inq-pw-msg">
         <p class="form__msg inq-pw__msg" id="inq-pw-msg" role="alert"></p>
         <div class="site-dialog__actions">
           <button class="btn btn--line" type="button" data-dialog-close>취소</button>

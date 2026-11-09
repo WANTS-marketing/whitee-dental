@@ -824,6 +824,8 @@ a.article-nav__item:hover .article-nav__title { color: var(--color-accent); }
 .form__agree { position: relative; display: block; padding-left: 28px; font-size: var(--fs-sm); color: var(--color-text-sub); }
 .form__agree input { position: absolute; top: 2px; left: 0; width: 18px; height: 18px; accent-color: var(--color-point); }
 .form__agree a { text-decoration: underline; }
+.contact-layout .form__agree { font-size: calc(var(--fs-sm) - 2px); line-height: 1.7; } /* 상담문의 작성 페이지만 16 → 14px */
+.contact-layout .form__agree input { top: calc((1.7em - 18px) / 2); } /* 체크박스(18px)를 첫 줄 높이 가운데에 — 글자 크기 조절에도 따라감 */
 .form__hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; } /* 허니팟 */
 .form__msg { min-height: 1.5em; font-size: var(--fs-sm); }
 .form__msg.is-error { color: #d93025; }
@@ -1044,7 +1046,11 @@ html:has(body.has-lnb .page-doctors) { scroll-padding-top: calc(var(--header-h) 
 .quick-consult .btn { height: 52px; border-radius: var(--radius-btn); }
 .contact-layout { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 48px; align-items: start; }
 .contact-aside { display: grid; gap: 16px; }
-.contact-aside .branch-card { padding: 24px; }
+.contact-aside .branch-card { padding: 24px; text-align: center; }
+/* 상담문의 작성 페이지 전화 카드: 지점명·전화·진료시간 모두 가운데 정렬 (진료시간 = '진료시간' 제목 한 줄 + 시간 가운데) */
+.contact-aside .branch-card__name { justify-content: center; }
+.contact-aside .branch-card__hours { flex-direction: column; align-items: center; gap: 4px; }
+.contact-aside .branch-card__hours strong { margin-right: 0; }
 .contact-aside .branch-card__tel { font-size: 1.5rem; }
 .contact-aside .branch-card__tel svg { width: 24px; height: 24px; }
 
@@ -1298,8 +1304,9 @@ html.is-dialog-open { overflow: hidden; }
 .inq-row.is-just.is-just-fade { background: transparent; }
 .inq-row.is-just.is-just-fade:hover { background: rgba(var(--color-accent-rgb), 0.04); }
 /* 상담문의 작성 페이지 하단 버튼 [목록으로 | 문의 남기기] */
-.form__actions { display: flex; justify-content: center; gap: 12px; margin-top: 8px; }
-.form__actions .btn { min-width: 180px; padding: 0 32px; font-weight: 700; }
+/* 입력란 오른쪽 경계선에 맞춰 오른쪽 정렬, 크기는 기존(64px 높이·최소 180px·20px 글자)의 0.7배 */
+.form__actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 8px; }
+.form__actions .btn { height: 45px; min-width: 126px; padding: 0 22px; font-size: calc(var(--fs-h4) * 0.7); font-weight: 700; }
 .inq-board__note { margin-top: 32px; font-size: var(--fs-xs); color: var(--color-text-sub); text-align: center; word-break: keep-all; }
 .inq-board__empty, .inq-table td.inq-table__empty { padding: 80px 16px; text-align: center; color: var(--color-text-sub); white-space: normal; }
 .inq-board .pager { margin-top: 48px; }
@@ -1332,7 +1339,6 @@ html.is-dialog-open { overflow: hidden; }
   .inq-board__tools { align-items: stretch; }
   .inq-board__left { width: 100%; justify-content: space-between; }
   .inq-board__write { width: 100%; height: 48px; justify-content: center; }
-  .form__actions .btn { flex: 1; min-width: 0; padding: 0 16px; }
   .inq-table, .inq-table tbody { display: block; }
   .inq-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
   .inq-row { display: grid; grid-template-columns: auto auto minmax(0, 1fr) auto; grid-template-areas: "branch branch . status" "title title title title" "name date date date"; align-items: center; gap: 8px 6px; padding: 16px var(--b-pad); border-bottom: 1px solid var(--color-line); }

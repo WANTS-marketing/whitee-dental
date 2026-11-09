@@ -119,9 +119,8 @@
   /* 시안 안내 — 접수가 병원에 전달되지 않을 때(api.js isDeliveryReady() = false: Web3Forms 키·서버 없음)
      모든 상담 폼 전송 버튼 아래 작은 글씨 + 접수 완료 문구 대신. 키가 등록되면 자동으로 사라지고 원래 '접수되었습니다' */
   const deliveryReady = () => !!window.API?.isDeliveryReady?.();
-  const telList = () => (window.SITE?.branches || []).map((b) => [b.name || b.shortName, b.tel]);
-  const demoText = () => `시안 화면입니다. 실제로 병원에 전달되지 않습니다. 문의는 전화로 부탁드립니다. ${telList().map(([n, t]) => `${n} ${t}`).join(' · ')}`;
-  const demoHtml = () => `시안 화면입니다. 실제로 병원에 전달되지 않습니다. 문의는 전화로 부탁드립니다. ${telList().map(([n, t]) => `${esc(n)} <a href="${telHref(t)}">${esc(t)}</a>`).join(' · ')}`;
+  const demoText = () => '시안 화면입니다. 실제로 병원에 전달되지 않습니다.';
+  const demoHtml = () => esc(demoText());
   function inquiryForm(form, { onSuccess, demoNote = true } = {}) {
     const msg = form.querySelector('.form__msg');
     const submitBtn = form.querySelector('[type="submit"]');

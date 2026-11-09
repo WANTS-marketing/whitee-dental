@@ -2,11 +2,8 @@
    서브페이지 시작 위치 — 같은 대메뉴 안에서 이동하면 본문부터, 그 밖에는 배너 맨 위부터
    (LNB 가 있는 서브페이지 <head> 에서 바로 실행, defer 아님 — 그리기 전에 위치를 정해야 해서)
 
-   대메뉴 = 주소의 폴더: about(화이트e치과) · treatment(진료과목) · community(커뮤니티)
-   · faq(FAQ — 자주 묻는 질문 faq/index.html · 상담문의 contact.html · contact-write.html)
-   ※ 커뮤니티 페이지는 배너가 없어(글 우선) 이 스크립트를 넣지 않는다
-   ※ 상담문의 페이지도 배너가 없지만, 같은 대메뉴의 '자주 묻는 질문'(배너 있음)이 본문부터 열리도록 <html data-lnb-jump="record"> 로 넣는다
-     → 그 페이지에서는 링크 기록(1)만 하고, 위치 판단·이동(2~4)은 하지 않는다 — 항상 맨 위(= 바로 LNB·본문)부터
+   대메뉴 = 주소의 폴더: about(화이트e치과) · treatment(진료과목)
+   ※ 커뮤니티·FAQ(자주 묻는 질문·상담문의) 페이지는 배너가 없어(글 우선) 이 스크립트를 넣지 않는다 — 항상 맨 위(= 바로 LNB·본문)부터
 
    1) 기록: 서브페이지에서 링크를 누르면 sessionStorage 에 {from: 지금 대메뉴, to: 갈 경로, t: 시각} 을 남긴다
       - 기록하는 링크 = LNB(PC 세로 메뉴 · 1024px 이하 가로 탭) · 헤더(대메뉴·메가메뉴 하위 링크·모바일 메뉴) · 본문(배너 제외)
@@ -28,7 +25,7 @@
   var GAP = 32; // PC: 흰 헤더 아래 ~ LNB 타이틀 블록·경로 줄 윗선 간격
 
   function groupOf(path) {
-    var m = /\/(about|treatment|community|faq)\/[^/]*$/.exec(path || '');
+    var m = /\/(about|treatment)\/[^/]*$/.exec(path || '');
     return m ? m[1] : null;
   }
   var here = groupOf(location.pathname);
@@ -45,8 +42,6 @@
     if (url.pathname === location.pathname && url.hash) return; // 같은 페이지 안 바로가기
     try { sessionStorage.setItem(KEY, JSON.stringify({ from: here, to: url.pathname, t: Date.now() })); } catch (err) { /* 저장 불가 */ }
   });
-
-  if (document.documentElement.getAttribute('data-lnb-jump') === 'record') return; // 배너 없는 페이지: 기록만
 
   // ---------- 2) 판단 ----------
   var data = null;
