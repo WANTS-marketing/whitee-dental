@@ -54,8 +54,8 @@ function fadeIn(el) {
    원장(카드 상자 없음, 원장 사이 가는 가로선 + 위아래 100px): 모두 같은 방향(사진 왼쪽)
      [이름 52px 굵게 + 직함 52px 400 같은 줄 ······ 학회·학교 로고(site-data.js logos)]
      [진료과 태그(네이비 면) + 주요 진료(site-data.js focus)]
-     [연한 베이지 약력 상자 — 왼쪽에 사진(아래 끝 = 상자 아래 끝, 머리가 상자 위로 80px) | 약력 2열]
-   약력: 지금 데이터 순서 그대로가 아니라 분류 순서 — 전문의 → 학력 → 경력(네이비 굵게) → 연수·학회 활동(기본 검정) (site-data.js SITE.classifyCareer · isTraining)
+     [옅은 파랑 약력 상자 — 왼쪽에 사진(아래 끝 = 상자 아래 끝, 머리가 상자 위로 100px) | 약력 1열(항목 8개 이상 = 2열)]
+   약력: 지금 데이터 순서 그대로가 아니라 분류 순서 — 전문의 → 학력 → 경력 → 연수·학회 활동, 색·굵기는 모두 같음 (site-data.js SITE.classifyCareer · isTraining)
    사진: 원장별 보정값(site-data.js photoScale·photoOffsetY·photoOffsetX → --ps·--py·--px), 흰 배경 사진(photoBlend 켜진 원장)도 이 페이지에서는 multiply 를 쓰지 않음 — 흰 가운·얼굴로 상자 색이 비쳐서. 대신 .is-whitebg 가장자리만 녹임 (메인 의료진은 그대로 multiply)
      스타일: common.css '의료진 소개'. 1024px 이하 = 사진 위 · 정보 아래, 이름 36px, 약력 1열
    지점 이동 버튼(.doc-branch-nav): 화면 아래 고정 [창원점 N][마산점 N] — 누르면 그 지점 제목이 헤더 + 24px 아래에 오게 스크롤, 스크롤 위치로 현재 지점 표시(aria-current),
@@ -67,15 +67,17 @@ function renderDoctorsPage() {
   const S = window.SITE;
   const EN = { changwon: 'CHANGWON', masan: 'MASAN' };
   const groups = S.branches.map((b) => ({ b, docs: S.getDoctorsByBranch(b.id) }));
-  // 약력: 전문의 → 학력 → 경력 (굵게 네이비) / 연수 → 학회 활동 (기본)
+  /* 약력: 순서는 분류 순서 — 전문의 → 학력 → 경력 → 연수 → 학회 활동. 글자 색·굵기는 모두 같음
+     (2026-11-09 예전 '전문의·학력·경력 = 네이비 굵게 / 연수·학회 = 기본' 구분 삭제)
+     항목 8개 이상 = 2열(.is-2col): 두 묶음(앞 절반 올림 / 나머지)을 왼쪽부터 나란히, 열 사이 56px (common.css). 7개 이하 = 1열 */
+  const CAREER_2COL_MIN = 8;
   const careerOf = (d) => {
     const by = { cert: [], edu: [], career: [], training: [], society: [] };
     (d.career || []).forEach((c) => { const k = S.classifyCareer(c); by[k === 'career' && S.isTraining(c) ? 'training' : k].push(c); });
-    const li = (c, strong) => `<li class="${strong ? 'is-strong' : ''}">${esc(c)}</li>`;
-    const all = [...[...by.cert, ...by.edu, ...by.career].map((c) => li(c, true)), ...[...by.training, ...by.society].map((c) => li(c, false))];
-    // 두 묶음(앞 절반 올림 / 나머지) — 2열이면 나란히, 1열이면 위아래로 이어짐 (열마다 따로 흘러 한쪽 줄바꿈이 다른 쪽 간격을 벌리지 않음)
+    const all = [...by.cert, ...by.edu, ...by.career, ...by.training, ...by.society].map((c) => `<li>${esc(c)}</li>`);
+    if (all.length < CAREER_2COL_MIN) return `<div class="doctor-profile__career"><ul class="doctor-profile__col">${all.join('')}</ul></div>`;
     const half = Math.ceil(all.length / 2);
-    return `<ul class="doctor-profile__col">${all.slice(0, half).join('')}</ul>${all.length > half ? `<ul class="doctor-profile__col">${all.slice(half).join('')}</ul>` : ''}`;
+    return `<div class="doctor-profile__career is-2col"><ul class="doctor-profile__col">${all.slice(0, half).join('')}</ul><ul class="doctor-profile__col">${all.slice(half).join('')}</ul></div>`;
   };
   box.innerHTML = groups.map(({ b, docs }) => `
     <section class="doctor-group" id="${b.id}" data-branch="${b.id}" aria-labelledby="doctor-group-${b.id}">
@@ -103,7 +105,7 @@ function renderDoctorsPage() {
             </div>
             <div class="doctor-profile__box">
               <div class="doctor-profile__photo${d.photoBlend === false ? '' : ' is-whitebg'}"><img class="doctor-profile__img" src="${img(String(d.photo || '').replace(/\.[a-z]+$/i, '-cut.png'))}" alt="${esc(d.name)} ${esc(d.title)} 사진" loading="lazy"></div>
-              ${(d.career || []).length ? `<div class="doctor-profile__career">${careerOf(d)}</div>` : ''}
+              ${(d.career || []).length ? careerOf(d) : ''}
             </div>
           </article>`;
         }).join('')}
@@ -123,15 +125,6 @@ function renderDoctorsPage() {
       root.style.setProperty('--doc-side', `${Math.round(Math.max(cw - qr.left + 32, (cw - DOC_MAX) / 2))}px`);
     } else root.style.removeProperty('--doc-side');
   };
-  /* 약력 2열 여부: 약력 칸에 한 열 15글자(15em) × 2 + 열 간격 64px 가 들어가면 2열(.is-2col), 아니면 1열
-     2열 = 두 묶음(.doctor-profile__col)을 나란히 — 열 너비는 글자 길이대로, 남는 폭은 두 열 사이(common.css) */
-  const setCols = () => box.querySelectorAll('.doctor-profile__career').forEach((wrap) => {
-    wrap.classList.remove('is-2col');
-    const cs = getComputedStyle(wrap);
-    const fsz = parseFloat(cs.fontSize) || 19;
-    const inner = wrap.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
-    wrap.classList.toggle('is-2col', wrap.children.length > 1 && inner >= fsz * 30 + 64);
-  });
   /* 약력이 길면 상자는 내용대로 길어지고 사진 칸(상자 위 --pop ~ 상자 아래 끝)도 따라 길어진다.
      사진 크기는 기본 칸 높이(--ph0) 기준이라 그대로 — 원장마다 얼굴 크기·정수리 높이가 같게 (staffCrop, 2026-11-08 예전 fitBoxes 의 사진 키우기 삭제) */
   // 상자가 사진보다 길어지면(좁은 폭 + 글자 크게 → 약력 1열) 사진 아래 끝이 상자 안에서 보이므로, 그 원장만 사진 아래 64px 를 녹인다(.is-short)
@@ -140,7 +133,7 @@ function renderDoctorsPage() {
     c.classList.remove('is-short');
     if (im) c.classList.toggle('is-short', c.getBoundingClientRect().bottom - im.getBoundingClientRect().bottom > 1);
   });
-  const layout = () => { setDocRight(); setCols(); markShort(); };
+  const layout = () => { setDocRight(); markShort(); };
   layout();
   window.addEventListener('resize', layout);
   new MutationObserver(layout).observe(root, { attributes: true, attributeFilter: ['data-fs'] }); // 글자 크기 단계 → 퀵메뉴 폭·약력 길이가 바뀜
