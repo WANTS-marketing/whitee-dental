@@ -517,7 +517,7 @@ body.is-locked { overflow: hidden; }
 .sub-layout { display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: 0 64px; align-items: start; padding-top: var(--space-3xl); padding-bottom: var(--space-4xl); }
 /* 배너 없는 LNB 페이지(커뮤니티 — 글이 먼저 보이게 배너 삭제): 고정 흰 헤더 아래 64px 에서 LNB·본문 시작 (1024px 이하는 가로 탭이 헤더 바로 아래) */
 .has-lnb:not(:has(.sub-visual)) .sub-layout { padding-top: calc(var(--header-h) + var(--space-3xl)); }
-/* 상단 배너를 뺀 서브페이지(body.no-hero — 진료과목 5개, 다른 서브페이지도 body 에 클래스만 붙이면 같은 방식):
+/* 상단 배너를 뺀 서브페이지(body.no-hero — 진료과목 5개·병원 오시는길, 다른 서브페이지도 body 에 클래스만 붙이면 같은 방식):
    처음부터 흰 헤더(흰 바탕·진한 글자·컬러 로고 — 배너가 없어 투명 헤더 규칙이 걸리지 않음) + 스크롤 후와 같은 옅은 그림자 → 스크롤 전후 같은 모습
    본문(LNB·경로 줄) 시작 = 헤더 아래 56px (1024px 이하는 위 규칙대로 가로 탭이 헤더 바로 아래) */
 body.no-hero .header { box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08); }
@@ -909,13 +909,13 @@ a.article-nav__item:hover .article-nav__title { color: var(--color-accent); }
        사진 칸 = 상자 위 100px(--pop) ~ 상자 아래 끝, 너비 --doc-pw(모든 원장 같음). 크롭 = site-data.js staffCrop(김영우 원장 구도 기준 — 얼굴 길이·정수리 높이 같게)
          정수리를 칸 위 끝에, 얼굴 가운데를 칸 가운데에. 사진 크기는 기본 칸 높이(--ph0) 기준이라 약력이 길어 상자가 커져도 얼굴 크기는 그대로, 아래는 상자 아래 끝에서 잘림
          — 원장별 크롭 값은 pages.js 가 --cs·--cx·--cy 로 넘김. 칸 밖은 잘라냄(아래쪽 = 상반신 구도)
-       흰 배경 사진(doctor-*-cut.png)은 multiply 를 쓰지 않는다(흰 가운·얼굴로 상자 색이 비침). 칸 좌우 끝 24px 만 흰색→투명으로 녹임(.is-whitebg — 배경 투명 PNG 는 그대로)
+       흰 배경 사진(doctor-*-cut.png)은 multiply 를 쓰지 않는다(흰 가운·얼굴로 상자 색이 비침). 칸 좌우 끝 24px 를 녹임 — 흰 배경 사진·배경 투명 PNG 모두(투명 사진도 가운이 칸 끝에서 잘리므로)
      약력: 전문의·학력·경력 = 네이비 굵게, 연수·학회 활동 = 기본 검정 (pages.js careerOf)
    1024px 이하: 사진(옅은 파랑 면 위, 머리가 면 위로) → 이름·태그 → 약력 상자(1열), 이름 36px */
 .doctor-group + .doctor-group { margin-top: var(--space-4xl); }
 .doctor-group__head { margin-bottom: 28px; }
 .doctor-group__label { font-size: 0.8125rem; font-weight: 700; letter-spacing: 0.16em; line-height: 1.4; color: var(--doc-color, var(--color-point)); }
-.doctor-group__title { margin-top: 6px; font-size: 1.75rem; line-height: 1.35; letter-spacing: -0.02em; }
+.doctor-group__title { margin-top: 6px; font-size: 2.1rem; line-height: 1.35; letter-spacing: -0.02em; }
 html:has(body.has-lnb .page-doctors) { scroll-padding-top: calc(var(--header-h) + 24px); } /* #changwon · #masan · 원장 해시로 열 때 = 지점 이동 버튼과 같은 위치(헤더 + 24px) */
 /* 이 페이지 가로 배치 (1025px 이상): 위쪽 [LNB | 경로·제목·소개 블록] 묶음과 원장 목록(.doc-list)이 같은 가운데·같은 폭
    좌우 여백 = --doc-side (pages.js: max(퀵메뉴와 32px 띄울 만큼, (화면 - 1600px) ÷ 2)) → 왼쪽 = 오른쪽, 최대 너비 1600px */
@@ -966,7 +966,7 @@ html:has(body.has-lnb .page-doctors) { scroll-padding-top: calc(var(--header-h) 
   top: calc(var(--ph0) * var(--cs) * var(--cy) * -1); left: calc(50% - var(--ph0) * var(--cs) * 0.6024 * var(--cx));
 }
 /* 흰 배경 사진: 칸 좌우 끝 24px 만 흰색→투명 (상자 위에서 흰 사각형 경계가 보이지 않게). 위는 정수리 = 칸 위 끝이라 녹이지 않음 */
-.doctor-profile__photo.is-whitebg { -webkit-mask-image: linear-gradient(90deg, transparent, #000 24px, #000 calc(100% - 24px), transparent); mask-image: linear-gradient(90deg, transparent, #000 24px, #000 calc(100% - 24px), transparent); }
+.doctor-profile__photo { /* 흰 배경·투명 PNG 모두 — 투명 사진도 가운이 칸 끝에서 잘려 세로선이 보여서 (2026-11-09) */  -webkit-mask-image: linear-gradient(90deg, transparent, #000 24px, #000 calc(100% - 24px), transparent); mask-image: linear-gradient(90deg, transparent, #000 24px, #000 calc(100% - 24px), transparent); }
 .doctor-profile__img.is-missing { display: none; }
 /* 약력: 500 · 줄 간격 1.5 · #1a1f2b, 점(4px)과 글자 사이 10px — 모든 항목 같은 색·굵기. 시작선 = 이름 왼쪽 끝 (같은 상자 안 왼쪽 여백)
    3개 이하 1열, 4개 이상 2열(.is-2col) — 왼쪽 열을 위→아래로 먼저 채우고 오른쪽 열로 (행 수 --career-rows = 올림(항목 ÷ 2), pages.js careerOf)
@@ -1004,8 +1004,8 @@ html:has(body.has-lnb .page-doctors) { scroll-padding-top: calc(var(--header-h) 
   .doctor-profile__box { order: 2; min-height: 0; padding: 32px 40px 40px; border-radius: 0 0 var(--radius-md) var(--radius-md); }
   .doctor-profile__head { margin-bottom: 24px; }
   /* 칸이 사진보다 넓음 → 칸 대신 사진 좌우 끝 24px 를 녹임 */
-  .doctor-profile__photo.is-whitebg { -webkit-mask-image: none; mask-image: none; }
-  .doctor-profile__photo.is-whitebg > .doctor-profile__img { -webkit-mask-image: linear-gradient(90deg, transparent, #000 24px, #000 calc(100% - 24px), transparent); mask-image: linear-gradient(90deg, transparent, #000 24px, #000 calc(100% - 24px), transparent); }
+  .doctor-profile__photo { -webkit-mask-image: none; mask-image: none; }
+  .doctor-profile__photo > .doctor-profile__img { -webkit-mask-image: linear-gradient(90deg, transparent, #000 24px, #000 calc(100% - 24px), transparent); mask-image: linear-gradient(90deg, transparent, #000 24px, #000 calc(100% - 24px), transparent); }
 }
 /* 1024px 이하: 사진(옅은 파랑 면 위, 머리가 면 위로 --pop) → 상자(이름·태그·약력), 이름 36px */
 @media (max-width: 1024px) {
@@ -1021,8 +1021,8 @@ html:has(body.has-lnb .page-doctors) { scroll-padding-top: calc(var(--header-h) 
   .doctor-profile__box { order: 2; min-height: 0; padding: 28px 32px 32px; border-radius: 0 0 var(--radius-md) var(--radius-md); }
   .doctor-profile__head { margin-bottom: 24px; }
   /* 칸이 사진보다 넓음 → 칸 대신 사진 좌우 끝 24px 를 녹임 */
-  .doctor-profile__photo.is-whitebg { -webkit-mask-image: none; mask-image: none; }
-  .doctor-profile__photo.is-whitebg > .doctor-profile__img { -webkit-mask-image: linear-gradient(90deg, transparent, #000 24px, #000 calc(100% - 24px), transparent); mask-image: linear-gradient(90deg, transparent, #000 24px, #000 calc(100% - 24px), transparent); }
+  .doctor-profile__photo { -webkit-mask-image: none; mask-image: none; }
+  .doctor-profile__photo > .doctor-profile__img { -webkit-mask-image: linear-gradient(90deg, transparent, #000 24px, #000 calc(100% - 24px), transparent); mask-image: linear-gradient(90deg, transparent, #000 24px, #000 calc(100% - 24px), transparent); }
 }
 @media (max-width: 768px) {
   .doctor-profile { --mh: 360px; --pop: 72px; padding-block: 48px; }
@@ -1237,7 +1237,7 @@ html:has(body.has-lnb .page-doctors) { scroll-padding-top: calc(var(--header-h) 
   .branch-card__tel { font-size: 1.625rem; }
   .quick-consult { padding: 24px 16px; }
   .quick-consult .form { grid-template-columns: 1fr; }
-  .doctor-group__title { font-size: 1.5rem; }
+  .doctor-group__title { font-size: 1.8rem; }
   .doc-branch-nav { bottom: calc(var(--bottom-bar-h) + env(safe-area-inset-bottom) + 16px); }
 }
 
