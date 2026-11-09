@@ -510,6 +510,7 @@ html[data-fs="xl"] .doc-modal { width: min(680px, 100% - 48px); }
 .clinic-card--orthodontics .clinic-card__body { --cl-fade: 14px; padding-top: calc(var(--cl-fade) + 4px); } /* 치아교정: 카드가 납작해 녹는 구간을 가장 짧게 (공통값보다 조금 더) */
 .clinic-card--general .clinic-card__img img { object-position: center 60%; } /* 일반치료 사진(4:3 3D 그림): 넓은 카드에서 충치를 비춘 거울이 글자 바탕 위로 오게 */
 .clinic-card--scaling .clinic-card__img img { object-position: center 25%; } /* 스케일링 사진(정사각 3D 그림): 가로로 긴 카드(모바일·태블릿)에서도 기구 끝·치아 윗면이 보이게 위쪽 기준 */
+.clinic-card--wisdom-tooth .clinic-card__img img { position: relative; top: -20%; height: 120%; object-position: 22% center; } /* 사랑니 발치(매복 사랑니 3D 그림 8:5, 거의 정사각 카드라 위아래 여유 없음): 사진을 20% 키워 위로 올려 치아가 글자 바탕 위로 오게, 왼쪽에 누운 사랑니가 잘리지 않게 */
 .clinic-card__sub { margin-right: calc(var(--cl-arrow) + 12px); font-size: clamp(0.875rem, 0.45rem + 0.421875vw, 0.95625rem); line-height: 1.5; color: var(--color-text-sub); word-break: keep-all; text-wrap: balance; } /* 15.3 (= 17 × 0.9, 최소 14px) — 오른쪽은 화살표 자리 */
 .clinic-card__sub > span { display: block; }
 .clinic-card__arrow { position: absolute; z-index: 2; right: var(--cl-pad); bottom: var(--cl-pad); display: grid; place-items: center; width: var(--cl-arrow); height: var(--cl-arrow); color: var(--color-point); transition: color var(--dur); } /* 원형 테두리 없이 화살표만 (네이비) */
