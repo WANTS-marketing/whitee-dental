@@ -48,6 +48,19 @@ function renderTreatmentPage() {
     next();
   });
   document.querySelectorAll('[data-t-fold]').forEach(initTreatmentFold);
+  // 치아교정 '교정 장치 비교' 섹션: 화면 1025px 이상(LNB 옆 본문)에서 섹션 가로 중심을 화면 가운데(= 아래 펼침형 갤러리 중심)로 옮김 — 폭은 본문 칸 그대로
+  const devSec = document.querySelector('.t-devices');
+  const devBody = devSec?.closest('.sub-body');
+  if (devSec && devBody) {
+    const mq = window.matchMedia('(min-width: 1025px)');
+    const center = () => {
+      if (!mq.matches) { devSec.style.removeProperty('--dev-shift'); return; }
+      const r = devBody.getBoundingClientRect();
+      devSec.style.setProperty('--dev-shift', `${Math.round(document.documentElement.clientWidth / 2 - (r.left + r.width / 2))}px`);
+    };
+    center();
+    window.addEventListener('resize', center);
+  }
   // 페이지 안 바로가기(예: 치아교정 단계 2 '장치별 비교 보기 ↓' → #t-devices): 고정 헤더 아래 24px 에 오도록 부드럽게 (동작 줄이기면 즉시)
   document.querySelectorAll('[data-t-jump]').forEach((a) => a.addEventListener('click', (e) => {
     const target = document.querySelector(a.getAttribute('href'));
