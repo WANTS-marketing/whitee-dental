@@ -95,6 +95,49 @@
 .t-btn:hover { background: rgba(var(--color-accent-rgb), 0.06); }
 .t-btn--fill { background: var(--color-accent); color: #fff; }
 .t-btn--fill:hover { background: var(--color-accent-hover); }
+/* ---------- 추가 블록 (기존 상세 기반 — 원고 '추가 블록', 2026-11-09) ----------
+   이미지 칸(.t-slot): 연한 회색 #EEF1F5 + 가운데 '파일명 · 권장 크기'. 파일이 있으면 pages.js 가 사진을 위에 덮음(.is-loaded) */
+.t-slot { position: relative; display: grid; place-items: center; overflow: hidden; border-radius: 16px; background: #eef1f5; }
+.t-slot__ph { padding: 8px 12px; font-size: 0.8125rem; color: #8a94a6; text-align: center; }
+.t-slot > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+/* 사진 띠: 2장 가로(모바일 1열), 아래 설명 14px 회색 */
+.t-photos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; margin-top: 32px; }
+.t-photo__cap { margin-top: 10px; font-size: 0.875rem; color: #6b7280; word-break: keep-all; }
+/* 단계 이미지: 단계 본문 오른쪽(최대 520px), 좁은 본문·모바일은 본문 아래 100% */
+.t-step__media { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, min(520px, 46%)); gap: 16px 32px; align-items: start; }
+/* 상담 카드: 2×2(모바일 1열) — 아이콘(파랑) → 제목 20px → 설명 16px → '이런 분이라면 상담해 보세요' 체크 목록 */
+.t-cases { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+.t-case { padding: 32px; border: 1px solid #e3e8f0; border-radius: 16px; background: #fff; }
+.t-case__icon { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 50%; background: rgba(var(--color-accent-rgb), 0.08); color: var(--color-accent); }
+.t-case__icon svg { width: 26px; height: 26px; }
+.t-case__icon.is-loaded { background: none; }
+.t-case__icon img { width: 52px; height: 52px; }
+.t-case__title { margin-top: 18px; font-size: 1.25rem; font-weight: 700; line-height: 1.4; word-break: keep-all; }
+.t-case__text { margin-top: 10px; font-size: 1rem; line-height: 1.7; color: var(--color-text-sub); word-break: keep-all; }
+.t-case__fits-title { margin-top: 20px; padding-top: 18px; border-top: 1px solid #eef1f5; font-size: 0.875rem; font-weight: 700; color: var(--color-point); }
+.t-case__fits { display: grid; gap: 8px; margin-top: 10px; }
+.t-case__fits li { display: flex; align-items: flex-start; gap: 8px; font-size: 0.9375rem; line-height: 24px; word-break: keep-all; }
+.t-case__fits svg { flex: none; width: 16px; height: 24px; color: var(--color-accent); }
+/* 기공센터: 왼쪽 이미지 + 오른쪽 글, 배경 #F8FAFD · 둥근 16px (모바일 이미지 위·글 아래) */
+.t-lab { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; overflow: hidden; border-radius: 16px; background: #f8fafd; }
+.t-lab .t-lab__img { border-radius: 0; }
+.t-lab__text { padding: 40px; }
+.t-lab__label { display: block; font-size: 0.8125rem; font-weight: 700; letter-spacing: 0.16em; color: var(--color-accent); }
+.t-lab__title { margin-top: 10px; font-size: 1.5rem; font-weight: 700; line-height: 1.4; word-break: keep-all; }
+.t-lab__body { margin-top: 14px; font-size: 1rem; line-height: 1.75; color: var(--color-text-sub); word-break: keep-all; }
+@container sub (max-width: 55rem) {
+  .t-step__media { grid-template-columns: minmax(0, 1fr); }
+  .t-cases { grid-template-columns: minmax(0, 1fr); }
+  .t-lab { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 768px) {
+  .t-photos { grid-template-columns: minmax(0, 1fr); gap: 16px; margin-top: 24px; }
+  .t-case { padding: 24px; }
+  .t-case__title { font-size: 1.125rem; }
+  .t-lab__text { padding: 24px; }
+  .t-lab__title { font-size: 1.25rem; }
+}
+
 /* 하단 고지 */
 .t-notice { margin-top: 64px; padding-top: 24px; border-top: 1px solid #e3e8f0; font-size: 0.875rem; line-height: 1.7; color: #888; word-break: keep-all; }
 @container sub (max-width: 55rem) {

@@ -63,6 +63,38 @@ const treatments = blocks.map((b) => {
   const specRaw = sectionOf(b, '진료 연결 — 관련 진료과');
   const specNote = (specRaw.match(/\(([^)]+)\)/) || [])[1] || '';
   const specialties = splitList(specRaw.replace(/\([^)]*\)/, ''));
+
+  /* 추가 블록 (기존 상세 기반, 원고 문장과 별도) — 없으면 빈 값
+     이미지 칸: '이름 (비율, 권장 크기)' → { file: 'treatment/{slug}/이름', name, ratio: '4/3', size: '1200×900' } (확장자 없이 — 화면에서 webp·jpg·png 순서로 찾음) */
+  const optSection = (title) => { try { return sectionOf(b, title); } catch (e) { return ''; } };
+  const slotOf = (s) => {
+    const m = s.trim().match(/^([\w-]+)\s*\((\d+):(\d+),\s*([\d×x]+)\)$/);
+    if (!m) throw new Error(`${slug} 이미지 칸 형식: ${s}`);
+    return { file: `treatment/${slug}/${m[1]}`, name: m[1], ratio: `${m[2]}/${m[3]}`, size: m[4] };
+  };
+  const lineOf = (sec, label) => (sec.match(new RegExp(`^- ${label}: (.+)$`, 'm')) || [])[1]?.trim() || '';
+  const extras = {};
+  const photoSec = optSection('추가 블록 — 사진 띠');
+  if (photoSec) extras.photos = photoSec.split('\n').filter((l) => /^- [\w-]+ \(/.test(l)).map((l) => { const [slot, caption] = l.slice(2).split(/\):\s*/); return { ...slotOf(`${slot})`), caption: caption.trim() }; });
+  const stepImgSec = optSection('추가 블록 — 단계 이미지');
+  if (stepImgSec) {
+    const [stepPart, slot, altPart] = stepImgSec.replace(/^- /, '').split(/\s+\/\s+/);
+    extras.stepImage = { step: Number(stepPart.replace(/\D/g, '')), ...slotOf(slot), alt: altPart.replace(/^alt:\s*/, '').trim() };
+  }
+  const caseSec = optSection('추가 블록 — 이런 경우에도 상담해 보세요');
+  if (caseSec) {
+    extras.cases = caseSec.split(/\n#### /).slice(1).map((c) => ({
+      title: c.split('\n')[0].trim(),
+      source: lineOf(c, '근거'),
+      icon: lineOf(c, '아이콘'),
+      verified: lineOf(c, '게시') === '예', // 아니요 = 데이터에만, 화면에 숨김
+      text: lineOf(c, '설명'),
+      fits: lineOf(c, '이런 분이라면 상담해 보세요').split(/\s+\/\s+/).filter(Boolean),
+    }));
+  }
+  const labSec = optSection('추가 블록 — 기공센터');
+  if (labSec) extras.lab = { label: lineOf(labSec, '라벨'), title: lineOf(labSec, '제목'), ...slotOf(lineOf(labSec, '이미지')), text: lineOf(labSec, '본문') };
+
   const t = {
     slug,
     ...SITE_FIELDS[slug],
@@ -84,6 +116,7 @@ const treatments = blocks.map((b) => {
     specialtiesNote: specNote,
     cardSub: SITE_FIELDS[slug].cardSub || seoTitle.split('|')[1].trim(),
     review: { verified: false, date: '', reviewer: '' }, // 원고 '의료진 검수일: [확인 필요]' — 값이 없으면 화면에서 그 줄을 숨김
+    ...(Object.keys(extras).length ? { extras } : {}), // 추가 블록 (기존 상세 기반) — 원고 '### 추가 블록 —' 섹션
   };
   if (t.points.length !== 3 || t.steps.length !== 4 || t.faq.length !== 4 || t.faq.some((f) => !f.a) || !t.criteria.questions.length) throw new Error(`${slug} 개수 확인: ${JSON.stringify({ p: t.points.length, s: t.steps.length, f: t.faq.length })}`);
   return t;
