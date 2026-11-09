@@ -382,7 +382,9 @@ html[data-fs="xl"] .doc-modal { width: min(680px, 100% - 48px); }
    [왼쪽 글 360px(1280px 이하 320px): 라벨 · 제목 44px · 소통·교감·공감 · since 문구 · 치과소개 더보기 + ‹ › | 오른쪽 카드 슬라이더 — 화면 오른쪽 끝까지, 마지막 카드는 잘려 보임]
    카드 300×400(1280px 이하 280), 간격 20px, 둥근 16px — 사진(site-data.js promises image) + 아래 네이비 그라데이션, 약속 0N · 제목 26px · 한 줄 · 자세히 보기 →
    동작: main.js initWhySlider (가로 스크롤 + scroll-snap, ‹ › 한 장씩, 마우스 끌기·터치 스와이프, 휠은 가로채지 않음, 자동 재생 없음) */
-.why { --why-left: 360px; --why-card: 300px; position: relative; padding: 120px 0; background: var(--color-point); color: #fff; overflow: hidden; }
+.why { --why-left: 360px; --why-card: 300px; position: relative; isolation: isolate; padding: 120px 0; background: var(--color-point); color: #fff; overflow: hidden; }
+/* 배경 사진(맞잡은 손, 자료/메인페이지/cb2000002852.png → why-bg.webp 1800×1200, 오른쪽 끝 투명): 왼쪽에 맞춰 섹션 높이만큼, 네이비에 곱하기(multiply) */
+.why::before { content: ""; position: absolute; inset: 0; z-index: -1; background: url("../images/why-bg.webp") left center / auto 100% no-repeat; mix-blend-mode: multiply; pointer-events: none; }
 .why :focus-visible { outline-color: #fff; }
 .why__inner { display: grid; grid-template-columns: var(--why-left) minmax(0, 1fr); gap: 40px; align-items: center; }
 .why__label { display: block; margin-bottom: 14px; font-size: 0.875rem; font-weight: 700; letter-spacing: 0.2em; color: var(--color-accent-light); }
