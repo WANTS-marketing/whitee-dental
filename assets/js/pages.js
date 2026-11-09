@@ -47,7 +47,7 @@ function renderTreatmentPage() {
     };
     next();
   });
-  document.querySelectorAll('[data-t-fold]').forEach(initTreatmentFold); // 먼저: 순환용 복제 카드의 이미지 칸도 함께 채우게
+  document.querySelectorAll('[data-t-fold]').forEach(initTreatmentFold);
   document.querySelectorAll('[data-slot]').forEach(async (el) => {
     const src = await findImage(el.dataset.slot, ['webp', 'jpg', 'png']);
     if (!src) return;
@@ -97,13 +97,16 @@ function renderTreatmentPage() {
 }
 
 /* ---------- 진료과목 '이런 경우에도 상담해 보세요' 펼침형 갤러리 ([data-t-fold] — build-treatments.js, 모양: sub.css) ----------
-   넘기기: 접힌 카드 클릭(그 카드가 가운데로) · 글자 탭 클릭 · 좌우 방향키(탭 위에서는 Home·End 도) — 순환: 6번 → 오른쪽 = 1번. 자동 넘김 없음
-   데스크톱(1025px~): 줄 = 화면 전체 폭, 펼친 카드가 화면 가로 가운데
-     무한 순환: 원본 6장 앞뒤에 복제 6장씩(총 18장, 가운데 6장 = 원본). pos = 펼친 카드의 줄 위치(0~17)
-       이동은 가장 가까운 방향(탭·방향키: 최대 3칸, 접힌 카드 클릭: 그 카드 그대로) → 이동이 끝나면 같은 모습인 가운데(원본) 칸으로 몰래 옮김
-     펼친 폭 --open-w = 콘텐츠 폭(.sub-layout 안쪽, LNB 포함 본문 전체) 75%, 최대 900px
+   넘기기: 접힌 카드 클릭 · 글자 탭 클릭 · 좌우 방향키(탭 위에서는 Home·End 도) — 6번에서 오른쪽 = 1번(줄은 반대쪽으로 이동, 복제 카드 없음). 자동 넘김 없음
+   데스크톱(1025px~): 카드 6장(01~06 한 번씩) 한 줄 = 접힌 5장 + 펼친 1장(선택 위치 그대로). 줄은 화면 전체 폭 안에서 움직임(화면 밖은 잘림)
+     줄 위치(--fold-x = 줄 왼쪽 끝을 화면 왼쪽에서 얼마나 왼쪽으로 — 음수면 오른쪽):
+       줄이 여백 안에 다 들어가면 → 줄 전체를 화면 가운데
+       넘치면 → 펼친 카드를 화면 가운데에 두되, 줄 왼쪽 끝은 왼쪽 여백보다 안으로, 오른쪽 끝은 오른쪽 여백보다 안으로 들어오지 않게 제한
+         (1번 = 줄 왼쪽 끝이 왼쪽 여백에, 6번 = 줄 오른쪽 끝이 오른쪽 여백에)
+       여백: 왼쪽 40px(퀵메뉴 오른쪽 여백과 같게) · 오른쪽 = 퀵메뉴 왼쪽 + 16px (펼친 카드 글이 퀵메뉴에 가리지 않게)
+     펼친 폭 --open-w = 콘텐츠 폭(.sub-layout 안쪽) 75%, 최대 900px
      카드 높이: 기본 560px(1280px 이하 520px, sub.css) — 가장 긴 설명 칸이 넘치면 그만큼 늘림(--fold-h, 글자 크기는 그대로)
-   1024px 이하: 가로 스와이프(scroll-snap, 복제 숨김). 탭 클릭 = 그 카드로 가로 스크롤, 스와이프 = 가장 가까운 카드로 탭 선택만 따라 바뀜 */
+   1024px 이하: 가로 스와이프(scroll-snap). 탭 클릭 = 그 카드로 가로 스크롤, 스와이프 = 가장 가까운 카드로 탭 선택만 따라 바뀜 */
 function initTreatmentFold(root) {
   const tabs = [...root.querySelectorAll('[role="tab"]')];
   const cards = [...root.querySelectorAll('.t-fold__card')];
@@ -117,92 +120,65 @@ function initTreatmentFold(root) {
   const mqDesk = window.matchMedia('(min-width: 1025px)');
   const reduced = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const px = (v) => parseFloat(v) || 0;
-
-  // 복제: 앞 6장 · 뒤 6장 (id·역할 없음, 화면낭독기·탭 키 이동에서 제외 — 마우스 클릭은 됨)
-  const makeClone = (c) => {
-    const k = c.cloneNode(true);
-    k.removeAttribute('id'); k.removeAttribute('role'); k.removeAttribute('aria-labelledby');
-    k.classList.remove('is-open');
-    k.dataset.clone = '';
-    k.setAttribute('aria-hidden', 'true');
-    k.querySelectorAll('button').forEach((x) => { x.tabIndex = -1; });
-    return k;
-  };
-  track.prepend(...cards.map(makeClone));
-  track.append(...cards.map(makeClone));
-  const all = [...track.querySelectorAll('.t-fold__card')]; // 0~5 복제 · 6~11 원본 · 12~17 복제
-
-  let pos = N; // 펼친 카드의 줄 위치 (가운데 칸 = 원본)
+  const EDGE = 40;
+  let index = 0;
   let fold = true;
   let openW = 0;
-  let settleTimer = 0;
-  const index = () => ((pos % N) + N) % N;
   const offset = (k) => cards[k].offsetLeft - cards[0].offsetLeft;
 
-  const place = () => { // 펼친 카드 가운데 = 화면 가운데
+  const place = () => {
     const cs = getComputedStyle(root);
-    const step = px(cs.getPropertyValue('--fold-closed')) + px(cs.getPropertyValue('--fold-gap'));
-    root.style.setProperty('--fold-x', `${pos * step + openW / 2 - viewport.clientWidth / 2}px`);
+    const closed = px(cs.getPropertyValue('--fold-closed'));
+    const step = closed + px(cs.getPropertyValue('--fold-gap'));
+    const total = (N - 1) * step + openW;
+    const vw = viewport.clientWidth;
+    const q = document.querySelector('.quick--float');
+    const ql = q && q.offsetWidth ? q.getBoundingClientRect().left : vw - EDGE;
+    const mL = EDGE;
+    const mR = Math.max(EDGE, vw - ql + 16);
+    const min = vw - mR - total; // 줄 오른쪽 끝 = 오른쪽 여백
+    let left;
+    if (total <= vw - mL - mR) left = Math.min(Math.max((vw - total) / 2, mL), min); // 다 들어감 → 가운데
+    else left = Math.min(mL, Math.max(min, vw / 2 - (index * step + openW / 2))); // 넘침 → 펼친 카드 가운데, 양 끝 제한
+    root.style.setProperty('--fold-x', `${-left}px`);
   };
-  const instant = (fn) => { // 전환 없이 즉시
+  const instant = (fn) => {
     root.classList.add('is-measuring');
     fn();
     void track.offsetWidth;
     root.classList.remove('is-measuring');
   };
   const scrollTabIntoView = () => {
-    const tab = tabs[index()];
+    const tab = tabs[index];
     if (tabList.scrollWidth <= tabList.clientWidth) return;
     tabList.scrollTo({ left: tab.offsetLeft - tabList.firstElementChild.offsetLeft - (tabList.clientWidth - tab.offsetWidth) / 2, behavior: reduced() ? 'auto' : 'smooth' });
   };
   const mark = () => {
-    const i = index();
-    tabs.forEach((t, k) => { const on = k === i; t.setAttribute('aria-selected', String(on)); t.tabIndex = on ? 0 : -1; });
-    all.forEach((c, k) => c.classList.toggle('is-open', fold ? k === pos : k === N + i));
-    cards.forEach((c, k) => { const b = c.querySelector('.t-fold__body'); if ((fold && k + N === pos) || !fold) b.removeAttribute('aria-hidden'); else b.setAttribute('aria-hidden', 'true'); });
+    tabs.forEach((t, k) => { const on = k === index; t.setAttribute('aria-selected', String(on)); t.tabIndex = on ? 0 : -1; });
+    cards.forEach((c, k) => {
+      const on = k === index;
+      c.classList.toggle('is-open', on);
+      const b = c.querySelector('.t-fold__body');
+      if (on || !fold) b.removeAttribute('aria-hidden'); else b.setAttribute('aria-hidden', 'true');
+    });
     scrollTabIntoView();
   };
-  const settle = () => { // 이동이 끝나면 원본 칸으로 (모습은 같음)
-    clearTimeout(settleTimer);
-    if (pos >= N && pos < 2 * N) return;
-    instant(() => { pos = N + index(); mark(); place(); });
-  };
-  const moveTo = (target, { focus = false } = {}) => { // target = 줄 위치(0~17)
-    if (!fold) {
-      pos = N + ((target % N) + N) % N;
-      mark();
-      viewport.scrollTo({ left: offset(index()), behavior: reduced() ? 'auto' : 'smooth' });
-      if (focus) tabs[index()].focus();
-      return;
-    }
-    if (target === pos) { if (focus) tabs[index()].focus(); return; }
-    // 연달아 누를 때 끝 칸을 넘지 않게: 아직 가장자리 쪽이면 먼저 원본 칸으로
-    if (target < 3 || target > 3 * N - 4) { const d = target - pos; settle(); target = pos + d; }
-    pos = target;
+  const show = (i, { focus = false } = {}) => {
+    index = ((i % N) + N) % N;
     mark();
-    place();
-    if (focus) tabs[index()].focus();
-    clearTimeout(settleTimer);
-    settleTimer = setTimeout(settle, reduced() ? 0 : 650);
-  };
-  const near = (i) => { // 탭·방향키: 가장 가까운 방향 (3칸 차이면 오른쪽)
-    let d = (((i - index()) % N) + N) % N;
-    if (d > N / 2) d -= N;
-    return pos + d;
+    if (fold) place();
+    else viewport.scrollTo({ left: offset(index), behavior: reduced() ? 'auto' : 'smooth' });
+    if (focus) tabs[index].focus();
   };
 
-  tabs.forEach((t, k) => t.addEventListener('click', (e) => moveTo(near(k), { focus: e.detail === 0 })));
-  all.forEach((c, k) => c.querySelector('.t-fold__hit')?.addEventListener('click', (e) => moveTo(k, { focus: e.detail === 0 })));
+  tabs.forEach((t, k) => t.addEventListener('click', (e) => show(k, { focus: e.detail === 0 })));
+  cards.forEach((c, k) => c.querySelector('.t-fold__hit')?.addEventListener('click', (e) => show(k, { focus: e.detail === 0 })));
   root.addEventListener('keydown', (e) => {
     const onTab = tabs.includes(e.target);
-    let target;
-    if (e.key === 'ArrowRight') target = pos + 1;
-    else if (e.key === 'ArrowLeft') target = pos - 1;
-    else if (e.key === 'Home' && onTab) target = near(0);
-    else if (e.key === 'End' && onTab) target = near(N - 1);
-    if (target === undefined || e.target.closest('.t-fold__body')) return;
+    const go = { ArrowRight: index + 1, ArrowLeft: index - 1, ...(onTab ? { Home: 0, End: N - 1 } : {}) }[e.key];
+    if (go === undefined || e.target.closest('.t-fold__body')) return;
     e.preventDefault();
-    moveTo(target, { focus: onTab });
+    show(go, { focus: onTab });
   });
   // 스와이프 → 스크롤이 멈추면 가장 가까운 카드로 탭 선택
   let timer = 0;
@@ -213,7 +189,7 @@ function initTreatmentFold(root) {
       const left = viewport.scrollLeft;
       let best = 0;
       cards.forEach((c, k) => { if (Math.abs(offset(k) - left) < Math.abs(offset(best) - left)) best = k; });
-      if (best !== index()) { pos = N + best; mark(); }
+      if (best !== index) { index = best; mark(); }
     }, 80);
   }, { passive: true });
 
@@ -221,7 +197,6 @@ function initTreatmentFold(root) {
     instant(() => {
       fold = mqDesk.matches;
       root.classList.toggle('is-swipe', !fold);
-      pos = N + index();
       if (fold) {
         const rect = body.getBoundingClientRect();
         root.style.setProperty('--fold-bleed-l', `${Math.max(0, rect.left)}px`);
@@ -231,7 +206,7 @@ function initTreatmentFold(root) {
         openW = Math.round(Math.min(900, contentW * 0.75));
         root.style.setProperty('--open-w', `${openW}px`);
         root.style.removeProperty('--fold-h');
-        const base = all[0].clientHeight;
+        const base = cards[0].clientHeight;
         const need = Math.max(...cards.map((c) => c.querySelector('.t-fold__inner').offsetHeight + 80));
         if (need > base) root.style.setProperty('--fold-h', `${Math.ceil(need)}px`);
         mark();
@@ -239,7 +214,7 @@ function initTreatmentFold(root) {
       } else {
         ['--fold-bleed-l', '--fold-bleed-r', '--fold-x', '--fold-h', '--open-w'].forEach((v) => root.style.removeProperty(v));
         mark();
-        viewport.scrollLeft = offset(index());
+        viewport.scrollLeft = offset(index);
       }
     });
   };
