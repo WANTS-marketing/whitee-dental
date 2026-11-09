@@ -14,7 +14,7 @@ const OUT = path.join(ROOT, 'assets/data/treatments.json');
 
 // 원고에 없는 사이트 표시용 값 — cardSub(메인 진료안내 카드 한 줄)은 원고 SEO Title 가운데 구절
 const SITE_FIELDS = {
-  implant: { nameKo: '임플란트', image: 'clinic-implant.jpg', imageAlt: '잇몸뼈에 심은 임플란트 위에 지대주와 크라운을 올리는 모습 3D 그림' },
+  implant: { nameKo: '임플란트', image: 'clinic-implant.jpg', imageAlt: '잇몸뼈에 심은 임플란트 위에 지대주와 크라운을 올리는 모습 3D 그림', h1Break: '빠진 치아를 채우기 전에,', summaryBreaks: ['아닙니다.', '세웁니다.', '충분한지,'], summaryCenter: true }, // h1Break = 비주얼 박스 h1 줄바꿈 위치, summaryBreaks = 요약 문단 줄바꿈 위치(PC만), summaryCenter = 요약 가운데 정렬 (문구는 그대로)
   orthodontics: { nameKo: '치아교정', image: 'clinic-orthodontics.jpg', imageAlt: '치아에 붙인 교정 장치(브래킷)와 와이어 3D 그림' },
   aesthetic: { nameKo: '심미치료', image: 'clinic-aesthetic.jpg', imageAlt: '가지런하고 하얀 앞니와 잇몸 클로즈업 3D 그림' },
   general: { nameKo: '일반진료', image: 'clinic-general.jpg', imageAlt: '치과 거울에 비친 어금니 충치를 살펴보는 모습 3D 그림', cardSub: '충치·신경·잇몸치료' }, // SEO Title 가운데 구절('치과 일반진료')보다 앞 구절이 내용을 알려 줌

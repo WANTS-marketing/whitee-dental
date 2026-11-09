@@ -201,7 +201,7 @@
 
         <!-- 3. 화이트e치과 진료 포인트 -->
         <section class="t-sec" aria-labelledby="t-points-title">
-          <h2 class="t-sec__title" id="t-points-title">화이트e치과 진료 포인트</h2>
+          <h2 class="t-sec__title t-sec__title--center" id="t-points-title">화이트e치과 진료 포인트</h2>
           <ol class="t-points">
             <li class="t-point"><span class="t-point__no">01</span><p class="t-point__text">치과교정과 전문의가 진단하고, 클리피씨·클리피엠 등 장치의 선택 기준을 설명합니다</p></li>
             <li class="t-point"><span class="t-point__no">02</span><p class="t-point__text">발치·비발치 여부와 함께 잇몸·교합·보철까지 고려해 계획합니다</p></li>
@@ -211,7 +211,7 @@
 
         <!-- 4. 치료를 결정하기 전 알아야 할 기준 -->
         <section class="t-sec" aria-labelledby="t-criteria-title">
-          <h2 class="t-sec__title" id="t-criteria-title">치료를 결정하기 전 알아야 할 기준</h2>
+          <h2 class="t-sec__title t-sec__title--center" id="t-criteria-title">치료를 결정하기 전 알아야 할 기준</h2>
           <div class="t-criteria">
             <div class="t-crit"><h3 class="t-crit__title">검사에서 확인할 것</h3><ul class="t-chips"><li class="t-chip">덧니·벌어짐의 원인</li><li class="t-chip">골격·교합</li><li class="t-chip">잇몸 상태</li><li class="t-chip">영구치 맹출 공간</li><li class="t-chip">얼굴·턱 성장 상태</li></ul></div>
             <div class="t-crit"><h3 class="t-crit__title">치료 선택지</h3><ul class="t-chips"><li class="t-chip">클리피씨·클리피엠 등 장치 특성</li><li class="t-chip">발치·비발치 계획</li><li class="t-chip">성인교정과 성장기 조기개입의 목적</li></ul></div>
@@ -253,9 +253,8 @@
           </ul>
         </section>
 
-        <!-- 7. 진료 연결 | 창원점 · 마산점 — 지점 탭·주소·전화·진료시간·담당 의료진은 pages.js renderTreatmentConnect 가 site-data.js 에서 그림
-             담당 의료진 = 의료진 dept 가 아래 data-t-specs(원고 '관련 진료과')와 맞는 원장 (보류·퇴사 원장 제외, 없으면 줄 숨김) -->
-        <section class="t-sec t-connect" aria-labelledby="t-connect-title" data-t-connect data-t-specs="[&quot;치과교정과&quot;]">
+        <!-- 7. 진료 연결 | 창원점 · 마산점 — 지점 탭·주소·전화·진료시간은 pages.js renderTreatmentPage 가 site-data.js 에서 그림 (담당 의료진 줄은 2026-11-09 뺌) -->
+        <section class="t-sec t-connect" aria-labelledby="t-connect-title" data-t-connect>
           <h2 class="t-sec__title" id="t-connect-title">진료 연결 <span class="t-connect__sub">창원점 · 마산점</span></h2>
           <p class="t-connect__text">창원점과 마산점은 진료 의료진과 일정이 다를 수 있습니다. 지점을 선택하면 해당 지점의 담당 의료진, 진료시간, 주소와 연락처를 확인할 수 있습니다. 특정 전문의 진료와 개별 치료의 가능 여부는 예약 시 확인해 주세요.</p>
           <div class="t-connect__box" data-t-connect-box></div>

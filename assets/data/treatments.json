@@ -11,6 +11,13 @@
       "nameKo": "임플란트",
       "image": "clinic-implant.jpg",
       "imageAlt": "잇몸뼈에 심은 임플란트 위에 지대주와 크라운을 올리는 모습 3D 그림",
+      "h1Break": "빠진 치아를 채우기 전에,",
+      "summaryBreaks": [
+        "아닙니다.",
+        "세웁니다.",
+        "충분한지,"
+      ],
+      "summaryCenter": true,
       "labelEn": "IMPLANT",
       "seoTitle": "창원 임플란트 | 식립 전 3D 분석과 치료 계획 | 화이트e치과",
       "description": "창원·마산 화이트e치과 임플란트 안내. 치아 보존 가능성, 3D 분석, 뼈이식 판단, 식립 후 관리까지 이해하기 쉽게 확인하세요.",
