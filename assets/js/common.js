@@ -92,6 +92,43 @@
   }
   initLnb();
 
+  /* ---------- 공통 데이터 블록 (site-data.js 한 곳에서 — 메인·치과소개·진료과목이 같은 목록을 쓴다) ----------
+     [data-specialties]            전문의 원(.spec-circle) 줄 — SITE.specialties
+     [data-specialty-text]         진료과 목록 글자 '치과교정과 · 치과보철과 …' (data-specialty-text="sep" 로 구분자 지정, 기본 ' · ')
+     [data-promises="full|short"]  4가지 약속 카드 — full = 치과소개(.strength), short = 메인(.why-card)
+     [data-partner-highlights]     협력 강조 배지 — full(치과소개 카드) / 메인 띠는 data-partner-highlights="badge"
+     [data-partner-logos]          협력 기관 이름 칸(치과소개) · [data-partner-marquee] 메인 흐르는 띠 */
+  function renderSiteBlocks() {
+    const S = window.SITE;
+    if (!S) return;
+    const spec = S.specialties || [];
+    const specText = (sep = '·') => spec.join(sep);
+    document.querySelectorAll('[data-specialties]').forEach((el) => {
+      el.innerHTML = spec.map((s) => `<span class="spec-circle">${esc(s)}<small>전문의</small></span>`).join('');
+    });
+    document.querySelectorAll('[data-specialty-text]').forEach((el) => { el.textContent = specText(el.dataset.specialtyText || ' · '); });
+    const icon = (p) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">${p.icon}</svg>`;
+    document.querySelectorAll('[data-promises]').forEach((el) => {
+      const short = el.dataset.promises === 'short';
+      el.innerHTML = (S.promises || []).map((p) => (short
+        ? `<li class="why-card"><span class="why-card__icon">${icon(p)}</span><h3 class="why-card__title">${esc(p.title)}</h3><p class="why-card__text">${esc(p.short)}</p></li>`
+        : `<article class="strength"><span class="strength__icon">${icon(p)}</span><h3 class="strength__title">${esc(p.title)}</h3><p class="strength__text">${esc(p.text.replace('{spec}', specText()))}</p></article>`)).join('');
+    });
+    const P = S.partners || { highlights: [], names: [] };
+    document.querySelectorAll('[data-partner-highlights]').forEach((el) => {
+      el.innerHTML = el.dataset.partnerHighlights === 'badge'
+        ? P.highlights.map((h) => `<li class="partner-badge"><strong>${esc(h.title)}</strong> <span>${esc(h.desc)}</span></li>`).join('')
+        : P.highlights.map((h) => `<div class="partner-highlight"><strong>${esc(h.title)}</strong><span>${esc(h.desc)}</span></div>`).join('');
+    });
+    document.querySelectorAll('[data-partner-logos]').forEach((el) => { el.innerHTML = P.names.map((n) => `<li>${esc(n)}</li>`).join(''); });
+    // 흐르는 띠: 같은 목록을 두 번 이어 붙여 -50% 만큼 움직이면 끊김 없이 반복 (두 번째 묶음은 화면낭독기에서 숨김). 움직임 줄이기 설정이면 main.css 가 멈춤
+    document.querySelectorAll('[data-partner-marquee]').forEach((el) => {
+      const items = P.names.map((n) => `<li>${esc(n)}</li>`).join('');
+      el.innerHTML = `<ul class="partner-marquee__list">${items}</ul><ul class="partner-marquee__list" aria-hidden="true">${items}</ul>`;
+    });
+  }
+  renderSiteBlocks();
+
   /* ---------- 상담문의 폼 (상담문의하기 · 진료과목 빠른상담 · 메인 빠른 상담문의 공용) — 저장: api.js createInquiry (+ 병원 메일 알림) ----------
      form[data-inquiry-form="구분"]: 어느 폼에서 왔는지(source). 진료과목 칸이 없으면 data-treatment 값(예: 메인 빠른 상담문의 = 기타)
      칸: branch · treatment · name · phone · password(숫자 4자리, 본인 문의·답변 확인용) · message(있는 폼만) · agree · website(허니팟)
@@ -710,7 +747,7 @@
     if (!box) return;
     box.innerHTML = SITE.branches.map((b) => `
       <div class="branch-bar__item branch-bar__item--${b.id}">
-        <a class="branch-bar__cover" href="${root}/about/clinic.html#${b.id}" aria-label="화이트e치과 ${esc(b.name)} 오시는길 (병원소개)"></a>
+        <a class="branch-bar__cover" href="${root}/about/clinic.html#${b.id}" aria-label="화이트e치과 ${esc(b.name)} 오시는길"></a>
         <h2 class="branch-bar__name">화이트e치과 <em class="text-${b.id}">${esc(b.name)}</em></h2>
         <a class="branch-bar__tel" href="${telHref(b.tel)}" aria-label="${esc(b.name)} 전화 ${esc(b.tel)}">${esc(b.tel)}</a>
         <p class="branch-bar__more" aria-hidden="true">${b.id === 'changwon' ? '<span class="branch-bar__arrow">←</span> 오시는길' : '오시는길 <span class="branch-bar__arrow">→</span>'}</p>
