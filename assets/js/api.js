@@ -29,6 +29,7 @@
 
   /* 시안 테스트용 글 수 바꾸기 — 주소에 ?mock=N(공지사항) · ?mockNews=N(치과소식). 없으면 실제 데이터만(더미 '_dummy' 글은 뺌)
      공지: 더미 글을 N 개가 될 때까지 복제(한 바퀴 넘으면 제목에 (2)… · 날짜 30일씩 앞으로) / 소식: 실제 글 중 N 개
+     ?mockBranch=changwon|masan|both: 더미 공지의 지점을 모두 그 값으로(지점 필터 결과 0개 확인용). ?mock 없이 쓰면 더미 전부
      빈 배열([])이어도 화면은 빈 상태로 처리한다 (docs/API-SPEC.md '공지사항'). TODO(서버): 서버 연결 후 지워도 됨 */
   function mockCount(key) {
     try {
@@ -47,10 +48,14 @@
       return round === 0 ? { ...src } : { ...src, id: `${src.id}-m${round}`, title: `${src.title} (${round + 1})`, pinned: false, date: new Date(new Date(src.date).getTime() - round * 30 * DAY).toISOString() };
     });
   }
+  function mockBranch() {
+    try { const v = new URLSearchParams(location.search).get('mockBranch'); return ['changwon', 'masan', 'both'].includes(v) ? v : null; } catch (e) { return null; }
+  }
   /** 상세로 넘어가는 링크에 붙일 테스트 파라미터('&mock=2' 등, 없으면 '') — 상세에서도 같은 더미 목록을 보게 */
   function mockQuery() {
     const p = new URLSearchParams();
     ['mock', 'mockNews'].forEach((k) => { const v = mockCount(k); if (v !== null) p.set(k, v); });
+    if (mockBranch()) p.set('mockBranch', mockBranch());
     const s = p.toString();
     return s ? `&${s}` : '';
   }
@@ -59,8 +64,11 @@
   async function getNotices({ limit } = {}) {
     // TODO(서버): 공지 목록 — 고정 먼저 + 최신순 (API-SPEC '공지사항')
     const all = (await fetchJson('notice')) || [];
-    const n = mockCount('mock');
-    const src = n === null ? all.filter((r) => !r._dummy) : mockRows(all.filter((r) => r._dummy), n); // 기본 = 실제 공지만 (지금 0개)
+    const dummies = all.filter((r) => r._dummy);
+    const br = mockBranch();
+    const n = mockCount('mock') ?? (br ? dummies.length : null);
+    let src = n === null ? all.filter((r) => !r._dummy) : mockRows(dummies, n); // 기본 = 실제 공지만 (지금 0개)
+    if (n !== null && br) src = src.map((r) => ({ ...r, branch: br }));
     const rows = withViews(src).sort((a, b) => (b.pinned - a.pinned) || byDateDesc(a, b));
     return limit ? rows.slice(0, limit) : rows;
   }
