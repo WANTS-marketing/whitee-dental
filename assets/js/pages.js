@@ -48,6 +48,15 @@ function renderTreatmentPage() {
     next();
   });
   document.querySelectorAll('[data-t-fold]').forEach(initTreatmentFold);
+  // 페이지 안 바로가기(예: 치아교정 단계 2 '장치별 비교 보기 ↓' → #t-devices): 고정 헤더 아래 24px 에 오도록 부드럽게 (동작 줄이기면 즉시)
+  document.querySelectorAll('[data-t-jump]').forEach((a) => a.addEventListener('click', (e) => {
+    const target = document.querySelector(a.getAttribute('href'));
+    if (!target) return;
+    e.preventDefault();
+    const headerH = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-h')) || 0;
+    window.scrollTo({ top: Math.max(0, target.getBoundingClientRect().top + window.scrollY - headerH - 24), behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+    history.replaceState(null, '', a.getAttribute('href'));
+  }));
   document.querySelectorAll('[data-slot]').forEach(async (el) => {
     const src = await findImage(el.dataset.slot, ['webp', 'jpg', 'png']);
     if (!src) return;

@@ -81,11 +81,14 @@ const treatments = blocks.map((b) => {
     const [stepPart, slot, altPart] = stepImgSec.replace(/^- /, '').split(/\s+\/\s+/);
     extras.stepImage = { step: Number(stepPart.replace(/\D/g, '')), ...slotOf(slot), alt: altPart.replace(/^alt:\s*/, '').trim() };
   }
-  /* 장치 비교 표 (치아교정 단계 2 아래, 2026-11-09): '#### 장치 이름' 마다 이미지 · 게시 · 유형 · 겉보기 · 방문 간격 */
+  /* 장치 비교 표 (치아교정 '검사부터 관리까지' 다음 독립 섹션, 2026-11-09): 제목 · 링크 단계(그 단계 본문 끝에 섹션으로 가는 링크) · 링크 글자 · 안내
+     '#### 장치 이름' 마다 이미지 · 게시 · 유형 · 겉보기 · 방문 간격 */
   const devSec = optSection('추가 블록 — 장치 비교');
   if (devSec) {
     extras.devices = {
-      step: Number(lineOf(devSec, '단계')),
+      title: lineOf(devSec, '제목'),
+      linkStep: Number(lineOf(devSec, '링크 단계')),
+      link: lineOf(devSec, '링크'),
       note: lineOf(devSec, '안내'),
       items: devSec.split(/\n#### /).slice(1).map((d) => ({
         name: d.split('\n')[0].trim(),
