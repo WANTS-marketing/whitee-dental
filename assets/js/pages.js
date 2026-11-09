@@ -104,6 +104,7 @@ function initTreatmentGallery(root) {
   const tabs = [...root.querySelectorAll('[role="tab"]')];
   const panels = [...root.querySelectorAll('[role="tabpanel"]')];
   const tabList = root.querySelector('[role="tablist"]');
+  const stage = root.querySelector('[data-t-gallery-stage]');
   const now = root.querySelector('[data-t-gallery-now]');
   if (!tabs.length) return;
   let index = 0;
@@ -124,6 +125,14 @@ function initTreatmentGallery(root) {
       tabList.scrollTo({ left, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
     }
     if (focus) tab.focus();
+    // 모바일(패널 높이 = 내용만큼): 바꾼 뒤 패널 맨 위가 헤더 뒤로 밀려 있으면 탭 줄이 보이게 부드럽게 올림 (이미 보이면 그대로)
+    if (window.matchMedia('(max-width: 768px)').matches && stage) {
+      const headerH = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-h')) || 0;
+      if (stage.getBoundingClientRect().top < headerH) {
+        const y = tabList.getBoundingClientRect().top + window.scrollY - headerH - 12;
+        window.scrollTo({ top: Math.max(0, y), behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+      }
+    }
   };
   tabs.forEach((t, k) => {
     t.addEventListener('click', () => show(k));
@@ -137,7 +146,6 @@ function initTreatmentGallery(root) {
   root.querySelector('[data-t-gallery-prev]')?.addEventListener('click', () => show(index - 1));
   root.querySelector('[data-t-gallery-next]')?.addEventListener('click', () => show(index + 1));
   // 스와이프 (터치·펜): 가로로 48px 이상, 세로보다 크게 움직였을 때만
-  const stage = root.querySelector('[data-t-gallery-stage]');
   let start = null;
   stage?.addEventListener('pointerdown', (e) => { if (e.pointerType !== 'mouse') start = { x: e.clientX, y: e.clientY }; });
   stage?.addEventListener('pointerup', (e) => {

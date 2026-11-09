@@ -107,7 +107,7 @@
 .t-step__media { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, min(520px, 46%)); gap: 16px 32px; align-items: start; }
 /* 이런 경우에도 상담해 보세요 — 탭 갤러리 (pages.js initTreatmentGallery)
    탭: 둥근 알약 16px, 흰 바탕 + 회색 테두리 / 선택 = 파랑 바탕 흰 글자, 가운데 정렬(넘치면 가로 스크롤)
-   패널: #F8FAFD · 둥근 20px · 여백 40px · [사진 4:3 55% | 56px | 글 45%(세로 가운데)] — 모든 패널을 한 칸에 겹쳐 높이 = 가장 긴 패널
+   패널: #F8FAFD · 둥근 20px · 여백 40px · [사진 4:3 55% | 56px | 글 45%(세로 가운데)] — 769px 이상은 모든 패널을 한 칸에 겹쳐 높이 = 가장 긴 패널, 768px 이하는 내용만큼
    글: 번호 14px 파랑 → 제목 26px(+ 진료명 다음 줄 파랑 18px) → 설명 17px 1.75 #4A5160 → 선 → '이런 분이라면 상담해 보세요' 16px → 체크 목록 16px → (안내 14px 회색)
    넘기기: ‹ 1 / 6 › (원형 44px, 파랑 테두리, hover 채움). 전환 = 페이드 + 8px 0.25s (동작 줄이기면 즉시) */
 .t-gallery__tabs { display: flex; justify-content: center; gap: 8px; overflow-x: auto; scrollbar-width: none; padding: 2px; }
@@ -134,7 +134,8 @@
 .t-gallery__arrow:is(:hover, :focus-visible) { background: var(--color-accent); color: #fff; }
 .t-gallery__count { min-width: 56px; font-size: 1rem; text-align: center; color: var(--color-text-sub); font-variant-numeric: tabular-nums; }
 .t-gallery__count b { color: var(--color-text); }
-@media (prefers-reduced-motion: reduce) { .t-gallery__panel, .t-gallery__panel.is-active { transform: none; transition: none; } }
+@keyframes t-gallery-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .t-gallery__panel, .t-gallery__panel.is-active { transform: none; transition: none; animation: none; } }
 /* 기공센터: 왼쪽 이미지 + 오른쪽 글, 배경 #F8FAFD · 둥근 16px (모바일 이미지 위·글 아래) */
 .t-lab { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; overflow: hidden; border-radius: 16px; background: #f8fafd; }
 .t-lab .t-lab__img { border-radius: 0; }
@@ -152,6 +153,9 @@
   .t-gallery__tabs { justify-content: flex-start; margin: 0 calc(var(--gutter) * -1); padding: 2px var(--gutter); }
   .t-gallery__stage { margin-top: 24px; }
   .t-gallery__panel { padding: 24px; gap: 24px; }
+  /* 모바일: 패널 높이 = 내용만큼 (겹쳐 두지 않고 선택한 패널만 보임, 나타날 때 페이드 + 8px) */
+  .t-gallery__panel { display: none; }
+  .t-gallery__panel.is-active { display: grid; animation: t-gallery-in 0.25s ease both; }
   .t-gallery__title { font-size: 1.375rem; }
   .t-lab__text { padding: 24px; }
   .t-lab__title { font-size: 1.25rem; }
