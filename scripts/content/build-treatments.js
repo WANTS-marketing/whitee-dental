@@ -57,7 +57,13 @@ const dentistLd = () => BRANCHES.map((b) => ({
 function page(t) {
   const url = `${SITE_URL}/treatment/${t.slug}.html`;
   const lnb = T.map((x) => `            <li><a href="${x.slug}.html"${x.slug === t.slug ? ' aria-current="page"' : ''}>${esc(x.nameKo)}</a></li>`).join('\n');
-  const chips = (items) => `<ul class="t-chips">${items.map((x) => `<li class="t-chip">${esc(x)}</li>`).join('')}</ul>`;
+  // 결정 기준 3칸 공통: 한 줄에 한 항목(흰 줄) — [아이콘] 글자. 아이콘: 검사 = 체크 / 선택지 = 오른쪽 화살표 / 질문 = Q
+  const CRIT_ICON = {
+    check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
+    option: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15M13.5 6l6 6-6 6"/></svg>',
+    question: '<b aria-hidden="true">Q</b>',
+  };
+  const critList = (items, kind) => `<ul class="t-crit__list">${items.map((x) => `<li class="t-crit__item"><span class="t-crit__icon t-crit__icon--${kind}">${CRIT_ICON[kind]}</span><span class="t-crit__text">${esc(x)}</span></li>`).join('')}</ul>`;
   const ld = {
     '@context': 'https://schema.org',
     '@graph': [
@@ -146,9 +152,9 @@ ${t.points.map((p, i) => `            <li class="t-point"><span class="t-point__
         <section class="t-sec" aria-labelledby="t-criteria-title">
           <h2 class="t-sec__title t-sec__title--center" id="t-criteria-title">치료를 결정하기 전 알아야 할 기준</h2>
           <div class="t-criteria">
-            <div class="t-crit"><h3 class="t-crit__title">검사에서 확인할 것</h3>${chips(t.criteria.check)}</div>
-            <div class="t-crit"><h3 class="t-crit__title">치료 선택지</h3>${chips(t.criteria.options)}${t.criteria.optionsNote ? `<p class="t-crit__note">${esc(t.criteria.optionsNote)}</p>` : ''}</div>
-            <div class="t-crit"><h3 class="t-crit__title">이런 질문을 많이 하세요</h3><ul class="t-questions">${t.criteria.questions.map((q) => `<li>"${esc(q)}"</li>`).join('')}</ul></div>
+            <div class="t-crit"><h3 class="t-crit__title">검사에서 확인할 것</h3>${critList(t.criteria.check, 'check')}</div>
+            <div class="t-crit"><h3 class="t-crit__title">치료 선택지</h3>${critList(t.criteria.options, 'option')}${t.criteria.optionsNote ? `<p class="t-crit__note">${esc(t.criteria.optionsNote)}</p>` : ''}</div>
+            <div class="t-crit"><h3 class="t-crit__title">이런 질문을 많이 하세요</h3>${critList(t.criteria.questions, 'question')}</div>
           </div>
         </section>
 
