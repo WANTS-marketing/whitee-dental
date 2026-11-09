@@ -110,17 +110,22 @@
 
     </div>
 
-    <!-- ② WHY 화이트e — 4가지 약속 (site-data.js SITE.promises 의 short 문구 — 치과소개 'WHY WHITE e' 와 같은 데이터, common.js renderSiteBlocks) -->
+    <!-- ② WHY WHITE e — [왼쪽 진료 철학 소통·교감·공감 | 오른쪽 그래서 지키는 4가지 약속 2×2]
+         데이터: site-data.js SITE.philosophy · SITE.promises(short) — 치과소개 인트로·WHY WHITE e 와 같음 (common.js renderSiteBlocks) -->
     <section class="why screen" id="screen-why" data-header-theme="light" aria-labelledby="why-title">
       <div class="container why__inner">
         <div class="why__head">
-          <span class="sec-label">WHY WHITE e</span>
-          <h2 class="why__title" id="why-title">화이트e치과의<br>4가지 약속</h2>
+          <span class="why__label">WHY WHITE e</span>
+          <h2 class="why__title" id="why-title">마음을 먼저 듣는 치과</h2>
+          <ol class="why-philo" data-philosophy="list" aria-label="진료 철학"></ol>
           <p class="why__desc">since 2003, 20년 이상 지켜온 화이트e치과의 약속</p>
           <a class="btn why__more roll-text" href="./about/intro.html">치과소개 더보기
             <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg></a>
         </div>
-        <ul class="why__grid" data-promises="short"></ul>
+        <div class="why__promise">
+          <h3 class="why__promise-label" id="why-promise-label">그래서 지키는 4가지 약속</h3>
+          <ul class="why__grid" data-promises="short" aria-labelledby="why-promise-label"></ul>
+        </div>
       </div>
     </section>
 

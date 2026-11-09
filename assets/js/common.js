@@ -95,6 +95,7 @@
   /* ---------- 공통 데이터 블록 (site-data.js 한 곳에서 — 메인·치과소개·진료과목이 같은 목록을 쓴다) ----------
      [data-specialties]            전문의 원(.spec-circle) 줄 — SITE.specialties
      [data-specialty-text]         진료과 목록 글자 '치과교정과 · 치과보철과 …' (data-specialty-text="sep" 로 구분자 지정, 기본 ' · ')
+     [data-philosophy="hanja|sub|text|list"] 진료 철학 — 치과소개 인트로(hanja·sub·text) / 메인 WHY 왼쪽 목록(list)
      [data-promises="full|short"]  4가지 약속 카드 — full = 치과소개(.strength), short = 메인(.why-card)
      [data-partner-highlights]     협력 강조 — 기본 = 치과소개 카드(.partner-highlight) / ="card" = 메인 WHITE e PARTNERS 카드(.partners-card)
      [data-partner-logos]          협력 기관 칸(치과소개) · [data-partner-marquee] 메인 2줄 흐르는 타일 · [data-partner-count] 기관 수 'N+'
@@ -108,6 +109,14 @@
       el.innerHTML = spec.map((s) => `<span class="spec-circle">${esc(s)}<small>전문의</small></span>`).join('');
     });
     document.querySelectorAll('[data-specialty-text]').forEach((el) => { el.textContent = specText(el.dataset.specialtyText || ' · '); });
+    const PH = S.philosophy || { words: [], text: '' };
+    document.querySelectorAll('[data-philosophy]').forEach((el) => {
+      const kind = el.dataset.philosophy;
+      if (kind === 'hanja') el.innerHTML = PH.words.map((w) => `<span>${esc(w.ko)}<small>${esc(w.hanja)}</small></span>`).join('');
+      else if (kind === 'sub') el.textContent = PH.words.map((w) => w.desc).join(', ');
+      else if (kind === 'text') el.textContent = PH.text;
+      else if (kind === 'list') el.innerHTML = PH.words.map((w) => `<li class="why-philo__item"><p class="why-philo__word"><strong>${esc(w.ko)}</strong> <span lang="zh-Hant">${esc(w.hanja)}</span></p><p class="why-philo__desc">${esc(w.desc)}</p></li>`).join('');
+    });
     const icon = (p) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">${p.icon}</svg>`;
     document.querySelectorAll('[data-promises]').forEach((el) => {
       const short = el.dataset.promises === 'short';
