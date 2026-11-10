@@ -8,7 +8,7 @@
 | GitHub 저장소 | `WANTS-marketing/whitee-dental` (Public — GitHub Pages 무료 배포 조건). 조직에서 바로 만들었으므로 Transfer 단계 없음 |
 | 호스팅 | GitHub Pages (시안 공유 → 최종 배포까지 동일) |
 | 문의 폼 서비스 | Web3Forms — 키 발급 이메일: **미정** (병원 수신 이메일로 발급할 것) |
-| 키 보관 위치 | GitHub 저장소 Secrets (`WEB3FORMS_ACCESS_KEY`). 값은 이 문서에 쓰지 않는다 |
+| 키 보관 위치 | GitHub 저장소 Secrets (`WEB3FORMS_ACCESS_KEY`, 지도 `KAKAO_MAP_KEY` — 아직 없음). 값은 이 문서에 쓰지 않는다 |
 
 ## 도메인
 

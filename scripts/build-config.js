@@ -9,7 +9,7 @@ const fs = require('fs');
 const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..');
-const PUBLIC_KEYS = ['WEB3FORMS_ACCESS_KEY', 'SUPABASE_URL', 'SUPABASE_ANON_KEY'];
+const PUBLIC_KEYS = ['WEB3FORMS_ACCESS_KEY', 'SUPABASE_URL', 'SUPABASE_ANON_KEY', 'KAKAO_MAP_KEY']; // KAKAO_MAP_KEY = 카카오맵 JavaScript 키(공개용, 도메인 등록으로 제한)
 
 function readDotEnv(file) {
   if (!fs.existsSync(file)) return {};
