@@ -94,7 +94,7 @@ ${cases.map((c, i) => { const no = String(i + 1).padStart(2, '0'); return `     
                   <div class="t-fold__media">${slot(c.image, '')}<span class="t-fold__no" aria-hidden="true">${no}</span>${c.illustrative !== false ? '<span class="t-fold__ill">이미지는 이해를 돕기 위한 예시입니다</span>' : ''}</div>
                   <div class="t-fold__body"${i === 0 ? '' : ' aria-hidden="true"'}><div class="t-fold__inner">
                     <span class="t-fold__num">${no}</span>
-                    <h3 class="t-fold__title">${esc(c.titleMain)}${c.titleSub ? `<span class="t-fold__sub">${esc(c.titleSub)}</span>` : ''}</h3>
+                    <h3 class="t-fold__title">${esc(c.titleMain).split(" / ").join("<br>")}${c.titleSub ? `<span class="t-fold__sub">${esc(c.titleSub)}</span>` : ''}</h3>
                     <p class="t-fold__desc">${esc(c.text).split(' / ').join('<br>')}</p>
                     <p class="t-fold__fits-title">이런 분이라면 상담해 보세요</p>
                     <ul class="t-fold__fits">${c.fits.map((f) => `<li>${CRIT_ICON.check}<span>${esc(f)}</span></li>`).join('')}</ul>
