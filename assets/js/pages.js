@@ -69,7 +69,8 @@ function renderTreatmentPage() {
      영역 가로 중심을 화면 가운데(= 펼침형 갤러리 중심)로 옮김 — 폭은 본문 칸 그대로. 갤러리보다 먼저(갤러리가 이 위치를 기준으로 화면 끝까지 넓힘) */
   const lower = document.querySelector('[data-t-lower]');
   const lowerBody = lower?.closest('.sub-body');
-  if (lower && lowerBody) {
+  // 갤러리가 없는 페이지(스케일링 · 사랑니 발치 — body.t-flat, 2026-11-10)는 옮기지 않음 → 위 본문 칸과 같은 왼쪽·오른쪽 끝
+  if (lower && lowerBody && lower.querySelector('[data-t-fold]')) {
     const mq = window.matchMedia('(min-width: 1025px)');
     const center = () => {
       if (!mq.matches) { lower.style.removeProperty('--lower-shift'); return; }

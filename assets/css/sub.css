@@ -353,6 +353,9 @@
 
 /* 아래 영역(갤러리 · FAQ · 기공센터 · 진료 연결 · 하단 고지): 폭 = 본문 칸, 1025px 이상에서 화면 가운데로(pages.js --lower-shift) */
 .t-lower { position: relative; left: var(--lower-shift, 0px); }
+/* 갤러리 없는 진료 페이지(body.t-flat — build-treatments.js, 스케일링 · 사랑니 발치): 아래 영역은 옮기지 않고(pages.js) 본문 칸 그대로,
+   사이드 메뉴는 헤더 아래 24px 에 붙어 본문 끝(지점 안내 · 하단 고지)까지 따라옴 — 1025px 이상 */
+@media (min-width: 1025px) { body.t-flat .lnb { position: sticky; top: calc(var(--header-h) + 24px); } }
 /* 하단 고지 */
 .t-notice { margin-top: 64px; padding-top: 24px; border-top: 1px solid #e3e8f0; font-size: 0.875rem; line-height: 1.7; color: #888; word-break: keep-all; }
 @container sub (max-width: 55rem) {

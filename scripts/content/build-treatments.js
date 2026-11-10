@@ -229,7 +229,8 @@ ${F.items.map((s, i) => `            <li class="t-flow__item"><span class="t-flo
   <script src="../assets/js/pages.js" defer></script>
   ${jsonLd(ld)}
 </head>
-<body class="is-sub has-lnb no-hero" data-page="treatment"> <!-- no-hero: 상단 배너 없음 → 처음부터 흰 헤더, 본문은 헤더 아래 56px (common.css) -->
+<body class="is-sub has-lnb no-hero${cases.length ? '' : ' t-flat'}" data-page="treatment"> <!-- no-hero: 상단 배너 없음 → 처음부터 흰 헤더, 본문은 헤더 아래 56px (common.css)
+     t-flat(2026-11-10): 펼침형 갤러리가 없는 페이지(원고에 '이런 … 상담해 보세요' 블록 없음) — 아래 영역(FAQ·기공센터·지점 안내·하단 고지)도 화면 가운데로 옮기지 않고 위 본문 칸과 같은 왼쪽·오른쪽 끝, 사이드 메뉴는 본문 끝까지 따라옴(sticky, sub.css). 갤러리를 추가하면 빌드 때 자동으로 빠짐 -->
   <div data-include="header"></div>
 
   <main id="main">
