@@ -128,7 +128,9 @@ ${cases.map((c, i) => `              <button type="button" class="t-fold__tab" r
      768px 이하 = 표를 숨기고 장치별 카드 세로 쌓기(그림 → 이름 → 항목 3줄) — 둘 중 하나만 보임(sub.css)
      단계 '링크 단계' 본문 끝에 '장치별 비교 보기 ↓' (pages.js: 부드럽게 스크롤)
      data-verified="false" = 병원 확인 전(docs/HOSPITAL-CHECK.md #14) — 화면에는 표시 */
-  /* 3D 디지털 진단 (치아교정, 2026-11-09 — 기존 상세 05 기반): 라벨(파랑) + 제목 + 소개 한 줄 → 장비 3칸 [그림 4:3 + 이름 + 한 줄 설명] (본문 704px 이하 1열)
+  /* 3D 디지털 진단 (치아교정, 2026-11-09 — 기존 상세 05 기반): 라벨(파랑) + 제목 + 소개 한 줄 → 장비 3칸 표 [그림 4:3 + 이름 + (보조) + 한 줄 설명, 가운데 정렬]
+     2026-11-10 표 형식: 위 2px 남색 · 아래 1px 선 · 칸 사이 세로선, 768px 이하 세로 쌓기(sub.css)
+     보조 글씨 줄은 모든 칸에 둔다(없는 칸은 빈 줄, aria-hidden) — 3칸의 이름 줄 · 설명 시작선이 가로로 맞게(subgrid)
      위치: '치료를 결정하기 전 알아야 할 기준' 다음, '검사부터 관리까지' 앞 (위 영역 = 본문 칸) */
   const G = X.digital;
   const digitalSection = G ? `
@@ -138,7 +140,7 @@ ${cases.map((c, i) => `              <button type="button" class="t-fold__tab" r
           <h2 class="t-sec__title t-digital__title" id="t-digital-title">${esc(G.title)}</h2>
           <p class="t-digital__lead">${esc(G.text)}</p>
           <ul class="t-digital__list">
-${G.items.map((d) => `            <li class="t-digital__item">${slot(d.image, '')}<h3 class="t-digital__name">${esc(d.name)}</h3><p class="t-digital__text">${esc(d.text)}</p></li>`).join('\n')}
+${G.items.map((d) => `            <li class="t-digital__item">${slot(d.image, '')}<h3 class="t-digital__name">${esc(d.name)}</h3>${d.sub ? `<span class="t-digital__sub">${esc(d.sub)}</span>` : '<span class="t-digital__sub" aria-hidden="true"></span>'}<p class="t-digital__text">${esc(d.text)}</p></li>`).join('\n')}
           </ul>
         </section>
 ` : '';

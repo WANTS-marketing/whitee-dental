@@ -380,10 +380,11 @@
         "digital": {
           "label": "3D DIGITAL",
           "title": "3D 디지털 진단",
-          "text": "3D 얼굴 스캔, CT, 구강 스캐너 등의 검사 자료를 바탕으로 치아교정 계획을 세웁니다.",
+          "text": "3D 모르페우스 진단 시스템, CT, 구강 스캐너 등의 검사 자료를 바탕으로 치아교정 계획을 세웁니다.",
           "items": [
             {
-              "name": "3D 얼굴 스캔",
+              "name": "3D 모르페우스 진단 시스템",
+              "sub": "3D 얼굴 스캔",
               "image": {
                 "file": "treatment/orthodontics/ortho-3d-face",
                 "name": "ortho-3d-face",
