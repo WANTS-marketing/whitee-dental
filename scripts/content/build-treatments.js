@@ -97,7 +97,7 @@ ${cases.map((c, i) => { const no = String(i + 1).padStart(2, '0'); return `     
                     <h3 class="t-fold__title">${esc(c.titleMain).split(" / ").join("<br>")}${c.titleSub ? `<span class="t-fold__sub">${esc(c.titleSub)}</span>` : ''}</h3>
                     <p class="t-fold__desc">${esc(c.text).split(' / ').join('<br>')}</p>
                     <p class="t-fold__fits-title">이런 분이라면 상담해 보세요</p>
-                    <ul class="t-fold__fits">${c.fits.map((f) => `<li>${CRIT_ICON.check}<span>${esc(f)}</span></li>`).join('')}</ul>
+                    <ul class="t-fold__fits">${c.fits.map((f) => `<li>${CRIT_ICON.check}<span>${esc(f).split("//").join("<br>")}</span></li>`).join('')}</ul>
                     ${c.note ? `<p class="t-fold__note">${esc(c.note)}</p>` : ''}
                     ${c.caseKey ? `<a class="t-fold__cases" href="../community/cases.html?category=${esc(c.caseKey)}">${esc(c.titleSub || c.tab)} 치료사례 보기 →</a>` : ''}
                   </div></div>
