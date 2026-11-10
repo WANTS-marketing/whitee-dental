@@ -12,10 +12,13 @@
      Home·End·섹션 점·메뉴 링크는 슬라이드와 상관없이 바로 그 섹션
    - 도착 알림: 넘김이 끝나면 window 'fullpage:arrive' (detail = { index, el }) → main.js initReveal 이 그 섹션 요소를 서서히 나타냄(다시 오면 다시)
    - 모바일·태블릿·낮은 화면: 아무것도 하지 않음(일반 스크롤 + 등장 애니메이션)
-   스타일: main.css '풀스크린 섹션 넘김' (html.is-fullpage 일 때만)
+   스타일: assets/css/fullpage.css (html.is-fullpage 일 때만) — 메인 · 치과소개 공용
+   다른 페이지에서 재사용(2026-11-10 치과소개): 섹션 요소에 data-fp-section + data-fp-hash="주소 해시" + data-fp-label="점 이름" 을 붙이면
+     그 목록을 쓴다(없으면 아래 메인 목록). 켜지는 최소 화면 높이는 <body data-fp-min-height="720"> 로 바꿀 수 있다(기본 700)
+     마지막 섹션 뒤에 푸터가 있으면 마지막 섹션에서 아래로는 보통 스크롤(푸터까지)
    ========================================================================== */
 (function () {
-  const ALL_SECTIONS = [
+  const MAIN_SECTIONS = [
     { sel: '.screen-home__first', hash: 'home', label: '홈' },
     { sel: '#screen-why', hash: 'why', label: '4가지 약속' },
     { sel: '#screen-clinic', hash: 'treatment', label: '진료안내' },
@@ -26,11 +29,14 @@
     { sel: '#screen-story', hash: 'news', label: '치과소식' },
     { sel: '.branch-bar', hash: 'location', label: '지점·오시는길' }, // 푸터 include 가 들어오면 자리 요소가 바뀌므로 지점 바로가기 바 기준
   ];
+  // 페이지가 직접 정한 섹션(data-fp-section)이 있으면 그 목록, 없으면 메인 목록
+  const pageSections = [...document.querySelectorAll('[data-fp-section]')].map((el) => ({ sel: `#${el.id}`, hash: el.dataset.fpHash || el.id, label: el.dataset.fpLabel || '' }));
+  const ALL_SECTIONS = pageSections.length ? pageSections : MAIN_SECTIONS;
   let SECTIONS = ALL_SECTIONS; // 실제 쓰는 목록 = 숨김(hidden) 아닌 섹션만 (enable 에서 다시 고름 — 공지·소식이 모두 0개면 공지·소식 섹션 빠짐)
   const DURATION = 800;
   const LOCK_MS = 1000;
   const GESTURE_GAP = 200;
-  const mq = window.matchMedia('(min-width: 1025px) and (min-height: 700px)');
+  const mq = window.matchMedia(`(min-width: 1025px) and (min-height: ${parseInt(document.body.dataset.fpMinHeight, 10) || 700}px)`);
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
   const root = document.documentElement;
 
@@ -279,5 +285,6 @@
 
   // 헤더·푸터(include)가 들어온 뒤 시작 — 마지막 섹션이 푸터라서
   document.addEventListener('components:loaded', sync);
-  if (document.querySelector('.branch-bar')) sync();
+  // 이미 헤더·퀵메뉴·푸터가 들어와 있으면 바로(섹션 점은 퀵메뉴 안에 넣으므로 퀵메뉴가 들어온 뒤에 시작)
+  if (document.querySelector('.branch-bar') || (pageSections.length && document.querySelector('.quick--float .quick__sns'))) sync();
 })();

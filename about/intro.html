@@ -20,111 +20,124 @@
   <link rel="stylesheet" href="../assets/css/variables.css">
   <link rel="stylesheet" href="../assets/css/common.css">
   <link rel="stylesheet" href="../assets/css/sub.css">
-  <script src="../assets/js/lnb-jump.js"></script> <!-- 같은 대메뉴 안에서 이동하면 본문부터, 그 밖에는 배너 맨 위부터 열기 (defer 아님 — 그리기 전에 실행) -->
+  <link rel="stylesheet" href="../assets/css/fullpage.css"> <!-- 투명 헤더 · 한 화면씩 넘기기 · 섹션 점 (메인과 공용) -->
   <script src="../assets/js/config.js" defer></script>
   <script src="../assets/js/site-data.js" defer></script>
   <script src="../assets/js/api.js" defer></script>
   <script src="../assets/js/include.js" defer></script>
   <script src="../assets/js/common.js" defer></script>
   <script src="../assets/js/pages.js" defer></script>
+  <script src="../assets/js/fullpage.js" defer></script>
 </head>
-<body class="is-sub has-lnb">
+<body class="is-sub page-intro" data-page="intro" data-fp-min-height="720"><!-- 브랜드 페이지(2026-11-10): 사이드 메뉴·브레드크럼 없이 화면 전체 폭. PC(1025px 이상 · 높이 720px 이상)는 메인과 같은 한 화면씩 넘기기(fullpage.js, data-fp-section) -->
   <div data-include="header"></div>
 
   <main id="main">
-    <section class="sub-visual sub-visual--image">
-      <div class="sub-visual__bg" aria-hidden="true"></div> <!-- 공통 배너 사진 assets/images/banner-sub.jpg (sub.css .sub-visual__bg) -->
+    <h1 class="sr-only">치과소개</h1>
+
+    <!-- 1. 슬로건 — 배경 intro-01-hero(16:9) + 남색 반투명 덮개 -->
+    <section class="intro-scr intro-hero screen" id="intro-slogan" data-fp-section data-fp-hash="slogan" data-fp-label="치과소개" data-header-theme="dark" aria-labelledby="intro-slogan-title">
+      <div class="intro-hero__media">
+        <div class="t-slot" style="aspect-ratio: 16/9" data-slot="intro-01-hero" data-slot-alt=""><span class="t-slot__ph" aria-hidden="true">intro-01-hero · 2400×1350</span></div>
+      </div>
+      <div class="container intro-hero__inner">
+        <p class="intro-hero__label">SINCE 2003</p>
+        <h2 class="intro-hero__title" id="intro-slogan-title">믿음을 심고 미소를 빚는<br>환자를 위한 치과</h2>
+      </div>
+      <a class="intro-hero__cue" href="#intro-stats" aria-label="아래로 — 숫자로 보는 화이트e치과">
+        <span aria-hidden="true">SCROLL</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+      </a>
+    </section>
+
+    <!-- 2. 숫자로 보는 화이트e치과 — 값은 site-data.js 에서(pages.js renderIntroPage): 전문의 수 = 보류·퇴사 제외, 평일 마감 = 진료시간 데이터 -->
+    <section class="intro-scr intro-stats screen" id="intro-stats" data-fp-section data-fp-hash="numbers" data-fp-label="숫자로 보는 화이트e치과" data-header-theme="light" aria-labelledby="intro-stats-title">
       <div class="container">
-        <p class="sub-visual__label">ABOUT</p>
-        <p class="sub-visual__slogan">since 2003 · 20년 이상 전통의 브랜드치과</p>
+        <span class="sec-label">WHITE e IN NUMBERS</span>
+        <h2 class="intro-scr__title" id="intro-stats-title">숫자로 보는 화이트e치과</h2>
+        <ul class="intro-stats__list" data-intro-stats>
+          <li class="intro-stat"><p class="intro-stat__num"><span data-count="2003">2003</span></p><p class="intro-stat__label">since 2003</p><p class="intro-stat__desc">2003년부터 한자리에서</p></li>
+          <li class="intro-stat"><p class="intro-stat__num"><span data-count="2" data-intro-branches>2</span><small class="intro-stat__unit">개</small></p><p class="intro-stat__label">지점</p><p class="intro-stat__desc" data-intro-branch-names>창원점 · 마산점</p></li>
+          <li class="intro-stat"><p class="intro-stat__num"><span data-count="8" data-intro-doctors>8</span><small class="intro-stat__unit">명</small></p><p class="intro-stat__label">분야별 전문의</p><p class="intro-stat__desc">창원점 · 마산점 의료진</p></li>
+          <li class="intro-stat"><p class="intro-stat__num"><span data-count="21" data-suffix=":00" data-intro-close>21:00</span></p><p class="intro-stat__label">평일 21:00까지</p><p class="intro-stat__desc">창원점 · 마산점 평일 야간진료</p></li>
+        </ul>
       </div>
     </section>
 
-    <!-- 서브 레이아웃: 왼쪽 LNB(하위 메뉴) + 오른쪽 본문 — 1024px 이하는 본문 위 가로 탭 (common.css '서브 LNB') -->
-    <div class="sub-layout container">
-      <aside class="lnb">
-        <nav class="lnb__nav" aria-label="화이트e치과 하위 메뉴">
-          <div class="lnb__head"><p class="lnb__title">화이트e치과</p><p class="lnb__en">ABOUT</p></div>
-          <ul class="lnb__list">
-            <li><a href="intro.html" aria-current="page">치과소개</a></li>
-            <li><a href="doctors.html">의료진 소개</a></li>
-            <li><a href="clinic.html">병원 오시는길</a></li>
-          </ul>
-        </nav>
-      </aside>
-      <div class="sub-body">
-        <div class="sub-head">
-          <ol class="breadcrumb" aria-label="현재 위치">
-            <li><a class="breadcrumb__home" href="../index.html" aria-label="홈"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5.5 9v11h13V9"/></svg></a></li>
-            <li>화이트e치과</li>
-            <li aria-current="page">치과소개</li>
-          </ol>
-          <h1 class="sub-head__title">치과소개</h1>
-        </div>
-
-
-    <section class="sec ">
-      <div class="container">
-        <div class="slogan">
-          <!-- 진료 철학: site-data.js SITE.philosophy (메인 WHY WHITE e 왼쪽과 같은 데이터, common.js renderSiteBlocks) -->
-          <p class="slogan__hanja" data-philosophy="hanja"><span>소통<small>疏通</small></span><span>교감<small>交感</small></span><span>공감<small>共感</small></span></p>
-          <p class="slogan__sub" data-philosophy="sub">내 마음을 듣고, 내 마음을 알아주고, 내 마음을 살피는 치료</p>
-          <p class="slogan__text" data-philosophy="text">원인을 파악하고 개인별 맞춤 책임진료를 통해 환자분의 입장에서 한 번 더 생각하여 가족처럼 소중히 치료하겠습니다.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- 진료 철학 (예전 메인 '좋은 진료는…' 섹션에서 옮김) -->
-    <section class="sec sec--soft">
-      <div class="container">
-        <div class="sec-head">
-          <span class="sec-label">OUR PHILOSOPHY</span>
-          <h2 class="sec-title">좋은 진료는<br>충분한 <span class="text-point">이해</span>에서 시작됩니다.</h2>
-          <p class="sec-desc">화이트e치과는 환자의 이야기에 귀 기울이고, 정확한 진단과 충분한 설명을 바탕으로 한 사람에게 꼭 필요한 진료만을 계획합니다.</p>
+    <!-- 3~6. 4가지 약속 — 한 화면에 하나씩, 사진 50% + 글 50% 좌우 번갈아. 메인 WHY 카드 → #promise-1~4 -->
+    <section class="intro-scr intro-promise screen" id="promise-1" data-fp-section data-fp-hash="promise-1" data-fp-label="약속 01 분야별 협진" data-header-theme="light" aria-labelledby="promise-1-title">
+      <div class="container intro-promise__grid">
+        <div class="intro-promise__media"><div class="t-slot" style="aspect-ratio: 4/3" data-slot="intro-promise-collab" data-slot-alt="분야별 전문의가 함께 진료하는 모습"><span class="t-slot__ph" aria-hidden="true">intro-promise-collab · 1200×900</span></div></div>
+        <div class="intro-promise__body">
+          <p class="intro-promise__no">약속 01</p>
+          <h2 class="intro-promise__title" id="promise-1-title">분야별 협진 진료시스템</h2>
+          <p class="intro-promise__text"><span data-specialty-text=" · ">치과교정과 · 치과보철과 · 치과보존과 · 구강악안면외과 · 통합치의학과</span> 전문의가 함께 진료합니다. 한 분야의 치료가 다른 분야와 연결될 때에도 각 분야 전문의가 함께 진단하고 치료 계획을 세웁니다.</p>
         </div>
       </div>
     </section>
 
-    <section class="sec sec--warm" id="why">
-      <div class="container">
-        <div class="sec-head">
-          <span class="sec-label">WHY WHITE e</span>
-          <h2 class="sec-title">화이트e치과의 4가지 약속</h2>
-          
+    <section class="intro-scr intro-promise intro-promise--rev intro-scr--soft screen" id="promise-2" data-fp-section data-fp-hash="promise-2" data-fp-label="약속 02 기공센터" data-header-theme="light" aria-labelledby="promise-2-title">
+      <div class="container intro-promise__grid">
+        <div class="intro-promise__media"><div class="t-slot" style="aspect-ratio: 4/3" data-slot="treatment/implant/implant-lab" data-slot-alt="기공센터에서 보철물을 제작하는 모습"><span class="t-slot__ph" aria-hidden="true">implant-lab · 1200×800 (임플란트 기공센터와 공용)</span></div></div>
+        <div class="intro-promise__body">
+          <p class="intro-promise__no">약속 02</p>
+          <h2 class="intro-promise__title" id="promise-2-title">전지점 공동운영 기공센터</h2>
+          <p class="intro-promise__text">창원점과 마산점이 함께 운영하는 기공센터에서 의료진과 기공사가 충분히 소통하며 보철물을 제작합니다. 치아 상태를 진단하고 분석한 내용을 바탕으로 보철물의 형태와 맞물림을 함께 검토합니다.</p>
         </div>
-        <!-- 4가지 약속: site-data.js SITE.promises (메인 WHY 화이트e 와 같은 데이터, common.js renderSiteBlocks) -->
-        <div class="strength-grid" data-promises="full"></div>
       </div>
     </section>
 
-    <section class="sec " id="collaboration">
+    <section class="intro-scr intro-promise screen" id="promise-3" data-fp-section data-fp-hash="promise-3" data-fp-label="약속 03 치료비용" data-header-theme="light" aria-labelledby="promise-3-title">
+      <div class="container intro-promise__grid">
+        <div class="intro-promise__media"><div class="t-slot" style="aspect-ratio: 4/3" data-slot="intro-promise-price" data-slot-alt="상담실에서 치료 계획과 비용을 설명하는 모습"><span class="t-slot__ph" aria-hidden="true">intro-promise-price · 1200×900</span></div></div>
+        <div class="intro-promise__body">
+          <p class="intro-promise__no">약속 03</p>
+          <h2 class="intro-promise__title" id="promise-3-title">합리적인 치료비용</h2>
+          <p class="intro-promise__text">상담과 진단을 바탕으로 꼭 필요한 치료를 계획합니다. 치료를 시작하기 전에 치료 방법과 예상 비용을 먼저 설명해 드립니다.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="intro-scr intro-promise intro-promise--rev intro-scr--soft screen" id="promise-4" data-fp-section data-fp-hash="promise-4" data-fp-label="약속 04 평일 야간진료" data-header-theme="light" aria-labelledby="promise-4-title">
+      <div class="container intro-promise__grid">
+        <div class="intro-promise__media"><div class="t-slot" style="aspect-ratio: 4/3" data-slot="intro-promise-night" data-slot-alt="저녁 시간 화이트e치과 입구"><span class="t-slot__ph" aria-hidden="true">intro-promise-night · 1200×900</span></div></div>
+        <div class="intro-promise__body">
+          <p class="intro-promise__no">약속 04</p>
+          <h2 class="intro-promise__title" id="promise-4-title">전지점 평일 야간진료</h2>
+          <p class="intro-promise__text">창원점·마산점 모두 평일 저녁 9시까지 진료합니다. 퇴근 후나 학교를 마친 뒤에도 진료를 받으실 수 있으며, 토요일과 공휴일에도 진료합니다(일요일·명절 휴진).</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. 병원 둘러보기 — 지점 탭(지점색은 탭 점에만) + 큰 사진 1장 + 썸네일 줄. 사진 목록 = site-data.js introTour (pages.js renderIntroPage) -->
+    <section class="intro-scr intro-tour screen" id="intro-tour" data-fp-section data-fp-hash="tour" data-fp-label="병원 둘러보기" data-header-theme="light" aria-labelledby="intro-tour-title">
       <div class="container">
-        <div class="intro-split">
+        <div class="intro-tour__head">
           <div>
-            <span class="sec-label">COLLABORATION</span>
-            <h2 class="intro-split__title">분야별 전문의의<br>협진 진료시스템</h2>
-            <p class="intro-split__text">분야별 협진 진료시스템과 1:1 맞춤진료로 믿을 수 있는 의료진이 함께합니다. 한 분야의 치료가 다른 분야와 연결될 때에도 각 전문의가 함께 진단하고 계획합니다.</p>
-            <div style="margin-top:28px"><div class="spec-row" data-specialties></div><!-- 전문의 진료과: site-data.js SITE.specialties (메인 분야별 전문의와 같은 데이터) --></div>
+            <span class="sec-label">TOUR</span>
+            <h2 class="intro-scr__title" id="intro-tour-title">병원 둘러보기</h2>
           </div>
-          <div class="img-ph intro-split__img"><img src="../assets/images/visual-general.jpg" alt="전문의가 환자를 진료하는 모습" loading="lazy"></div>
+          <div class="t-connect__tabs intro-tour__tabs" role="tablist" aria-label="지점 선택" data-intro-tour-tabs></div>
         </div>
+        <div class="intro-tour__view" data-intro-tour></div>
       </div>
     </section>
 
-    <section class="sec sec--soft" id="partners" hidden><!-- 2026-11-09 숨김: 협력 기관 정보 확인 전 (docs/PARTNERS-CHECK.md) -->
+    <!-- 8. 디지털 장비 + 바로가기 — 치아교정 '3D 디지털 시스템'과 같은 데이터·이미지(assets/data/treatments.json) -->
+    <section class="intro-scr intro-digital intro-scr--soft screen" id="intro-digital" data-fp-section data-fp-hash="digital" data-fp-label="디지털 장비" data-header-theme="light" aria-labelledby="intro-digital-title">
       <div class="container">
-        <div class="sec-head">
-          <span class="sec-label">PARTNERS</span>
-          <h2 class="sec-title">함께하는 협력 기관</h2>
-          <p class="sec-desc">지역의 다양한 기관·단체와 함께하고 있습니다.</p>
+        <div class="t-digital">
+          <span class="t-digital__label">3D DIGITAL SYSTEM</span>
+          <h2 class="intro-scr__title t-digital__title" id="intro-digital-title">3D 디지털 시스템</h2>
+          <ul class="t-digital__list" data-intro-digital></ul>
+          <p class="intro-digital__more"><a href="../treatment/orthodontics.html#t-digital-title">치아교정에서 자세히 보기 <span aria-hidden="true">→</span></a></p>
         </div>
-        <!-- 협력 기관: site-data.js SITE.partners (메인 WHITE e PARTNERS 와 같은 데이터) — 메인 '치과소개에서 전체 보기' = #partners -->
-        <div class="partner-highlights" data-partner-highlights></div>
-        <ul class="partner-logos" data-partner-logos></ul>
+        <p class="intro-links">
+          <a class="t-btn t-btn--fill" href="doctors.html">의료진 소개</a>
+          <a class="t-btn" href="clinic.html">오시는길</a>
+        </p>
       </div>
     </section>
-      </div>
-    </div>
   </main>
 
   <div class="quick quick--float" data-include="quick" data-keep></div>

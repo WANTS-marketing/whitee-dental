@@ -147,21 +147,28 @@ window.SITE = {
   /* 화이트e치과 4가지 약속 — 치과소개(about/intro.html WHY WHITE e) · 메인(WHY 화이트e) 공통
        icon = svg 안쪽 (viewBox 0 0 24 24, 선), text = 치과소개용 설명, short = 메인용 한 줄 ({spec} = 진료과 목록)
        image = 메인 카드 배경 사진 (assets/images/ 안 — 병원 사진을 받으면 이 값만 교체), imagePos = 세로 카드에서 보일 위치(object-position, 없으면 가운데)
-       href = 메인 카드 연결 주소 (사이트 루트 기준) — 2026-11-09 '자세히 보기' 삭제로 지금은 쓰지 않음, 다시 링크를 달 때 사용 */
+       href = 메인 카드 연결 주소 (사이트 루트 기준) — 2026-11-10 치과소개 약속 화면(#promise-1~4)으로, 메인 카드 전체가 링크 */
   promises: [
     { title: '분야별 협진 진료시스템', text: '{spec} 전문의가 함께 진료합니다.', short: '분야별 전문의가 함께 진단하고 계획합니다',
-      image: 'banner-clinic.jpg', href: 'about/intro.html#collaboration',
+      image: 'banner-clinic.jpg', href: 'about/intro.html#promise-1',
       icon: '<circle cx="8" cy="8" r="3"/><circle cx="16" cy="8" r="3"/><path d="M2 20c0-3.3 2.7-6 6-6 1.5 0 2.9.6 4 1.5A6 6 0 0122 20"/>' },
     { title: '전지점 공동운영 기공센터', text: '창원점·마산점이 기공센터를 함께 운영합니다.', short: '창원점·마산점이 기공센터를 함께 운영합니다', // TODO: 기공센터 설명 병원 확인
-      image: 'promise-lab.jpg', imagePos: '34% center', href: 'about/intro.html#why', // 기공 작업 손·세라믹 치아 (자료/메인페이지/pc0040586614.jpg → 1600px)
+      image: 'promise-lab.jpg', imagePos: '34% center', href: 'about/intro.html#promise-2', // 기공 작업 손·세라믹 치아 (자료/메인페이지/pc0040586614.jpg → 1600px)
       icon: '<path d="M3 21h18M5 21V10l7-5 7 5v11M9 21v-6h6v6"/>' },
     { title: '합리적인 치료비용', text: '상담과 정확한 진단을 바탕으로 합리적인 비용의 치료를 계획합니다.', short: '정확한 진단으로 꼭 필요한 치료만 계획합니다',
-      image: 'promise-cost.jpg', imagePos: '64% center', href: 'about/intro.html#why', // 치아 저금통·동전 (자료/메인페이지/cm080938973.jpg → 1600px)
+      image: 'promise-cost.jpg', imagePos: '64% center', href: 'about/intro.html#promise-3', // 치아 저금통·동전 (자료/메인페이지/cm080938973.jpg → 1600px)
       icon: '<circle cx="12" cy="12" r="9"/><path d="M8 9l2 6 2-4 2 4 2-6M7 12h10"/>' },
     { title: '전지점 평일 야간진료', text: '창원점·마산점 모두 평일 저녁 9시까지 진료합니다.', short: '창원점·마산점 모두 평일 저녁 9시까지',
-      image: 'promise-night.jpg', href: 'about/clinic.html#loc-title-changwon', // 마산점 입구 — 화이트e치과 간판·평일 야간진료 안내 (공유폴더 권혜빈/클라이언트2/[화이트E치과 창원마산점]/마산점/인테리어/240307_MED_0003.jpeg → 1600px) // 병원 오시는길 — 창원점 오시는길(진료시간) 블록
+      image: 'promise-night.jpg', href: 'about/intro.html#promise-4', // 마산점 입구 — 화이트e치과 간판·평일 야간진료 안내 (공유폴더 권혜빈/클라이언트2/[화이트E치과 창원마산점]/마산점/인테리어/240307_MED_0003.jpeg → 1600px) // 병원 오시는길 — 창원점 오시는길(진료시간) 블록
       icon: '<path d="M20 14.5A8.5 8.5 0 019.5 4a8.5 8.5 0 1010.5 10.5z"/>' },
   ],
+
+  /* 치과소개 '병원 둘러보기' 사진 (about/intro.html, 2026-11-10) — 지점별 assets/images/ 안 파일 이름(확장자 없이 — webp·jpg·png 순서로 찾고 없으면 자리표시)
+     사진을 받으면 이름을 늘리면 된다(intro-tour-changwon-01 ~ 06, intro-tour-masan-01 ~ 06 · 3:2 1500×1000 — docs/IMAGE-SLOTS.md) */
+  introTour: {
+    changwon: ['intro-tour-changwon-01', 'intro-tour-changwon-02', 'intro-tour-changwon-03'],
+    masan: ['intro-tour-masan-01', 'intro-tour-masan-02', 'intro-tour-masan-03'],
+  },
 
   /* 협력 기관 — 메인 'WHITE e PARTNERS' · 치과소개(about/intro.html #partners) 공통 (common.js renderSiteBlocks)
        출처: 기존 홈페이지 심미치료 상세(https://whiteedental.co.kr/bbs/content.php?co_id=sub06_01) 20·21 구간 — 2026-11-10 원본 이미지와 대조, 모두 verified: true

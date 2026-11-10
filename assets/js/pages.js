@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     faq: renderFaqList,
     fee: renderFeePage,
     contact: () => window.InquiryBoard?.init(), // 상담문의 목록 (inquiry.js)
+    intro: renderIntroPage, // 치과소개 브랜드 페이지 (2026-11-10)
   }[page];
   run?.();
   document.querySelectorAll('[data-inquiry-form]').forEach((f) => window.UI.inquiryForm(f)); // common.js
@@ -24,19 +25,12 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('[data-kakao-login]').forEach((btn) => btn.addEventListener('click', () => window.API.signInWithKakao(loginReturnUrl())));
 });
 
-/* ---------- 진료과목 6개 (treatment/*.html — scripts/content/build-treatments.js 가 만든 정적 HTML) ----------
-   FAQ 아코디언(첫 번째는 HTML 에서 열린 상태) + '지점 안내'(원고 '진료 연결') 지점 탭
-   지점 안내(원고 '진료 연결', 2026-11-10 간소화): 탭 [창원점 | 마산점](지점 색은 탭 앞 점에만) → 선택 지점 흰 카드
-     [주소 | 전화(tel:) | 진료시간 | 버튼(상담문의 / 네이버예약)] 한 줄(1025px 이상) — 1024px 이하 버튼은 아래 줄, 768px 이하 세로 쌓기(sub.css)
-     담당 의료진 · 지도 · 전화하기 버튼은 뺌 — 의료진 변동 가능성 때문에 진료 페이지에 담당 의료진을 표시하지 않음(treatments.json specialties 는 데이터로만 남김) */
-function renderTreatmentPage() {
-  const faq = document.querySelector('[data-t-faq]');
-  if (faq) window.UI.accordion(faq);
-  /* 이미지 칸(추가 블록): [data-slot="treatment/implant/implant-photo-01"] → assets/images/ 아래 .webp → .jpg → .png 순서로 찾아 있으면 사진을 넣고,
-     없으면 자리표시('파일명 · 권장 크기') 그대로 — 깨진 이미지 아이콘이 생기지 않게 미리 불러 본 뒤에만 넣는다
-     파일 목록: docs/IMAGE-SLOTS.md */
+/* ---------- 이미지 칸 채우기 (진료과목 추가 블록 · 치과소개 공용) ----------
+   [data-slot="treatment/implant/implant-photo-01"] → assets/images/ 아래 .webp → .jpg → .png 순서로 찾아 있으면 사진을 넣고,
+   없으면 자리표시('파일명 · 권장 크기') 그대로 — 깨진 이미지 아이콘이 생기지 않게 미리 불러 본 뒤에만 넣는다. 파일 목록: docs/IMAGE-SLOTS.md */
+function findSlotImage(base, exts = ['webp', 'jpg', 'png']) {
   const root = document.documentElement.dataset.root || '.';
-  const findImage = (base, exts) => new Promise((resolve) => {
+  return new Promise((resolve) => {
     let i = 0;
     const next = () => {
       if (i >= exts.length) { resolve(null); return; }
@@ -48,6 +42,29 @@ function renderTreatmentPage() {
     };
     next();
   });
+}
+function fillSlots(scope = document) {
+  scope.querySelectorAll('[data-slot]:not([data-slot-done])').forEach(async (el) => {
+    el.dataset.slotDone = '';
+    const src = await findSlotImage(el.dataset.slot);
+    if (!src) return;
+    const img = document.createElement('img');
+    img.src = src;
+    img.alt = el.dataset.slotAlt || '';
+    img.loading = 'lazy';
+    el.appendChild(img);
+    el.classList.add('is-loaded');
+  });
+}
+
+/* ---------- 진료과목 6개 (treatment/*.html — scripts/content/build-treatments.js 가 만든 정적 HTML) ----------
+   FAQ 아코디언(첫 번째는 HTML 에서 열린 상태) + '지점 안내'(원고 '진료 연결') 지점 탭
+   지점 안내(원고 '진료 연결', 2026-11-10 간소화): 탭 [창원점 | 마산점](지점 색은 탭 앞 점에만) → 선택 지점 흰 카드
+     [주소 | 전화(tel:) | 진료시간 | 버튼(상담문의 / 네이버예약)] 한 줄(1025px 이상) — 1024px 이하 버튼은 아래 줄, 768px 이하 세로 쌓기(sub.css)
+     담당 의료진 · 지도 · 전화하기 버튼은 뺌 — 의료진 변동 가능성 때문에 진료 페이지에 담당 의료진을 표시하지 않음(treatments.json specialties 는 데이터로만 남김) */
+function renderTreatmentPage() {
+  const faq = document.querySelector('[data-t-faq]');
+  if (faq) window.UI.accordion(faq);
   /* 아래 영역(.t-lower — 갤러리 · FAQ · 기공센터 · 진료 연결 · 하단 고지): 화면 1025px 이상(LNB 옆 본문)에서
      영역 가로 중심을 화면 가운데(= 펼침형 갤러리 중심)로 옮김 — 폭은 본문 칸 그대로. 갤러리보다 먼저(갤러리가 이 위치를 기준으로 화면 끝까지 넓힘) */
   const lower = document.querySelector('[data-t-lower]');
@@ -72,16 +89,7 @@ function renderTreatmentPage() {
     window.scrollTo({ top: Math.max(0, target.getBoundingClientRect().top + window.scrollY - headerH - 24), behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
     history.replaceState(null, '', a.getAttribute('href'));
   }));
-  document.querySelectorAll('[data-slot]').forEach(async (el) => {
-    const src = await findImage(el.dataset.slot, ['webp', 'jpg', 'png']);
-    if (!src) return;
-    const img = document.createElement('img');
-    img.src = src;
-    img.alt = el.dataset.slotAlt || '';
-    img.loading = 'lazy';
-    el.appendChild(img);
-    el.classList.add('is-loaded');
-  });
+  fillSlots(document); // 이미지 칸(추가 블록) — 아래 fillSlots
   const sec = document.querySelector('[data-t-connect]');
   const box = sec?.querySelector('[data-t-connect-box]');
   const S = window.SITE;
@@ -835,4 +843,92 @@ function renderFeeOrigin(root, data) {
     if (e.key === 'ArrowLeft') open(index - 1);
     if (e.key === 'ArrowRight') open(index + 1);
   });
+}
+
+/* ---------- 치과소개 브랜드 페이지 (about/intro.html, 2026-11-10) ----------
+   한 화면씩 넘기기 · 섹션 점은 fullpage.js(메인과 공용, data-fp-section)가 맡고, 여기서는 데이터로 그리는 부분만
+   2 숫자: 지점 수 · 지점 이름 = SITE.branches, 전문의 수 = SITE.doctors 중 보류·퇴사(hidden · status pending/retired) 제외, 평일 마감 = 진료시간 '평일'
+     화면에 들어오면 0 → 값으로 올라감(1.2s) — 움직임 줄이기면 바로 값
+   7 병원 둘러보기: SITE.introTour[지점] 사진 이름 목록(assets/images/ 안, 없으면 자리표시) — 탭(지점) + 큰 사진 1장 + 썸네일(누르면 큰 사진 교체)
+   8 디지털 장비: assets/data/treatments.json 치아교정 extras.digital(3D 모르페우스 · 3D CT · 3D 스캐너) — 교정 페이지와 같은 데이터 · 이미지 */
+function renderIntroPage() {
+  const S = window.SITE;
+  const { esc } = window.UI;
+  const root = document.documentElement.dataset.root || '.';
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // 2. 숫자
+  if (S) {
+    const active = (d) => !d.hidden && !['pending', 'retired'].includes(d.status);
+    const set = (sel, v) => document.querySelectorAll(sel).forEach((el) => { el.dataset.count = v; });
+    set('[data-intro-branches]', (S.branches || []).length);
+    set('[data-intro-doctors]', (S.doctors || []).filter(active).length);
+    const wk = (S.branches?.[0]?.hours || []).find((h) => /^평일/.test(h.label));
+    const close = wk ? wk.time.split(/[–~-]/).pop().trim() : '';
+    if (close) set('[data-intro-close]', parseInt(close, 10));
+    document.querySelectorAll('[data-intro-branch-names]').forEach((el) => { el.textContent = (S.branches || []).map((b) => b.name).join(' · '); });
+  }
+  const counts = [...document.querySelectorAll('[data-count]')];
+  const show = (el, v) => { el.textContent = `${v}${el.dataset.suffix || ''}`; };
+  counts.forEach((el) => show(el, el.dataset.count));
+  const stats = document.querySelector('[data-intro-stats]');
+  if (stats && !reduce && 'IntersectionObserver' in window) {
+    counts.forEach((el) => show(el, 0));
+    const io = new IntersectionObserver((entries) => {
+      if (!entries.some((e) => e.isIntersecting)) return;
+      io.disconnect();
+      const start = performance.now();
+      const step = (now) => {
+        const t = Math.min(1, (now - start) / 1200);
+        const k = 1 - Math.pow(1 - t, 3);
+        counts.forEach((el) => show(el, Math.round(Number(el.dataset.count) * k)));
+        if (t < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    }, { threshold: 0.4 });
+    io.observe(stats);
+  }
+  // 7. 병원 둘러보기
+  const tabsBox = document.querySelector('[data-intro-tour-tabs]');
+  const view = document.querySelector('[data-intro-tour]');
+  const tour = S?.introTour || {};
+  const B = (S?.branches || []).filter((b) => (tour[b.id] || []).length);
+  const slot = (name, ratio, size, alt = '') => `<div class="t-slot" style="aspect-ratio: ${ratio}" data-slot="${esc(name)}" data-slot-alt="${esc(alt)}"><span class="t-slot__ph" aria-hidden="true">${esc(name.split('/').pop())}${size ? ` · ${size}` : ''}</span></div>`; // 자리표시 글자 = 파일 이름만
+  if (tabsBox && view && B.length) {
+    let branch = B[0].id;
+    let pick = 0;
+    const draw = () => {
+      const list = tour[branch];
+      const b = B.find((x) => x.id === branch);
+      view.innerHTML = `<div class="intro-tour__main" role="tabpanel" aria-label="${esc(b.name)} 사진">${slot(list[pick], '3/2', '1500×1000', `${b.name} 내부 사진 ${pick + 1}`)}</div>
+        <div class="intro-tour__thumbs">${list.map((n, i) => `<button type="button" class="intro-tour__thumb" data-tour-pick="${i}" aria-label="${esc(b.name)} 사진 ${i + 1} 크게 보기" aria-current="${i === pick}">${slot(n, '3/2', '')}</button>`).join('')}</div>`;
+      fillSlots(view);
+    };
+    tabsBox.innerHTML = B.map((b, i) => `<button type="button" class="t-connect__tab" role="tab" aria-selected="${i === 0}" data-tour-branch="${b.id}"><i class="t-connect__dot t-connect__dot--${b.id}" aria-hidden="true"></i>${esc(b.name)}</button>`).join('');
+    tabsBox.addEventListener('click', (e) => {
+      const t = e.target.closest('[data-tour-branch]');
+      if (!t || t.dataset.tourBranch === branch) return;
+      branch = t.dataset.tourBranch; pick = 0;
+      tabsBox.querySelectorAll('[data-tour-branch]').forEach((x) => x.setAttribute('aria-selected', String(x === t)));
+      draw();
+    });
+    view.addEventListener('click', (e) => {
+      const t = e.target.closest('[data-tour-pick]');
+      if (!t) return;
+      pick = Number(t.dataset.tourPick);
+      draw();
+    });
+    draw();
+  }
+  // 8. 디지털 장비 (치아교정 3D 디지털 시스템과 같은 데이터)
+  const dig = document.querySelector('[data-intro-digital]');
+  if (dig) {
+    fetch(`${root}/assets/data/treatments.json`, { cache: 'no-cache' }).then((r) => r.json()).then((d) => {
+      const G = (d.treatments || []).find((t) => t.slug === 'orthodontics')?.extras?.digital;
+      if (!G) return;
+      dig.style.setProperty('--cols', G.items.length);
+      dig.innerHTML = G.items.map((x) => `<li class="t-digital__item">${slot(x.image.file, x.image.ratio || '4/3', x.image.size || '', x.name)}<h3 class="t-digital__name">${esc(x.name)}</h3><p class="t-digital__text">${esc(x.text)}</p></li>`).join('');
+      fillSlots(dig);
+    }).catch(() => {});
+  }
+  fillSlots(document);
 }

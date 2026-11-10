@@ -112,7 +112,7 @@
      [data-philosophy="hanja|sub|text|list"] 진료 철학 — 치과소개 인트로(hanja·sub·text) / 메인 WHY 왼쪽 목록(list)
      [data-hero-hours]             메인 히어로 진료시간 카드 (SITE.branches[].hours · hoursNote — 두 지점이 같으면 표 하나 + '창원점·마산점 동일', 다르면 지점별)
      [data-branch-hours="지점 id"] 진료시간 한 줄(상담문의 작성 지점 카드) — '평일 10:00–21:00 · 토요일 …' + 대체공휴일 안내
-     [data-promises="full|short"]  4가지 약속 카드 — full = 치과소개(.strength), short = 메인 사진 카드(.why-card — image 배경, 사진·제목·설명만, 링크 없음)
+     [data-promises="full|short"]  4가지 약속 카드 — full = 치과소개(.strength), short = 메인 사진 카드(.why-card — image 배경, 사진·제목·설명, 카드 전체가 치과소개 해당 약속 화면 링크 — href, 2026-11-10)
      [data-partner-highlights]     협력 강조 — 기본 = 치과소개 카드(.partner-highlight) / ="card" = 메인 WHITE e PARTNERS 카드(.partners-card)
      [data-partner-logos]          협력 기관 칸(치과소개) · [data-partner-marquee] 메인 2줄 흐르는 타일 · [data-partner-count] 기관 수 'N+'
      협력 기관 logo 가 있으면 assets/images/partners/ 로고 이미지, 없으면 이름 글자 */
@@ -162,7 +162,7 @@
     document.querySelectorAll('[data-promises]').forEach((el) => {
       const short = el.dataset.promises === 'short';
       el.innerHTML = (S.promises || []).map((p, i) => (short
-        ? `<li class="why-card"><div class="why-card__body"><span class="why-card__media"><img src="${root}/assets/images/${esc(p.image || '')}" alt="" loading="lazy" draggable="false"${p.imagePos ? ` style="object-position:${esc(p.imagePos)}"` : ''}></span><h3 class="why-card__title">${esc(p.title)}</h3><p class="why-card__text">${esc(p.short)}</p><span class="why-card__glare" aria-hidden="true"></span></div></li>`
+        ? `<li class="why-card"><${p.href ? `a href="${root}/${esc(p.href)}"` : 'div'} class="why-card__body"${p.href ? ` aria-label="${esc(p.title)} — 치과소개에서 자세히 보기"` : ''}><span class="why-card__media"><img src="${root}/assets/images/${esc(p.image || '')}" alt="" loading="lazy" draggable="false"${p.imagePos ? ` style="object-position:${esc(p.imagePos)}"` : ''}></span><h3 class="why-card__title">${esc(p.title)}</h3><p class="why-card__text">${esc(p.short)}</p><span class="why-card__glare" aria-hidden="true"></span></${p.href ? 'a' : 'div'}></li>`
         : `<article class="strength"><span class="strength__icon">${icon(p)}</span><h3 class="strength__title">${esc(p.title)}</h3><p class="strength__text">${esc(p.text.replace('{spec}', specText()))}</p></article>`)).join('');
     });
     const P = S.partners || { highlights: [], list: [] };
