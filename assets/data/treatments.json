@@ -378,13 +378,12 @@
           }
         ],
         "digital": {
-          "label": "3D DIGITAL",
-          "title": "3D 디지털 진단",
-          "text": "3D 모르페우스 진단 시스템, CT, 구강 스캐너 등의 검사 자료를 바탕으로 치아교정 계획을 세웁니다.",
+          "label": "3D DIGITAL SYSTEM",
+          "title": "3D 디지털 시스템",
+          "text": "3D 모르페우스, 3D CT, 3D 스캐너 등의 장비를 갖추고, 검사와 진단을 바탕으로 치아교정 계획을 수립합니다.",
           "items": [
             {
-              "name": "3D 모르페우스 진단 시스템",
-              "sub": "3D 얼굴 스캔",
+              "name": "3D 모르페우스",
               "image": {
                 "file": "treatment/orthodontics/ortho-3d-face",
                 "name": "ortho-3d-face",
@@ -394,7 +393,7 @@
               "text": "얼굴과 옆모습을 3D 영상으로 확인하며 교정 계획을 설명합니다"
             },
             {
-              "name": "CT",
+              "name": "3D CT",
               "image": {
                 "file": "treatment/orthodontics/ortho-3d-ct",
                 "name": "ortho-3d-ct",
@@ -404,7 +403,7 @@
               "text": "치아 뿌리와 턱뼈 상태를 3차원으로 확인합니다"
             },
             {
-              "name": "구강 스캐너",
+              "name": "3D 스캐너",
               "image": {
                 "file": "treatment/orthodontics/ortho-3d-scanner",
                 "name": "ortho-3d-scanner",
