@@ -1,6 +1,6 @@
 # 협력 기관 — 확인 목록 (2026-11-10 출처 확인 완료)
 
-메인 'WHITE e PARTNERS'와 치과소개(`about/intro.html#partners`, 아직 숨김)에 나오는 협력 기관·강조 항목입니다.
+메인 'WHITE e PARTNERS'에 나오는 협력 기관·강조 항목입니다. (치과소개의 협력 기관 영역은 2026-11-10 삭제 — 메인과 중복)
 데이터는 한 곳(`assets/js/site-data.js` → `SITE.partners`)에 있고, 모든 항목이 `verified: true`, `source: "기존 홈페이지 sub06_01 (2026-11-10 확인)"`입니다.
 
 ## 출처 확인 결과 — 완료
@@ -56,4 +56,4 @@
 ## 확인 후 고치는 법
 - 끝난 항목: `site-data.js` 그 줄 삭제 → 메인 숫자(29+)도 자동으로 바뀜
 - 로고를 받으면: `assets/images/partners/` 에 넣고 그 줄 `logo: '파일이름.png'` — 메인 타일·치과소개 칸이 글자 대신 로고로 바뀜
-- 치과소개 `about/intro.html` 의 `#partners` 영역은 아직 `hidden` — 공개하려면 hidden 을 지움
+- 치과소개 `about/intro.html` 의 협력 기관 영역은 2026-11-10 브랜드 페이지 개편 때 삭제(메인과 중복) — 데이터(`SITE.partners`)는 그대로, 메인 'WHITE e PARTNERS'에서만 표시
