@@ -84,7 +84,7 @@ ${X.photos.map((p) => `          <figure class="t-photo">${slot(p, "")}<figcapti
   const cases = X.cases || [];
   const caseSection = cases.length ? `
         <!-- 추가 · ${esc(X.casesTitle || '이런 경우에도 상담해 보세요')} (기존 상세 기반, 원고 '추가 블록') -->
-        <section class="t-sec" aria-labelledby="t-cases-title">
+        <section class="t-sec" id="t-cases" aria-labelledby="t-cases-title"><!-- 주소 #cases-N 으로 열면 N번 카드를 펼치고 이 섹션으로 이동(pages.js initTreatmentFold — 예: 일반진료 틀니 → implant.html#cases-4) -->
           <h2 class="sr-only" id="t-cases-title">${esc(X.casesTitle || '이런 경우에도 상담해 보세요')}</h2><!-- 화면 제목은 2026-11-09 삭제(임플란트) — 두 페이지 같은 모양으로 화면낭독기용으로만 남김. 제목 문구는 원고 '### 추가 블록 — 이런 … 상담해 보세요' -->
           <div class="t-fold t-fold--${t.slug}" data-t-fold>
             <div class="t-fold__viewport" data-t-fold-viewport>
@@ -98,7 +98,7 @@ ${cases.map((c, i) => { const no = String(i + 1).padStart(2, '0'); return `     
                     <p class="t-fold__desc">${esc(c.text).split(' / ').join('<br>')}</p>
                     <p class="t-fold__fits-title">이런 분이라면 상담해 보세요</p>
                     <ul class="t-fold__fits">${c.fits.map((f) => `<li>${CRIT_ICON.check}<span>${esc(f).split("//").join("<br>")}</span></li>`).join('')}</ul>
-                    ${c.note ? `<p class="t-fold__note">${esc(c.note)}</p>` : ''}
+                    ${c.note ? `<p class="t-fold__note">${esc(c.note)}</p>` : ''}${c.link && c.linkHref ? `<a class="t-fold__link" href="${esc(c.linkHref)}">${esc(c.link)}</a>` : ''}
                     ${c.caseKey ? `<a class="t-fold__cases" href="../community/cases.html?category=${esc(c.caseKey)}">${esc(c.titleSub || c.tab)} 치료사례 보기 →</a>` : ''}
                   </div></div>
                 </div>`; }).join('\n')}
@@ -110,12 +110,12 @@ ${cases.map((c, i) => `              <button type="button" class="t-fold__tab" r
           </div>
         </section>
 ` : '';
-  /* 안내 박스 (진료 포인트 바로 아래, 본문 칸 — 2026-11-10 스케일링 '가글 마취'): #F8FAFD · 왼쪽 4px 파랑 선 · 라벨 14px 파랑 굵게 · 문장 17px (sub.css .t-notice) */
+  /* 안내 박스 (진료 포인트 바로 아래, 본문 칸 — 2026-11-10 스케일링 '가글 마취'): #F8FAFD · 왼쪽 4px 파랑 선 · 라벨 14px 파랑 굵게 · 문장 17px (sub.css .t-guide — 하단 고지 .t-notice 와 다른 클래스) */
   const noticeBox = X.notice ? `
         <!-- 추가 · 안내 박스 — ${esc(X.notice.label)} (원고 '추가 블록 — 안내 박스') -->
-        <aside class="t-notice" aria-label="${esc(X.notice.label)} 안내">
-          <p class="t-notice__label">${esc(X.notice.label)}</p>
-          <p class="t-notice__text">${esc(X.notice.text)}</p>
+        <aside class="t-guide" aria-label="${esc(X.notice.label)} 안내">
+          <p class="t-guide__label">${esc(X.notice.label)}</p>
+          <p class="t-guide__text">${esc(X.notice.text)}</p>
         </aside>
 ` : '';
   const labBlock = X.lab ? `
@@ -147,29 +147,46 @@ ${cases.map((c, i) => `              <button type="button" class="t-fold__tab" r
           <span class="t-digital__label">${esc(G.label)}</span>
           <h2 class="t-sec__title t-digital__title" id="t-digital-title">${esc(G.title)}</h2>
           <p class="t-digital__lead">${esc(G.text)}</p>
-          <ul class="t-digital__list" style="--cols: ${G.items.length}">
-${G.items.map((d) => `            <li class="t-digital__item">${slot(d.image, '')}<h3 class="t-digital__name">${esc(d.name)}</h3><p class="t-digital__text">${esc(d.text)}</p></li>`).join('\n')}
+          <ul class="t-digital__list" style="--cols: ${G.items.length}${G.items.some((d) => d.treat) ? '; --rows: 4' : ''}">
+${G.items.map((d) => `            <li class="t-digital__item">${slot(d.image, '')}<h3 class="t-digital__name">${esc(d.name)}</h3><p class="t-digital__text">${esc(d.text)}</p>${d.treat ? `<p class="t-digital__treat"><span class="t-digital__treat-label">검토하는 치료</span>${esc(d.treat)}</p>` : ''}</li>`).join('\n')}
           </ul>
         </section>
 ` : '';
-  const DEV_ROWS = [['유형', 'type'], ['겉보기', 'look'], ['방문 간격', 'visit']];
+  /* 비교 표 범용(2026-11-10): 행 이름 = D.rows(원고 '- 행:'), 값 = 칸마다 D.items[].values — 치아교정 장치 비교 · 일반진료 충치 치료 재료 비교 · 스케일링 잇몸 질환 단계
+     값이 문장(20자 넘음)이면 .t-devices--text: 값 왼쪽 정렬 · 모바일 카드에서 항목 이름 위 · 값 아래. 제목이 길면(9자 이상) 왼쪽 위 칸에서 줄바꿈 허용(.t-devices__head--wrap) */
   const D = X.devices;
+  const devText = D && D.items.some((d) => d.values.some((v) => v.length > 20));
   const deviceSection = D ? `
-        <!-- 추가 · ${esc(D.title)} (기존 상세 16 기반, 원고 '추가 블록 — 장치 비교') -->
-        <section class="t-sec t-devices" id="t-devices" aria-labelledby="t-devices-title">
+        <!-- 추가 · ${esc(D.title)} (기존 상세 기반, 원고 '추가 블록 — ${D.id === 't-devices' && D.rows[0] === '유형' ? '장치 비교' : '비교 표'}') -->
+        <section class="t-sec t-devices${devText ? ' t-devices--text' : ''}" id="${esc(D.id)}" aria-labelledby="t-devices-title">
           <table class="t-devices__table">
-            <caption class="sr-only">${esc(D.title)} — ${DEV_ROWS.map((r) => r[0]).join(' · ')}</caption>
+            <caption class="sr-only">${esc(D.title)} — ${D.rows.map(esc).join(' · ')}</caption>
             <colgroup><col class="t-devices__col-label">${D.items.map(() => '<col>').join('')}</colgroup>
-            <thead><tr><td class="t-devices__head"><h2 class="t-sec__title" id="t-devices-title">${esc(D.title)}</h2>${D.sub ? `<p class="t-devices__sub">${esc(D.sub)}</p>` : ''}</td>${D.items.map((d) => `<th scope="col" data-verified="${d.verified}">${slot(d.image, '')}<span class="t-devices__name">${esc(d.name)}</span></th>`).join('')}</tr></thead>
-            <tbody>${DEV_ROWS.map(([label, key]) => `<tr><th scope="row">${label}</th>${D.items.map((d) => `<td>${esc(d[key]).replace(/ \+ /g, '<br>+ ')}</td>`).join('')}</tr>`).join('')}</tbody>
+            <thead><tr><td class="t-devices__head${D.title.length > 8 ? ' t-devices__head--wrap' : ''}"><h2 class="t-sec__title" id="t-devices-title">${esc(D.title)}</h2>${D.sub ? `<p class="t-devices__sub">${esc(D.sub)}</p>` : ''}</td>${D.items.map((d) => `<th scope="col" data-verified="${d.verified}">${slot(d.image, '')}<span class="t-devices__name">${esc(d.name)}</span></th>`).join('')}</tr></thead>
+            <tbody>${D.rows.map((label, r) => `<tr><th scope="row">${esc(label)}</th>${D.items.map((d) => `<td>${esc(d.values[r]).replace(/ \+ /g, '<br>+ ')}</td>`).join('')}</tr>`).join('')}</tbody>
           </table>
-          <ul class="t-devices__cards">${D.items.map((d) => `<li class="t-devices__card" data-verified="${d.verified}">${slot(d.image, '')}<p class="t-devices__name">${esc(d.name)}</p><dl>${DEV_ROWS.map(([label, key]) => `<div><dt>${label}</dt><dd>${esc(d[key])}</dd></div>`).join('')}</dl></li>`).join('')}</ul>
+          <ul class="t-devices__cards">${D.items.map((d) => `<li class="t-devices__card" data-verified="${d.verified}">${slot(d.image, '')}<p class="t-devices__name">${esc(d.name)}</p><dl>${D.rows.map((label, r) => `<div><dt>${esc(label)}</dt><dd>${esc(d.values[r])}</dd></div>`).join('')}</dl></li>`).join('')}</ul>
           ${D.note ? `<p class="t-devices__note">${esc(D.note)}</p>` : ''}
+        </section>
+` : '';
+  /* 단계 띠 (2026-11-10 일반진료 '신경치료 진행 과정' — 기존 상세 07): 라벨 · 제목 · 소개(가운데) → 번호 원을 가는 선으로 이은 가로 띠 [원 · 단계 이름 · 한 줄 설명]
+     본문 칸이 좁으면(컨테이너 55rem 이하) · 모바일은 세로(원 왼쪽 · 글 오른쪽, 원 사이 세로선) — sub.css .t-flow */
+  const F = X.flow;
+  const flowSection = F ? `
+        <!-- 추가 · ${esc(F.title)} (기존 상세 기반, 원고 '추가 블록 — 단계 띠') -->
+        <section class="t-sec t-flow" aria-labelledby="t-flow-title">
+          ${F.label ? `<span class="t-digital__label">${esc(F.label)}</span>` : ''}
+          <h2 class="t-sec__title t-flow__title" id="t-flow-title">${esc(F.title)}</h2>
+          ${F.text ? `<p class="t-digital__lead">${esc(F.text)}</p>` : ''}
+          <ol class="t-flow__list" style="--n: ${F.items.length}">
+${F.items.map((s, i) => `            <li class="t-flow__item"><span class="t-flow__no" aria-hidden="true">${i + 1}</span><div class="t-flow__body"><h3 class="t-flow__name">${esc(s.name)}</h3><p class="t-flow__text">${esc(s.text)}</p></div></li>`).join('\n')}
+          </ol>
         </section>
 ` : '';
   const stepHtml = (s, i) => {
     const img = X.stepImage && X.stepImage.step === i + 1 ? X.stepImage : null;
-    const dev = D && D.linkStep === i + 1 ? `<a class="t-step__link" href="#t-devices" data-t-jump>${esc(D.link)}</a>` : '';
+    const L = X.stepLink && X.stepLink.step === i + 1 ? X.stepLink : null;
+    const dev = (D && D.linkStep === i + 1 ? `<a class="t-step__link" href="#${esc(D.id)}" data-t-jump>${esc(D.link)}</a>` : '') + (L ? `<a class="t-step__link" href="${esc(L.href)}">${esc(L.text)}</a>` : '');
     const text = `<h3 class="t-step__title">${esc(s.title)}</h3><p class="t-step__body">${esc(s.body)}</p>${dev}`;
     return `            <li class="t-step${img ? ' t-step--media' : ''}"><span class="t-step__no" aria-hidden="true">${i + 1}</span><div${img ? ' class="t-step__media"' : ''}>${img ? `<div>${text}</div>${slot(img, img.alt)}` : text}</div></li>`;
   };
@@ -256,7 +273,7 @@ ${lnb}
 ${t.points.map((p, i) => `            <li class="t-point"><span class="t-point__no">${String(i + 1).padStart(2, '0')}</span><p class="t-point__text">${esc(p)}${/[.?!]$/.test(p) ? '' : '.'}</p></li>`).join('\n')}
           </ol>
         </section>
-${noticeBox}${photoStrip}
+${noticeBox}${D && D.place === 'notice' ? deviceSection : ''}${photoStrip}
         <!-- 4. 치료를 결정하기 전 알아야 할 기준 -->
         <section class="t-sec" aria-labelledby="t-criteria-title">
           <h2 class="t-sec__title t-sec__title--center" id="t-criteria-title">치료를 결정하기 전 알아야 할 기준</h2>
@@ -267,7 +284,7 @@ ${noticeBox}${photoStrip}
           </div>
         </section>
 
-${digitalSection}
+${digitalSection}${D && D.place === 'criteria' ? deviceSection : ''}
         <!-- 5. 검사부터 관리까지 (4단계 세로 타임라인) -->
         <section class="t-sec" aria-labelledby="t-steps-title">
           <h2 class="t-sec__title" id="t-steps-title">검사부터 관리까지</h2>
@@ -276,7 +293,7 @@ ${t.steps.map(stepHtml).join('\n')}
           </ol>
         </section>
 
-${deviceSection}
+${flowSection}${D && D.place === 'steps' ? deviceSection : ''}
         <!-- 아래 영역(갤러리 · FAQ · 기공센터 · 진료 연결 · 하단 고지): 폭은 본문 칸 그대로, 화면 1025px 이상에서 가로 중심 = 화면 가운데(= 갤러리 중심) — pages.js [data-t-lower]
              표처럼 본문 성격의 블록(치아교정 장치 비교)은 위 영역(사이드 메뉴 옆 본문 칸)에 둠 -->
         <div class="t-lower" data-t-lower>

@@ -137,6 +137,8 @@
               "회복과 통증이 걱정되는 경우"
             ],
             "note": "",
+            "link": "",
+            "linkHref": "",
             "caseKey": "",
             "illustrative": true
           },
@@ -161,6 +163,8 @@
               "골다공증이 있는 경우"
             ],
             "note": "",
+            "link": "",
+            "linkHref": "",
             "caseKey": "",
             "illustrative": true
           },
@@ -185,6 +189,8 @@
               "임플란트가 빠진 경우"
             ],
             "note": "",
+            "link": "",
+            "linkHref": "",
             "caseKey": "",
             "illustrative": true
           },
@@ -209,6 +215,8 @@
               "오래 쓴 틀니를 새로 해야 하는 경우"
             ],
             "note": "",
+            "link": "",
+            "linkHref": "",
             "caseKey": "",
             "illustrative": true
           },
@@ -233,6 +241,8 @@
               "축농증 등 코·부비동 질환을 앓은 적이 있는 경우"
             ],
             "note": "적용 여부는 검사 후 상담 시 안내해 드립니다.",
+            "link": "",
+            "linkHref": "",
             "caseKey": "",
             "illustrative": true
           },
@@ -257,6 +267,8 @@
               "이식 재료에 대한 거부 반응이 걱정되는 경우"
             ],
             "note": "적용 여부는 검사 후 상담 시 안내해 드립니다.",
+            "link": "",
+            "linkHref": "",
             "caseKey": "",
             "illustrative": true
           }
@@ -415,6 +427,13 @@
           ]
         },
         "devices": {
+          "id": "t-devices",
+          "place": "steps",
+          "rows": [
+            "유형",
+            "겉보기",
+            "방문 간격"
+          ],
           "title": "교정장치 비교",
           "sub": "",
           "linkStep": 0,
@@ -430,9 +449,11 @@
                 "size": "800×600"
               },
               "verified": true,
-              "type": "자가결찰",
-              "look": "치아색 브라켓 + 은색 뚜껑",
-              "visit": "4~8주"
+              "values": [
+                "자가결찰",
+                "치아색 브라켓 + 은색 뚜껑",
+                "4~8주"
+              ]
             },
             {
               "name": "클리피엠",
@@ -443,9 +464,11 @@
                 "size": "800×600"
               },
               "verified": true,
-              "type": "자가결찰",
-              "look": "메탈 브라켓",
-              "visit": "4~8주"
+              "values": [
+                "자가결찰",
+                "메탈 브라켓",
+                "4~8주"
+              ]
             },
             {
               "name": "메탈",
@@ -456,9 +479,11 @@
                 "size": "800×600"
               },
               "verified": false,
-              "type": "비자가결찰",
-              "look": "메탈 브라켓",
-              "visit": "4~8주"
+              "values": [
+                "비자가결찰",
+                "메탈 브라켓",
+                "4~8주"
+              ]
             },
             {
               "name": "투명 교정장치",
@@ -469,9 +494,11 @@
                 "size": "800×600"
               },
               "verified": false,
-              "type": "탈부착식",
-              "look": "투명 장치(브라켓 없음)",
-              "visit": "4~8주 점검 방문"
+              "values": [
+                "탈부착식",
+                "투명 장치(브라켓 없음)",
+                "4~8주 점검 방문"
+              ]
             }
           ]
         },
@@ -498,6 +525,8 @@
               "발치가 필요한지 궁금한 경우"
             ],
             "note": "",
+            "link": "",
+            "linkHref": "",
             "caseKey": "ortho-crowding",
             "illustrative": true
           },
@@ -522,6 +551,8 @@
               "치아 때문인지 턱 때문인지 궁금한 경우"
             ],
             "note": "",
+            "link": "",
+            "linkHref": "",
             "caseKey": "ortho-protrusion",
             "illustrative": true
           },
@@ -546,6 +577,8 @@
               "입을 다물어도 앞니 사이가 뜨는 경우"
             ],
             "note": "",
+            "link": "",
+            "linkHref": "",
             "caseKey": "ortho-openbite",
             "illustrative": true
           },
@@ -570,6 +603,8 @@
               "앞니가 안쪽으로 기울어져 보이는 경우"
             ],
             "note": "",
+            "link": "",
+            "linkHref": "",
             "caseKey": "ortho-deepbite",
             "illustrative": true
           },
@@ -594,6 +629,8 @@
               "자녀의 아래턱이 앞으로 나와 보이는 경우"
             ],
             "note": "",
+            "link": "",
+            "linkHref": "",
             "caseKey": "ortho-crossbite",
             "illustrative": true
           },
@@ -618,6 +655,8 @@
               "성인이 되면서 잇몸이 나빠져 치아가 움직인 경우"
             ],
             "note": "",
+            "link": "",
+            "linkHref": "",
             "caseKey": "ortho-partial",
             "illustrative": true
           },
@@ -642,6 +681,8 @@
               "교정을 언제 시작해야 하는지 궁금한 경우"
             ],
             "note": "",
+            "link": "",
+            "linkHref": "",
             "caseKey": "ortho-child",
             "illustrative": true
           }
@@ -800,6 +841,8 @@
               "웃을 때 치아 색이 신경 쓰이는 경우"
             ],
             "note": "",
+            "link": "",
+            "linkHref": "",
             "caseKey": "aes-whitening",
             "illustrative": true
           },
@@ -824,6 +867,8 @@
               "배열이 고르지 않거나 치아의 크기가 큰 경우"
             ],
             "note": "",
+            "link": "",
+            "linkHref": "",
             "caseKey": "aes-laminate",
             "illustrative": true
           },
@@ -847,6 +892,8 @@
               "선천적으로 치아의 크기나 모양이 고르지 않은 경우"
             ],
             "note": "",
+            "link": "",
+            "linkHref": "",
             "caseKey": "aes-allceramic",
             "illustrative": true
           },
@@ -871,6 +918,8 @@
               "잇몸이 검붉거나 색소가 침착되어 있는 경우"
             ],
             "note": "",
+            "link": "",
+            "linkHref": "",
             "caseKey": "aes-gum",
             "illustrative": true
           }
@@ -974,6 +1023,250 @@
         "verified": false,
         "date": "",
         "reviewer": ""
+      },
+      "extras": {
+        "photos": [
+          {
+            "file": "treatment/common/common-photo-consult",
+            "name": "common-photo-consult",
+            "ratio": "4/3",
+            "size": "1200×900",
+            "caption": "검사 결과를 함께 보며 치료 방법을 설명합니다"
+          },
+          {
+            "file": "treatment/common/common-photo-room",
+            "name": "common-photo-room",
+            "ratio": "4/3",
+            "size": "1200×900",
+            "caption": "진료실 모습"
+          }
+        ],
+        "digital": {
+          "label": "CAVITY",
+          "title": "충치 진행 단계",
+          "text": "충치는 진행 정도에 따라 나타나는 증상과 검토하는 치료가 달라집니다.",
+          "items": [
+            {
+              "name": "1단계 · 법랑질",
+              "image": {
+                "file": "treatment/general/general-cavity-1",
+                "name": "general-cavity-1",
+                "ratio": "1/1",
+                "size": "600×600"
+              },
+              "text": "치아 겉면(법랑질)에만 생긴 충치로, 통증이 없을 수 있습니다. 초기 병소는 진행 정도에 따라 불소 관리와 관찰이 가능한 경우도 있습니다.",
+              "treat": "관찰·예방 관리 또는 간단한 충치 치료"
+            },
+            {
+              "name": "2단계 · 상아질",
+              "image": {
+                "file": "treatment/general/general-cavity-2",
+                "name": "general-cavity-2",
+                "ratio": "1/1",
+                "size": "600×600"
+              },
+              "text": "충치가 상아질까지 진행하면 차갑거나 뜨거운 것을 먹을 때 시릴 수 있습니다.",
+              "treat": "충치 부위를 제거하고 레진·인레이 등으로 수복"
+            },
+            {
+              "name": "3단계 · 치수(신경)",
+              "image": {
+                "file": "treatment/general/general-cavity-3",
+                "name": "general-cavity-3",
+                "ratio": "1/1",
+                "size": "600×600"
+              },
+              "text": "충치가 치수까지 진행하면 자극이 없어도 통증을 느낄 수 있습니다.",
+              "treat": "신경치료 후 필요에 따라 보철 치료"
+            },
+            {
+              "name": "4단계 · 잇몸뼈",
+              "image": {
+                "file": "treatment/general/general-cavity-4",
+                "name": "general-cavity-4",
+                "ratio": "1/1",
+                "size": "600×600"
+              },
+              "text": "염증이 치아 주변 잇몸뼈와 잇몸까지 퍼지면 치아가 흔들릴 수 있습니다.",
+              "treat": "치아 상태에 따라 보철 치료 또는 임플란트 치료"
+            }
+          ]
+        },
+        "devices": {
+          "id": "t-devices",
+          "place": "criteria",
+          "rows": [
+            "재료",
+            "방식",
+            "겉보기",
+            "고려할 점"
+          ],
+          "title": "충치 치료 재료 비교",
+          "sub": "",
+          "linkStep": 0,
+          "link": "",
+          "note": "재료와 치료 방법은 충치 범위와 위치에 따라 달라집니다.",
+          "items": [
+            {
+              "name": "레진",
+              "image": {
+                "file": "treatment/general/general-material-resin",
+                "name": "general-material-resin",
+                "ratio": "4/3",
+                "size": "800×600"
+              },
+              "verified": true,
+              "values": [
+                "치아색 복합 레진",
+                "충치를 제거한 자리에 직접 채워 굳히는 방법",
+                "치아색과 비슷함",
+                "인레이보다 강도가 약해 깨질 수 있고, 시간이 지나면 변색되거나 떨어질 수 있음"
+              ]
+            },
+            {
+              "name": "인레이",
+              "image": {
+                "file": "treatment/general/general-material-inlay",
+                "name": "general-material-inlay",
+                "ratio": "4/3",
+                "size": "800×600"
+              },
+              "verified": true,
+              "values": [
+                "골드(금) 또는 세라믹",
+                "본을 떠 만든 수복물을 충치를 제거한 자리에 붙이는 방법",
+                "골드는 금색, 세라믹은 치아색과 비슷함",
+                "골드는 온도 자극을 느끼기 쉽고, 세라믹은 강한 충격에 깨질 수 있음"
+              ]
+            }
+          ]
+        },
+        "casesTitle": "이런 경우에도 상담해 보세요",
+        "cases": [
+          {
+            "title": "치아가 크게 손상되었거나 / 신경치료를 받은 경우 (크라운)",
+            "titleMain": "치아가 크게 손상되었거나 / 신경치료를 받은 경우",
+            "titleSub": "크라운",
+            "tab": "크라운",
+            "source": "기존 상세 08 · 09",
+            "image": {
+              "file": "treatment/general/general-case-crown",
+              "name": "general-case-crown",
+              "ratio": "4/5",
+              "size": "1080×1350"
+            },
+            "verified": true,
+            "text": "크라운은 금속이나 도자기 등으로 치아 전체를 씌워 남은 치아를 보호하는 치료입니다. 치아가 크게 깨졌거나 신경치료를 받은 치아에서 검토하며, 보철 필요성은 남은 치아 구조와 위치·교합력을 보고 결정합니다. 보철물 재료로는 골드, 올세라믹, 지르코니아 등이 있습니다.",
+            "fits": [
+              "신경치료를 받은 치아가 있는 경우",
+              "치아가 크게 깨지거나 금이 간 경우",
+              "충치가 넓게 진행된 경우",
+              "오래된 크라운이 흔들리거나 떨어진 경우"
+            ],
+            "note": "",
+            "link": "",
+            "linkHref": "",
+            "caseKey": "prosthetics",
+            "illustrative": true
+          },
+          {
+            "title": "치아 하나가 빠진 채로 / 지내고 있는 경우 (브릿지)",
+            "titleMain": "치아 하나가 빠진 채로 / 지내고 있는 경우",
+            "titleSub": "브릿지",
+            "tab": "브릿지",
+            "source": "기존 상세 09",
+            "image": {
+              "file": "treatment/general/general-case-bridge",
+              "name": "general-case-bridge",
+              "ratio": "4/5",
+              "size": "1080×1350"
+            },
+            "verified": true,
+            "text": "브릿지는 빠진 치아 양옆의 치아를 이용해 인공치아를 만들어 연결하는 방법입니다. 양옆 치아를 다듬어 연결하는 방식이라 임플란트·틀니와 비교해 결정합니다.",
+            "fits": [
+              "빠진 치아 양옆 치아가 비교적 건강한 경우",
+              "임플란트 수술이 어려운 사정이 있는 경우",
+              "빠진 자리로 옆 치아가 기울기 시작한 경우",
+              "치료 기간을 상담해 보고 싶은 경우"
+            ],
+            "note": "",
+            "link": "",
+            "linkHref": "",
+            "caseKey": "prosthetics",
+            "illustrative": true
+          },
+          {
+            "title": "여러 개의 치아를 잃은 경우 (틀니)",
+            "titleMain": "여러 개의 치아를 잃은 경우",
+            "titleSub": "틀니",
+            "tab": "틀니",
+            "source": "기존 상세 09",
+            "image": {
+              "file": "treatment/general/general-case-denture",
+              "name": "general-case-denture",
+              "ratio": "4/5",
+              "size": "1080×1350"
+            },
+            "verified": true,
+            "text": "부분틀니는 같은 위치에서 여러 개의 치아를 잃었거나 맨 마지막 어금니를 연결할 부위가 없는 경우, 고리를 이용해 남아 있는 치아를 감싸는 방식으로 사용합니다. 남아 있는 치아가 없으면 전체틀니를 하게 되며, 말을 하거나 음식을 먹을 때 움직일 수 있어 어느 정도 적응 기간이 필요합니다. / 임플란트로 틀니를 고정하는 방법은 임플란트 페이지에서 안내합니다.",
+            "fits": [
+              "쓰던 틀니가 맞지 않거나 아픈 경우",
+              "임플란트 수술이 부담스러운 경우",
+              "오래 쓴 틀니를 새로 하고 싶은 경우",
+              "부분틀니와 전체틀니 중 고민되는 경우"
+            ],
+            "note": "",
+            "link": "틀니 임플란트 보기 →",
+            "linkHref": "implant.html#cases-4",
+            "caseKey": "prosthetics",
+            "illustrative": true
+          }
+        ],
+        "flow": {
+          "label": "ROOT CANAL",
+          "title": "신경치료 진행 과정",
+          "text": "충치가 신경까지 진행한 경우 아래 순서로 치료하며, 치료 횟수와 기간은 치아 상태에 따라 다릅니다.",
+          "items": [
+            {
+              "name": "염증 확인",
+              "text": "신경에 염증이 생긴 치아를 확인합니다."
+            },
+            {
+              "name": "충치 제거",
+              "text": "충치를 제거하고 뿌리 쪽 신경을 드러내 염증을 제거합니다."
+            },
+            {
+              "name": "길이 측정",
+              "text": "신경을 깨끗이 제거하기 위해 뿌리 길이를 측정합니다."
+            },
+            {
+              "name": "뿌리 충전",
+              "text": "치아 뿌리 내부를 치과용 재료로 채웁니다."
+            },
+            {
+              "name": "치아머리 수복",
+              "text": "치아머리 부분을 레진 등으로 메웁니다."
+            },
+            {
+              "name": "보철 검토",
+              "text": "치아가 깨지지 않도록 필요에 따라 보철 치료를 검토합니다."
+            }
+          ]
+        },
+        "stepLink": {
+          "step": 3,
+          "text": "잇몸 질환 단계와 치료 과정 보기 →",
+          "href": "scaling.html#gum-stages"
+        },
+        "lab": {
+          "label": "DENTAL LAB",
+          "title": "전지점 공동운영 기공센터",
+          "file": "treatment/implant/implant-lab",
+          "name": "implant-lab",
+          "ratio": "3/2",
+          "size": "1200×800",
+          "text": "창원점과 마산점이 함께 운영하는 기공센터에서 의료진과 기공사가 충분히 소통하며 보철물을 제작합니다. 치아 상태를 진단하고 분석한 내용을 바탕으로 보철물의 형태와 맞물림을 함께 검토합니다."
+        }
       }
     },
     {
@@ -1064,6 +1357,83 @@
         "reviewer": ""
       },
       "extras": {
+        "photos": [
+          {
+            "file": "treatment/common/common-photo-consult",
+            "name": "common-photo-consult",
+            "ratio": "4/3",
+            "size": "1200×900",
+            "caption": "검사 결과를 함께 보며 치료 방법을 설명합니다"
+          },
+          {
+            "file": "treatment/common/common-photo-room",
+            "name": "common-photo-room",
+            "ratio": "4/3",
+            "size": "1200×900",
+            "caption": "진료실 모습"
+          }
+        ],
+        "devices": {
+          "id": "gum-stages",
+          "place": "notice",
+          "rows": [
+            "상태",
+            "증상",
+            "검토하는 치료"
+          ],
+          "title": "잇몸 질환 단계와 치료",
+          "sub": "",
+          "linkStep": 0,
+          "link": "",
+          "note": "잇몸 상태와 치료 범위는 검사 후 안내해 드립니다.",
+          "items": [
+            {
+              "name": "치은염",
+              "image": {
+                "file": "treatment/scaling/scaling-gum-1",
+                "name": "scaling-gum-1",
+                "ratio": "4/3",
+                "size": "800×600"
+              },
+              "verified": true,
+              "values": [
+                "잇몸에 염증이 생긴 상태",
+                "잇몸이 붓고, 양치질할 때 피가 날 수 있습니다",
+                "스케일링으로 치아 주변의 치석과 착색을 제거합니다"
+              ]
+            },
+            {
+              "name": "초기 치주염",
+              "image": {
+                "file": "treatment/scaling/scaling-gum-2",
+                "name": "scaling-gum-2",
+                "ratio": "4/3",
+                "size": "800×600"
+              },
+              "verified": true,
+              "values": [
+                "염증이 치아 뿌리 주위로 퍼지기 시작한 상태",
+                "잇몸이 아프거나 붓고, 입 냄새나 시린 증상이 나타날 수 있습니다",
+                "잇몸을 마취한 뒤 잇몸 깊숙이 있는 치석과 염증을 제거합니다"
+              ]
+            },
+            {
+              "name": "진행된 치주염",
+              "image": {
+                "file": "treatment/scaling/scaling-gum-3",
+                "name": "scaling-gum-3",
+                "ratio": "4/3",
+                "size": "800×600"
+              },
+              "verified": true,
+              "values": [
+                "염증이 치아 뿌리와 잇몸뼈 주위로 퍼져 잇몸이 내려앉은 상태",
+                "치아가 흔들리거나 길어 보일 수 있으며, 치아를 잃을 수도 있습니다",
+                "상태에 따라 잇몸 수술을 검토할 수 있습니다"
+              ]
+            }
+          ]
+        },
         "notice": {
           "label": "가글 마취",
           "text": "스케일링할 때 시림이 걱정되는 분께는 가글 마취를 함께 진행할 수 있습니다. 마취 성분이 든 가글로 입안을 헹궈 잇몸 표면을 마취하는 방법이며, 느끼는 정도는 개인마다 다를 수 있습니다."
@@ -1152,6 +1522,71 @@
         "verified": false,
         "date": "",
         "reviewer": ""
+      },
+      "extras": {
+        "photos": [
+          {
+            "file": "treatment/common/common-photo-consult",
+            "name": "common-photo-consult",
+            "ratio": "4/3",
+            "size": "1200×900",
+            "caption": "검사 결과를 함께 보며 치료 방법을 설명합니다"
+          },
+          {
+            "file": "treatment/common/common-photo-room",
+            "name": "common-photo-room",
+            "ratio": "4/3",
+            "size": "1200×900",
+            "caption": "진료실 모습"
+          }
+        ],
+        "digital": {
+          "label": "WISDOM TOOTH",
+          "title": "사랑니로 생길 수 있는 문제",
+          "text": "모든 사랑니를 뽑아야 하는 것은 아니며, 아래와 같은 문제가 있거나 생길 가능성이 높을 때 발치를 검토합니다.",
+          "items": [
+            {
+              "name": "앞으로 기울어 난 사랑니",
+              "image": {
+                "file": "treatment/wisdom-tooth/wisdom-problem-1",
+                "name": "wisdom-problem-1",
+                "ratio": "1/1",
+                "size": "600×600"
+              },
+              "text": "사랑니가 앞으로 기울어 나면 앞 어금니와의 사이에 음식물이 끼거나 충치가 생길 수 있습니다."
+            },
+            {
+              "name": "길게 솟아오른 사랑니",
+              "image": {
+                "file": "treatment/wisdom-tooth/wisdom-problem-2",
+                "name": "wisdom-problem-2",
+                "ratio": "1/1",
+                "size": "600×600"
+              },
+              "text": "사랑니가 지나치게 솟아오르면 어금니 사이에 음식물이 자주 끼고 통증이 생길 수 있습니다."
+            },
+            {
+              "name": "충치가 생긴 사랑니",
+              "image": {
+                "file": "treatment/wisdom-tooth/wisdom-problem-3",
+                "name": "wisdom-problem-3",
+                "ratio": "1/1",
+                "size": "600×600"
+              },
+              "text": "사랑니가 썩으면 통증이 생길 수 있습니다."
+            },
+            {
+              "name": "오래 방치된 충치",
+              "image": {
+                "file": "treatment/wisdom-tooth/wisdom-problem-4",
+                "name": "wisdom-problem-4",
+                "ratio": "1/1",
+                "size": "600×600"
+              },
+              "text": "심하게 썩은 사랑니를 그대로 두면 통증이 심해지고 얼굴이 부을 수 있습니다."
+            }
+          ]
+        }
       }
     }
   ]

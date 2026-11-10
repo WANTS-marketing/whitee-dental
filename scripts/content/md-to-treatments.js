@@ -77,7 +77,7 @@ const treatments = blocks.map((b) => {
   const lineOf = (sec, label) => (sec.match(new RegExp(`^- ${label}: (.+)$`, 'm')) || [])[1]?.trim() || '';
   const extras = {};
   const photoSec = optSection('추가 블록 — 사진 띠');
-  if (photoSec) extras.photos = photoSec.split('\n').filter((l) => /^- [\w-]+ \(/.test(l)).map((l) => { const [slot, caption] = l.slice(2).split(/\):\s*/); return { ...slotOf(`${slot})`), caption: caption.trim() }; });
+  if (photoSec) extras.photos = photoSec.split('\n').filter((l) => /^- [\w/-]+ \(/.test(l)).map((l) => { const [slot, caption] = l.slice(2).split(/\):\s*/); return { ...slotOf(`${slot})`), caption: caption.trim() }; });
   const stepImgSec = optSection('추가 블록 — 단계 이미지');
   if (stepImgSec) {
     const [stepPart, slot, altPart] = stepImgSec.replace(/^- /, '').split(/\s+\/\s+/);
@@ -85,20 +85,28 @@ const treatments = blocks.map((b) => {
   }
   /* 장비 표 블록 ('치료를 결정하기 전 알아야 할 기준' 다음): 라벨 · 제목 · 본문 + '#### 장비 이름' 마다 이미지 · 설명 — 칸 수는 장비 수대로
      원고 제목: 치아교정 '### 추가 블록 — 3D 디지털 시스템'(2026-11-09) · 심미치료 '### 추가 블록 — 장비 블록'(치아미백 장비·재료, 2026-11-10) */
-  const digSec = optSection('추가 블록 — 3D 디지털 시스템') || optSection('추가 블록 — 장비 블록');
+  // 2026-11-10: 일반진료 '충치 진행 단계' · 사랑니 '사랑니로 생길 수 있는 문제' = '### 추가 블록 — 표 블록 …' (같은 모양, 칸마다 '- 검토하는 치료:' 줄이 있으면 설명 아래 한 줄 더)
+  const digSec = optSection('추가 블록 — 3D 디지털 시스템') || optSection('추가 블록 — 장비 블록') || optSection('추가 블록 — 표 블록');
   if (digSec) {
     extras.digital = {
       label: lineOf(digSec, '라벨'),
       title: lineOf(digSec, '제목'),
       text: lineOf(digSec, '본문'),
-      items: digSec.split(/\n#### /).slice(1).map((d) => ({ name: d.split('\n')[0].trim(), image: slotOf(lineOf(d, '이미지')), text: lineOf(d, '설명') })),
+      items: digSec.split(/\n#### /).slice(1).map((d) => ({ name: d.split('\n')[0].trim(), image: slotOf(lineOf(d, '이미지')), text: lineOf(d, '설명'), ...(lineOf(d, '검토하는 치료') ? { treat: lineOf(d, '검토하는 치료') } : {}) })),
     };
   }
   /* 장치 비교 표 (치아교정 '검사부터 관리까지' 다음 독립 섹션, 2026-11-09): 제목 · 링크 단계(그 단계 본문 끝에 섹션으로 가는 링크) · 링크 글자 · 안내
      '#### 장치 이름' 마다 이미지 · 게시 · 유형 · 겉보기 · 방문 간격 */
-  const devSec = optSection('추가 블록 — 장치 비교');
+  /* 2026-11-10 범용화: '### 추가 블록 — 비교 표 …'(일반진료 충치 치료 재료 비교 · 스케일링 잇몸 질환 단계) — 같은 모양
+     - 행: 상태 / 증상 / … (없으면 치아교정 그대로 유형 / 겉보기 / 방문 간격) — 칸마다 같은 이름의 '- 행이름:' 줄
+     - 위치: 안내 박스 다음 | 기준 다음 | (없음 = 검사부터 관리까지 다음) · 아이디: 섹션 id(없음 = t-devices) */
+  const devSec = optSection('추가 블록 — 장치 비교') || optSection('추가 블록 — 비교 표');
   if (devSec) {
+    const rows = (lineOf(devSec, '행') || '유형 / 겉보기 / 방문 간격').split(/\s+\/\s+/);
     extras.devices = {
+      id: lineOf(devSec, '아이디') || 't-devices',
+      place: { '안내 박스 다음': 'notice', '기준 다음': 'criteria' }[lineOf(devSec, '위치')] || 'steps',
+      rows,
       title: lineOf(devSec, '제목'),
       sub: lineOf(devSec, '부제'),
       linkStep: Number(lineOf(devSec, '링크 단계')),
@@ -108,9 +116,7 @@ const treatments = blocks.map((b) => {
         name: d.split('\n')[0].trim(),
         image: slotOf(lineOf(d, '이미지')),
         verified: lineOf(d, '게시') === '예', // 아니요 = 병원 확인 전 (화면에는 표시, docs/HOSPITAL-CHECK.md)
-        type: lineOf(d, '유형'),
-        look: lineOf(d, '겉보기'),
-        visit: lineOf(d, '방문 간격'),
+        values: rows.map((r) => lineOf(d, r)),
       })),
     };
   }
@@ -133,11 +139,18 @@ const treatments = blocks.map((b) => {
         text: lineOf(c, '설명'),
         fits: lineOf(c, '이런 분이라면 상담해 보세요').split(/\s+\/\s+/).filter(Boolean),
         note: lineOf(c, '안내'),
+        link: lineOf(c, '링크'), linkHref: lineOf(c, '링크 주소'), // 설명 아래 다른 페이지 바로가기(2026-11-10 일반진료 틀니 → 임플란트 갤러리 4번)
         caseKey: lineOf(c, '사례'), // 치료사례 세부 분류 키(예: ortho-crowding) → 카드 아래 '{진료명} 치료사례 보기 →'
         illustrative: lineOf(c, '예시') !== '아니요', // 기본 = 예시 이미지(펼친 카드 사진에 '이해를 돕기 위한 예시' 안내). 병원 실제 사진이면 원고에 '- 예시: 아니요'
       };
     });
   }
+  /* 단계 띠 ('검사부터 관리까지' 다음, 2026-11-10 일반진료 '신경치료 진행 과정'): 라벨 · 제목 · 소개 + '#### 단계 이름' 마다 '- 설명:' */
+  const flowSec = optSection('추가 블록 — 단계 띠');
+  if (flowSec) extras.flow = { label: lineOf(flowSec, '라벨'), title: lineOf(flowSec, '제목'), text: lineOf(flowSec, '소개'), items: flowSec.split(/\n#### /).slice(1).map((d) => ({ name: d.split('\n')[0].trim(), text: lineOf(d, '설명') })) };
+  /* 단계 링크 (2026-11-10 일반진료 단계 3 끝 → 스케일링 #gum-stages): 단계 · 링크(글자) · 주소 */
+  const stepLinkSec = optSection('추가 블록 — 단계 링크');
+  if (stepLinkSec) extras.stepLink = { step: Number(lineOf(stepLinkSec, '단계')), text: lineOf(stepLinkSec, '링크'), href: lineOf(stepLinkSec, '주소') };
   /* 안내 박스 (진료 포인트 아래, 2026-11-10 스케일링 '가글 마취'): 라벨 · 본문 */
   const noticeSec = optSection('추가 블록 — 안내 박스');
   if (noticeSec) extras.notice = { label: lineOf(noticeSec, '라벨'), text: lineOf(noticeSec, '본문') };
