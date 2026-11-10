@@ -86,7 +86,7 @@ ${X.photos.map((p) => `          <figure class="t-photo">${slot(p, "")}<figcapti
         <!-- 추가 · ${esc(X.casesTitle || '이런 경우에도 상담해 보세요')} (기존 상세 기반, 원고 '추가 블록') -->
         <section class="t-sec" aria-labelledby="t-cases-title">
           <h2 class="sr-only" id="t-cases-title">${esc(X.casesTitle || '이런 경우에도 상담해 보세요')}</h2><!-- 화면 제목은 2026-11-09 삭제(임플란트) — 두 페이지 같은 모양으로 화면낭독기용으로만 남김. 제목 문구는 원고 '### 추가 블록 — 이런 … 상담해 보세요' -->
-          <div class="t-fold" data-t-fold>
+          <div class="t-fold t-fold--${t.slug}" data-t-fold>
             <div class="t-fold__viewport" data-t-fold-viewport>
               <div class="t-fold__track" data-t-fold-track>
 ${cases.map((c, i) => { const no = String(i + 1).padStart(2, '0'); return `                <div class="t-fold__card${i === 0 ? ' is-open' : ''}" role="tabpanel" id="t-case-panel-${i + 1}" aria-labelledby="t-case-tab-${i + 1}">
