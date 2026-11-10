@@ -130,6 +130,7 @@
 | clinic-orthodontics.jpg (메인 진료안내 치아교정 카드 — 2026-11-06 교체, 6000×3375 PNG 에서 왼쪽 흐린 부분 빼고 1.2:1 로 잘라 1600×1333 JPG) | 제공 자료 `자료/메인페이지/pc0040589545.png` — **출처·라이선스 확인 필요** | 확인 필요 | 확인 필요 |
 | clinic-aesthetic.jpg (메인 진료안내 심미치료 카드 — 2026-11-06 교체, 6638×5000 에서 위쪽 흐린 잇몸 30% 잘라 1600×844) | 제공 자료 `자료/메인페이지/tci01060000008.jpg` — **출처·라이선스 확인 필요** | 확인 필요 | 확인 필요 |
 | banner-sub.jpg (서브페이지 공통 배너 — 임시, 실제 원내 사진으로 교체 대상) | [Pexels 8459996](https://www.pexels.com/photo/8459996/) (temp/doctors-bg.jpg 와 같은 사진) | Pexels 페이지에서 확인 | Pexels License |
+| treatment/orthodontics/ortho-case-crowding · protrusion · openbite · deepbite · crossbite · partial · child .jpg (치아교정 갤러리 7장 — 2026-11-10) | 병원 제공 구강 사진 `자료/서브/덧니 · 돌출입 · 개방교합 · 과개교합 · 반대교합 · 틈새교정 · 어린이교정.png`(518×924) → 가운데 기준 4:5 518×646 JPG(메타데이터 삭제). 실제 환자 구강 사진 — 병원 결정으로 사용, 변경 요청 시 교체 | 병원 | 병원 소유 |
 | hero-03-night.jpg (메인 히어로 3번, 좌우 반전·축소) | [Unsplash J39gT2aIgOM](https://unsplash.com/photos/J39gT2aIgOM) | Klarin Steffens | Unsplash License (상업 사용·수정 가능, 출처 표기 의무 없음) |
 
 ### 교체 방법
