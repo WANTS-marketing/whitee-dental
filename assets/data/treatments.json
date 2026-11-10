@@ -620,6 +620,30 @@
             "note": "",
             "caseKey": "ortho-partial",
             "illustrative": true
+          },
+          {
+            "title": "성장기 아이의 치아·턱 발달이 걱정되는 경우 (어린이 교정)",
+            "titleMain": "성장기 아이의 치아·턱 발달이 걱정되는 경우",
+            "titleSub": "어린이 교정",
+            "tab": "어린이 교정",
+            "source": "기존 상세 13",
+            "image": {
+              "file": "treatment/orthodontics/ortho-case-child",
+              "name": "ortho-case-child",
+              "ratio": "4/5",
+              "size": "1080×1350"
+            },
+            "verified": true,
+            "text": "어린이 교정은 성장 과정에서 생길 수 있는 치아와 턱의 문제가 심해지지 않도록 미리 살펴보고, 기능과 모양을 함께 개선할 수 있도록 돕는 치료입니다. / 성장 단계에 따라 필요한 치료와 시기가 달라지므로, 검사를 통해 지금 치료가 필요한지부터 평가합니다.",
+            "fits": [
+              "영구치가 나면서 배열이 고르지 않은 경우",
+              "아래턱이 앞으로 나오거나 뒤로 들어가 보이는 경우",
+              "입으로 숨 쉬거나 손가락을 빠는 습관이 있는 경우",
+              "교정을 언제 시작해야 하는지 궁금한 경우"
+            ],
+            "note": "",
+            "caseKey": "ortho-child",
+            "illustrative": true
           }
         ]
       }
