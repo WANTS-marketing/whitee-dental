@@ -106,58 +106,58 @@
   }
   initLnb();
 
-  /* ---------- 하단 메뉴 선택바 (LNB 가 있는 모든 서브페이지, 2026-11-10 — 스타일 common.css '하단 메뉴 선택바') ----------
-     LNB(PC 세로 메뉴 · 1024px 이하 가로 탭)가 화면 위로 완전히 사라지면 화면 아래 가운데에 [{메뉴 묶음} · {현재 페이지} ▴] 알약 버튼
-     → 누르면 위로 목록 패널(LNB 와 같은 항목·순서 — LNB 링크를 그대로 읽음, 따로 입력 없음). 항목 클릭 = 이동, 바깥 클릭 · ESC = 닫기
-     숨김: LNB 가 다시 보일 때 · 푸터(지점 바로가기 바부터)가 화면에 들어올 때 (IntersectionObserver)
-     위치: 아래 24px(모바일은 하단 고정 바 위 12px — CSS). 의료진 소개의 '지점 이동 버튼'(.doc-branch-nav)이 보이면 그 위 12px · 같은 가로 중심
-       모바일에서 오른쪽 아래 '+' 퀵메뉴 버튼과 겹치면 왼쪽으로 비킴 */
+  /* ---------- 하단 메뉴 선택바 (LNB 가 있는 모든 서브페이지 — 스타일 common.css '하단 메뉴 선택바') ----------
+     2026-11-10 v2: 펼치기 없이 같은 묶음 항목을 전부 한 줄로 — [임플란트 · 치아교정 · …] (묶음 이름 없음, LNB 링크를 그대로 읽음)
+     현재 페이지 = 흰 면 + 남색 굵게(aria-current="page"). 줄이 넘치면 바 안에서 가로 스크롤(처음에 현재 항목을 가운데로) + 양 끝 남색 그라데이션
+     보임: LNB(PC 세로 메뉴 · 1024px 이하 가로 탭)가 화면 위로 완전히 사라졌고, 푸터(지점 바로가기 바부터)가 화면에 없을 때 (IntersectionObserver)
+     위치: 화면 아래 가운데 24px(모바일 = 하단 고정 바 위 12px, 폭 = 화면 - 32px — CSS)
+       의료진 소개의 '지점 이동 버튼'(.doc-branch-nav)이 보이면 그 위 12px · 같은 가로 중심
+       모바일에서 오른쪽 아래 '+' 퀵메뉴 버튼은 선택바가 보이는 동안 선택바 위 12px 로 올림(가로 폭이 화면 전체라 겹쳐서) */
   function initLnbBar() {
     const lnb = document.querySelector('.lnb');
     const links = lnb ? [...lnb.querySelectorAll('.lnb__list a[href]')] : [];
     if (!lnb || !links.length || !('IntersectionObserver' in window)) return;
-    const group = lnb.querySelector('.lnb__title')?.textContent.trim() || '';
-    const cur = links.find((a) => a.getAttribute('aria-current') === 'page');
-    const label = [group, cur?.textContent.trim()].filter(Boolean).join(' · ');
-    const bar = document.createElement('div');
+    const group = lnb.querySelector('.lnb__title')?.textContent.trim() || '하위';
+    const bar = document.createElement('nav');
     bar.className = 'lnb-bar';
-    bar.innerHTML = `<nav class="lnb-bar__panel" id="lnb-bar-panel" aria-label="${esc(group || '하위')} 메뉴" hidden><ul class="lnb-bar__list">${links.map((a) => `<li><a class="lnb-bar__link" href="${esc(a.getAttribute('href'))}"${a === cur ? ' aria-current="page"' : ''}>${esc(a.textContent.trim())}</a></li>`).join('')}</ul></nav>`
-      + `<button type="button" class="lnb-bar__btn" aria-expanded="false" aria-controls="lnb-bar-panel"><span class="lnb-bar__label">${esc(label)}</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg></button>`;
+    bar.setAttribute('aria-label', `${group} 메뉴 바로가기`);
+    bar.innerHTML = `<div class="lnb-bar__inner"><ul class="lnb-bar__list">${links.map((a) => `<li><a class="lnb-bar__link" href="${esc(a.getAttribute('href'))}"${a.getAttribute('aria-current') === 'page' ? ' aria-current="page"' : ''}>${esc(a.textContent.trim())}</a></li>`).join('')}</ul></div>`;
     document.body.appendChild(bar); // main 안에 두면 서브페이지 등장 효과(opacity) 동안 쌓임 순서가 흔들릴 수 있어 body 바로 아래
-    const btn = bar.querySelector('.lnb-bar__btn');
-    const panel = bar.querySelector('.lnb-bar__panel');
+    const inner = bar.querySelector('.lnb-bar__inner');
+    const list = bar.querySelector('.lnb-bar__list');
+    const cur = list.querySelector('[aria-current="page"]');
+    const mqMobile = window.matchMedia('(max-width: 768px)');
     let lnbGone = false;
     let footerIn = false;
-    const mqMobile = window.matchMedia('(max-width: 768px)');
-    const setOpen = (open) => {
-      btn.setAttribute('aria-expanded', String(open));
-      panel.hidden = !open;
-      // 모바일: 패널(화면 폭 90%)을 화면 가운데에 — 선택바가 '+' 버튼을 피해 옆으로 비켜 있어도
-      if (open && mqMobile.matches) panel.style.left = `${Math.round(window.innerWidth / 2 - bar.getBoundingClientRect().left)}px`;
-      else panel.style.removeProperty('left');
-      bar.classList.toggle('is-open', open);
+    // 양 끝 그라데이션: 더 있는 쪽에만
+    const edges = () => {
+      const max = list.scrollWidth - list.clientWidth;
+      inner.classList.toggle('has-more-l', list.scrollLeft > 2);
+      inner.classList.toggle('has-more-r', max > 2 && list.scrollLeft < max - 2);
     };
+    const centerCurrent = () => {
+      if (cur && list.scrollWidth > list.clientWidth) list.scrollLeft = cur.offsetLeft - (list.clientWidth - cur.offsetWidth) / 2;
+      edges();
+    };
+    const quick = () => document.querySelector('.quick--float');
     const place = () => {
-      // 의료진 소개 지점 이동 버튼이 보이면 그 위 12px · 같은 가로 중심
       const dn = document.querySelector('.doc-branch-nav.is-visible');
-      let x = window.innerWidth / 2;
       if (dn) {
         const r = dn.getBoundingClientRect();
         bar.style.bottom = `${Math.round(window.innerHeight - r.top + 12)}px`;
-        x = r.left + r.width / 2;
-      } else bar.style.removeProperty('bottom');
-      // 모바일 '+' 퀵메뉴 버튼과 겹치면 왼쪽으로
-      const plus = document.querySelector('.quick__toggle');
-      const pr = plus && getComputedStyle(plus).display !== 'none' ? plus.getBoundingClientRect() : null;
-      const half = btn.offsetWidth / 2;
-      if (pr && pr.width && x + half > pr.left - 12) x = Math.max(half + 12, pr.left - 12 - half);
-      bar.style.setProperty('--bar-x', `${Math.round(x)}px`);
+        if (!mqMobile.matches) bar.style.setProperty('--bar-x', `${Math.round(r.left + r.width / 2)}px`);
+      } else {
+        bar.style.removeProperty('bottom');
+        bar.style.removeProperty('--bar-x');
+      }
+      const q = quick();
+      if (q && mqMobile.matches && bar.classList.contains('is-visible')) q.style.bottom = `${Math.round(window.innerHeight - inner.getBoundingClientRect().top + 12)}px`;
+      else q?.style.removeProperty('bottom');
     };
     const update = () => {
       const show = lnbGone && !footerIn;
-      if (show) place();
       bar.classList.toggle('is-visible', show);
-      if (!show) setOpen(false);
+      place();
     };
     new IntersectionObserver(([e]) => {
       lnbGone = !e.isIntersecting && e.boundingClientRect.bottom <= 0; // 화면 위로 완전히 사라짐(아래쪽에 있어 안 보이는 것은 제외)
@@ -170,18 +170,14 @@
       return !!f;
     };
     if (!watchFooter()) document.addEventListener('components:loaded', watchFooter, { once: true });
+    list.addEventListener('scroll', edges, { passive: true });
     // 지점 이동 버튼은 스크롤에 따라 보였다 숨었다 하므로 스크롤 · 크기 변경 때 위치를 다시
     let raf = 0;
-    const onMove = () => { if (!bar.classList.contains('is-visible')) return; cancelAnimationFrame(raf); raf = requestAnimationFrame(place); };
+    const onMove = () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(place); };
     window.addEventListener('scroll', onMove, { passive: true });
-    window.addEventListener('resize', onMove);
-    btn.addEventListener('click', () => setOpen(btn.getAttribute('aria-expanded') !== 'true'));
-    document.addEventListener('click', (e) => { if (bar.classList.contains('is-open') && !bar.contains(e.target)) setOpen(false); });
-    document.addEventListener('keydown', (e) => {
-      if (e.key !== 'Escape' || !bar.classList.contains('is-open')) return;
-      setOpen(false);
-      btn.focus();
-    });
+    window.addEventListener('resize', () => { centerCurrent(); onMove(); });
+    document.fonts?.ready.then(centerCurrent);
+    centerCurrent();
   }
   initLnbBar();
 
