@@ -35,37 +35,13 @@
 
 ## 기존 사이트에서 옮긴 자료
 
-### 치료사례 (시술 전후) 14건 — 2026-11-06
+### 치료사례 (시술 전후) — 기존 사례는 이관하지 않음 (2026-11-10)
 
-- 원본 게시판: https://whiteedental.co.kr/bbs/board.php?bo_table=gallery (wr_id 5~18)
-- 다시 가져오기: `cd scripts/import && npm install` → `node fetch-gallery.js` (목록·원본 이미지 → `raw/gallery/`, 1초 간격) → `node build-gallery.js` (BEFORE·AFTER 나누기·흐림 미리보기 + `assets/data/cases.json`)
-- ⚠️ **기존 사이트는 이 게시판 글 상세를 회원만 볼 수 있게 막아 두어**("글을 읽을 권한이 없습니다") 로그인 없이 가져올 수 있는 것만 옮겼다
-  - 가져온 것: 목록의 제목·작성일(MM-DD)·썸네일 → 썸네일 이름으로 찾은 **원본 이미지 1장**(1000×600)
-  - 작성 연도: 이미지 폴더 연월(`/data/editor/2610/` → 2026년 10월) + 목록 MM-DD
-  - **못 가져온 것: 본문 텍스트**, 글 안에 이미지가 더 있었다면 두 번째 이후 이미지 → 본문은 이미지 위 안내 띠(교정 기간·내용)를 옮겨 적었다(`build-gallery.js` `CAPTIONS`, 환자 이니셜은 뺌). 원래 본문이 따로 있었다면 병원 관리자 계정으로 확인 필요
-- 이미지 14장 모두 [안내 띠 / BEFORE | AFTER / 로고] 한 장 양식 → 흰 사진 테두리를 찾아 **자동으로 나눔(수동 확인 필요 0건)**
-- 원본 합본 이미지(AFTER 가 그대로 보이고 환자 이니셜이 있음)는 사이트에도 저장소에도 올리지 않는다 — **이 저장소는 공개(Public)라 커밋하면 누구나 볼 수 있음**. 원본 14장 + 목록(`list.json`)은 프로젝트 밖 `자료/기존사이트-치료사례/` 에 보관 (오픈 후 기존 서버가 사라지므로 병원 자료와 함께 따로 백업할 것). 다시 만들 때는 `scripts/import/raw/gallery/` 에 넣고 build-gallery.js 실행 (`.gitignore`)
-- **AFTER 원본 14장은 저장소 밖 보관, 서버 저장소에 올려 로그인 회원에게만 제공** (2026-11-06) — `자료/기존사이트-치료사례/after/case-{번호}-after.jpg`. 공개 저장소·공개 사이트에는 BEFORE 와 AFTER 흐림 미리보기만 있다(`.gitignore`). 시안에서는 로그인 상태(`?login=1`)에서도 AFTER 자리는 흐림 미리보기 + '시안: 실제 운영 시 원본 공개'. build-gallery.js 를 다시 돌리면 AFTER 원본은 이 폴더로 나간다(`CASES_AFTER_DIR` 로 바꿀 수 있음)
-- [ ] 서버 연결 때 AFTER 원본 14장을 비공개 저장소에 올리고 로그인 회원에게만 주소 제공 (API-SPEC 4-3)
-- 진료 분류: 제목에 '교정' → 치아교정, wr_id 5(교정·보철·임플란트) → 치아교정·보철·임플란트. wr_id 18 은 제목에 '교정'이 없지만 안내 띠가 '교정기간'이라 치아교정
-- [ ] 병원 확인: 사진 게시 동의(환자 동의서) 유효 여부, 의료광고 심의 필요 여부, 지점(창원·마산) 정보(기존 글에 없음)
-
-| 자료 | 원래 제목 | 작성일 | 원본 글 | 원본 이미지 | 새 파일 |
-|---|---|---|---|---|---|
-| 치료사례 18 | 화이트e치과 시술 전후(덧니, 개방교합 해소) | 2026-10-27 (목록 10-27 + 이미지 폴더 2026-10) | https://whiteedental.co.kr/bbs/board.php?bo_table=gallery&wr_id=18 | https://whiteedental.co.kr/data/editor/2610/30df551de57490d6124bf12064bbc658_1793054095_2954.jpg | `assets/images/cases/case-18-before.jpg` · `-after.jpg` · `-after-blur.jpg` |
-| 치료사례 17 | 화이트e치과 시술 전후(부정교합 개선 교정) | 2026-10-07 (목록 10-07 + 이미지 폴더 2026-10) | https://whiteedental.co.kr/bbs/board.php?bo_table=gallery&wr_id=17 | https://whiteedental.co.kr/data/editor/2610/d10eb5052ca7e3a3cd1e1c19508fa9cc_1791332886_2322.jpg | `assets/images/cases/case-17-before.jpg` · `-after.jpg` · `-after-blur.jpg` |
-| 치료사례 16 | 화이트e치과 시술 전후(치아배열 교정) | 2026-08-31 (목록 08-31 + 이미지 폴더 2026-08) | https://whiteedental.co.kr/bbs/board.php?bo_table=gallery&wr_id=16 | https://whiteedental.co.kr/data/editor/2608/cf69db3595d73a5aece148c47ea7a314_1788149606_8551.jpg | `assets/images/cases/case-16-before.jpg` · `-after.jpg` · `-after-blur.jpg` |
-| 치료사례 15 | 화이트e치과 시술 전후(덧니 개선 교정) | 2026-05-27 (목록 05-27 + 이미지 폴더 2026-05) | https://whiteedental.co.kr/bbs/board.php?bo_table=gallery&wr_id=15 | https://whiteedental.co.kr/data/editor/2605/454ed50e19393ef4c90805adde0ef862_1779868330_5295.jpg | `assets/images/cases/case-15-before.jpg` · `-after.jpg` · `-after-blur.jpg` |
-| 치료사례 14 | 화이트e치과 시술 전후(덧니 개선 교정) | 2026-05-11 (목록 05-11 + 이미지 폴더 2026-05) | https://whiteedental.co.kr/bbs/board.php?bo_table=gallery&wr_id=14 | https://whiteedental.co.kr/data/editor/2605/0ce7bb52f5f93a1122f8224652c15c68_1778460248_1964.jpg | `assets/images/cases/case-14-before.jpg` · `-after.jpg` · `-after-blur.jpg` |
-| 치료사례 13 | 화이트e치과 시술 전후(치아돌출 및 치열개선 목적 교정) | 2026-04-27 (목록 04-27 + 이미지 폴더 2026-04) | https://whiteedental.co.kr/bbs/board.php?bo_table=gallery&wr_id=13 | https://whiteedental.co.kr/data/editor/2604/e1ad33083ab315fdd27835dd9b34b1bf_1777253454_3635.jpg | `assets/images/cases/case-13-before.jpg` · `-after.jpg` · `-after-blur.jpg` |
-| 치료사례 12 | 화이트e치과 시술 전후(전치부 총생 및 교합 개선 목적 교정) | 2026-03-20 (목록 03-20 + 이미지 폴더 2026-03) | https://whiteedental.co.kr/bbs/board.php?bo_table=gallery&wr_id=12 | https://whiteedental.co.kr/data/editor/2603/94449997946be0968ddd203b3ef0e3bf_1773971582_719.jpg | `assets/images/cases/case-12-before.jpg` · `-after.jpg` · `-after-blur.jpg` |
-| 치료사례 11 | 화이트e치과 시술 전후(전치부 반대교합 개선 및 치아 사이 공간 개선 교정) | 2026-03-12 (목록 03-12 + 이미지 폴더 2026-03) | https://whiteedental.co.kr/bbs/board.php?bo_table=gallery&wr_id=11 | https://whiteedental.co.kr/data/editor/2603/9f4a90d115f29e136e4ee22842a17e83_1773279008_8676.jpg | `assets/images/cases/case-11-before.jpg` · `-after.jpg` · `-after-blur.jpg` |
-| 치료사례 10 | 화이트e치과 시술 전후(삐뚤한 치아교정) | 2025-09-23 (목록 09-23 + 이미지 폴더 2025-09) | https://whiteedental.co.kr/bbs/board.php?bo_table=gallery&wr_id=10 | https://whiteedental.co.kr/data/editor/2509/2990960d34258c58a405f8a4f1c1eef1_1758590397_8362.jpg | `assets/images/cases/case-10-before.jpg` · `-after.jpg` · `-after-blur.jpg` |
-| 치료사례 9 | 화이트e치과 시술 전후(삐뚤한 치아교정) | 2025-09-12 (목록 09-12 + 이미지 폴더 2025-09) | https://whiteedental.co.kr/bbs/board.php?bo_table=gallery&wr_id=9 | https://whiteedental.co.kr/data/editor/2509/767135d9815ac5b173548011e73787c1_1757651489_4745.jpg | `assets/images/cases/case-9-before.jpg` · `-after.jpg` · `-after-blur.jpg` |
-| 치료사례 8 | 화이트e치과 시술 전후(덧니 해소 교정) | 2025-05-28 (목록 05-28 + 이미지 폴더 2025-05) | https://whiteedental.co.kr/bbs/board.php?bo_table=gallery&wr_id=8 | https://whiteedental.co.kr/data/editor/2505/4cb4ad7c54ae787735b23f38af6485f4_1748387561_2623.jpg | `assets/images/cases/case-8-before.jpg` · `-after.jpg` · `-after-blur.jpg` |
-| 치료사례 7 | 화이트e치과 시술 전후(성장기 교정) | 2025-04-29 (목록 04-29 + 이미지 폴더 2025-04) | https://whiteedental.co.kr/bbs/board.php?bo_table=gallery&wr_id=7 | https://whiteedental.co.kr/data/editor/2504/8d61bc47d977034cf485f0cb1db358ad_1745900245_1948.jpg | `assets/images/cases/case-7-before.jpg` · `-after.jpg` · `-after-blur.jpg` |
-| 치료사례 6 | 화이트e치과 시술 전후(덧니 교정) | 2025-04-07 (목록 04-07 + 이미지 폴더 2025-04) | https://whiteedental.co.kr/bbs/board.php?bo_table=gallery&wr_id=6 | https://whiteedental.co.kr/data/editor/2504/1c122374826fe7d954ac194596487cee_1743988190_6898.jpg | `assets/images/cases/case-6-before.jpg` · `-after.jpg` · `-after-blur.jpg` |
-| 치료사례 5 | 화이트e치과 시술 전후(교정, 보철, 임플란트) | 2025-03-07 (목록 03-07 + 이미지 폴더 2025-03) | https://whiteedental.co.kr/bbs/board.php?bo_table=gallery&wr_id=5 | https://whiteedental.co.kr/data/editor/2503/e8a1936e1cf073499027ad1c1d2aa8a7_1741306019_9898.jpg | `assets/images/cases/case-5-before.jpg` · `-after.jpg` · `-after-blur.jpg` |
+- 기존 홈페이지 갤러리 게시판의 '시술 전후' 14건은 **새 사이트로 이관하지 않는다.** 병원이 환자 게시 동의를 받은 사례만 관리자 화면에서 새로 등록한다 (HOSPITAL-CHECK #20)
+- 2026-11-06에 옮겨 왔던 데이터(`assets/data/cases.json` 14건)와 가져오기 스크립트(`scripts/import/fetch-gallery.js` · `build-gallery.js` · `raw/gallery/list.json`)는 2026-11-10 삭제했고, git 이력에서도 지웠다(사진 · 사례별 기간 · 내용 포함)
+- 지금 `assets/data/cases.json` 은 빈 목록(`[]`) → 치료사례 목록 0건, 메인 치료사례 섹션 숨김, 관리자 치료사례 탭은 빈 상태 문구. 시안 미리보기는 `?mock=N`(예시 사례)
+- 기존 사진은 저장소 밖에만 보관: `자료/치료사례/` · `자료/기존사이트-치료사례/` · `자료/기존상세/orthodontics/before-after/` — 병원에 돌려줄지 삭제할지는 인수인계 때 결정
+- [ ] 병원 확인: 새로 등록할 사례의 사진 게시 동의(환자 동의서) · 의료광고 심의 필요 여부 · 지점(창원 · 마산)
 
 ### 비급여 진료비용 수가표 (A4 스캔 12장) — 2026-11-08
 
@@ -121,7 +97,7 @@
 - 라이선스: [Pexels License](https://www.pexels.com/license/) — 상업적 사용 무료, 출처 표기 의무 없음, 수정 가능.
   금지: 이미지 자체를 그대로 판매, 사진 속 인물이 병원·제품을 보증하는 것처럼 표현, 상표·로고로 사용
 - ⚠️ 의료진·환자·원내 사진처럼 **실제 병원을 대표하는 것처럼 보일 수 있는 사진은 오픈 전 반드시 실제 사진으로 교체** (의료광고·소비자 오인 방지)
-- 치료사례는 기존 사이트 '시술 전후' 14건의 실제 사진으로 바꿨습니다 (2026-11-06, 위 '기존 사이트에서 옮긴 자료'). 예전 스톡 더미 사진은 지웠습니다
+- 치료사례의 예전 스톡 더미 사진은 지웠습니다. 기존 사이트 '시술 전후' 14건은 이관하지 않습니다 (2026-11-10, 위 '기존 사이트에서 옮긴 자료')
 
 | 파일 (assets/images/temp/) | Pexels 사진 ID | 촬영자 | 라이선스 |
 |---|---|---|---|
