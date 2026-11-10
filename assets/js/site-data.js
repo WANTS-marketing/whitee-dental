@@ -3,7 +3,7 @@
    병원 정보가 바뀌면 이 파일만 고치면 된다. (2차에 Supabase로 옮길 대상 아님: 거의 안 바뀌는 정보)
    ========================================================================== */
 
-/* 진료시간 — 창원점·마산점 공통, 한 곳에서 관리 (병원 제공 자료로 확정 2026-11-10, 24시간 표기)
+/* 진료시간 — 창원점·마산점 공통, 한 곳에서 관리 (병원 제공 자료로 확정 2026-11-10, 24시간 표기 — 일요일·명절 휴진 포함)
    쓰는 곳(모두 이 값): 메인 히어로 진료시간 카드 · 진료과목 '지점 안내' · 푸터 · 오시는길 · 상담문의 작성 지점 카드 · FAQ 답변의 {hours} · 진료과목 구조화 데이터(평일·토요일만)
    지점별로 달라지면 branches[].hours 에 그 지점 값을 따로 넣으면 된다 */
 const CLINIC_HOURS = [
@@ -11,6 +11,7 @@ const CLINIC_HOURS = [
   { label: '토요일', time: '10:00–16:00' },
   { label: '공휴일(평일)', time: '10:00–18:00' },
   { label: '공휴일(토요일)', time: '10:00–14:30' },
+  { label: '일요일·명절', time: '휴진' }, // 병원 자료 '평일 매일 오후9시까지 야간진료, 공휴일 진료 (단, 일요일, 명절 제외)' (2026-11-10)
 ];
 const CLINIC_HOURS_NOTE = '대체공휴일은 정상 진료합니다'; // 진료시간 아래 작은 글씨(파랑)
 
@@ -27,7 +28,7 @@ window.SITE = {
       bizNo: '566-95-00700',
       tel: '055-716-2884',
       email: 'whitee2018@naver.com',
-      hoursVerified: true, // 병원 제공 자료(2026-11-10) — 일요일 휴진 표기 여부만 확인(docs/HOSPITAL-CHECK.md #1)
+      hoursVerified: true, // 병원 제공 자료(2026-11-10, 일요일·명절 휴진 포함) — 확인 완료(docs/HOSPITAL-CHECK.md #1)
       hours: CLINIC_HOURS,
       hoursNote: CLINIC_HOURS_NOTE,
       naverMap: 'https://naver.me/FY3f3LdP',
@@ -48,7 +49,7 @@ window.SITE = {
       bizNo: '577-91-01943',
       tel: '055-255-2000',
       email: 'whitee2024@naver.com',
-      hoursVerified: true, // 병원 제공 자료(2026-11-10) — 일요일 휴진 표기 여부만 확인(docs/HOSPITAL-CHECK.md #1)
+      hoursVerified: true, // 병원 제공 자료(2026-11-10, 일요일·명절 휴진 포함) — 확인 완료(docs/HOSPITAL-CHECK.md #1)
       hours: CLINIC_HOURS,
       hoursNote: CLINIC_HOURS_NOTE,
       naverMap: 'https://naver.me/xWTYEspr',
