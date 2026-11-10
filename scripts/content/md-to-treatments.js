@@ -88,7 +88,7 @@ const treatments = blocks.map((b) => {
       label: lineOf(digSec, '라벨'),
       title: lineOf(digSec, '제목'),
       text: lineOf(digSec, '본문'),
-      items: digSec.split(/\n#### /).slice(1).map((d) => ({ name: d.split('\n')[0].trim(), image: slotOf(lineOf(d, '이미지')), text: lineOf(d, '설명') })),
+      items: digSec.split(/\n#### /).slice(1).map((d) => ({ name: d.split('\n')[0].trim(), ...(lineOf(d, '보조') ? { sub: lineOf(d, '보조') } : {}), image: slotOf(lineOf(d, '이미지')), text: lineOf(d, '설명') })), // 보조 = 이름 아래 작은 글씨(선택)
     };
   }
   /* 장치 비교 표 (치아교정 '검사부터 관리까지' 다음 독립 섹션, 2026-11-09): 제목 · 링크 단계(그 단계 본문 끝에 섹션으로 가는 링크) · 링크 글자 · 안내
