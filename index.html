@@ -37,7 +37,7 @@
     <h1 class="sr-only">화이트e치과 — 창원점 · 마산점</h1>
 
     <!-- 메인 구성 (2026-11-09): 홈(히어로 슬라이드 — 4번 = 이벤트) → WHY 화이트e 4가지 약속 → 진료안내(카드 5개) → 분야별 전문의
-         → 치료사례 → WHITE e PARTNERS(협력 기관) → 자주 묻는 질문 + 온라인 상담 문의 → 공지사항 · 소식 → (푸터) 지점 바로가기 바
+         → WHITE e PARTNERS(협력 기관) → 치료사례 → 자주 묻는 질문 + 온라인 상담 문의 → 공지사항 · 소식 → (푸터) 지점 바로가기 바
          (히어로 안 '빠른 진료 안내' 퀵바는 진료안내 카드와 링크 5개가 같아 삭제)
          진료 철학 문구는 치과소개(about/intro.html)로, 지점 정보는 하단 지점 바로가기 바로 옮겼다 -->
     <div class="screen-home" id="screen-home">
@@ -219,7 +219,24 @@
       </div>
     </section>
 
-    <!-- ⑤ 치료사례 -->
+    <!-- ⑤ WHITE e PARTNERS — 협력 기관 (네이비 면, 2026-11-10 출처 확인 후 노출 — 의료진 바로 다음). 데이터 = site-data.js SITE.partners (치과소개 #partners 와 같음, common.js renderSiteBlocks)
+         숫자 = 협력 기관 수 자동, 강조 카드 3개, 기관 타일 2줄 흐름(윗줄 ←, 아랫줄 →, 마우스 올리면 멈춤, 움직임 줄이기면 줄바꿈 그리드) -->
+    <section class="partners screen" id="screen-partners" data-header-theme="dark" aria-labelledby="partners-title">
+      <div class="container partners__inner">
+        <div class="partners__head">
+          <div class="partners__intro">
+            <span class="partners__label">WHITE e PARTNERS</span>
+            <h2 class="partners__title" id="partners-title">지역과 함께하는 화이트e치과</h2>
+            <p class="partners__desc">화이트e치과는 지역의 의료기관·기업·단체와 함께하고 있습니다.</p>
+          </div>
+          <p class="partners__count"><strong data-partner-count></strong><span>협력 기관</span></p>
+        </div>
+        <ul class="partners__cards" data-partner-highlights="card"></ul>
+      </div>
+      <div class="partner-marquee" data-partner-marquee role="region" aria-label="협력 기관 목록"></div>
+    </section>
+
+    <!-- ⑥ 치료사례 -->
     <section class="cases screen" id="screen-cases" data-header-theme="light" aria-labelledby="cases-title">
       <div class="container cases__inner">
         <div class="cases__head">
@@ -236,26 +253,6 @@
         </div>
         <!-- 최신 치료사례 3건 (main.js initCases ← api.js getCases — 게시 동의 확인된 사례만, 없으면 한 줄 안내) — 카드 = [BEFORE / AFTER 로그인 전 둘 다 흐림·자물쇠] + 분류·제목 -->
         <ul class="cases__list" data-cases></ul>
-      </div>
-    </section>
-
-    <!-- ⑥ WHITE e PARTNERS — 협력 기관 (네이비 면). 데이터 = site-data.js SITE.partners (치과소개 #partners 와 같음, common.js renderSiteBlocks)
-         숫자 = 협력 기관 수 자동, 강조 카드 3개, 기관 타일 2줄 흐름(윗줄 ←, 아랫줄 →, 마우스 올리면 멈춤, 움직임 줄이기면 줄바꿈 그리드) -->
-    <section class="partners screen" id="screen-partners" data-header-theme="dark" aria-labelledby="partners-title" hidden><!-- 2026-11-09 숨김: 협력 기관 정보가 정확하지 않아 확인 후 다시 공개 (docs/PARTNERS-CHECK.md) — hidden 지우고 fullpage.js SECTIONS 줄 되살리면 됨 -->
-      <div class="container partners__inner">
-        <div class="partners__head">
-          <div class="partners__intro">
-            <span class="partners__label">WHITE e PARTNERS</span>
-            <h2 class="partners__title" id="partners-title">지역과 함께하는 화이트e치과</h2>
-            <p class="partners__desc">지역의 의료기관·기업·단체와 함께 건강한 일상을 만들어 갑니다.</p>
-          </div>
-          <p class="partners__count"><strong data-partner-count></strong><span>협력 기관</span></p>
-        </div>
-        <ul class="partners__cards" data-partner-highlights="card"></ul>
-      </div>
-      <div class="partner-marquee" data-partner-marquee role="region" aria-label="협력 기관 목록"></div>
-      <div class="container partners__foot">
-        <a class="partners__more" href="./about/intro.html#partners">치과소개에서 전체 보기<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a>
       </div>
     </section>
 

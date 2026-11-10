@@ -20,8 +20,8 @@
     { sel: '#screen-why', hash: 'why', label: '4가지 약속' },
     { sel: '#screen-clinic', hash: 'treatment', label: '진료안내' },
     { sel: '#screen-doctors', hash: 'doctors', label: '의료진' },
+    { sel: '#screen-partners', hash: 'partners', label: '협력 기관' }, // 2026-11-10 출처 확인 후 다시 공개 — 의료진 바로 다음
     { sel: '#screen-cases', hash: 'cases', label: '치료사례' },
-    // { sel: '#screen-partners', hash: 'partners', label: '협력 기관' }, // 2026-11-09 숨김 (index.html hidden) — 다시 공개할 때 되살림
     { sel: '#screen-faq', hash: 'faq', label: '자주 묻는 질문' },
     { sel: '#screen-story', hash: 'news', label: '치과소식' },
     { sel: '.branch-bar', hash: 'location', label: '지점·오시는길' }, // 푸터 include 가 들어오면 자리 요소가 바뀌므로 지점 바로가기 바 기준
