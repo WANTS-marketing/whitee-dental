@@ -270,7 +270,7 @@ ${lnb}
         <section class="t-sec" aria-labelledby="t-points-title">
           <h2 class="t-sec__title t-sec__title--center" id="t-points-title">화이트e치과 진료 포인트</h2>
           <ol class="t-points">
-${t.points.map((p, i) => `            <li class="t-point"><span class="t-point__no">${String(i + 1).padStart(2, '0')}</span><p class="t-point__text">${esc(p)}${/[.?!]$/.test(p) ? '' : '.'}</p></li>`).join('\n')}
+${t.points.map((p, i) => `            <li class="t-point"><span class="t-point__no">${String(i + 1).padStart(2, '0')}</span><div class="t-point__body"><p class="t-point__text">${esc(p)}${/[.?!]$/.test(p) ? '' : '.'}</p></div></li>`).join('\n')}
           </ol>
         </section>
 ${noticeBox}${D && D.place === 'notice' ? deviceSection : ''}${photoStrip}
