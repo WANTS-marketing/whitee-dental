@@ -110,12 +110,12 @@ ${cases.map((c, i) => `              <button type="button" class="t-fold__tab" r
           </div>
         </section>
 ` : '';
-  /* 안내 박스 (진료 포인트 바로 아래, 본문 칸 — 2026-11-10 스케일링 '가글 마취'): #F8FAFD · 왼쪽 4px 파랑 선 · 라벨 14px 파랑 굵게 · 문장 17px (sub.css .t-notice) */
+  /* 안내 박스 (진료 포인트 바로 아래, 본문 칸 — 2026-11-10 스케일링 '가글 마취'): #F8FAFD · 왼쪽 4px 파랑 선 · 라벨 14px 파랑 굵게 · 문장 17px (sub.css .t-guide — 하단 고지 .t-notice 와 다른 클래스) */
   const noticeBox = X.notice ? `
         <!-- 추가 · 안내 박스 — ${esc(X.notice.label)} (원고 '추가 블록 — 안내 박스') -->
-        <aside class="t-notice" aria-label="${esc(X.notice.label)} 안내">
-          <p class="t-notice__label">${esc(X.notice.label)}</p>
-          <p class="t-notice__text">${esc(X.notice.text)}</p>
+        <aside class="t-guide" aria-label="${esc(X.notice.label)} 안내">
+          <p class="t-guide__label">${esc(X.notice.label)}</p>
+          <p class="t-guide__text">${esc(X.notice.text)}</p>
         </aside>
 ` : '';
   const labBlock = X.lab ? `
