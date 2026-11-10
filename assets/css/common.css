@@ -535,6 +535,29 @@ body.no-hero .header { box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08); }
 /* 현재 페이지 행: 옅은 네이비 면 + 네이비 굵은 글자 + 왼쪽 4px 세로 막대(파랑, 행 높이 꽉) — 네이비 타이틀 블록과 구분 */
 .lnb__list > li > a[aria-current="page"] { background: var(--color-point-soft); color: var(--color-point); font-weight: 700; }
 .lnb__list > li > a[aria-current="page"]::before { content: ""; position: absolute; top: 0; bottom: 0; left: 0; width: 4px; background: var(--color-accent); }
+/* 하단 메뉴 선택바 (LNB 가 있는 모든 서브페이지 — common.js initLnbBar, 2026-11-10)
+   LNB 가 화면 위로 사라지면 화면 아래 가운데(--bar-x, JS — 퀵메뉴 '+' 와 겹치면 왼쪽으로) · 아래 24px(모바일: 하단 고정 바 위 12px)
+   닫힘: 알약 48px · 좌우 24px · 남색 면 · 흰 글자 15px 굵게 + 위 화살표 / 열림: 위로 흰 패널(둥근 16px · 그림자) — LNB 와 같은 항목, 현재 = accent 글자 + 왼쪽 accent 점
+   나타남·사라짐: 아래에서 16px 올라오며 페이드 250ms (동작 줄이기 = 즉시). 푸터가 보이면 숨김(JS) */
+.lnb-bar { position: fixed; z-index: calc(var(--z-quick) - 1); left: var(--bar-x, 50%); bottom: 24px; transform: translate(-50%, 16px); opacity: 0; visibility: hidden; transition: opacity 0.25s ease, transform 0.25s ease, visibility 0s 0.25s; }
+.lnb-bar.is-visible { transform: translate(-50%, 0); opacity: 1; visibility: visible; transition: opacity 0.25s ease, transform 0.25s ease, visibility 0s; }
+.lnb-bar__btn { display: inline-flex; align-items: center; gap: 8px; height: 48px; max-width: calc(100vw - 32px); padding: 0 24px; border-radius: 999px; background: var(--color-point); box-shadow: 0 8px 24px rgba(22, 35, 63, 0.2); font-size: 0.9375rem; font-weight: 700; color: #fff; white-space: nowrap; transition: background-color 0.2s; }
+.lnb-bar__btn:hover { background: var(--color-point-hover); }
+.lnb-bar__btn:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; }
+.lnb-bar__label { overflow: hidden; text-overflow: ellipsis; }
+.lnb-bar__btn svg { flex: none; width: 16px; height: 16px; transition: transform 0.25s ease; }
+.lnb-bar.is-open .lnb-bar__btn svg { transform: rotate(180deg); }
+.lnb-bar__panel { position: absolute; left: 50%; bottom: calc(100% + 12px); width: max-content; min-width: 100%; max-width: min(360px, 90vw); padding: 8px; border-radius: 16px; background: #fff; box-shadow: 0 12px 32px rgba(22, 35, 63, 0.18), 0 0 0 1px rgba(22, 35, 63, 0.04); transform: translateX(-50%); }
+.lnb-bar__panel[hidden] { display: none; }
+.lnb-bar__link { position: relative; display: flex; align-items: center; min-height: 44px; padding: 8px 20px 8px 30px; border-radius: 10px; font-size: 1rem; line-height: 1.4; color: #333; word-break: keep-all; transition: background-color 0.2s, color 0.2s; }
+.lnb-bar__link:hover { background: var(--color-point-soft); color: var(--color-point); }
+.lnb-bar__link[aria-current="page"] { font-weight: 700; color: var(--color-accent); }
+.lnb-bar__link[aria-current="page"]::before { content: ""; position: absolute; left: 14px; top: 50%; width: 6px; height: 6px; margin-top: -3px; border-radius: 50%; background: var(--color-accent); }
+@media (max-width: 768px) {
+  .lnb-bar { bottom: calc(var(--bottom-bar-h) + env(safe-area-inset-bottom) + 12px); } /* 하단 고정 바(전화·상담) 위 12px */
+  .lnb-bar__panel { width: 90vw; max-width: none; } /* 화면 폭 90%, 화면 가운데(선택바가 옆으로 비켜도 — left 는 JS) */
+}
+@media (prefers-reduced-motion: reduce) { .lnb-bar, .lnb-bar.is-visible, .lnb-bar__btn svg { transition: none; } }
 /* 본문 맨 위: 경로(홈 아이콘 › 대메뉴 › 페이지) + 페이지 제목 + 얇은 구분선 — 경로 줄이 LNB 맨 위와 같은 높이 */
 .sub-head { margin-bottom: 56px; padding: 0 0 24px; border-bottom: 1px solid var(--color-line); }
 .sub-head .breadcrumb { justify-content: flex-start; align-items: center; margin: 0 0 10px; font-size: 0.875rem; color: #888; }
