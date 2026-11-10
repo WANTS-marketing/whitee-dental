@@ -164,49 +164,51 @@ window.SITE = {
   ],
 
   /* 협력 기관 — 메인 'WHITE e PARTNERS' · 치과소개(about/intro.html #partners) 공통 (common.js renderSiteBlocks)
-       출처: 2026-11-02 커밋 bd5b31e(디자인 2차)에서 처음 입력 — 출처 기록 없음. 기존 홈페이지(메인·의료진소개 이미지)·자료 폴더에서도 확인 못 함
-       → 모두 verified: false (병원 확인 필요 목록: docs/PARTNERS-CHECK.md). 지우지 않고 유지
+       출처: 기존 홈페이지 심미치료 상세(https://whiteedental.co.kr/bbs/content.php?co_id=sub06_01) 20·21 구간 — 2026-11-10 원본 이미지와 대조, 모두 verified: true
+       (docs/content/legacy/aesthetic-legacy.md, docs/PARTNERS-CHECK.md)
        highlights 강조 카드: icon = svg 안쪽(viewBox 0 0 24 24, 선)
        list 협력 기관: logo = assets/images/partners/ 안 파일 이름 — 있으면 로고 이미지, 비어 있으면 글자 타일 (로고를 받으면 logo 만 채우면 됨) */
   partners: {
+    // 2026-11-10 출처 확인 완료 — 기존 홈페이지 심미치료 상세(sub06_01) 20·21 구간 원본 이미지와 하나씩 대조, 기관명은 원본 표기 그대로(띄어쓰기·괄호·(주) 포함)
+    // 남은 확인: 현재도 유효한지 · 로고 파일 요청 (docs/PARTNERS-CHECK.md). logo 에 파일 이름을 넣으면 이름 대신 로고(assets/images/partners/) — 원본 이미지의 로고는 잘라 쓰지 않음
     highlights: [
-      { title: '부산대학병원 협력', desc: '협력 의료기관', verified: false, // TODO: 협력 내용 확인
+      { title: '부산대학병원 협력', desc: '협력 의료기관', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)',
         icon: '<path d="M4 21V8l8-5 8 5v13"/><path d="M9 21v-5h6v5M12 8v5M9.5 10.5h5"/>' },
-      { title: '경찰 자문', desc: '자문 활동', verified: false, // TODO: 자문 내용 확인
+      { title: '경찰자문', desc: '자문 활동', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)',
         icon: '<path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6z"/><path d="M9 12l2 2 4-4"/>' },
-      { title: '방송 출연', desc: '‘세상에 이런일이’', verified: false,
+      { title: '방송출연', desc: '‘순간포착 세상에 이런일이’', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)',
         icon: '<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 3l4 4 4-4"/>' },
     ],
     list: [
-      { name: "전국금속노동조합", logo: '', verified: false },
-      { name: "DOOSAN", logo: '', verified: false },
-      { name: "한화디펜스", logo: '', verified: false },
-      { name: "경상남도 대한미용협회", logo: '', verified: false },
-      { name: "창원대학교", logo: '', verified: false },
-      { name: "창원시 배드민턴협회", logo: '', verified: false },
-      { name: "마산 어시장상인회", logo: '', verified: false },
-      { name: "한국실버경찰봉사대 의창구지회", logo: '', verified: false },
-      { name: "웨딩드림", logo: '', verified: false },
-      { name: "라라한방병원", logo: '', verified: false },
-      { name: "미시안 안과의원", logo: '', verified: false },
-      { name: "미시안 여성의원", logo: '', verified: false },
-      { name: "창원시 사회인 야구단", logo: '', verified: false },
-      { name: "(주)창원청과시장", logo: '', verified: false },
-      { name: "탑골프아카데미", logo: '', verified: false },
-      { name: "효성중공업", logo: '', verified: false },
-      { name: "경남 자율방재단연합회", logo: '', verified: false },
-      { name: "창원시 소프트볼협회", logo: '', verified: false, note: "처음 넣을 때부터 '로고 확인' 표시가 있던 항목" },
-      { name: "바르게살기운동 경남협의회", logo: '', verified: false },
-      { name: "창원 LG 세이커스", logo: '', verified: false },
-      { name: "경남FC", logo: '', verified: false },
-      { name: "창원 시청축구단", logo: '', verified: false },
-      { name: "창원 성산소방서", logo: '', verified: false },
-      { name: "엔디티 엔지니어링(주)", logo: '', verified: false },
-      { name: "중소기업융합경남연합회", logo: '', verified: false },
-      { name: "가온내과", logo: '', verified: false },
-      { name: "365병원", logo: '', verified: false, note: "마산점 건물(석전동 365병원)과 이름이 같음 — 주소 정보에서 잘못 들어온 것인지 확인" },
-      { name: "강추한방병원", logo: '', verified: false },
-      { name: "창원메트로시티석전 아파트", logo: '', verified: false, note: "마산점 주소 동네(석전동)와 겹침 — 주소 정보에서 잘못 들어온 것인지 확인" },
+      { name: "전국금속노동조합", logo: '', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)' },
+      { name: "DOOSAN", logo: '', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)' },
+      { name: "한화디펜스", logo: '', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)' },
+      { name: "경상남도 대한미용협회", logo: '', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)' },
+      { name: "창원대학교", logo: '', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)' },
+      { name: "창원시 배드민턴협회", logo: '', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)' },
+      { name: "마산 어시장상인회", logo: '', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)' },
+      { name: "한국실버경찰봉사대 의창구지회", logo: '', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)' },
+      { name: "웨딩드림", logo: '', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)' },
+      { name: "라라한방병원", logo: '', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)' },
+      { name: "미시안 안과의원", logo: '', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)' },
+      { name: "미시안 여성의원", logo: '', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)' },
+      { name: "창원시 사회인 야구단 [창원88용병경기]", logo: '', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)' },
+      { name: "(주)창원청과시장", logo: '', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)' },
+      { name: "탑골프아카데미", logo: '', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)' },
+      { name: "효성중공업", logo: '', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)' },
+      { name: "경남 자율방재단연합회", logo: '', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)' },
+      { name: "창원시야구소프트볼협회", logo: '', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)' },
+      { name: "바르게살기 운동 경남협의회", logo: '', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)' },
+      { name: "창원 LG 세이커스", logo: '', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)' },
+      { name: "경남FC", logo: '', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)' },
+      { name: "창원 시청축구단", logo: '', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)' },
+      { name: "창원 성산소방서", logo: '', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)' },
+      { name: "엔디티 엔지니어링 (주)", logo: '', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)' },
+      { name: "중소기업융합경남연합회", logo: '', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)' },
+      { name: "가온내과", logo: '', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)' },
+      { name: "365병원", logo: '', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)' },
+      { name: "강추한방병원", logo: '', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)' },
+      { name: "창원메트로시티석전 아파트", logo: '', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)' },
     ],
   },
 
