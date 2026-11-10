@@ -144,7 +144,7 @@
 .t-digital__label { display: block; margin-bottom: 8px; font-size: 0.8125rem; font-weight: 700; letter-spacing: 0.16em; color: var(--color-accent); }
 .t-digital__title { margin-bottom: 12px; }
 .t-digital__lead { max-width: 640px; margin-inline: auto; font-size: 1.0625rem; line-height: 1.75; color: var(--color-text-sub); word-break: keep-all; }
-.t-digital__list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: repeat(3, auto); margin-top: 28px; border-top: 2px solid var(--color-point); border-bottom: 1px solid #e3e8f0; }
+.t-digital__list { display: grid; grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr)); /* 칸 수 = 장비 수(build-treatments.js --cols) */ grid-template-rows: repeat(3, auto); margin-top: 28px; border-top: 2px solid var(--color-point); border-bottom: 1px solid #e3e8f0; }
 .t-digital__item { display: grid; grid-row: span 3; grid-template-rows: subgrid; justify-items: center; align-content: start; padding: 36px 32px; text-align: center; }
 .t-digital__item + .t-digital__item { border-left: 1px solid #e3e8f0; }
 .t-digital__item .t-slot { width: 80%; border-radius: 12px; }

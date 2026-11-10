@@ -112,12 +112,17 @@
      - 게시 동의 확인된 사례만(consentChecked: true)
      - 치료 전·후 사진 모두 로그인 회원만: 비로그인이면 beforeImage · afterImage = null (화면은 흐림 자리 + '로그인 후 확인하실 수 있습니다')
      - 환자 이름(성씨 포함) 필드는 두지 않는다
-     - category = 세부 분류 키(교정 7종 — CASE_CATEGORIES), period = 치료 기간, extraction = '발치' | '비발치'
+     - category = 세부 분류 키(교정 7종 · 심미치료 4종 — CASE_CATEGORIES), period = 치료 기간, extraction = '발치' | '비발치'(교정만)
+     - 큰 분류(categories): 키가 ortho- 이면 '치아교정', aes- 이면 '심미치료' (CASE_GROUP)
      - 시안: ?mock=N → 예시 사례 N개(사진 없음 = 회색 자리표시) */
   const CASE_CATEGORIES = {
     'ortho-crowding': '덧니교정', 'ortho-protrusion': '돌출입교정', 'ortho-openbite': '개방교합',
     'ortho-deepbite': '과개교합', 'ortho-crossbite': '반대교합', 'ortho-partial': '부분·틈새교정', 'ortho-child': '어린이교정',
+    // 심미치료 4종 (2026-11-10 — 심미치료 갤러리 '치료사례 보기')
+    'aes-whitening': '치아미백', 'aes-laminate': '라미네이트', 'aes-allceramic': '올세라믹', 'aes-gum': '잇몸성형',
   };
+  /** 세부 분류 키 → 큰 분류 이름 */
+  const CASE_GROUP = (k) => (String(k).startsWith('aes-') ? '심미치료' : '치아교정');
   function mockCases(n) {
     const keys = Object.keys(CASE_CATEGORIES);
     const PERIOD = ['1년 8개월', '2년 1개월', '1년 4개월', '2년 6개월', '2년 10개월', '8개월'];
@@ -126,9 +131,9 @@
       const k = keys[i % keys.length];
       return {
         id: `mock-case-${i + 1}`, no: i + 1, title: `${CASE_CATEGORIES[k]} 사례 (예시 ${i + 1})`,
-        categories: ['치아교정'], category: k, date: new Date(Date.parse('2026-10-30T09:00:00+09:00') - i * 20 * DAY).toISOString(),
+        categories: [CASE_GROUP(k)], category: k, date: new Date(Date.parse('2026-10-30T09:00:00+09:00') - i * 20 * DAY).toISOString(),
         branch: i % 2 ? 'masan' : 'changwon', beforeImage: null, afterImage: null,
-        period: PERIOD[i % PERIOD.length], extraction: i % 3 === 0 ? '발치' : '비발치', consentChecked: true, body: '', _mock: true,
+        period: PERIOD[i % PERIOD.length], extraction: k.startsWith('ortho-') ? (i % 3 === 0 ? '발치' : '비발치') : '', consentChecked: true, body: '', _mock: true,
       };
     });
   }

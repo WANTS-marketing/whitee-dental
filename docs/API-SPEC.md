@@ -318,8 +318,8 @@ api.js 안에서 HTTP 상태 코드를 위 오류 코드로 바꿔 주면 됩니
 | `id` | string | 필수 | `case-{번호}` |
 | `no` | number | 필수 | 번호 |
 | `title` | string | 필수 | 목록 제목 (예: '덧니교정 — 비발치') |
-| `categories` | string[] | 필수 | 큰 분류 (복수 가능: '치아교정' · '보철' · '임플란트') |
-| `category` | string | 선택 | 세부 분류 키 — 교정 7종: `ortho-crowding`(덧니교정) · `ortho-protrusion`(돌출입교정) · `ortho-openbite`(개방교합) · `ortho-deepbite`(과개교합) · `ortho-crossbite`(반대교합) · `ortho-partial`(부분·틈새교정) · `ortho-child`(어린이교정, 2026-11-10). 이름은 api.js `CASE_CATEGORIES` |
+| `categories` | string[] | 필수 | 큰 분류 (복수 가능: '치아교정' · '심미치료' · '보철' · '임플란트') |
+| `category` | string | 선택 | 세부 분류 키 — 교정 7종: `ortho-crowding`(덧니교정) · `ortho-protrusion`(돌출입교정) · `ortho-openbite`(개방교합) · `ortho-deepbite`(과개교합) · `ortho-crossbite`(반대교합) · `ortho-partial`(부분·틈새교정) · `ortho-child`(어린이교정, 2026-11-10) / 심미치료 4종(2026-11-10): `aes-whitening`(치아미백) · `aes-laminate`(라미네이트) · `aes-allceramic`(올세라믹) · `aes-gum`(잇몸성형). 이름은 api.js `CASE_CATEGORIES` |
 | `beforeImage` | string | null | 로그인 시 | 치료 전 사진 — **서버가 로그인 확인 후에만 값을 담을 것** (비로그인 응답에는 주소·파일 이름 모두 넣지 않음) |
 | `afterImage` | string | null | 로그인 시 | 치료 후 사진 — 같은 규칙 |
 | `period` | string | 필수 | 치료 기간 (예: '1년 8개월') |
@@ -340,7 +340,7 @@ api.js 안에서 HTTP 상태 코드를 위 오류 코드로 바꿔 주면 됩니
   - 로그인: 두 사진 표시. 사진 주소가 없으면(시안·예시) 회색 '사진 자리'
   - 서버: 사진은 비공개 저장소(버킷)에 두고, 로그인 세션을 확인한 요청에만 기한 있는 주소(signed URL)를 담는다
 - 화면: 카드 = [BEFORE | AFTER] 나란히 + 진료 분류 · 치료 기간 · 발치 여부 + 아래 고지 '치료 결과는 개인의 구강 상태에 따라 다를 수 있으며 부작용이 발생할 수 있습니다.'(모든 카드·상세)
-- 분류 칩: 치아교정 · 교정 7종 · 보철 · 임플란트 (사례가 없어도 늘 보임). `?category=키` 로 열면 그 칩이 선택된 상태
+- 분류 칩: 치아교정 · 교정 7종 · 심미치료 · 심미 4종 · 보철 · 임플란트 (사례가 없어도 늘 보임). `?category=키` 로 열면 그 칩이 선택된 상태
 - 시안: `?mock=N` → 예시 사례 N개(사진 없음, 교정 7종 돌아가며), `?login=1` → 로그인 상태(sessionStorage) — **서버 연결 때 둘 다 지울 것**
 - 치료 전·후 사진은 환자 동의서가 있는 사진만 (의료광고 심의 기준도 확인). 기존 홈페이지 교정 상세의 전후 사진 14쌍은 저장소 밖 `자료/기존상세/orthodontics/before-after/` 보관 — 동의된 것만 등록(HOSPITAL-CHECK #18)
 - 예전 데이터 필드(`originalTitle` · `afterBlur` · `afterOriginal` · `images` · `legacy`)는 쓰지 않는다 — 기존 14건 이관을 취소하면서 데이터와 가져오기 스크립트를 삭제(2026-11-10)
