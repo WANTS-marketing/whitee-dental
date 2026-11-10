@@ -25,9 +25,16 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* ---------- 진료과목 6개 (treatment/*.html — scripts/content/build-treatments.js 가 만든 정적 HTML) ----------
-   FAQ 아코디언(첫 번째는 HTML 에서 열린 상태) + '진료 연결' 지점 탭
-   진료 연결: 탭 [창원점 | 마산점](지점 색은 탭 앞 점에만) → 선택 지점의 주소 · 전화(tel:) · 진료시간 · 버튼(상담문의 / 네이버예약 / 전화하기)
-     담당 의료진 줄은 2026-11-09 뺌 (treatments.json specialties 는 데이터로만 남김) */
+   FAQ 아코디언(첫 번째는 HTML 에서 열린 상태) + '지점 안내'(원고 '진료 연결') 지점 탭
+   지점 안내(2026-11-10): 탭 [창원점 | 마산점](지점 색은 탭 앞 점에만) → 선택 지점 패널 = 흰 카드 2단(1025px 이상, 768px 이하·태블릿은 세로 쌓기)
+     왼쪽 55%: 주소 · 전화(tel:) · 진료시간 · 버튼(상담문의 / 네이버예약 / 전화하기)
+     오른쪽 45%(사이 세로선): ① 이 진료 담당 의료진 ② 지도
+       담당 의료진 = SITE.doctors 중 그 지점 + dept 가 data-t-specs(원고 '관련 진료과')와 맞는 원장
+         맞춤: '치과보철과' → '보철' 처럼 앞의 '치과'·끝의 '과'를 떼고 dept 에 들어 있는지 (보철과 ↔ 치과보철과·보철·보존)
+         보류·퇴사(hidden · status 'pending'·'retired') 원장은 빼고, 맞는 원장이 없으면 '담당 의료진은 예약 시 안내해 드립니다'
+         원형 사진 56px(배경 지운 -cut.png, staffCrop 의 얼굴 위치로 맞춤) + 이름 + 진료과 → 누르면 about/doctors.html#{지점}-{slug}
+       지도 = 카카오맵 키(config.js KAKAO_MAP_KEY)가 있으면 api.js drawBranchMap 으로 실제 지도(탭을 처음 열 때 그림),
+         없으면 자리표시(#EEF1F5 + 지점명 + 카카오맵 · 네이버지도 링크 새 창) */
 function renderTreatmentPage() {
   const faq = document.querySelector('[data-t-faq]');
   if (faq) window.UI.accordion(faq);
@@ -85,28 +92,63 @@ function renderTreatmentPage() {
   const box = sec?.querySelector('[data-t-connect-box]');
   const S = window.SITE;
   if (!box || !S) return;
-  const { esc, telHref } = window.UI;
+  const { esc, telHref, img } = window.UI;
   const B = S.branches || [];
+  let specs = [];
+  try { specs = JSON.parse(sec.dataset.tSpecs || '[]'); } catch (e) { /* 맞는 원장 없음 → 안내 문구 */ }
+  const keys = specs.map((s) => s.replace(/^치과/, '').replace(/과$/, '')).filter(Boolean);
+  const active = (d) => !d.hidden && !['pending', 'retired'].includes(d.status);
+  const docsOf = (b) => (keys.length ? S.getDoctorsByBranch(b.id).filter((d) => active(d) && keys.some((k) => String(d.dept || '').includes(k))) : []);
+  // 원형 사진: 세로 상반신 사진(-cut.png)을 얼굴 크기가 같아지게 키우고(staffCrop.scale), 얼굴 가운데(x)·정수리(y)를 원 안에 맞춤
+  const face = (d) => { const c = d.staffCrop || {}; return `--s:${c.scale || 1.4};--x:${c.x ?? 0.5};--y:${c.y ?? 0.08}`; };
+  const doctor = (b, d) => `<li><a class="t-doc" href="../about/doctors.html#${b.id}-${S.doctorSlug(d)}"><span class="t-doc__photo" style="${face(d)}"><img src="${img(String(d.photo || '').replace(/\.[a-z]+$/i, '-cut.png'))}" alt="" loading="lazy"></span><span class="t-doc__text"><strong>${esc(d.name)}</strong><span>${esc(d.dept)}</span></span></a></li>`;
+  const mapLinks = (b) => {
+    const q = encodeURIComponent(String(b.address || '').split(',')[0]);
+    return `<a href="https://map.kakao.com/?q=${q}" target="_blank" rel="noopener">카카오맵 지도 보기 →</a><a href="${esc(b.naverMap || `https://map.naver.com/p/search/${q}`)}" target="_blank" rel="noopener">네이버지도 보기 →</a>`;
+  };
   const tabs = B.map((b, i) => `<button type="button" class="t-connect__tab" role="tab" id="t-tab-${b.id}" aria-controls="t-panel-${b.id}" aria-selected="${i === 0}"${i ? ' tabindex="-1"' : ''}><i class="t-connect__dot t-connect__dot--${b.id}" aria-hidden="true"></i>${esc(b.name)}</button>`).join('');
   const panel = (b, i) => {
     const booking = b.naverBooking || b.naverMap;
+    const docs = docsOf(b);
     return `<div class="t-connect__panel" role="tabpanel" id="t-panel-${b.id}" aria-labelledby="t-tab-${b.id}"${i ? ' hidden' : ''}>
-      <dl class="t-connect__info">
-        <div><dt>주소</dt><dd>${esc(b.address)}</dd></div>
-        <div><dt>전화</dt><dd><a href="${telHref(b.tel)}">${esc(b.tel)}</a></dd></div>
-        <div><dt>진료시간</dt><dd>${(b.hours || []).map((h) => `<span class="t-connect__hour">${esc(h.label)} ${esc(h.time)}</span>`).join('')}</dd></div>
-      </dl>
-      <p class="t-connect__btns">
-        <a class="t-btn t-btn--fill" href="../faq/contact-write.html">상담문의</a>
-        ${booking ? `<a class="t-btn" href="${esc(booking)}" target="_blank" rel="noopener">네이버예약</a>` : ''}
-        <a class="t-btn" href="${telHref(b.tel)}">전화하기</a>
-      </p>
+      <div class="t-connect__main">
+        <dl class="t-connect__info">
+          <div><dt>주소</dt><dd>${esc(b.address)}</dd></div>
+          <div><dt>전화</dt><dd><a href="${telHref(b.tel)}">${esc(b.tel)}</a></dd></div>
+          <div><dt>진료시간</dt><dd>${(b.hours || []).map((h) => `<span class="t-connect__hour">${esc(h.label)} ${esc(h.time)}</span>`).join('')}</dd></div>
+        </dl>
+        <p class="t-connect__btns">
+          <a class="t-btn t-btn--fill" href="../faq/contact-write.html">상담문의</a>
+          ${booking ? `<a class="t-btn" href="${esc(booking)}" target="_blank" rel="noopener">네이버예약</a>` : ''}
+          <a class="t-btn" href="${telHref(b.tel)}">전화하기</a>
+        </p>
+      </div>
+      <div class="t-connect__side">
+        <div class="t-connect__docs">
+          <h3 class="t-connect__docs-title">이 진료 담당 의료진</h3>
+          ${docs.length ? `<ul class="t-docs">${docs.map((d) => doctor(b, d)).join('')}</ul>` : '<p class="t-connect__docs-none">담당 의료진은 예약 시 안내해 드립니다</p>'}
+        </div>
+        <div class="t-connect__map" data-t-map="${b.id}">
+          <div class="t-map__ph"><strong>${esc(b.fullName || b.name)}</strong><span class="t-map__links">${mapLinks(b)}</span></div>
+        </div>
+      </div>
     </div>`;
   };
   box.innerHTML = `<div class="t-connect__tabs" role="tablist" aria-label="지점 선택">${tabs}</div>${B.map(panel).join('')}`;
+  // 실제 지도(키가 있을 때만): 패널이 보일 때 처음 한 번 그린다(숨긴 패널은 크기가 0이라 지도가 깨짐)
+  const drawn = new Set();
+  const drawMap = (id) => {
+    if (drawn.has(id) || !window.API?.hasMapKey?.()) return;
+    drawn.add(id);
+    const el = box.querySelector(`[data-t-map="${id}"]`);
+    const keep = el.innerHTML; // 실패하면 자리표시로 되돌림
+    window.API.drawBranchMap(el, B.find((b) => b.id === id)).then((ok) => { if (ok) el.classList.add('is-map'); else el.innerHTML = keep; });
+  };
+  if (B[0]) drawMap(B[0].id);
   const tabEls = [...box.querySelectorAll('[role="tab"]')];
   const select = (t, focus) => {
     tabEls.forEach((x) => { const on = x === t; x.setAttribute('aria-selected', String(on)); x.tabIndex = on ? 0 : -1; document.getElementById(x.getAttribute('aria-controls')).hidden = !on; });
+    drawMap(t.id.replace(/^t-tab-/, ''));
     if (focus) t.focus();
   };
   tabEls.forEach((t, i) => {
