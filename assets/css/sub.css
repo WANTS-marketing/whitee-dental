@@ -224,6 +224,9 @@
 .t-fold__media::after { content: ""; position: absolute; inset: 0; background: rgba(22, 35, 63, 0.25); transition: background 0.3s ease, opacity 0.3s ease; pointer-events: none; }
 .t-fold__card:not(.is-open):hover .t-fold__media::after { background: rgba(22, 35, 63, 0.08); }
 .t-fold__card.is-open .t-fold__media::after { opacity: 0; }
+/* 치아교정: 접힌 띠 사진(실제 구강 사진)을 더 어둡게 — 남색 막 0.25 → 0.55, 마우스를 올리면 지금처럼 0.08 로 밝게 (2026-11-10). 스와이프(모바일)는 막 없음 */
+.t-fold--orthodontics .t-fold__card:not(.is-open) .t-fold__media::after { background: rgba(22, 35, 63, 0.55); }
+.t-fold--orthodontics .t-fold__card:not(.is-open):hover .t-fold__media::after { background: rgba(22, 35, 63, 0.08); }
 .t-fold__no { position: absolute; z-index: 1; left: 0; right: 0; bottom: 24px; font-size: 0.875rem; font-weight: 700; letter-spacing: 0.04em; text-align: center; color: #fff; transition: opacity 0.2s ease; }
 .t-fold__card.is-open .t-fold__no { opacity: 0; }
 /* 예시 이미지 안내(데이터 illustrative: true): 펼친 카드 사진 왼쪽 아래 안쪽 — 12px 흰색 80% · 반투명 남색 알약. 접힌 띠에서는 즉시 숨김, 펼칠 때 설명 글과 같이 나타남 */
