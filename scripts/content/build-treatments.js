@@ -5,7 +5,7 @@
    만드는 것 (모두 같은 데이터, 순서 = treatments.json 순서)
    1) treatment/{slug}.html 6개 — 원고 문장(h1·요약·포인트·기준·단계·FAQ)을 HTML 에 그대로 넣는다(검색엔진·AI 가 JS 없이 읽게)
       + title · description · canonical · og + FAQPage · Dentist(창원점·마산점) 구조화 데이터
-      '지점 안내'(원고 '진료 연결' — 지점 탭·주소·전화·진료시간·담당 의료진·지도)만 화면에서 site-data.js 로 그린다(pages.js renderTreatmentPage)
+      '지점 안내'(원고 '진료 연결' — 지점 탭·주소·전화·진료시간·버튼)만 화면에서 site-data.js 로 그린다(pages.js renderTreatmentPage)
    2) treatment/wisdom-scaling.html — 예전 주소 → wisdom-tooth.html 로 이동 (스케일링·사랑니 두 링크도 표시)
    3) components/header.html 진료과목 하위 메뉴(PC·모바일) — <!-- treatments:menu --> 표시 사이
    4) index.html 메인 진료안내 카드 — <!-- treatments:cards --> 표시 사이
@@ -283,9 +283,9 @@ ${t.faq.map((f, i) => `            <li class="accordion__item">
           </ul>
         </section>
 ${labBlock}
-        <!-- 7. 지점 안내 | 창원점 · 마산점 (원고 '진료 연결') — 지점 탭 + [왼쪽 주소·전화·진료시간·버튼 | 오른쪽 담당 의료진·지도]는
-             pages.js renderTreatmentPage 가 site-data.js 에서 그림. 담당 의료진 = 그 지점 원장 중 dept 가 아래 data-t-specs(원고 '관련 진료과')와 맞는 원장 -->
-        <section class="t-sec t-connect" aria-labelledby="t-connect-title" data-t-connect data-t-specs="${esc(JSON.stringify(t.specialties || []))}">
+        <!-- 7. 지점 안내 | 창원점 · 마산점 (원고 '진료 연결') — 지점 탭 + [주소 | 전화 | 진료시간 | 버튼]은 pages.js renderTreatmentPage 가 site-data.js 에서 그림
+             담당 의료진은 표시하지 않음(의료진 변동 가능성, 2026-11-10 — specialties 는 데이터로만) -->
+        <section class="t-sec t-connect" aria-labelledby="t-connect-title" data-t-connect>
           <h2 class="t-sec__title" id="t-connect-title">지점 안내 <span class="t-connect__sub">창원점 · 마산점</span></h2>
           <p class="t-connect__text">${esc(DATA.common.connectText)}</p>
           <div class="t-connect__box" data-t-connect-box></div>

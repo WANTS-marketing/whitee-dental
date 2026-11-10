@@ -36,7 +36,6 @@ jobs:
           WEB3FORMS_ACCESS_KEY: ${{ secrets.WEB3FORMS_ACCESS_KEY }}
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
-          KAKAO_MAP_KEY: ${{ secrets.KAKAO_MAP_KEY }}
 
       - name: 배포 대상만 복사
         run: |

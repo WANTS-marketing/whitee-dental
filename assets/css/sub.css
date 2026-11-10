@@ -72,50 +72,55 @@
 /* FAQ: 공통 아코디언 + 번호 자리에 Q(파랑) */
 .t-faq .accordion__no { font-size: 1.125rem; font-weight: 800; line-height: 1.5; color: var(--color-accent); } /* Q = 질문과 같은 18px */
 @media (max-width: 1280px) { .t-faq .accordion__no { font-size: 1.0625rem; } }
-/* 지점 안내 (원고 '진료 연결', pages.js renderTreatmentPage) */
-.t-connect { padding: 40px; border-radius: 20px; background: #f8fafd; }
-.t-connect .t-sec__title { margin-bottom: 12px; }
+/* 지점 안내 (원고 '진료 연결', pages.js renderTreatmentPage) — 2026-11-10 간소화: 담당 의료진 · 지도 · 전화하기 버튼 없음
+   회색 박스(위아래 32 · 좌우 36) → 제목(아래 8) → 안내 문구 → 지점 탭(위 20 · 아래 14) → 흰 카드(위아래 28 · 좌우 32)
+   흰 카드 배치는 카드가 놓인 칸의 폭(.t-connect__box 컨테이너) 기준 3단계 — 1025~1280px 화면은 왼쪽 메뉴 때문에 카드가 1024px 화면보다 좁다
+     넓음(화면 1025px 이상 + 칸 820px 이상): 한 줄 [주소 38 | 전화 18 | 진료시간 26 | 버튼] — 정보 칸 사이 세로선 1px #E3E8F0, 버튼 2개는 오른쪽 끝에 위아래로(세로 가운데)
+                          (버튼을 나란히 두면 1440px 화면에서도 주소가 3줄 이상 · 진료시간이 3줄로 넘어가서 위아래로 쌓음)
+     중간(칸 600px 이상, 화면 1024px 이하 포함): 정보 3칸 한 줄 + 버튼 2개는 아래 줄
+     좁음(600px 미만 · 화면 768px 이하): 정보 3줄 [항목명 | 내용] → 버튼 2개 가로 반반
+   진료시간 = 2줄(평일 · 토 / 일요일 휴진 — pages.js 가 앞 2개와 나머지로 나눔) */
+.t-connect { padding: 32px 36px; border-radius: 20px; background: #f8fafd; }
+.t-connect .t-sec__title { margin-bottom: 8px; }
 .t-connect__sub { margin-left: 8px; font-size: 1.125rem; font-weight: 600; color: var(--color-text-sub); }
 .t-connect__text { max-width: 760px; font-size: 1rem; line-height: 1.7; color: var(--color-text-sub); word-break: keep-all; }
-.t-connect__tabs { display: flex; gap: 8px; margin: 28px 0 20px; }
-.t-connect__tab { display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 20px; border: 1px solid #d6dde8; border-radius: var(--radius-btn); background: #fff; font-size: 0.9375rem; font-weight: 600; color: var(--color-text-sub); transition: background var(--dur), color var(--dur), border-color var(--dur); }
+.t-connect__tabs { display: flex; gap: 8px; margin: 20px 0 14px; }
+.t-connect__tab { display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 20px; border: 1px solid #d6dde8; border-radius: var(--radius-btn); background: #fff; font-size: 0.9375rem; font-weight: 600; color: var(--color-text-sub); }
 .t-connect__tab[aria-selected="true"] { border-color: var(--color-point); background: var(--color-point); color: #fff; }
 .t-connect__dot { width: 6px; height: 6px; border-radius: 50%; }
 .t-connect__dot--changwon { background: var(--color-changwon); }
 .t-connect__dot--masan { background: var(--color-masan); }
-.t-connect__panel { display: grid; gap: 28px; padding: 28px; border-radius: 16px; background: #fff; }
+.t-connect__box { container: connect / inline-size; }
+.t-connect__panel { display: grid; gap: 20px; padding: 28px 32px; border-radius: 16px; background: #fff; }
 .t-connect__panel[hidden] { display: none; }
+/* 좁음(기본): 정보 3줄 [항목명 72px | 내용] */
 .t-connect__info { display: grid; gap: 12px; }
-.t-connect__info > div { display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 16px; }
-.t-connect__info dt { font-size: 0.9375rem; font-weight: 700; color: var(--color-point); }
+.t-connect__info > div { display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 12px; align-items: baseline; }
+.t-connect__info dt { font-size: 0.875rem; font-weight: 700; color: var(--color-text-sub); }
 .t-connect__info dd { font-size: 1rem; line-height: 1.6; word-break: keep-all; }
 .t-connect__info a { font-weight: 600; color: var(--color-accent); }
-.t-connect__hour { display: inline-block; margin-right: 14px; }
-.t-connect__btns { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
-/* 오른쪽 단(2026-11-10): ① 이 진료 담당 의료진(원형 사진 56px + 이름 + 진료과, 가로 나열 · 넘치면 줄바꿈) ② 지도(높이 180 · 둥근 12)
-   1025px 이상 = 흰 카드 안 [왼쪽 55% | 세로선 1px #E3E8F0 | 오른쪽 45%], 1024px 이하 = 왼쪽 정보 → 의료진 → 지도 세로 쌓기 */
-.t-connect__side { display: grid; gap: 24px; align-content: start; padding-top: 24px; border-top: 1px solid #e3e8f0; }
-.t-connect__docs-title { margin-bottom: 14px; font-size: 0.9375rem; font-weight: 700; line-height: 1.4; color: var(--color-point); }
-.t-connect__docs-none { font-size: 0.9375rem; line-height: 1.6; color: var(--color-text-sub); }
-.t-docs { display: flex; flex-wrap: wrap; gap: 14px 24px; }
-.t-doc { display: flex; align-items: center; gap: 12px; border-radius: 999px; }
-.t-doc__photo { position: relative; flex: none; width: 56px; height: 56px; overflow: hidden; border-radius: 50%; background: #eef2f8; }
-/* 사진 높이 = 56px × staffCrop.scale × 2.2 (원장마다 얼굴 크기가 같게), 얼굴 가운데(--x)를 원 가운데로 · 정수리(--y)를 원 위 6px 에 */
-.t-doc__photo img { position: absolute; left: 50%; top: 6px; width: auto; max-width: none; height: calc(56px * var(--s) * 2.2); transform: translate(calc(var(--x) * -100%), calc(var(--y) * -100%)); }
-.t-doc__text { display: grid; gap: 2px; line-height: 1.4; }
-.t-doc__text strong { font-size: 1rem; font-weight: 700; color: var(--color-text); transition: color var(--dur); }
-.t-doc__text > span { font-size: 0.875rem; color: var(--color-text-sub); }
-.t-doc:is(:hover, :focus-visible) strong { color: var(--color-accent); }
-.t-connect__map { height: 180px; overflow: hidden; border-radius: 12px; background: #eef1f5; }
-.t-map__ph { display: grid; place-content: center; gap: 10px; height: 100%; padding: 16px; text-align: center; }
-.t-map__ph strong { font-size: 1rem; font-weight: 700; color: var(--color-point); }
-.t-map__links { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 18px; }
-.t-map__links a { font-size: 0.875rem; font-weight: 600; color: var(--color-accent); }
-.t-map__links a:hover { text-decoration: underline; }
-@media (min-width: 1025px) {
-  .t-connect__panel { grid-template-columns: minmax(0, 55fr) minmax(0, 45fr); gap: 0; }
-  .t-connect__main { padding-right: 32px; }
-  .t-connect__side { padding: 0 0 0 32px; border-top: 0; border-left: 1px solid #e3e8f0; }
+.t-connect__hours-line { display: block; }
+.t-connect__hour { display: inline-block; margin-right: 12px; white-space: nowrap; }
+.t-connect__hour:last-child { margin-right: 0; }
+.t-connect__btns { display: flex; gap: 8px; }
+.t-connect__btns .t-btn { flex: 1 1 0; justify-content: center; }
+/* 중간 · 넓음: 정보 칸 = 위 항목명 / 아래 내용, 칸 사이 세로선 */
+@container connect (min-width: 600px) {
+  .t-connect__info { grid-template-columns: minmax(0, 38fr) minmax(max-content, 18fr) minmax(max-content, 26fr); gap: 0; } /* 전화번호 · 진료시간 줄은 끊기지 않게(최소 = 글자 폭) */
+  .t-connect__cell--tel dd { white-space: nowrap; }
+  .t-connect__info > div { display: block; padding: 0 24px; }
+  .t-connect__info > div:first-child { padding-left: 0; }
+  .t-connect__info > div + div { border-left: 1px solid #e3e8f0; }
+  .t-connect__info dd { margin-top: 6px; }
+  .t-connect__btns .t-btn { flex: 0 0 auto; }
+}
+@media (min-width: 1025px) { /* 한 줄 배치는 화면 1025px 이상에서만 — 1024px 이하는 칸이 넓어도 버튼을 아래 줄로 */
+  @container connect (min-width: 820px) {
+    .t-connect__panel { grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 0; }
+    .t-connect__info > div:last-child { padding-right: 24px; }
+    .t-connect__btns { flex-direction: column; padding-left: 24px; }
+    .t-connect__btns .t-btn { height: 44px; }
+  }
 }
 .t-btn { display: inline-flex; align-items: center; height: 48px; padding: 0 22px; border: 1px solid var(--color-accent); border-radius: var(--radius-btn); background: #fff; font-size: 0.9375rem; font-weight: 600; color: var(--color-accent); transition: background var(--dur), color var(--dur); }
 .t-btn:hover { background: rgba(var(--color-accent-rgb), 0.06); }
@@ -310,7 +315,13 @@
   .t-connect { margin-left: calc(var(--gutter) * -1); margin-right: calc(var(--gutter) * -1); padding: 32px var(--gutter); border-radius: 0; }
   .t-connect__sub { display: block; margin: 4px 0 0; font-size: 1rem; }
   .t-connect__panel { padding: 20px; }
-  .t-connect__info > div { grid-template-columns: 1fr; gap: 2px; }
+  /* 화면 768px 이하는 칸 폭과 상관없이 좁음 배치(세로 쌓기 · 버튼 반반) */
+  .t-connect__info { grid-template-columns: none; gap: 12px; }
+  .t-connect__info > div { display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 12px; padding: 0; }
+  .t-connect__info > div + div { border-left: 0; }
+  .t-connect__info dd { margin-top: 0; }
+  .t-connect__btns { flex-direction: row; padding-left: 0; }
+  .t-connect__btns .t-btn { flex: 1 1 0; }
   .t-btn { flex: 1 1 auto; justify-content: center; }
 }
 
