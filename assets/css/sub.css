@@ -106,7 +106,7 @@
 /* 3D 디지털 시스템 (치아교정 — build-treatments.js digitalSection): 라벨 13px 파랑 자간 넓게 → 제목(섹션 제목과 같음) → 소개 17px 회색(최대 640px)
    — 셋 다 가운데 정렬 (2026-11-10)
    → 장비 3칸 표: 위 2px 남색 · 아래 1px #E3E8F0 (장치 비교 표와 같은 선) · 칸 사이 세로선 1px · 칸 안 위아래 36 · 좌우 32
-     칸 안 가운데 정렬 [그림 4:3 칸 폭 80% 둥근 12px → 이름 20px 굵게 남색(그림 아래 20) → 설명 16px #4A5160 1.7(최대 260px, 위 10)]
+     칸 안 가운데 정렬 [그림 4:3 칸 폭 80% 둥근 12px → 이름 20px 굵게 밝은 파랑 --color-accent(그림 아래 20) → 설명 16px #4A5160 1.7(최대 260px, 위 10)]
      칸마다 3줄(그림 · 이름 · 설명)을 subgrid 로 같은 줄에 — 이름이 두 줄이 되어도 이름 줄 · 설명 시작선이 3칸 모두 맞음
    768px 이하: 세로로 쌓고, 세로선 대신 칸 사이 가로선 */
 .t-digital { text-align: center; }
@@ -117,7 +117,7 @@
 .t-digital__item { display: grid; grid-row: span 3; grid-template-rows: subgrid; justify-items: center; align-content: start; padding: 36px 32px; text-align: center; }
 .t-digital__item + .t-digital__item { border-left: 1px solid #e3e8f0; }
 .t-digital__item .t-slot { width: 80%; border-radius: 12px; }
-.t-digital__name { margin-top: 20px; font-size: 1.25rem; font-weight: 700; line-height: 1.4; color: var(--color-point); word-break: keep-all; }
+.t-digital__name { margin-top: 20px; font-size: 1.25rem; font-weight: 700; line-height: 1.4; color: var(--color-accent); word-break: keep-all; } /* 장비 이름 = 밝은 파랑(2026-11-10) */
 .t-digital__text { max-width: 260px; margin-top: 10px; font-size: 1rem; line-height: 1.7; color: #4a5160; word-break: keep-all; }
 @media (max-width: 768px) {
   .t-digital__list { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; }
