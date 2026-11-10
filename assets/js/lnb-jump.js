@@ -36,7 +36,7 @@
     if (e.defaultPrevented || e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
     var a = e.target.closest && e.target.closest('a[href]');
     if (!a || (a.target && a.target !== '_self') || a.hasAttribute('download')) return;
-    if (!a.closest('.lnb, .header, .mnav, main') || a.closest('.sub-visual, .footer, .quick')) return;
+    if (!a.closest('.lnb, .lnb-bar, .header, .mnav, main') /* .lnb-bar = 하단 메뉴 선택바(common.js initLnbBar — LNB 와 같은 링크) */ || a.closest('.sub-visual, .footer, .quick')) return;
     var url;
     try { url = new URL(a.href, location.href); } catch (err) { return; }
     if (url.origin !== location.origin) return;
