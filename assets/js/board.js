@@ -61,9 +61,9 @@
     cases: {
       name: '치료사례', list: 'cases.html', view: 'case-view.html', idPrefix: 'case',
       load: () => window.API.getCases(),
-      // 분류 = 큰 분류(치아교정·보철·임플란트, 복수 가능) + 교정 세부 6종(category 키 → 이름, api.js CASE_CATEGORIES)
+      // 분류 = 큰 분류(치아교정·보철·임플란트, 복수 가능) + 교정 세부 7종(category 키 → 이름, api.js CASE_CATEGORIES)
       catsOf: (r) => [...(r.categories || [r.categoryName]), ...(r.categoryLabel ? [r.categoryLabel] : [])],
-      catOrder: ['치아교정', '덧니교정', '돌출입교정', '개방교합', '과개교합', '반대교합', '부분·틈새교정', '보철', '임플란트'],
+      catOrder: ['치아교정', '덧니교정', '돌출입교정', '개방교합', '과개교합', '반대교합', '부분·틈새교정', '어린이교정', '보철', '임플란트'],
       allCats: true, // 칩은 사례가 없어도 늘 보임(치아교정 갤러리 '치료사례 보기' → ?category= 로 들어와도 선택 상태)
       catLabel: '진료',
       sortable: true, // 정렬 = [최신순 | 오래된순] 글자 버튼 (헤더 로그인 | 회원가입처럼 나란히)
@@ -163,7 +163,7 @@
     const readState = () => {
       const p = new URLSearchParams(location.search);
       let cat = p.get('cat') || '';
-      // 치료사례 ?category= : 예전 주소(implant 등 — 메인 치료사례 카드) · 교정 세부 6종(ortho-crowding 등 — 치아교정 갤러리 '치료사례 보기') → 분류 이름
+      // 치료사례 ?category= : 예전 주소(implant 등 — 메인 치료사례 카드) · 교정 세부 7종(ortho-crowding 등 — 치아교정 갤러리 '치료사례 보기') → 분류 이름
       if (!cat && board === 'cases' && p.get('category')) cat = { orthodontics: '치아교정', prosthetics: '보철', implant: '임플란트', ...(window.API.CASE_CATEGORIES || {}) }[p.get('category')] || '';
       if (!cats.includes(cat)) cat = '';
       return { cat, sort: cfg.sortable && p.get('sort') === 'oldest' ? 'oldest' : 'latest', q: (p.get('q') || '').trim(), page: Math.max(1, parseInt(p.get('page'), 10) || 1) };

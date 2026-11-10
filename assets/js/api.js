@@ -112,11 +112,11 @@
      - 게시 동의 확인된 사례만(consentChecked: true)
      - 치료 전·후 사진 모두 로그인 회원만: 비로그인이면 beforeImage · afterImage = null (화면은 흐림 자리 + '로그인 후 확인하실 수 있습니다')
      - 환자 이름(성씨 포함) 필드는 두지 않는다
-     - category = 세부 분류 키(교정 6종 — CASE_CATEGORIES), period = 치료 기간, extraction = '발치' | '비발치'
+     - category = 세부 분류 키(교정 7종 — CASE_CATEGORIES), period = 치료 기간, extraction = '발치' | '비발치'
      - 시안: ?mock=N → 예시 사례 N개(사진 없음 = 회색 자리표시) */
   const CASE_CATEGORIES = {
     'ortho-crowding': '덧니교정', 'ortho-protrusion': '돌출입교정', 'ortho-openbite': '개방교합',
-    'ortho-deepbite': '과개교합', 'ortho-crossbite': '반대교합', 'ortho-partial': '부분·틈새교정',
+    'ortho-deepbite': '과개교합', 'ortho-crossbite': '반대교합', 'ortho-partial': '부분·틈새교정', 'ortho-child': '어린이교정',
   };
   function mockCases(n) {
     const keys = Object.keys(CASE_CATEGORIES);
