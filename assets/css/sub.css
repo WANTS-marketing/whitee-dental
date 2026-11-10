@@ -229,8 +229,11 @@
 .t-devices__head--wrap .t-sec__title { max-width: 5em; white-space: normal; } /* 두 줄로 고르게(예: 충치 치료 / 재료 비교) */
 .t-devices__table thead .t-slot { max-width: 300px; margin-inline: auto; } /* 칸이 2~3개라 넓어도 그림은 300px 까지 */
 .t-devices--text .t-devices__col-label { width: 180px; }
-.t-devices--text .t-devices__table tbody td { padding: 16px 20px; font-size: 1.0625rem; line-height: 1.6; text-align: left; vertical-align: top; }
-.t-devices--text .t-devices__table tbody th { vertical-align: top; padding-top: 16px; padding-bottom: 16px; }
+.t-devices--text .t-devices__table tbody td { padding: 16px 20px; font-size: 1.0625rem; line-height: 1.6; text-align: left; vertical-align: middle; }
+.t-devices--text .t-devices__table tbody th { vertical-align: middle; padding-top: 16px; padding-bottom: 16px; }
+/* 비교 표 공통(2026-11-10): 몸통 칸(항목명 · 값)은 모두 행 안에서 세로 가운데, 칸 안 p 가 생겨도 위아래 margin 0 */
+.t-devices__table tbody :is(th, td) { vertical-align: middle; }
+.t-devices__table tbody :is(th, td) p { margin-block: 0; }
 @media (max-width: 768px) {
   .t-devices--text .t-devices__card dl > div { display: block; }
   .t-devices--text .t-devices__card dd { margin-top: 4px; font-weight: 500; text-align: left; }
