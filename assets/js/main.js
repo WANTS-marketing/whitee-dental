@@ -359,7 +359,7 @@ function initHero() {
 }
 
 /* ---------- ④ 의료진 — 사진 카드 줄 + 약력 팝업 ----------
-   카드: 지점 의료진(site-data.js doctorOrder 순서 — 의료진 소개와 같음)을 가로 스크롤 줄로, 머리말 ‹ › 는 한 장씩 이동 (한 화면 장수는 main.css --doc-per)
+   카드: 지점 의료진(site-data.js mainDoctorOrder 순서 — 의료진 소개 페이지 순서(doctorOrder)와 따로)을 가로 스크롤 줄로, 머리말 ‹ › 는 한 장씩 이동 (한 화면 장수는 main.css --doc-per)
    팝업(dialog): 카드 클릭 시 큰 프로필(사진 + 학력·경력·학회 활동). 팝업 안 ‹ › 는 같은 지점 원장 순환
    프로필은 전원을 한 칸에 겹쳐 두고 선택된 원장만 보인다 → 원장을 바꿔도 팝업 크기가 그대로 */
 /* 의료진 섹션 배경 사진: assets/images/doctors-bg.jpg 가 실제로 있을 때만 .has-bg (main.css — 사진 + 옅은 흰 막). 없으면 #f7f5f2 단색 */
@@ -432,7 +432,10 @@ function initDoctors() {
     branch = branchId;
     panel.dataset.branch = branchId; // 진료과·약력 보기 버튼 색 = 지점 색 (common.css --doc-color)
     modal.dataset.branch = branchId;
-    const ds = window.SITE.getDoctorsByBranch(branchId); // 순서 = site-data.js doctorOrder (의료진 소개와 같음, 2026-11-10)
+    const ds = window.SITE.getDoctorsByBranch(branchId);
+    // 메인 나열 순서 = site-data.js mainDoctorOrder (의료진 소개 페이지 doctorOrder 와 따로) — 목록에 없는 원장은 뒤에 데이터 순서대로
+    const order = (window.SITE.mainDoctorOrder || {})[branchId];
+    if (order) { const rank = (d) => { const i = order.indexOf(d.name); return i < 0 ? order.length : i; }; ds.sort((a, b) => rank(a) - rank(b)); }
     list = ds.map((d) => docs.indexOf(d));
     panel.style.setProperty('--doc-count', ds.length);
     const mid = (ds.length - 1) / 2;
