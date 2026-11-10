@@ -137,6 +137,22 @@ function initHero() {
   let busy = false;
 
   slider.querySelector('[data-hero-total]').textContent = slides.length;
+  // 1번 슬라이드 덮개: 제목 오른쪽 끝(사진 왼쪽 기준 px)을 --brand-title-end 로 — 진한 구간이 제목 끝 + 40px 까지 오게 (main.css .hero__media--brand)
+  const brandMedia = slider.querySelector('.hero__media--brand');
+  const brandTitle = brandMedia?.closest('.hero__slide')?.querySelector('.hero__title');
+  if (brandMedia && brandTitle) {
+    const measureBrand = () => {
+      const r = document.createRange();
+      r.selectNodeContents(brandTitle);
+      const rect = r.getBoundingClientRect();
+      // 기준 = 슬라이드 왼쪽 (사진 .hero__media 는 첫 진입 때 확대 애니메이션이 있어 기준으로 쓰지 않음)
+      if (rect.width) brandMedia.style.setProperty('--brand-title-end', `${Math.round(rect.right - brandMedia.closest('.hero__slide').getBoundingClientRect().left)}px`);
+    };
+    measureBrand();
+    document.fonts?.ready.then(measureBrand);
+    document.addEventListener('hero:introend', measureBrand); // 첫 진입 애니메이션(히어로 열림·확대)이 끝난 뒤 다시
+    window.addEventListener('resize', measureBrand);
+  }
   // 슬라이드별 사진 위치·확대·이름표 (site-data.js heroSlides — CSS 변수로 넘기고 PC 에서만 쓴다)
   const esc = window.UI?.esc || ((s) => String(s));
   slides.forEach((s, k) => {
