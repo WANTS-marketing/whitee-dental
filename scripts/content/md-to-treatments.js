@@ -68,9 +68,11 @@ const treatments = blocks.map((b) => {
      이미지 칸: '이름 (비율, 권장 크기)' → { file: 'treatment/{slug}/이름', name, ratio: '4/3', size: '1200×900' } (확장자 없이 — 화면에서 webp·jpg·png 순서로 찾음) */
   const optSection = (title) => { try { return sectionOf(b, title); } catch (e) { return ''; } };
   const slotOf = (s) => {
-    const m = s.trim().match(/^([\w-]+)\s*\((\d+):(\d+),\s*([\d×x]+)\)$/);
+    // 'implant/implant-lab (3:2, …)' 처럼 '폴더/이름' 이면 다른 진료의 이미지를 같이 씀(공용 — 심미치료 기공센터 = 임플란트와 같은 사진)
+    const m = s.trim().match(/^((?:[\w-]+\/)?[\w-]+)\s*\((\d+):(\d+),\s*([\d×x]+)\)$/);
     if (!m) throw new Error(`${slug} 이미지 칸 형식: ${s}`);
-    return { file: `treatment/${slug}/${m[1]}`, name: m[1], ratio: `${m[2]}/${m[3]}`, size: m[4] };
+    const shared = m[1].includes('/');
+    return { file: shared ? `treatment/${m[1]}` : `treatment/${slug}/${m[1]}`, name: m[1].split('/').pop(), ratio: `${m[2]}/${m[3]}`, size: m[4] };
   };
   const lineOf = (sec, label) => (sec.match(new RegExp(`^- ${label}: (.+)$`, 'm')) || [])[1]?.trim() || '';
   const extras = {};
@@ -81,8 +83,9 @@ const treatments = blocks.map((b) => {
     const [stepPart, slot, altPart] = stepImgSec.replace(/^- /, '').split(/\s+\/\s+/);
     extras.stepImage = { step: Number(stepPart.replace(/\D/g, '')), ...slotOf(slot), alt: altPart.replace(/^alt:\s*/, '').trim() };
   }
-  /* 3D 디지털 시스템 (치아교정 '치료를 결정하기 전 알아야 할 기준' 다음, 2026-11-09 · 2026-11-10 기존 홈페이지 명칭으로): 라벨 · 제목 · 본문 + '#### 장비 이름' 마다 이미지 · 설명 */
-  const digSec = optSection('추가 블록 — 3D 디지털 시스템');
+  /* 장비 표 블록 ('치료를 결정하기 전 알아야 할 기준' 다음): 라벨 · 제목 · 본문 + '#### 장비 이름' 마다 이미지 · 설명 — 칸 수는 장비 수대로
+     원고 제목: 치아교정 '### 추가 블록 — 3D 디지털 시스템'(2026-11-09) · 심미치료 '### 추가 블록 — 장비 블록'(치아미백 장비·재료, 2026-11-10) */
+  const digSec = optSection('추가 블록 — 3D 디지털 시스템') || optSection('추가 블록 — 장비 블록');
   if (digSec) {
     extras.digital = {
       label: lineOf(digSec, '라벨'),

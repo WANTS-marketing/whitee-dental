@@ -732,6 +732,158 @@
         "verified": false,
         "date": "",
         "reviewer": ""
+      },
+      "extras": {
+        "photos": [
+          {
+            "file": "treatment/aesthetic/aes-photo-01",
+            "name": "aes-photo-01",
+            "ratio": "4/3",
+            "size": "1200×900",
+            "caption": "치아 색과 모양을 함께 확인하며 치료 방법을 설명합니다"
+          },
+          {
+            "file": "treatment/aesthetic/aes-photo-02",
+            "name": "aes-photo-02",
+            "ratio": "4/3",
+            "size": "1200×900",
+            "caption": "진료실 모습"
+          }
+        ],
+        "digital": {
+          "label": "WHITENING",
+          "title": "치아미백 장비·재료",
+          "text": "창원점과 마산점에서는 전문가용 미백 재료와 광조사기를 사용해 치아미백을 진행합니다.",
+          "items": [
+            {
+              "name": "오스템 뷰티스",
+              "image": {
+                "file": "treatment/aesthetic/aes-whitening-material",
+                "name": "aes-whitening-material",
+                "ratio": "4/3",
+                "size": "800×600"
+              },
+              "text": "식약처 인증 받은 전문가용 치아미백 재료입니다"
+            },
+            {
+              "name": "광조사기",
+              "image": {
+                "file": "treatment/aesthetic/aes-whitening-light",
+                "name": "aes-whitening-light",
+                "ratio": "4/3",
+                "size": "800×600"
+              },
+              "text": "미백 재료를 바른 치아에 빛을 비추는 장비입니다"
+            }
+          ]
+        },
+        "casesTitle": "이런 고민이 있다면 상담해 보세요",
+        "cases": [
+          {
+            "title": "치아 색이 누렇거나 변색되어 고민인 경우 (치아미백)",
+            "titleMain": "치아 색이 누렇거나 변색되어 고민인 경우",
+            "titleSub": "치아미백",
+            "tab": "치아미백",
+            "source": "기존 상세 12 · 14",
+            "image": {
+              "file": "treatment/aesthetic/aes-case-whitening",
+              "name": "aes-case-whitening",
+              "ratio": "4/5",
+              "size": "1080×1350"
+            },
+            "verified": true,
+            "text": "치아미백은 여러 가지 원인으로 변색된 치아를 깎지 않고, 미백 재료를 사용해 치아 색을 밝게 하는 방법입니다. 착색의 원인과 종류에 따라 밝아지는 정도가 다를 수 있습니다. 크라운과 라미네이트 등 보철물은 미백제로 색이 바뀌지 않습니다.",
+            "fits": [
+              "누렇거나 변색된 치아로 고민인 경우",
+              "중요한 일정을 앞두고 치아 색이 신경 쓰이는 경우",
+              "커피·차·흡연으로 착색이 걱정되는 경우",
+              "웃을 때 치아 색이 신경 쓰이는 경우"
+            ],
+            "note": "",
+            "caseKey": "aes-whitening",
+            "illustrative": true
+          },
+          {
+            "title": "앞니 모양·틈·크기가 신경 쓰이는 경우 (라미네이트)",
+            "titleMain": "앞니 모양·틈·크기가 신경 쓰이는 경우",
+            "titleSub": "라미네이트",
+            "tab": "라미네이트",
+            "source": "기존 상세 09 · 11",
+            "image": {
+              "file": "treatment/aesthetic/aes-case-laminate",
+              "name": "aes-case-laminate",
+              "ratio": "4/5",
+              "size": "1080×1350"
+            },
+            "verified": true,
+            "text": "라미네이트는 얇은 도재를 만들어 치아의 바깥 면에 붙이는 치료로, 앞니의 모양·틈·크기가 신경 쓰일 때 검토할 수 있는 방법 중 하나입니다. 삭제 여부와 범위는 치아 배열·형태·치료 계획에 따라 달라집니다.",
+            "fits": [
+              "치아가 사고로 인해 파절된 경우",
+              "치아가 돌출된 경우",
+              "치아 사이가 벌어져 공간이 있는 경우",
+              "배열이 고르지 않거나 치아의 크기가 큰 경우"
+            ],
+            "note": "",
+            "caseKey": "aes-laminate",
+            "illustrative": true
+          },
+          {
+            "title": "치아가 깨지거나 손상·변형된 경우 (올세라믹)",
+            "titleMain": "치아가 깨지거나 손상·변형된 경우",
+            "titleSub": "올세라믹",
+            "tab": "올세라믹",
+            "source": "기존 상세 06 · 08",
+            "image": {
+              "file": "treatment/aesthetic/aes-case-allceramic",
+              "name": "aes-case-allceramic",
+              "ratio": "4/5",
+              "size": "1080×1350"
+            },
+            "verified": true,
+            "text": "올세라믹은 치아 색을 띤 세라믹(도자기)으로 치아 전체를 감싸는 보철 치료입니다. 금속을 사용하지 않는 보철로, 금속 알레르기가 걱정되는 경우 검토할 수 있습니다.",
+            "fits": [
+              "치아가 파절되거나 심하게 손상된 경우",
+              "충치 등의 구강질환으로 인해 치아가 변형된 경우",
+              "선천적으로 치아의 크기나 모양이 고르지 않은 경우"
+            ],
+            "note": "",
+            "caseKey": "aes-allceramic",
+            "illustrative": true
+          },
+          {
+            "title": "웃을 때 잇몸이 많이 보이거나 잇몸선이 고르지 않은 경우 (잇몸성형)",
+            "titleMain": "웃을 때 잇몸이 많이 보이거나 잇몸선이 고르지 않은 경우",
+            "titleSub": "잇몸성형",
+            "tab": "잇몸성형",
+            "source": "기존 상세 03 · 04",
+            "image": {
+              "file": "treatment/aesthetic/aes-case-gum",
+              "name": "aes-case-gum",
+              "ratio": "4/5",
+              "size": "1080×1350"
+            },
+            "verified": true,
+            "text": "잇몸성형은 잇몸의 높이가 비대칭이거나 잇몸이 치아를 덮어 치아가 짧아 보이는 경우, 웃을 때 드러나는 잇몸선의 좌우 대칭과 조화를 맞추기 위해 잇몸을 절개하거나 이식하는 치료입니다. 잇몸성형만으로 해결 가능한지 먼저 평가해야 합니다.",
+            "fits": [
+              "미소를 지을 때 잇몸이 많이 보이는 경우",
+              "잇몸의 높이가 비대칭인 경우",
+              "잇몸이 치아를 덮어 치아가 짧게 보이는 경우",
+              "잇몸이 검붉거나 색소가 침착되어 있는 경우"
+            ],
+            "note": "",
+            "caseKey": "aes-gum",
+            "illustrative": true
+          }
+        ],
+        "lab": {
+          "label": "DENTAL LAB",
+          "title": "전지점 공동운영 기공센터",
+          "file": "treatment/implant/implant-lab",
+          "name": "implant-lab",
+          "ratio": "3/2",
+          "size": "1200×800",
+          "text": "창원점과 마산점이 함께 운영하는 기공센터에서 의료진과 기공사가 충분히 소통하며 보철물을 제작합니다. 치아 상태를 진단하고 분석한 내용을 바탕으로 보철물의 형태와 맞물림을 함께 검토합니다."
+        }
       }
     },
     {
