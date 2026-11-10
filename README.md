@@ -62,7 +62,7 @@ VS Code Live Server 는 `fetch` 로 불러오는 컴포넌트(`components/*.html
 
 `.github/workflows/deploy.yml` 이 배포 때 하는 일은 두 가지뿐입니다. 파일 합치기·변환(번들·압축)은 없습니다.
 
-1. `node scripts/build-config.js` — GitHub Secrets 값으로 `assets/js/config.js` 생성 (로컬은 `.env` 에서 읽음). 키: `WEB3FORMS_ACCESS_KEY` · `SUPABASE_URL` · `SUPABASE_ANON_KEY` · `KAKAO_MAP_KEY`(진료과목 '지점 안내' 지도 — 카카오 JavaScript 키, 카카오 디벨로퍼스 플랫폼 Web 에 사이트 도메인 등록 필요. 비어 있으면 지도 자리표시 + 카카오맵·네이버지도 링크)
+1. `node scripts/build-config.js` — GitHub Secrets 값으로 `assets/js/config.js` 생성 (로컬은 `.env` 에서 읽음).
 2. 배포 대상만 `_site/` 로 복사 — `index.html 404.html fee.html privacy.html favicon.svg robots.txt sitemap.xml .nojekyll about treatment community faq member admin components assets` (`docs/`·`scripts/`·`README.md` 등은 올라가지 않음)
 
 배포본과 똑같은 결과물로 확인하고 싶을 때 (Git Bash):

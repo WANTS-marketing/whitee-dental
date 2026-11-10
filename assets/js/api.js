@@ -469,45 +469,9 @@
     // TODO(서버): 세션 지우기
   }
 
-  /* ---------- 지도 (카카오맵 JavaScript SDK) ----------
-     키 하나만 넣으면 된다: .env(로컬) 또는 GitHub Secrets(배포)의 KAKAO_MAP_KEY → scripts/build-config.js 가 config.js 에 넣음
-       키 = 카카오 디벨로퍼스 > 내 애플리케이션 > 앱 키 'JavaScript 키' (공개용 — 플랫폼 > Web 에 사이트 도메인 등록 필수:
-       https://wants-marketing.github.io, 로컬 확인용 http://localhost:포트)
-     키가 없으면 null → 화면은 자리표시(지점명 + 카카오맵·네이버지도 링크) 그대로 */
-  let kakaoMaps = null;
-  function hasMapKey() { return !!config.KAKAO_MAP_KEY; }
-  function loadKakaoMaps() {
-    if (!config.KAKAO_MAP_KEY) return Promise.resolve(null);
-    kakaoMaps = kakaoMaps || new Promise((resolve) => {
-      const s = document.createElement('script');
-      s.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${encodeURIComponent(config.KAKAO_MAP_KEY)}&autoload=false&libraries=services`;
-      s.onload = () => (window.kakao?.maps ? window.kakao.maps.load(() => resolve(window.kakao.maps)) : resolve(null));
-      s.onerror = () => resolve(null); // 키 오류·도메인 미등록 → 자리표시 유지
-      document.head.appendChild(s);
-    });
-    return kakaoMaps;
-  }
-  /** el 안에 지점 지도를 그린다 — 좌표(branch.map: { lat, lng })가 있으면 그대로, 없으면 주소(쉼표 앞)로 찾음. 성공하면 true */
-  async function drawBranchMap(el, branch) {
-    const maps = await loadKakaoMaps();
-    if (!maps || !el) return false;
-    const pos = await new Promise((resolve) => {
-      if (branch.map?.lat && branch.map?.lng) { resolve(new maps.LatLng(branch.map.lat, branch.map.lng)); return; }
-      new maps.services.Geocoder().addressSearch(String(branch.address || '').split(',')[0], (res, status) => {
-        resolve(status === maps.services.Status.OK && res[0] ? new maps.LatLng(res[0].y, res[0].x) : null);
-      });
-    });
-    if (!pos) return false;
-    el.innerHTML = '';
-    const map = new maps.Map(el, { center: pos, level: 3 });
-    new maps.Marker({ map, position: pos });
-    return true;
-  }
-
   window.API = {
     getNotices, getNotice, getNews, getNewsPost, mockQuery, getCases, getCase, CASE_CATEGORIES, adminListCases, getFaqs, getFees,
     listInquiries, getInquiry, createInquiry, isDeliveryReady, adminListInquiries, adminGetInquiry, answerInquiry, updateInquiryStatus, deleteInquiry,
     isLoggedIn, getCurrentUser, isAdmin, signInWithKakao, signOut,
-    hasMapKey, loadKakaoMaps, drawBranchMap,
   };
 })();
