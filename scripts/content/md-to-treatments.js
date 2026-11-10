@@ -138,6 +138,9 @@ const treatments = blocks.map((b) => {
       };
     });
   }
+  /* 안내 박스 (진료 포인트 아래, 2026-11-10 스케일링 '가글 마취'): 라벨 · 본문 */
+  const noticeSec = optSection('추가 블록 — 안내 박스');
+  if (noticeSec) extras.notice = { label: lineOf(noticeSec, '라벨'), text: lineOf(noticeSec, '본문') };
   const labSec = optSection('추가 블록 — 기공센터');
   if (labSec) extras.lab = { label: lineOf(labSec, '라벨'), title: lineOf(labSec, '제목'), ...slotOf(lineOf(labSec, '이미지')), text: lineOf(labSec, '본문') };
 

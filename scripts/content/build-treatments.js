@@ -110,6 +110,14 @@ ${cases.map((c, i) => `              <button type="button" class="t-fold__tab" r
           </div>
         </section>
 ` : '';
+  /* 안내 박스 (진료 포인트 바로 아래, 본문 칸 — 2026-11-10 스케일링 '가글 마취'): #F8FAFD · 왼쪽 4px 파랑 선 · 라벨 14px 파랑 굵게 · 문장 17px (sub.css .t-notice) */
+  const noticeBox = X.notice ? `
+        <!-- 추가 · 안내 박스 — ${esc(X.notice.label)} (원고 '추가 블록 — 안내 박스') -->
+        <aside class="t-notice" aria-label="${esc(X.notice.label)} 안내">
+          <p class="t-notice__label">${esc(X.notice.label)}</p>
+          <p class="t-notice__text">${esc(X.notice.text)}</p>
+        </aside>
+` : '';
   const labBlock = X.lab ? `
         <!-- 추가 · 기공센터 (기존 상세 공통 블록 F-02 기반, 원고 '추가 블록 — 기공센터') -->
         <section class="t-sec t-lab" aria-labelledby="t-lab-title">
@@ -248,7 +256,7 @@ ${lnb}
 ${t.points.map((p, i) => `            <li class="t-point"><span class="t-point__no">${String(i + 1).padStart(2, '0')}</span><p class="t-point__text">${esc(p)}${/[.?!]$/.test(p) ? '' : '.'}</p></li>`).join('\n')}
           </ol>
         </section>
-${photoStrip}
+${noticeBox}${photoStrip}
         <!-- 4. 치료를 결정하기 전 알아야 할 기준 -->
         <section class="t-sec" aria-labelledby="t-criteria-title">
           <h2 class="t-sec__title t-sec__title--center" id="t-criteria-title">치료를 결정하기 전 알아야 할 기준</h2>
