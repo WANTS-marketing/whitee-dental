@@ -253,8 +253,21 @@ function initTreatmentFold(root) {
   };
   let rt = 0;
   window.addEventListener('resize', () => { cancelAnimationFrame(rt); rt = requestAnimationFrame(refresh); });
+  // 주소 #cases-N (2026-11-10, 일반진료 틀니 → 임플란트 '틀니 임플란트' 4번): N번 카드를 펼친 채로 열고 갤러리 섹션을 헤더 아래 24px 에
+  const hit = location.hash.match(/^#cases-(\d+)$/);
+  const jump = hit && cards[Number(hit[1]) - 1] ? Number(hit[1]) - 1 : -1;
+  if (jump >= 0) index = jump;
   document.fonts?.ready.then(refresh);
   refresh();
+  if (jump >= 0) {
+    const go = () => {
+      const sec = root.closest('section') || root;
+      const headerH = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-h')) || 0;
+      window.scrollTo({ top: Math.max(0, sec.getBoundingClientRect().top + window.scrollY - headerH - 24), behavior: 'auto' });
+    };
+    requestAnimationFrame(go);
+    window.addEventListener('load', () => requestAnimationFrame(go), { once: true }); // 이미지·글꼴로 위쪽 높이가 바뀐 뒤 한 번 더
+  }
 }
 
 /* ---------- 로그인 후 돌아갈 곳 (member/login.html?return=community/case-view.html?id=case-18) ----------
