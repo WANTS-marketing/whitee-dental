@@ -99,9 +99,10 @@
 .t-connect__info dt { font-size: 0.875rem; font-weight: 700; color: var(--color-text-sub); }
 .t-connect__info dd { font-size: 1rem; line-height: 1.6; word-break: keep-all; }
 .t-connect__info a { font-weight: 600; color: var(--color-accent); }
-.t-connect__hours-line { display: block; }
-.t-connect__hour { display: inline-block; margin-right: 12px; white-space: nowrap; }
-.t-connect__hour:last-child { margin-right: 0; }
+.t-connect__hours { display: grid; grid-template-columns: max-content max-content; gap: 0 12px; } /* [요일 | 시간] 4줄 */
+.t-connect__hour-day { white-space: nowrap; color: var(--color-text-sub); }
+.t-connect__hour-time { white-space: nowrap; font-variant-numeric: tabular-nums; }
+.t-connect__holiday { display: block; margin-top: 4px; font-size: 0.875rem; font-weight: 600; color: var(--color-accent); }
 .t-connect__btns { display: flex; gap: 8px; }
 .t-connect__btns .t-btn { flex: 1 1 0; justify-content: center; }
 /* 중간 · 넓음: 정보 칸 = 위 항목명 / 아래 내용, 칸 사이 세로선 */
@@ -531,7 +532,8 @@
 .loc__line { display: block; word-break: keep-all; overflow-wrap: normal; }
 .loc__sub { font-size: var(--fs-xs); color: var(--color-text-muted); }
 .loc__hour { display: flex; color: var(--color-text); font-weight: 600; }
-.loc__day { flex: none; width: 5em; color: var(--color-text-sub); font-weight: 500; }
+.loc__day { flex: none; width: 7.5em; color: var(--color-text-sub); font-weight: 500; } /* '공휴일(토요일)' 까지 한 줄 (2026-11-10) */
+.loc__holiday { margin-top: 2px; font-size: var(--fs-xs); font-weight: 600; color: var(--color-accent); }
 .loc__hour.is-off .loc__time { color: var(--color-text-muted); font-weight: 500; }
 .loc__info dd { color: var(--color-text-sub); }
 .loc__info dd strong { color: var(--color-text); }

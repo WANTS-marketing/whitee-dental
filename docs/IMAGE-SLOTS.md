@@ -8,6 +8,11 @@
 - 동작: `assets/js/pages.js` renderTreatmentPage · 자리 정의: `docs/content/treatments-6-content.md` 각 진료 '추가 블록' → `node scripts/content/md-to-treatments.js` → `node scripts/content/build-treatments.js`
 - 기존 홈페이지 상세에서 잘라낸 이미지(`자료/기존상세/…/crops`)는 저해상도·확인 필요 표현이 있어 쓰지 않습니다. 병원 원본 사진을 받아 넣어 주세요
 
+## 메인 히어로 — `assets/images/`
+| 파일 이름 | 위치 | 비율 | 권장 크기 | 내용 예시 |
+|---|---|---|---|---|
+| hero-01-brand | 메인 히어로 1번 슬라이드 '믿음을 심고 미소를 빚는 / 환자를 위한 치과' (2026-11-10 추가) | 3:2 | 2400×1600 (다른 히어로 사진과 같음) | 밝은 진료실·상담 장면 등 신뢰감 있는 이미지, 실제 인물 얼굴은 동의 필요. 왼쪽에 글자가 올라가므로 주인공은 가운데~오른쪽 |
+
 ## 임플란트 — `assets/images/treatment/implant/`
 
 | 파일 이름 | 위치 | 비율 | 권장 크기 | 내용 예시 |

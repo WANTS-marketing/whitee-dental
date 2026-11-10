@@ -110,7 +110,8 @@
      [data-specialties]            전문의 원(.spec-circle) 줄 — SITE.specialties
      [data-specialty-text]         진료과 목록 글자 '치과교정과 · 치과보철과 …' (data-specialty-text="sep" 로 구분자 지정, 기본 ' · ')
      [data-philosophy="hanja|sub|text|list"] 진료 철학 — 치과소개 인트로(hanja·sub·text) / 메인 WHY 왼쪽 목록(list)
-     [data-hero-hours]             메인 히어로 3번 진료시간 카드 (SITE.branches[].hours — 두 지점이 같으면 표 하나 + '창원점·마산점 동일', 다르면 지점별)
+     [data-hero-hours]             메인 히어로 진료시간 카드 (SITE.branches[].hours · hoursNote — 두 지점이 같으면 표 하나 + '창원점·마산점 동일', 다르면 지점별)
+     [data-branch-hours="지점 id"] 진료시간 한 줄(상담문의 작성 지점 카드) — '평일 10:00–21:00 · 토요일 …' + 대체공휴일 안내
      [data-promises="full|short"]  4가지 약속 카드 — full = 치과소개(.strength), short = 메인 사진 카드(.why-card — image 배경, 사진·제목·설명만, 링크 없음)
      [data-partner-highlights]     협력 강조 — 기본 = 치과소개 카드(.partner-highlight) / ="card" = 메인 WHITE e PARTNERS 카드(.partners-card)
      [data-partner-logos]          협력 기관 칸(치과소개) · [data-partner-marquee] 메인 2줄 흐르는 타일 · [data-partner-count] 기관 수 'N+'
@@ -133,22 +134,18 @@
       else if (kind === 'text') el.textContent = PH.text;
       else if (kind === 'list') el.innerHTML = PH.words.map((w) => `<li class="why-philo__item"><p class="why-philo__word"><strong>${esc(w.ko)}</strong> <span lang="zh-Hant">${esc(w.hanja)}</span></p><p class="why-philo__desc">${esc(w.desc)}</p></li>`).join('');
     });
+    document.querySelectorAll('[data-branch-hours]').forEach((el) => {
+      const b = (S.branches || []).find((x) => x.id === el.dataset.branchHours);
+      if (!b) return;
+      el.innerHTML = (b.hours || []).map((h) => `<span class="branch-card__time">${esc(h.label)} ${esc(h.time)}</span>`).join('<span class="branch-card__sep"> · </span>')
+        + (b.hoursNote ? `<span class="branch-card__holiday">${esc(b.hoursNote)}</span>` : '');
+    });
     const icon = (p) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">${p.icon}</svg>`;
     document.querySelectorAll('[data-hero-hours]').forEach((el) => {
       const B = S.branches || [];
       if (!B.length) return;
-      // 표의 줄 = 평일 · 토요일 · 점심시간 · 일요일(공휴일). 데이터에 없는 줄은 숨김 (지어내지 않음)
-      const rowsOf = (b) => {
-        const H = b.hours || [];
-        const find = (re) => H.find((h) => re.test(h.label));
-        const sun = find(/일요일|공휴일/);
-        return [
-          ['평일', find(/^평일/)?.time],
-          ['토요일', find(/^토/)?.time],
-          ['점심시간', find(/점심/)?.time],
-          [sun && /공휴일/.test(sun.label) ? '일요일·공휴일' : '일요일', sun?.time],
-        ];
-      };
+      // 표의 줄 = site-data.js hours 그대로(평일 · 토요일 · 공휴일(평일) · 공휴일(토요일), 2026-11-10) + 아래 hoursNote(대체공휴일 안내)
+      const rowsOf = (b) => (b.hours || []).map((h) => [h.label, h.time]);
       // 값이 없는 줄(점심시간 등)은 숨김. 시간 '10:00–21:00' → '10:00 – 21:00' (대시 앞뒤 얇은 공백 U+2009)
       const fmt = (v) => String(v).replace(/\s*[–~-]\s*/g, '\u2009–\u2009');
       const list = (rows) => `<dl class="hero-hours__list">${rows.filter(([, v]) => v).map(([k, v]) => `<div class="hero-hours__row"><dt>${esc(k)}</dt><dd>${esc(fmt(v))}</dd></div>`).join('')}</dl>`;
@@ -159,6 +156,7 @@
         + (close ? `<p class="hero-hours__big"><span>평일</span> <strong>${esc(close)}</strong><span>까지</span></p>` : '')
         + `<hr class="hero-hours__line">`
         + (same ? list(rowsOf(B[0])) : B.map((b) => `<p class="hero-hours__branch"><i class="hero-hours__dot hero-hours__dot--${esc(b.id)}" aria-hidden="true"></i>${esc(b.name)}</p>${list(rowsOf(b))}`).join(''))
+        + (B[0].hoursNote ? `<p class="hero-hours__holiday">${esc(B[0].hoursNote)}</p>` : '')
         + (same && B.length > 1 ? `<p class="hero-hours__note">${B.map((b) => esc(b.name)).join('·')} 동일</p>` : '');
     });
     document.querySelectorAll('[data-promises]').forEach((el) => {
@@ -796,7 +794,7 @@
           <dt>주소</dt><dd>${esc(b.address)} (${esc(b.addressNote)})</dd>
           <dt>대표자</dt><dd>${esc(b.ceo)} · 사업자등록번호 ${esc(b.bizNo)}</dd>
           <dt>전화</dt><dd><a href="${telHref(b.tel)}">${esc(b.tel)}</a> · 이메일 <a href="mailto:${esc(b.email)}">${esc(b.email)}</a></dd>
-          <dt>진료시간</dt><dd>${b.hours.map((h) => `${esc(h.label)} ${esc(h.time)}`).join(' · ')}</dd>
+          <dt>진료시간</dt><dd>${b.hours.map((h) => `${esc(h.label)} ${esc(h.time)}`).join(' · ')}${b.hoursNote ? ` <span class="footer__holiday">${esc(b.hoursNote)}</span>` : ''}</dd>
         </dl>
       </div>`).join('');
   }
