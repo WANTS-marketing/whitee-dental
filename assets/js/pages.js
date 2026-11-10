@@ -89,16 +89,15 @@ function renderTreatmentPage() {
   const { esc, telHref } = window.UI;
   const B = S.branches || [];
   const tabs = B.map((b, i) => `<button type="button" class="t-connect__tab" role="tab" id="t-tab-${b.id}" aria-controls="t-panel-${b.id}" aria-selected="${i === 0}"${i ? ' tabindex="-1"' : ''}><i class="t-connect__dot t-connect__dot--${b.id}" aria-hidden="true"></i>${esc(b.name)}</button>`).join('');
-  // 진료시간 2줄: 앞 2개(평일 · 토) / 나머지(일요일 휴진)
-  const hour = (h) => `<span class="t-connect__hour">${esc(h.label)} ${esc(h.time)}</span>`;
-  const hoursLines = (hs) => [hs.slice(0, 2), hs.slice(2)].filter((l) => l.length).map((l) => `<span class="t-connect__hours-line">${l.map(hour).join('')}</span>`).join('');
+  // 진료시간: 한 줄에 하나씩 [요일 | 시간](4줄 — 평일 · 토요일 · 공휴일(평일) · 공휴일(토요일)) + 대체공휴일 안내 (site-data.js hours · hoursNote)
+  const hoursLines = (hs, note) => `<span class="t-connect__hours">${hs.map((h) => `<span class="t-connect__hour-day">${esc(h.label)}</span><span class="t-connect__hour-time">${esc(h.time)}</span>`).join('')}</span>${note ? `<span class="t-connect__holiday">${esc(note)}</span>` : ''}`;
   const panel = (b, i) => {
     const booking = b.naverBooking || b.naverMap;
     return `<div class="t-connect__panel" role="tabpanel" id="t-panel-${b.id}" aria-labelledby="t-tab-${b.id}"${i ? ' hidden' : ''}>
       <dl class="t-connect__info">
         <div class="t-connect__cell--addr"><dt>주소</dt><dd>${esc(b.address)}</dd></div>
         <div class="t-connect__cell--tel"><dt>전화</dt><dd><a href="${telHref(b.tel)}">${esc(b.tel)}</a></dd></div>
-        <div class="t-connect__cell--hours"><dt>진료시간</dt><dd>${hoursLines(b.hours || [])}</dd></div>
+        <div class="t-connect__cell--hours"><dt>진료시간</dt><dd>${hoursLines(b.hours || [], b.hoursNote)}</dd></div>
       </dl>
       <p class="t-connect__btns">
         <a class="t-btn t-btn--fill" href="../faq/contact-write.html">상담문의</a>
@@ -482,7 +481,7 @@ function renderClinic() {
           <dt>주소</dt><dd class="loc__lines">${(b.addressLines || [b.address]).map((l, i, arr) => `<strong class="loc__line">${esc(l)}${i === arr.length - 1 && b.addressNote ? ` (${esc(b.addressNote)})` : ''}</strong>`).join('')}${b.landmark ? `<span class="loc__line loc__sub">${esc(b.landmark)}</span>` : ''}</dd>
           <dt class="loc__dt--mid">전화</dt><dd><a class="loc__tel" href="${telHref(b.tel)}">${esc(b.tel)}</a></dd>
           <dt>이메일</dt><dd>${esc(b.email)}</dd>
-          <dt>진료시간</dt><dd class="loc__lines">${b.hours.map((x) => `<span class="loc__line loc__hour${/휴진/.test(x.time) ? ' is-off' : ''}"><span class="loc__day">${esc(DAY_LABEL[x.label] || x.label)}</span><span class="loc__time">${esc(x.time)}</span></span>`).join('')}</dd>
+          <dt>진료시간</dt><dd class="loc__lines">${b.hours.map((x) => `<span class="loc__line loc__hour${/휴진/.test(x.time) ? ' is-off' : ''}"><span class="loc__day">${esc(DAY_LABEL[x.label] || x.label)}</span><span class="loc__time">${esc(x.time)}</span></span>`).join('')}${b.hoursNote ? `<span class="loc__line loc__holiday">${esc(b.hoursNote)}</span>` : ''}</dd>
         </dl>`;
     }
     const transit = document.querySelector(`[data-loc-transit="${b.id}"]`);

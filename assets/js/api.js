@@ -175,7 +175,10 @@
   /** FAQ — [{ id, category, question, answer, featured, order }] */
   async function getFaqs({ featured } = {}) {
     // TODO(서버): FAQ 목록 order 순 (API-SPEC 'FAQ')
-    const rows = (await fetchJson('faq')).sort((a, b) => a.order - b.order);
+    // 답변 안의 {hours} · {hoursNote} = site-data.js 진료시간(한 곳에서 관리, 2026-11-10)
+    const S = window.SITE;
+    const fill = (t) => (S ? String(t).replace(/\{hours\}/g, S.hoursText()).replace(/\{hoursNote\}/g, S.branches[0]?.hoursNote || '') : t);
+    const rows = (await fetchJson('faq')).sort((a, b) => a.order - b.order).map((r) => ({ ...r, question: fill(r.question), answer: fill(r.answer) }));
     return featured ? rows.filter((r) => r.featured) : rows;
   }
 

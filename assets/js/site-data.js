@@ -2,6 +2,18 @@
    병원 기본 데이터 — 지점·의료진·SNS
    병원 정보가 바뀌면 이 파일만 고치면 된다. (2차에 Supabase로 옮길 대상 아님: 거의 안 바뀌는 정보)
    ========================================================================== */
+
+/* 진료시간 — 창원점·마산점 공통, 한 곳에서 관리 (병원 제공 자료로 확정 2026-11-10, 24시간 표기)
+   쓰는 곳(모두 이 값): 메인 히어로 진료시간 카드 · 진료과목 '지점 안내' · 푸터 · 오시는길 · 상담문의 작성 지점 카드 · FAQ 답변의 {hours} · 진료과목 구조화 데이터(평일·토요일만)
+   지점별로 달라지면 branches[].hours 에 그 지점 값을 따로 넣으면 된다 */
+const CLINIC_HOURS = [
+  { label: '평일', time: '10:00–21:00' },
+  { label: '토요일', time: '10:00–16:00' },
+  { label: '공휴일(평일)', time: '10:00–18:00' },
+  { label: '공휴일(토요일)', time: '10:00–14:30' },
+];
+const CLINIC_HOURS_NOTE = '대체공휴일은 정상 진료합니다'; // 진료시간 아래 작은 글씨(파랑)
+
 window.SITE = {
   branches: [
     {
@@ -15,13 +27,9 @@ window.SITE = {
       bizNo: '566-95-00700',
       tel: '055-716-2884',
       email: 'whitee2018@naver.com',
-      hoursVerified: false, // 원고 '진료시간 [확인 필요]' — 화면에는 표시, 병원 확인 대기 (docs/HOSPITAL-CHECK.md)
-      hours: [
-        { label: '평일', time: '10:00–21:00' }, // 원고: 월~금 10:00~21:00
-        { label: '토', time: '10:00–16:00' },
-        { label: '일요일', time: '휴진' },
-      ],
-      hoursShort: '평일 10:00–21:00 · 토 10:00–16:00 · 일요일 휴진',
+      hoursVerified: true, // 병원 제공 자료(2026-11-10) — 일요일 휴진 표기 여부만 확인(docs/HOSPITAL-CHECK.md #1)
+      hours: CLINIC_HOURS,
+      hoursNote: CLINIC_HOURS_NOTE,
       naverMap: 'https://naver.me/FY3f3LdP',
       naverBooking: '', // TODO: 창원점 네이버 예약 링크 병원 확인 — 비어 있으면 퀵메뉴 네이버예약이 네이버 지도(naverMap)로 연결
       landmark: '상남동 다이소 앞 건물',
@@ -40,13 +48,9 @@ window.SITE = {
       bizNo: '577-91-01943',
       tel: '055-255-2000',
       email: 'whitee2024@naver.com',
-      hoursVerified: false, // 원고 '진료시간 [확인 필요]' — 화면에는 표시, 병원 확인 대기 (docs/HOSPITAL-CHECK.md)
-      hours: [
-        { label: '평일', time: '10:00–21:00' }, // 원고: 월~금 10:00~21:00
-        { label: '토', time: '10:00–16:00' },
-        { label: '일요일', time: '휴진' },
-      ],
-      hoursShort: '평일 10:00–21:00 · 토 10:00–16:00 · 일요일 휴진',
+      hoursVerified: true, // 병원 제공 자료(2026-11-10) — 일요일 휴진 표기 여부만 확인(docs/HOSPITAL-CHECK.md #1)
+      hours: CLINIC_HOURS,
+      hoursNote: CLINIC_HOURS_NOTE,
       naverMap: 'https://naver.me/xWTYEspr',
       naverBooking: '', // TODO: 마산점 네이버 예약 링크 병원 확인 — 비어 있으면 퀵메뉴 네이버예약이 네이버 지도(naverMap)로 연결
       landmark: '마산역 도보 3분',
@@ -117,6 +121,7 @@ window.SITE = {
                1367px 이상에서만 보이고(그 아래·모바일은 숨김), 슬라이드가 들어온 뒤 0.4s 후 아래에서 올라온다
      모바일은 사진 위치를 따로(main.css 768px 이하) */
   heroSlides: [
+    { pos: '50% 50%' }, // 1 브랜드(2026-11-10 추가 — hero-01-brand.jpg, 사진을 받으면 위치 조정)
     { pos: '50% 40%' }, // 1 진료 장면(자료/의료진/DSC_0012.png): 원장님이 가운데~오른쪽, 왼쪽은 스태프 등(글자 자리)
     { pos: '36% 50%', scale: 1.1, caption: { name: '이은주 대표원장', role: '치과교정과 전문의', x: 60, y: 45 } }, // 2 상담: 원장님이 화면 가로 약 60~85%
     { pos: '50% 50%' }, // 3 야경(자료/메인페이지/tc02290001877.jpg): 퇴근길 도로·빌딩, 가운데 맞춤
@@ -204,10 +209,12 @@ window.SITE = {
     ],
   },
 
-  /* 메인 의료진 섹션 인물 나열 순서 (왼쪽 → 오른쪽, 이름). 없는 지점은 대표원장 먼저 + 데이터 순서. 의료진 소개 페이지 순서는 그대로 */
-  mainDoctorOrder: {
-    changwon: ['권진선', '이은주', '김영우', '이휘소'], // 이은주·김영우 가운데, 권진선·이휘소 양옆
-    masan: ['조혜진', '김영우', '정호석', '조용정', '송희태'], // 정호석 가운데, 김영우·조용정 양옆, 조혜진·송희태 바깥
+  /* 지점별 의료진 순서 (이름) — 의료진 소개(about/doctors.html) · 메인 의료진 공통 (SITE.getDoctorsByBranch 가 이 순서로 정렬)
+     2026-11-10 병원 요청: 대표원장 → 김영우 원장 → 나머지는 그전 순서 그대로. 목록에 없는 원장은 뒤에 데이터 순서대로
+     (예전 메인 전용 순서 mainDoctorOrder — 대표원장 가운데 배치 — 는 이 순서로 통합) */
+  doctorOrder: {
+    changwon: ['이은주', '김영우', '권진선', '이휘소'],
+    masan: ['정호석', '김영우', '송희태', '조용정', '조혜진'],
   },
 
   /* 의료진 — 의료진 소개(about/doctors.html)·메인 의료진 공통
@@ -314,7 +321,14 @@ window.SITE.splitSociety = function splitSociety(c) {
     의료진 소개 페이지의 각 원장 위치 = about/doctors.html#{지점id}-{slug} */
 window.SITE.doctorSlug = (d) => d.photo.replace(/^doctor-/, '').replace(/\.\w+$/, '');
 
-/** 지점별 의료진 — 대표원장 → 원장 순서(배열 순서 유지), 겸직 의사는 양쪽에 모두 포함 */
+/** 지점별 의료진 — SITE.doctorOrder[지점] 순서(없는 원장은 뒤에 데이터 순서), 겸직 의사는 양쪽에 모두 포함 */
 window.SITE.getDoctorsByBranch = function (branchId) {
-  return window.SITE.doctors.filter((d) => d.branches.includes(branchId));
+  const order = (window.SITE.doctorOrder || {})[branchId] || [];
+  const rank = (d) => { const i = order.indexOf(d.name); return i < 0 ? order.length : i; };
+  return window.SITE.doctors.filter((d) => d.branches.includes(branchId)).map((d, i) => [d, i]).sort((a, b) => rank(a[0]) - rank(b[0]) || a[1] - b[1]).map(([d]) => d);
+};
+/** 진료시간 한 줄 글자 — '평일 10:00–21:00 · 토요일 10:00–16:00 · …' (FAQ 답변 {hours} 등) */
+window.SITE.hoursText = function (branch) {
+  const b = branch || window.SITE.branches[0];
+  return (b.hours || []).map((h) => `${h.label} ${h.time}`).join(' · ');
 };

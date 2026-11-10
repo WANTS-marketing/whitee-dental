@@ -125,7 +125,7 @@ docs/                      배포·인수인계 문서
 | 상담 데이터 저장 방식 (지금 더미 → 서버) | `assets/js/api.js` 상담문의 함수 8개 + `docs/API-SPEC.md` |
 | 치료사례 | `assets/data/cases.json` — 지금 0건. 기존 사이트 14건은 이관하지 않음(병원이 게시 동의를 받은 사례만 관리자에서 새로 등록, HOSPITAL-CHECK #20). 시안 미리보기 `?mock=N`, 로그인 상태 `?login=1`(`?login=0` 해제) |
 | 의료진 소개 페이지 사진 크롭(김영우 원장 구도 기준 — 얼굴 크기·정수리 높이 통일) | `assets/js/site-data.js` 각 원장 `staffCrop: { scale, x, y }` (scale = 사진 높이 ÷ 사진 칸 높이, x = 얼굴 가운데 가로 위치, y = 정수리 세로 위치 — 사진 대비 0~1). 메인 의료진 `photoScale`·`photoOffset*` 과 따로. 페이지 가로 배치(위쪽 [LNB | 소개 블록]·원장 목록이 같은 가운데·같은 폭, 최대 1600px, 좌우 여백 같음·퀵메뉴와 32px 이상)는 `pages.js` `setDocRight`(--doc-side) · `common.css` `.page-doctors .sub-layout`·`.doc-list`. 약력은 3개 이하 1열, 4개 이상 2열(왼쪽 열을 위→아래로 먼저, 열 사이 48px — `pages.js` `CAREER_2COL_MIN` · `careerOf`), 행 수로 글자·간격 3단계(`.rows-s`·`.rows-m`·`.rows-l`, `common.css`), 768px 이하 항상 1열 16px |
-| 메인 의료진 나열 순서 | `assets/js/site-data.js` 의 `mainDoctorOrder` |
+| 의료진 나열 순서 (의료진 소개 · 메인 공통) | `assets/js/site-data.js` 의 `doctorOrder` (지점별 이름 순서) |
 | 메인 히어로 슬라이드별 사진 위치·확대·인물 이름표 (PC) | `assets/js/site-data.js` 의 `heroSlides` (`pos` · `scale` · `origin` · `caption {name, role, x, y}`) — `main.js` `initHero` 가 적용. 모바일 사진 위치는 `main.css` 768px 이하 |
 | 의료진 소개 지점 이동 버튼(화면 아래 [창원점 N][마산점 N]) · 지점별 묶음 | `assets/js/pages.js` `renderDoctorsPage` · `initDoctorBranchNav` (원장 수는 site-data.js 에서 자동) · 스타일 `common.css` '의료진 소개 — 소개 블록' · '의료진 소개 — 원장' · '지점 이동 버튼' |
 | 의료진 소개 위 소개 블록(네이비 문구 · 원형 배지 · 하단 바 · 오른쪽 흑백 사진) | `about/doctors.html` `.doc-intro` — 사진은 임시 `tour-masan-04.jpg` (CSS 로 흑백) |
