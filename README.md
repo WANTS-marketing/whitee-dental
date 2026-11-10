@@ -123,7 +123,7 @@ docs/                      배포·인수인계 문서
 | 상담문의 폼 칸·검사(비밀번호 4자리·내용 5자·링크 막기) | 각 폼 HTML (`faq/contact-write.html` · `treatment/*.html` 빠른상담 · `index.html` 빠른 상담문의) + `common.js` `inquiryForm` |
 | 상담문의 목록(15개·지점 칩·모바일 카드형·내 문의) · 비밀번호 팝업 — 연결: 메뉴·LNB 상담문의 = 목록, 퀵메뉴·하단 바·FAQ 하단 상담문의 = 작성 | `assets/js/inquiry.js` · 스타일 `common.css` '상담 현황' · 팝업 `common.js` `UI.dialog` |
 | 상담 데이터 저장 방식 (지금 더미 → 서버) | `assets/js/api.js` 상담문의 함수 8개 + `docs/API-SPEC.md` |
-| 치료사례 (기존 사이트 시술 전후 14건) | `assets/data/cases.json` — 다시 만들기: `scripts/import` 의 `fetch-gallery.js` → `build-gallery.js` (BEFORE·AFTER 나누기·흐림 미리보기). AFTER 는 로그인 회원만 — 원본 14장은 저장소 밖(자료/기존사이트-치료사례/after/), 시안은 `?login=1` 이어도 흐림 미리보기 + 시안 안내 (`?login=0` 해제) |
+| 치료사례 | `assets/data/cases.json` — 지금 0건. 기존 사이트 14건은 이관하지 않음(병원이 게시 동의를 받은 사례만 관리자에서 새로 등록, HOSPITAL-CHECK #20). 시안 미리보기 `?mock=N`, 로그인 상태 `?login=1`(`?login=0` 해제) |
 | 의료진 소개 페이지 사진 크롭(김영우 원장 구도 기준 — 얼굴 크기·정수리 높이 통일) | `assets/js/site-data.js` 각 원장 `staffCrop: { scale, x, y }` (scale = 사진 높이 ÷ 사진 칸 높이, x = 얼굴 가운데 가로 위치, y = 정수리 세로 위치 — 사진 대비 0~1). 메인 의료진 `photoScale`·`photoOffset*` 과 따로. 페이지 가로 배치(위쪽 [LNB | 소개 블록]·원장 목록이 같은 가운데·같은 폭, 최대 1600px, 좌우 여백 같음·퀵메뉴와 32px 이상)는 `pages.js` `setDocRight`(--doc-side) · `common.css` `.page-doctors .sub-layout`·`.doc-list`. 약력은 3개 이하 1열, 4개 이상 2열(왼쪽 열을 위→아래로 먼저, 열 사이 48px — `pages.js` `CAREER_2COL_MIN` · `careerOf`), 행 수로 글자·간격 3단계(`.rows-s`·`.rows-m`·`.rows-l`, `common.css`), 768px 이하 항상 1열 16px |
 | 메인 의료진 나열 순서 | `assets/js/site-data.js` 의 `mainDoctorOrder` |
 | 메인 히어로 슬라이드별 사진 위치·확대·인물 이름표 (PC) | `assets/js/site-data.js` 의 `heroSlides` (`pos` · `scale` · `origin` · `caption {name, role, x, y}`) — `main.js` `initHero` 가 적용. 모바일 사진 위치는 `main.css` 768px 이하 |
@@ -180,7 +180,7 @@ docs/                      배포·인수인계 문서
 ## 환자 사진 규칙 (2026-11-09)
 
 - **실제 환자의 치료 전·후 사진은 저장소에 넣지 않는다.** 이 저장소는 공개(public)이고 GitHub Pages 로 그대로 배포되므로, 저장소에 들어간 파일은 화면에서 가려도 주소로 누구나 열 수 있다. 커밋했다가 지워도 git 이력에 남는다
-- 치료사례 사진 보관: 저장소 밖 `자료/치료사례/`(기존 사이트 14건 BEFORE·흐림 미리보기) · `자료/기존사이트-치료사례/after/`(AFTER 원본) · `자료/기존상세/orthodontics/before-after/`(기존 교정 상세 14쌍). `.gitignore` 에 `assets/images/cases/`
+- 기존 사진 보관(이관하지 않음 — 인수인계 때 병원에 돌려줄지 삭제할지 결정): 저장소 밖 `자료/치료사례/`(기존 사이트 14건 BEFORE·흐림 미리보기) · `자료/기존사이트-치료사례/`(원본 합본 · AFTER 원본) · `자료/기존상세/orthodontics/before-after/`(기존 교정 상세 14쌍). `.gitignore` 에 `assets/images/cases/`
 - 운영: 사진은 서버의 비공개 저장소에 두고, 로그인·게시 동의(`consentChecked`)를 확인한 요청에만 기한 있는 주소로 내려준다 — `docs/API-SPEC.md` '치료사례'
 - 진료 안내용 그림(갤러리·장치·3D 진단 등)은 치아 모형·3D 그림·스톡 이미지만. 실제 환자 얼굴·구강 사진은 쓰지 않는다(`docs/IMAGE-SLOTS.md`)
 

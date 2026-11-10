@@ -104,14 +104,12 @@
     return { post: rows[i], html, prev: rows[i + 1] || null, next: rows[i - 1] || null };
   }
 
-  /** 치료사례 (기존 사이트 '시술 전후' 14건 — scripts/import/build-gallery.js 가 cases.json 생성)
-      [{ id, no, title(목록 제목), originalTitle(원래 제목, 상세), categories[], categoryName('치아교정·보철'), date, branch,
-         beforeImage(공개), afterBlur(흐림 미리보기, 공개), afterImage(AFTER 원본 주소 — 지금은 항상 null), images[], body }] 최신순
-      AFTER 원본 14장은 공개 저장소에 두지 않는다(저장소 밖 자료/기존사이트-치료사례/after/ 보관) → 시안은 로그인 상태에서도 afterImage = null
-        → 화면은 흐림 미리보기 + '시안: 실제 운영 시 원본 공개' (로그인 전이면 '로그인 후 확인')
-      TODO(서버): AFTER 원본을 서버 저장소(비공개)에 올리고, 로그인 확인 후에만 기한 있는 주소를 afterImage 에 담아 줄 것 (API-SPEC '치료사례') */
+  /** 치료사례 — assets/data/cases.json (지금 0건)
+      기존 사이트 '시술 전후' 14건은 이관하지 않음 — 병원이 환자 게시 동의를 받은 사례만 관리자에서 새로 등록 (2026-11-10, HOSPITAL-CHECK #20)
+      [{ id, no, title, categories[], category, date, branch, beforeImage, afterImage, period, extraction, consentChecked, body }] 최신순
+      TODO(서버): 전후 사진은 비공개 저장소에 두고, 로그인 확인 후에만 기한 있는 주소를 beforeImage · afterImage 에 담아 줄 것 (API-SPEC '치료사례') */
   /* 2026-11-09 규칙 (docs/API-SPEC.md '치료사례')
-     - 게시 동의 확인된 사례만(consentChecked: true) — 기존 14건은 동의 확인 전이라 화면에서 숨김(데이터는 그대로, HOSPITAL-CHECK #20)
+     - 게시 동의 확인된 사례만(consentChecked: true)
      - 치료 전·후 사진 모두 로그인 회원만: 비로그인이면 beforeImage · afterImage = null (화면은 흐림 자리 + '로그인 후 확인하실 수 있습니다')
      - 환자 이름(성씨 포함) 필드는 두지 않는다
      - category = 세부 분류 키(교정 6종 — CASE_CATEGORIES), period = 치료 기간, extraction = '발치' | '비발치'

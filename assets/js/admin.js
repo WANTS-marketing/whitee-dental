@@ -7,6 +7,7 @@
    치료사례 탭(2026-11-09): 게시 동의 확인 전 사례까지 모두(api.js adminListCases) + 동의 상태 배지(확인 = 파랑 / 미확인 = 회색 — 지점색 쓰지 않음)
      '게시 동의 확인' 체크 → 확인 팝업('환자의 게시 동의서를 확인하셨나요?') 후 consentChecked 변경 — 시안은 이 화면 안에서만(새로고침하면 처음대로), 저장은 API 연결 후
      사진(전·후)이 비어 있으면 '사진 등록 필요'
+     2026-11-10: 기존 사이트 14건은 이관하지 않음 → 0건이면 빈 상태 문구('환자 게시 동의를 받은 사례만 등록해 주세요') + 글쓰기 버튼 강조
    ========================================================================== */
 document.addEventListener('DOMContentLoaded', () => {
   const { esc, formatDate, branchBadge } = window.UI;
@@ -38,7 +39,8 @@ document.addEventListener('DOMContentLoaded', () => {
       cols: [['지점', (r) => branchBadge(r.branch)], ['제목', (r) => esc(r.title), 'is-wrap'], ['썸네일', (r) => esc(r.thumbnail)], ['작성일', (r) => formatDate(r.date, true)], ['관리', () => actions]],
     },
     cases: {
-      title: '치료사례', load: () => window.API.adminListCases(), // 동의 확인 전까지 모두 — 주소에 ?mock=N 이면 예시 사례 N개
+      title: '치료사례', load: () => window.API.adminListCases(), // 동의 확인 전까지 모두(지금 0건) — 주소에 ?mock=N 이면 예시 사례 N개
+      empty: '등록된 치료사례가 없습니다. 환자 게시 동의를 받은 사례만 등록해 주세요.',
       cols: [
         ['게시 동의', (r) => `<span class="case-consent case-consent--${r.consentChecked ? 'on' : 'off'}">${r.consentChecked ? '동의 확인' : '동의 미확인'}</span><label class="case-consent__check"><input type="checkbox" data-case-consent="${esc(r.id)}"${r.consentChecked ? ' checked' : ''}> 게시 동의 확인</label>`],
         ['분류', (r) => esc([r.categoryName, r.categoryLabel].filter(Boolean).join(' · '))], ['지점', (r) => branchBadge(r.branch)], ['제목', (r) => esc(r.title), 'is-wrap'],
