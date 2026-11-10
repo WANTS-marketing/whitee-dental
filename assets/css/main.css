@@ -24,13 +24,18 @@ html::-webkit-scrollbar { display: none; }
 @media (max-width: 768px) { .hero__media--consult img { object-position: 63% center; } /* hero-02 3000×1247 — 원장님 얼굴이 사진 가로 약 60% */ } /* 히어로 2번(진료 상담): 세로 화면에서는 원장님 쪽(오른쪽)이 보이게 */
 /* 어두운 막: 왼쪽(문구 쪽) 진하게 → 오른쪽(사진 피사체 쪽) 옅게 — 왼쪽 0.65 · 가운데 0.35 · 오른쪽 0.1 (위쪽 헤더 그라데이션은 .hero__slider::after 따로) */
 .hero__media::before { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(90deg, rgba(10, 10, 10, 0.65) 0%, rgba(10, 10, 10, 0.35) 50%, rgba(10, 10, 10, 0.1) 100%); }
-/* 히어로 1번(hero-01-brand): 왼쪽 ~ 제목 끝(빚는)까지 남색(--color-point #16233F) 막 — 글자 가독성 + 원내와 다른 인테리어(모니터·세면대)를 흐리게 (2026-11-10)
-   뒤 사진이 비치도록 0.86 → 0.8(제목 끝) → 투명(제목 끝 + 약 9%). 제목 끝 = 화면 가로 약 38%(1280~1600px) · 43%(1920px) 라 큰 화면은 따로. 모바일(768px 이하)은 기본 막 */
-@media (min-width: 769px) {
-  .hero__media--brand::before { background: linear-gradient(90deg, rgba(22, 35, 63, 0.86) 0%, rgba(22, 35, 63, 0.8) 38%, rgba(22, 35, 63, 0) 47%), linear-gradient(90deg, rgba(10, 10, 10, 0) 47%, rgba(10, 10, 10, 0.12) 100%); }
+/* 히어로 1번(hero-01-brand) 전용 덮개 (2026-11-10 — 2~4번은 위 기본 막 그대로)
+   1025px 이상: 왼쪽 → 오른쪽 남색(--color-point) 여러 단계 — 진한 구간 끝 --d = max(38%, 제목 오른쪽 끝 + 40px)
+     (제목 끝은 main.js initHero 가 재서 --brand-title-end 로 넣음 — 1920px 처럼 제목이 38% 를 넘는 화면은 그만큼 밀림)
+     0.82 → 0.78(--d − 10%) → 0.55(--d) → 0.25(+8%) → 0.08(+15%) → 0(+22%), 그 오른쪽(인물 쪽)은 덮개 없음. 사진 전체를 어둡게 하는 기본 막은 1번에서 대체됨
+   1024px 이하: 아래 → 위 남색 (글자가 아래쪽) */
+.hero__slide--brand .hero__title, .hero__slide--brand .hero__desc { text-shadow: 0 2px 12px rgba(0, 0, 0, 0.25); }
+@media (min-width: 1025px) {
+  .hero__media--brand { --d: max(38%, calc(var(--brand-title-end, 0px) + 40px)); }
+  .hero__media--brand::before { background: linear-gradient(90deg, rgba(22, 35, 63, 0.82) 0%, rgba(22, 35, 63, 0.78) calc(var(--d) - 10%), rgba(22, 35, 63, 0.55) var(--d), rgba(22, 35, 63, 0.25) calc(var(--d) + 8%), rgba(22, 35, 63, 0.08) calc(var(--d) + 15%), rgba(22, 35, 63, 0) calc(var(--d) + 22%)); }
 }
-@media (min-width: 1680px) {
-  .hero__media--brand::before { background: linear-gradient(90deg, rgba(22, 35, 63, 0.86) 0%, rgba(22, 35, 63, 0.8) 43%, rgba(22, 35, 63, 0) 52%), linear-gradient(90deg, rgba(10, 10, 10, 0) 52%, rgba(10, 10, 10, 0.12) 100%); }
+@media (max-width: 1024px) {
+  .hero__media--brand::before { background: linear-gradient(0deg, rgba(22, 35, 63, 0.85) 0%, rgba(22, 35, 63, 0.6) 35%, rgba(22, 35, 63, 0.15) 60%, rgba(22, 35, 63, 0) 75%); }
 }
 /* 들어오는 사진: scale 1.06 → 1 (전환과 함께 1.2s) */
 .hero__media img { transform: scale(1); transition: transform 1.2s cubic-bezier(0.65, 0, 0.35, 1); }
