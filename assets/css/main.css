@@ -526,7 +526,9 @@ html[data-fs="xl"] .doc-modal { width: min(680px, 100% - 48px); }
    타일: 흰 면 240×72px · 둥근 12px (모바일 176×56px) — 로고 타일·글자 타일 같은 크기
          로고(logo, 흰 바탕 webp): 높이 최대 40px(모바일 32px) · 가로 최대 타일 폭 80% · 가운데 / 글자: 16px 굵게 --color-point · 가운데 (긴 이름은 두 줄) */
 .partners[hidden] { display: none !important; } /* hidden 을 붙이면 숨김 — .screen 의 display: flex 보다 우선 (2026-11-10 다시 공개) */
-.partners { position: relative; padding: 120px 0; background: var(--color-point); color: #fff; overflow: hidden; }
+.partners { position: relative; isolation: isolate; padding: 120px 0; background: var(--color-point); color: #fff; overflow: hidden; }
+/* 배경 사진(맞잡은 손 — 하늘 아래에서 올려 본, 자료/메인페이지/twi001t3384450.jpg 6016×4016 → partners-bg.webp 2400×1602): 섹션을 꽉 채워 가운데, 네이비에 곱하기(multiply) — 메인 WHY 섹션과 같은 방식 (2026-11-11) */
+.partners::before { content: ""; position: absolute; inset: 0; z-index: -1; background: url("../images/partners-bg.webp") center / cover no-repeat; mix-blend-mode: multiply; pointer-events: none; }
 .partners :focus-visible { outline-color: #fff; }
 .partners__head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px 40px; flex-wrap: wrap; }
 .partners__label { display: block; margin-bottom: 14px; font-size: 0.875rem; font-weight: 700; letter-spacing: 0.2em; color: var(--color-accent-light); }
