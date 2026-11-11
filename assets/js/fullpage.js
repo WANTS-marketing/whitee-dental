@@ -23,7 +23,7 @@
     { sel: '#screen-why', hash: 'why', label: '4가지 약속' },
     { sel: '#screen-clinic', hash: 'treatment', label: '진료안내' },
     { sel: '#screen-doctors', hash: 'doctors', label: '의료진' },
-    { sel: '#screen-partners', hash: 'partners', label: '협력 기관' }, // 의료진 바로 다음 — 2026-11-10 보류(index.html hidden)라 지금은 자동으로 빠짐
+    { sel: '#screen-partners', hash: 'partners', label: '협약 기관' }, // 의료진 바로 다음 — (2026-11-11 공개, 이전 메모:) 2026-11-10 보류(index.html hidden)라 지금은 자동으로 빠짐
     { sel: '#screen-cases', hash: 'cases', label: '치료사례' },
     { sel: '#screen-faq', hash: 'faq', label: '자주 묻는 질문' },
     { sel: '#screen-story', hash: 'news', label: '치과소식' },

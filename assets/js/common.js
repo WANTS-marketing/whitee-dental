@@ -250,11 +250,18 @@
         : P.highlights.map((h) => `<div class="partner-highlight"><strong>${esc(h.title)}</strong><span>${esc(h.desc)}</span></div>`).join('');
     });
     document.querySelectorAll('[data-partner-logos]').forEach((el) => { el.innerHTML = list.map((x) => `<li${x.logo ? ' class="has-logo"' : ''}>${partnerInner(x)}</li>`).join(''); });
-    // 숫자 자리마다 지점 포인트색(2026-11-11): 첫 자리 = 창원점 · 둘째 자리 = 마산점 (자리가 더 많으면 번갈아). 화면낭독기는 aria-label 로 숫자 한 번에
+    // 숫자 자리마다 지점 포인트색(2026-11-11): 십의 자리 = 창원점 · 일의 자리 = 마산점 (최종 숫자 자릿수 기준 — 올라가는 중에도 자리 색 고정, 모자란 앞자리는 안 보이는 0 으로 폭 유지)
+    // 섹션이 30% 보일 때 0 → 기관 수로 한 번 올라감(countOnView). 화면낭독기는 최종 숫자 한 번만 '협약 기관 69곳' — 보이는 숫자·글자는 aria-hidden, 읽는 글은 .sr-only
+    // (p 에 aria-label 을 달면 낭독기마다 무시되기도 해서 숨은 글로 — 같은 문구는 p 의 aria-label 에도 남김)
     document.querySelectorAll('[data-partner-count]').forEach((el) => {
-      const n = String(list.length);
-      el.setAttribute('aria-label', n);
-      el.innerHTML = [...n].map((d, i) => `<span class="partners__digit partners__digit--${i % 2 ? 'masan' : 'changwon'}" aria-hidden="true">${d}</span>`).join('');
+      const total = list.length, width = String(total).length;
+      const box = el.closest('.partners__count');
+      if (box && !box.querySelector('.sr-only')) { box.setAttribute('aria-label', `협약 기관 ${total}곳`); [...box.children].forEach((c) => c.setAttribute('aria-hidden', 'true')); box.insertAdjacentHTML('beforeend', `<span class="sr-only">협약 기관 ${total}곳</span>`); }
+      const draw = (k) => {
+        const s = String(Math.round(total * k)).padStart(width, ' ');
+        el.innerHTML = [...s].map((d, i) => { const pos = width - 1 - i; return `<span class="partners__digit partners__digit--${pos % 2 ? 'changwon' : 'masan'}${d === ' ' ? ' is-pad' : ''}">${d === ' ' ? '0' : d}</span>`; }).join('');
+      };
+      countOnView(el.closest('section') || el, 0.3, draw);
     });
     // 흐르는 타일 3줄(2026-11-11 2줄 → 3줄 — 1·3줄 왼쪽으로 · 2줄 오른쪽으로): 로고 타일·글자 타일을 각각 차례로 세 줄에 나누고, 줄 안에서는 글자 타일을 로고 사이에 고르게 끼워 넣음(한쪽에 몰리지 않게). 줄마다 같은 묶음을 두 번 이어 붙여 -100% 이동 반복(두 번째는 화면낭독기에서 숨김)
     // 움직임 줄이기 설정이면 main.css 가 멈추고 두 번째 묶음을 숨겨 줄바꿈 그리드로
@@ -560,10 +567,34 @@
       if (['Enter', ' ', 'ArrowDown', 'ArrowUp'].includes(e.key) || (e.altKey && e.key === 'ArrowDown')) { e.preventDefault(); open(); }
     });
   }
+  /* ---------- 숫자 올라가는 효과(카운트 업) 공통 — 치과소개 '숫자로 보는 화이트e치과'(pages.js) · 메인 협약 기관 숫자(renderSiteBlocks) ----------
+     countOnView(target, threshold, draw): target 이 threshold 비율만큼 처음 보일 때 한 번만 1200ms 동안 draw(k) 를 k = 0 → 1 로 부른다
+       - 끝으로 갈수록 느려지게(ease-out cubic: 1 - (1 - t)^3)
+       - 움직임 줄이기(prefers-reduced-motion) · IntersectionObserver 없음 → 효과 없이 draw(1) 바로
+       - 한 화면씩 넘기기(PC 풀페이지)에서도 섹션이 화면에 들어오면 IntersectionObserver 가 잡는다 */
+  const COUNT_MS = 1200;
+  function countOnView(target, threshold, draw) {
+    if (!target) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)) { draw(1); return; }
+    draw(0);
+    const io = new IntersectionObserver((entries) => {
+      if (!entries.some((e) => e.isIntersecting)) return;
+      io.disconnect();
+      const start = performance.now();
+      const step = (now) => {
+        const t = Math.min(1, (now - start) / COUNT_MS);
+        draw(1 - Math.pow(1 - t, 3));
+        if (t < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    }, { threshold });
+    io.observe(target);
+  }
+
   function initSelects(scope = document) { scope.querySelectorAll('select').forEach(enhanceSelect); }
   initSelects();
 
-  window.UI = { esc, telHref, img, bg, formatDate, branchBadge, noticeLine, accordion, faqItem, rollText, inquiryForm, initSelects, deliveryReady, demoText, demoHtml, dialog, confirm: confirmDialog, alert: alertDialog };
+  window.UI = { countOnView, esc, telHref, img, bg, formatDate, branchBadge, noticeLine, accordion, faqItem, rollText, inquiryForm, initSelects, deliveryReady, demoText, demoHtml, dialog, confirm: confirmDialog, alert: alertDialog };
 
   /* ---------- 이미지 대체 ----------
      1) assets/images/파일명 이 없으면 → assets/images/temp/파일명 (임시 스톡 이미지)

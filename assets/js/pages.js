@@ -869,7 +869,6 @@ function renderIntroPage() {
   const S = window.SITE;
   const { esc } = window.UI;
   const root = document.documentElement.dataset.root || '.';
-  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   // 2. 숫자
   if (S) {
     const active = (d) => !d.hidden && !['pending', 'retired'].includes(d.status);
@@ -884,23 +883,8 @@ function renderIntroPage() {
   const counts = [...document.querySelectorAll('[data-count]')];
   const show = (el, v) => { el.textContent = `${v}${el.dataset.suffix || ''}`; };
   counts.forEach((el) => show(el, el.dataset.count));
-  const stats = document.querySelector('[data-intro-stats]');
-  if (stats && !reduce && 'IntersectionObserver' in window) {
-    counts.forEach((el) => show(el, 0));
-    const io = new IntersectionObserver((entries) => {
-      if (!entries.some((e) => e.isIntersecting)) return;
-      io.disconnect();
-      const start = performance.now();
-      const step = (now) => {
-        const t = Math.min(1, (now - start) / 1200);
-        const k = 1 - Math.pow(1 - t, 3);
-        counts.forEach((el) => show(el, Math.round(Number(el.dataset.count) * k)));
-        if (t < 1) requestAnimationFrame(step);
-      };
-      requestAnimationFrame(step);
-    }, { threshold: 0.4 });
-    io.observe(stats);
-  }
+  // 0 → 값으로 올라가는 효과 = 공통 함수(common.js UI.countOnView — 메인 협약 기관 숫자와 같음, 1200ms ease-out, 한 번만, 움직임 줄이기면 바로 값)
+  window.UI.countOnView(document.querySelector('[data-intro-stats]'), 0.4, (k) => counts.forEach((el) => show(el, Math.round(Number(el.dataset.count) * k))));
   // 7. 병원 둘러보기
   const tabsBox = document.querySelector('[data-intro-tour-tabs]');
   const view = document.querySelector('[data-intro-tour]');
