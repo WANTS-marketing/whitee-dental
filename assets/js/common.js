@@ -568,11 +568,11 @@
     });
   }
   /* ---------- 숫자 올라가는 효과(카운트 업) 공통 — 치과소개 '숫자로 보는 화이트e치과'(pages.js) · 메인 협약 기관 숫자(renderSiteBlocks) ----------
-     countOnView(target, threshold, draw): target 이 threshold 비율만큼 처음 보일 때 한 번만 1200ms 동안 draw(k) 를 k = 0 → 1 로 부른다
+     countOnView(target, threshold, draw): target 이 threshold 비율만큼 처음 보일 때 한 번만 2400ms 동안 draw(k) 를 k = 0 → 1 로 부른다
        - 끝으로 갈수록 느려지게(ease-out cubic: 1 - (1 - t)^3)
        - 움직임 줄이기(prefers-reduced-motion) · IntersectionObserver 없음 → 효과 없이 draw(1) 바로
        - 한 화면씩 넘기기(PC 풀페이지)에서도 섹션이 화면에 들어오면 IntersectionObserver 가 잡는다 */
-  const COUNT_MS = 1200;
+  const COUNT_MS = 2400; // 2026-11-11 두 배 느리게(1200 → 2400)
   function countOnView(target, threshold, draw) {
     if (!target) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)) { draw(1); return; }
