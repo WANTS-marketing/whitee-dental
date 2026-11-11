@@ -170,14 +170,14 @@ window.SITE = {
     masan: ['intro-tour-masan-01', 'intro-tour-masan-02', 'intro-tour-masan-03'],
   },
 
-  /* 협력 기관 — 메인 'WHITE e PARTNERS' · 치과소개(about/intro.html #partners) 공통 (common.js renderSiteBlocks)
-       출처: 기존 홈페이지 심미치료 상세(https://whiteedental.co.kr/bbs/content.php?co_id=sub06_01) 20·21 구간 — 2026-11-10 원본 이미지와 대조, 모두 verified: true
-       (docs/content/legacy/aesthetic-legacy.md, docs/PARTNERS-CHECK.md)
-       highlights 강조 카드: icon = svg 안쪽(viewBox 0 0 24 24, 선)
-       list 협력 기관: logo = assets/images/partners/ 안 파일 이름 — 있으면 로고 이미지, 비어 있으면 글자 타일 (로고를 받으면 logo 만 채우면 됨) */
+  /* 협약 기관 — 메인 'WHITE e PARTNERS' (common.js renderSiteBlocks)
+       출처: 병원 제공 협약처 리스트(xlsx)·협약업체 로고 시트(pdf), 2026-11-11 — 원본 docs/content/partners-2026.csv (69곳, CSV 순서 그대로)
+       highlights 강조 카드 3개(부산대학병원 협력·경찰자문·방송출연)는 기존 홈페이지 sub06_01 기준 그대로 유지. icon = svg 안쪽(viewBox 0 0 24 24, 선)
+       list 협약 기관: name = CSV '기관명(사이트 표기)' · date = 협약일자(엑셀, 없으면 '') · branches = 로고 시트에 로고 위치가 있는 지점(masan·changwon, 없으면 [])
+                       logo = assets/images/partners/ 안 파일 이름(로고 시트에서 잘라낸 것, 흰 바탕 webp) — 비어 있으면 글자 타일
+       화면에는 이름(또는 로고)만 — 협약일자·지점은 데이터에만. 큰 숫자 = list 개수 자동
+       남은 확인: 39 '경남지방병무청'(엑셀 '창원지방 병무청') 맞는지 · 로고 없는 22곳 로고 파일(선택) — docs/PARTNERS-CHECK.md */
   partners: {
-    // 2026-11-10 출처 확인 완료 — 기존 홈페이지 심미치료 상세(sub06_01) 20·21 구간 원본 이미지와 하나씩 대조, 기관명은 원본 표기 그대로(띄어쓰기·괄호·(주) 포함)
-    // 남은 확인: 현재도 유효한지 · 로고 파일 요청 (docs/PARTNERS-CHECK.md). logo 에 파일 이름을 넣으면 이름 대신 로고(assets/images/partners/) — 원본 이미지의 로고는 잘라 쓰지 않음
     highlights: [
       { title: '부산대학병원 협력', desc: '협력 의료기관', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)',
         icon: '<path d="M4 21V8l8-5 8 5v13"/><path d="M9 21v-5h6v5M12 8v5M9.5 10.5h5"/>' },
@@ -187,35 +187,75 @@ window.SITE = {
         icon: '<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 3l4 4 4-4"/>' },
     ],
     list: [
-      { name: "전국금속노동조합", logo: '', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)' },
-      { name: "DOOSAN", logo: '', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)' },
-      { name: "한화디펜스", logo: '', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)' },
-      { name: "경상남도 대한미용협회", logo: '', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)' },
-      { name: "창원대학교", logo: '', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)' },
-      { name: "창원시 배드민턴협회", logo: '', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)' },
-      { name: "마산 어시장상인회", logo: '', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)' },
-      { name: "한국실버경찰봉사대 의창구지회", logo: '', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)' },
-      { name: "웨딩드림", logo: '', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)' },
-      { name: "라라한방병원", logo: '', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)' },
-      { name: "미시안 안과의원", logo: '', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)' },
-      { name: "미시안 여성의원", logo: '', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)' },
-      { name: "창원시 사회인 야구단 [창원88용병경기]", logo: '', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)' },
-      { name: "(주)창원청과시장", logo: '', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)' },
-      { name: "탑골프아카데미", logo: '', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)' },
-      { name: "효성중공업", logo: '', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)' },
-      { name: "경남 자율방재단연합회", logo: '', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)' },
-      { name: "창원시야구소프트볼협회", logo: '', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)' },
-      { name: "바르게살기 운동 경남협의회", logo: '', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)' },
-      { name: "창원 LG 세이커스", logo: '', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)' },
-      { name: "경남FC", logo: '', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)' },
-      { name: "창원 시청축구단", logo: '', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)' },
-      { name: "창원 성산소방서", logo: '', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)' },
-      { name: "엔디티 엔지니어링 (주)", logo: '', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)' },
-      { name: "중소기업융합경남연합회", logo: '', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)' },
-      { name: "가온내과", logo: '', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)' },
-      { name: "365병원", logo: '', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)' },
-      { name: "강추한방병원", logo: '', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)' },
-      { name: "창원메트로시티석전 아파트", logo: '', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)' },
+      { name: '두산에너빌리티', date: '', branches: ['masan', 'changwon'], logo: 'partner-001.webp' }, // 1
+      { name: '한화에어로스페이스', date: '', branches: ['masan', 'changwon'], logo: 'partner-002.webp' }, // 2
+      { name: '한화세미텍', date: '2025-10-16', branches: ['masan', 'changwon'], logo: 'partner-003.webp' }, // 3
+      { name: '한국재료연구원', date: '2025-09-22', branches: ['masan', 'changwon'], logo: 'partner-004.webp' }, // 4. 로고 KIMS
+      { name: '전국금속노동조합', date: '', branches: ['masan', 'changwon'], logo: 'partner-005.webp' }, // 5
+      { name: '효성중공업', date: '', branches: ['masan', 'changwon'], logo: 'partner-006.webp' }, // 6
+      { name: 'HSG중공업', date: '2025-12-29', branches: ['masan', 'changwon'], logo: 'partner-007.webp' }, // 7
+      { name: 'HSG성동조선', date: '2025-12-29', branches: ['masan', 'changwon'], logo: 'partner-008.webp' }, // 8
+      { name: '웰템', date: '2025-12-19', branches: ['masan', 'changwon'], logo: 'partner-009.webp' }, // 9. 로고 영문 WELTEM
+      { name: '오성사', date: '2025-09-23', branches: ['masan', 'changwon'], logo: 'partner-010.webp' }, // 10. 로고 영문 OHSUNG
+      { name: 'CTR', date: '2025-10-22', branches: ['masan', 'changwon'], logo: 'partner-011.webp' }, // 11
+      { name: '창원 LG 세이커스', date: '', branches: ['masan', 'changwon'], logo: 'partner-012.webp' }, // 12. 로고 LG SAKERS
+      { name: '365병원', date: '', branches: ['masan', 'changwon'], logo: 'partner-013.webp' }, // 13
+      { name: '강추한방병원', date: '', branches: ['masan', 'changwon'], logo: 'partner-014.webp' }, // 14
+      { name: '창원해양경찰서', date: '2026-01-20', branches: ['masan', 'changwon'], logo: 'partner-015.webp' }, // 15
+      { name: '마산명문라이온스클럽', date: '', branches: ['masan'], logo: 'partner-016.webp' }, // 16
+      { name: '마산어시장 상인회', date: '', branches: ['masan'], logo: 'partner-017.webp' }, // 17
+      { name: '경남FC', date: '', branches: ['masan', 'changwon'], logo: 'partner-018.webp' }, // 18
+      { name: '롯데백화점 창원점', date: '2026-02-11', branches: ['masan', 'changwon'], logo: 'partner-019.webp' }, // 19
+      { name: '메가박스', date: '2025-10-01', branches: ['masan', 'changwon'], logo: 'partner-020.webp' }, // 20
+      { name: '국립창원대학교', date: '', branches: ['masan', 'changwon'], logo: 'partner-021.webp' }, // 21
+      { name: '경남대학교', date: '', branches: ['masan', 'changwon'], logo: 'partner-022.webp' }, // 22
+      { name: '바르게살기운동 경남협의회', date: '', branches: ['masan', 'changwon'], logo: 'partner-023.webp' }, // 23
+      { name: '아이스펙', date: '2025-10-14', branches: ['masan', 'changwon'], logo: 'partner-024.webp' }, // 24. 로고 영문 I-Spec
+      { name: '창원메트로시티 석전아파트', date: '', branches: ['masan'], logo: 'partner-025.webp' }, // 25
+      { name: '롯데캐슬 하버팰리스', date: '2025-10-30', branches: ['masan'], logo: 'partner-026.webp' }, // 26
+      { name: '롯데캐슬 센텀골드', date: '', branches: ['masan'], logo: 'partner-027.webp' }, // 27
+      { name: '창원시야구소프트볼협회', date: '', branches: ['masan', 'changwon'], logo: 'partner-028.webp' }, // 28
+      { name: '창원시배드민턴협회', date: '', branches: ['masan', 'changwon'], logo: 'partner-029.webp' }, // 29
+      { name: '마산회원노인종합복지관', date: '2025-11-20', branches: ['masan', 'changwon'], logo: 'partner-030.webp' }, // 30
+      { name: '경상남도청 공무원 노동조합', date: '2025-10-01', branches: ['masan', 'changwon'], logo: 'partner-031.webp' }, // 31
+      { name: '창원특례시 공무원 노동조합', date: '2025-10-21', branches: ['masan', 'changwon'], logo: 'partner-032.webp' }, // 32
+      { name: '경상남도교육청 공무원 노동조합', date: '2025-09-19', branches: ['masan', 'changwon'], logo: 'partner-033.webp' }, // 33
+      { name: '창원지방법원', date: '2025-11-07', branches: ['masan', 'changwon'], logo: 'partner-034.webp' }, // 34
+      { name: '중소기업융합 경남연합회', date: '', branches: ['masan', 'changwon'], logo: 'partner-035.webp' }, // 35
+      { name: '인생한방병원', date: '', branches: ['masan', 'changwon'], logo: 'partner-036.webp' }, // 36
+      { name: '창원소방지부 마산소방서 지회', date: '', branches: ['masan', 'changwon'], logo: 'partner-037.webp' }, // 37
+      { name: '창원소방지부 성산소방서 지회', date: '', branches: ['masan', 'changwon'], logo: 'partner-038.webp' }, // 38
+      { name: '경남지방병무청', date: '2026-02-13', branches: ['masan', 'changwon'], logo: 'partner-039.webp' }, // 39. 엑셀 "창원지방 병무청" = 로고 시트 "경남지방병무청"으로 판단 (확인 필요)
+      { name: '경남자율방재단연합회', date: '', branches: ['masan', 'changwon'], logo: 'partner-040.webp' }, // 40
+      { name: '(주)창원청과시장', date: '', branches: ['masan', 'changwon'], logo: 'partner-041.webp' }, // 41
+      { name: '라라한방병원', date: '', branches: ['masan', 'changwon'], logo: 'partner-042.webp' }, // 42
+      { name: '창원시 사회인 야구단', date: '', branches: ['changwon'], logo: 'partner-043.webp' }, // 43
+      { name: '창원레포츠파크 노동조합', date: '2025-10-01', branches: ['changwon'], logo: 'partner-044.webp' }, // 44
+      { name: '엔디티 엔지니어링', date: '', branches: ['changwon'], logo: 'partner-045.webp' }, // 45
+      { name: '탑골프아카데미', date: '', branches: ['changwon'], logo: 'partner-046.webp' }, // 46. 로고 TOP GOLF ACADEMY
+      { name: '세운철강', date: '2025-09-26', branches: ['changwon'], logo: 'partner-047.webp' }, // 47
+      { name: '베스트베이스볼', date: '2025-11-18', branches: [], logo: '' }, // 48
+      { name: '나라엠앤디', date: '2025-11-18', branches: [], logo: '' }, // 49
+      { name: '온가족실버연합회', date: '2025-12-19', branches: [], logo: '' }, // 50
+      { name: '한국승강기안전공단', date: '2026-01-08', branches: [], logo: '' }, // 51
+      { name: '한국소방시설협회', date: '2026-02-25', branches: [], logo: '' }, // 52
+      { name: '경남이주민센터', date: '2026-03-25', branches: [], logo: '' }, // 53
+      { name: '디딤돌사랑나눔회', date: '2026-04-22', branches: [], logo: '' }, // 54
+      { name: '창원시검도회', date: '2026-04-28', branches: [], logo: '' }, // 55
+      { name: '현대로템', date: '2026-04-30', branches: [], logo: '' }, // 56
+      { name: '연암테크', date: '2026-05-21', branches: [], logo: '' }, // 57
+      { name: '자연안에 한방병원', date: '2026-06-11', branches: [], logo: '' }, // 58
+      { name: '함안군파크골프협회', date: '2026-06-18', branches: [], logo: '' }, // 59
+      { name: '예일안과', date: '2026-06-30', branches: [], logo: '' }, // 60
+      { name: '강림테크', date: '2026-07-07', branches: [], logo: '' }, // 61
+      { name: '삼성공조', date: '2026-07-07', branches: [], logo: '' }, // 62
+      { name: '파티마안과', date: '2026-07-07', branches: [], logo: '' }, // 63
+      { name: '경남나눔모임봉사단', date: '2026-07-20', branches: [], logo: '' }, // 64
+      { name: '한국제강', date: '2026-07-23', branches: [], logo: '' }, // 65
+      { name: '마루한다한 태권도', date: '2026-07-29', branches: [], logo: '' }, // 66
+      { name: '삼성발레오', date: '2026-09-01', branches: [], logo: '' }, // 67
+      { name: '생각대로', date: '2026-09-08', branches: [], logo: '' }, // 68
+      { name: '삼성다이나에이치백', date: '2026-09-10', branches: [], logo: '' }, // 69
     ],
   },
 

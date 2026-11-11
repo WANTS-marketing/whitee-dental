@@ -188,9 +188,9 @@
      [data-hero-hours]             메인 히어로 진료시간 카드 (SITE.branches[].hours · hoursNote — 두 지점이 같으면 표 하나 + '창원점·마산점 동일', 다르면 지점별)
      [data-branch-hours="지점 id"] 진료시간 한 줄(상담문의 작성 지점 카드) — '평일 10:00–21:00 · 토요일 …' + 대체공휴일 안내
      [data-promises="full|short"]  4가지 약속 카드 — full = 치과소개(.strength), short = 메인 사진 카드(.why-card — image 배경, 사진·제목·설명, 카드 전체가 치과소개 해당 약속 화면 링크 — href, 2026-11-10)
-     [data-partner-highlights]     협력 강조 — 기본 = 치과소개 카드(.partner-highlight) / ="card" = 메인 WHITE e PARTNERS 카드(.partners-card)
-     [data-partner-logos]          협력 기관 칸(치과소개) · [data-partner-marquee] 메인 2줄 흐르는 타일 · [data-partner-count] 기관 수 'N+'
-     협력 기관 logo 가 있으면 assets/images/partners/ 로고 이미지, 없으면 이름 글자 */
+     [data-partner-highlights]     협약 강조 — 기본 = 치과소개 카드(.partner-highlight) / ="card" = 메인 WHITE e PARTNERS 카드(.partners-card)
+     [data-partner-logos]          협약 기관 칸(치과소개) · [data-partner-marquee] 메인 2줄 흐르는 타일 · [data-partner-count] 기관 수(데이터 개수 그대로)
+     협약 기관 logo 가 있으면 assets/images/partners/ 로고 이미지, 없으면 이름 글자 */
   function renderSiteBlocks() {
     const S = window.SITE;
     if (!S) return;
@@ -250,16 +250,20 @@
         : P.highlights.map((h) => `<div class="partner-highlight"><strong>${esc(h.title)}</strong><span>${esc(h.desc)}</span></div>`).join('');
     });
     document.querySelectorAll('[data-partner-logos]').forEach((el) => { el.innerHTML = list.map((x) => `<li${x.logo ? ' class="has-logo"' : ''}>${partnerInner(x)}</li>`).join(''); });
-    document.querySelectorAll('[data-partner-count]').forEach((el) => { el.textContent = `${list.length}+`; });
-    // 흐르는 타일 2줄: 앞 절반(윗줄, 왼쪽으로) · 나머지(아랫줄, 오른쪽으로). 줄마다 같은 묶음을 두 번 이어 붙여 -100% 이동 반복(두 번째는 화면낭독기에서 숨김)
+    document.querySelectorAll('[data-partner-count]').forEach((el) => { el.textContent = String(list.length); });
+    // 흐르는 타일 2줄(윗줄 왼쪽으로 · 아랫줄 오른쪽으로): 로고 타일·글자 타일을 각각 번갈아 두 줄에 나누고, 줄 안에서는 글자 타일을 로고 사이에 고르게 끼워 넣음(한쪽에 몰리지 않게). 줄마다 같은 묶음을 두 번 이어 붙여 -100% 이동 반복(두 번째는 화면낭독기에서 숨김)
     // 움직임 줄이기 설정이면 main.css 가 멈추고 두 번째 묶음을 숨겨 줄바꿈 그리드로
     document.querySelectorAll('[data-partner-marquee]').forEach((el) => {
-      const half = Math.ceil(list.length / 2);
+      const split = (arr) => [arr.filter((_, i) => i % 2 === 0), arr.filter((_, i) => i % 2 === 1)];
+      // a(로고) 사이에 b(글자)를 비율대로 고르게 섞기
+      const mix = (a, b) => { const n = a.length + b.length, out = []; let ai = 0, bi = 0; for (let i = 0; i < n; i++) { if (bi < b.length && (ai >= a.length || Math.floor(((i + 1) * b.length) / n) > bi)) out.push(b[bi++]); else out.push(a[ai++]); } return out; };
+      const [logoA, logoB] = split(list.filter((x) => x.logo));
+      const [textA, textB] = split(list.filter((x) => !x.logo));
       const row = (items, dir) => {
         const lis = items.map((x) => `<li class="partner-tile${x.logo ? ' has-logo' : ''}">${partnerInner(x)}</li>`).join('');
         return `<div class="partner-marquee__row partner-marquee__row--${dir}"><ul class="partner-marquee__list">${lis}</ul><ul class="partner-marquee__list" aria-hidden="true">${lis}</ul></div>`;
       };
-      el.innerHTML = row(list.slice(0, half), 'left') + row(list.slice(half), 'right');
+      el.innerHTML = row(mix(logoA, textA), 'left') + row(mix(logoB, textB), 'right');
     });
   }
   renderSiteBlocks();
