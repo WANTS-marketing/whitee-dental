@@ -172,18 +172,18 @@ window.SITE = {
 
   /* 협약 기관 — 메인 'WHITE e PARTNERS' (common.js renderSiteBlocks)
        출처: 병원 제공 협약처 리스트(xlsx)·협약업체 로고 시트(pdf), 2026-11-11 — 원본 docs/content/partners-2026.csv (69곳, CSV 순서 그대로)
-       highlights 강조 카드 3개(부산대학병원 협력·경찰자문·방송출연)는 기존 홈페이지 sub06_01 기준 그대로 유지. icon = svg 안쪽(viewBox 0 0 24 24, 선)
+       highlights 강조 카드 3개(부산대학병원 협력·경찰자문·방송출연): 기존 홈페이지 sub06_01 기준. 2026-11-11 화면에서 뺌 — show: false (데이터는 유지, 자세한 내용을 받으면 치과소개에 근거와 함께 게시 검토 — docs/HOSPITAL-CHECK.md). icon = svg 안쪽(viewBox 0 0 24 24, 선)
        list 협약 기관: name = CSV '기관명(사이트 표기)' · date = 협약일자(엑셀, 없으면 '') · branches = 로고 시트에 로고 위치가 있는 지점(masan·changwon, 없으면 [])
                        logo = assets/images/partners/ 안 파일 이름(로고 시트에서 잘라낸 것, 흰 바탕 webp) — 비어 있으면 글자 타일
        화면에는 이름(또는 로고)만 — 협약일자·지점은 데이터에만. 큰 숫자 = list 개수 자동
        남은 확인: 39 '경남지방병무청'(엑셀 '창원지방 병무청') 맞는지 · 로고 없는 22곳 로고 파일(선택) — docs/PARTNERS-CHECK.md */
   partners: {
     highlights: [
-      { title: '부산대학병원 협력', desc: '협력 의료기관', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)',
+      { title: '부산대학병원 협력', desc: '협력 의료기관', show: false, verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)',
         icon: '<path d="M4 21V8l8-5 8 5v13"/><path d="M9 21v-5h6v5M12 8v5M9.5 10.5h5"/>' },
-      { title: '경찰자문', desc: '자문 활동', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)',
+      { title: '경찰자문', desc: '자문 활동', show: false, verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)',
         icon: '<path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6z"/><path d="M9 12l2 2 4-4"/>' },
-      { title: '방송출연', desc: '‘순간포착 세상에 이런일이’', verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)',
+      { title: '방송출연', desc: '‘순간포착 세상에 이런일이’', show: false, verified: true, source: '기존 홈페이지 sub06_01 (2026-11-10 확인)',
         icon: '<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 3l4 4 4-4"/>' },
     ],
     list: [

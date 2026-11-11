@@ -244,10 +244,12 @@
     const list = P.list || [];
     // 기관 하나: logo 가 있으면 로고 이미지(alt = 이름), 없으면 이름 글자
     const partnerInner = (x) => (x.logo ? `<img src="${root}/assets/images/partners/${esc(x.logo)}" alt="${esc(x.name)}" loading="lazy">` : esc(x.name));
+    const highlights = (P.highlights || []).filter((h) => h.show !== false); // show: false = 화면에 안 보임(데이터만 유지)
     document.querySelectorAll('[data-partner-highlights]').forEach((el) => {
+      el.hidden = !highlights.length;
       el.innerHTML = el.dataset.partnerHighlights === 'card'
-        ? P.highlights.map((h) => `<li class="partners-card"><span class="partners-card__icon">${icon(h)}</span><strong class="partners-card__title">${esc(h.title)}</strong><span class="partners-card__desc">${esc(h.desc)}</span></li>`).join('')
-        : P.highlights.map((h) => `<div class="partner-highlight"><strong>${esc(h.title)}</strong><span>${esc(h.desc)}</span></div>`).join('');
+        ? highlights.map((h) => `<li class="partners-card"><span class="partners-card__icon">${icon(h)}</span><strong class="partners-card__title">${esc(h.title)}</strong><span class="partners-card__desc">${esc(h.desc)}</span></li>`).join('')
+        : highlights.map((h) => `<div class="partner-highlight"><strong>${esc(h.title)}</strong><span>${esc(h.desc)}</span></div>`).join('');
     });
     document.querySelectorAll('[data-partner-logos]').forEach((el) => { el.innerHTML = list.map((x) => `<li${x.logo ? ' class="has-logo"' : ''}>${partnerInner(x)}</li>`).join(''); });
     // 숫자: 밝은 accent 단색(main.css — 지점색은 지점 구분에만, 2026-11-11). 올라가는 중 모자란 앞자리는 안 보이는 0 으로 폭 유지
