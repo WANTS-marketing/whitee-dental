@@ -250,7 +250,7 @@
         : P.highlights.map((h) => `<div class="partner-highlight"><strong>${esc(h.title)}</strong><span>${esc(h.desc)}</span></div>`).join('');
     });
     document.querySelectorAll('[data-partner-logos]').forEach((el) => { el.innerHTML = list.map((x) => `<li${x.logo ? ' class="has-logo"' : ''}>${partnerInner(x)}</li>`).join(''); });
-    // 숫자 자리마다 지점 포인트색(2026-11-11): 십의 자리 = 창원점 · 일의 자리 = 마산점 (최종 숫자 자릿수 기준 — 올라가는 중에도 자리 색 고정, 모자란 앞자리는 안 보이는 0 으로 폭 유지)
+    // 숫자: 밝은 accent 단색(main.css — 지점색은 지점 구분에만, 2026-11-11). 올라가는 중 모자란 앞자리는 안 보이는 0 으로 폭 유지
     // 섹션이 30% 보일 때 0 → 기관 수로 한 번 올라감(countOnView). 화면낭독기는 최종 숫자 한 번만 '협약 기관 69곳' — 보이는 숫자·글자는 aria-hidden, 읽는 글은 .sr-only
     // (p 에 aria-label 을 달면 낭독기마다 무시되기도 해서 숨은 글로 — 같은 문구는 p 의 aria-label 에도 남김)
     document.querySelectorAll('[data-partner-count]').forEach((el) => {
@@ -259,7 +259,7 @@
       if (box && !box.querySelector('.sr-only')) { box.setAttribute('aria-label', `협약 기관 ${total}곳`); [...box.children].forEach((c) => c.setAttribute('aria-hidden', 'true')); box.insertAdjacentHTML('beforeend', `<span class="sr-only">협약 기관 ${total}곳</span>`); }
       const draw = (k) => {
         const s = String(Math.round(total * k)).padStart(width, ' ');
-        el.innerHTML = [...s].map((d, i) => { const pos = width - 1 - i; return `<span class="partners__digit partners__digit--${pos % 2 ? 'changwon' : 'masan'}${d === ' ' ? ' is-pad' : ''}">${d === ' ' ? '0' : d}</span>`; }).join('');
+        el.innerHTML = [...s].map((d) => `<span class="partners__digit${d === ' ' ? ' is-pad' : ''}">${d === ' ' ? '0' : d}</span>`).join('');
       };
       countOnView(el.closest('section') || el, 0.3, draw);
     });
