@@ -520,10 +520,11 @@ html[data-fs="xl"] .doc-modal { width: min(680px, 100% - 48px); }
 .doctors__more:hover { color: var(--color-accent); }
 .doctors__more:hover svg { transform: translateX(3px); }
 
-/* ---------- ⑥ WHITE e PARTNERS — 협력 기관 (2026-11-09, 예전 치료사례 아래 얇은 띠 대체) ----------
+/* ---------- ⑥ WHITE e PARTNERS — 협약 기관 (2026-11-09, 예전 치료사례 아래 얇은 띠 대체 · 2026-11-11 병원 제공 자료 69곳·로고) ----------
    네이비 면 전체 폭, 위아래 120px(모바일 72px). 지점 색은 쓰지 않음 — 강조 글자는 네이비 위에서 읽히는 밝은 파랑(--color-accent-light, accent 계열)
    [왼쪽 라벨·제목·설명 | 오른쪽 큰 숫자(기관 수 자동)] → 강조 카드 3개 → 기관 타일 2줄 흐름(윗줄 ←, 아랫줄 →, 느리게, hover 멈춤) → 치과소개에서 전체 보기
-   타일: 흰 면 높이 72px · 좌우 32px · 둥근 12px · 18px 굵게 #1a1f2b (모바일 56px · 16px). 로고(logo)가 있으면 이미지 */
+   타일: 흰 면 240×72px · 둥근 12px (모바일 176×56px) — 로고 타일·글자 타일 같은 크기
+         로고(logo, 흰 바탕 webp): 높이 최대 40px(모바일 32px) · 가로 최대 타일 폭 80% · 가운데 / 글자: 16px 굵게 --color-point · 가운데 (긴 이름은 두 줄) */
 .partners[hidden] { display: none !important; } /* hidden 을 붙이면 숨김 — .screen 의 display: flex 보다 우선 (2026-11-10 다시 공개) */
 .partners { position: relative; padding: 120px 0; background: var(--color-point); color: #fff; overflow: hidden; }
 .partners :focus-visible { outline-color: #fff; }
@@ -547,8 +548,9 @@ html[data-fs="xl"] .doc-modal { width: min(680px, 100% - 48px); }
 .partner-marquee__row--right .partner-marquee__list { animation-direction: reverse; }
 .partner-marquee:hover .partner-marquee__list { animation-play-state: paused; }
 @keyframes partner-marquee { from { transform: translateX(0); } to { transform: translateX(-100%); } }
-.partner-tile { display: flex; align-items: center; justify-content: center; height: 72px; padding: 0 32px; border-radius: 12px; background: #fff; font-size: 1.125rem; font-weight: 700; color: #1a1f2b; white-space: nowrap; }
-.partner-tile.has-logo img { display: block; max-height: 40px; width: auto; }
+.partner-tile { --pt-logo-h: 40px; flex: none; display: flex; align-items: center; justify-content: center; width: 240px; height: 72px; padding: 0 16px; border-radius: 12px; background: #fff; font-size: 1rem; font-weight: 700; line-height: 1.3; color: var(--color-point); text-align: center; word-break: keep-all; overflow: hidden; }
+.partner-tile.has-logo { padding: 0; }
+.partner-tile.has-logo img { display: block; width: auto; height: auto; max-width: 80%; max-height: var(--pt-logo-h); object-fit: contain; }
 .partners__foot { margin-top: 40px; text-align: right; }
 .partners__more { display: inline-flex; align-items: center; gap: 8px; font-size: 1rem; font-weight: 600; color: #fff; transition: color var(--dur); }
 .partners__more svg { width: 16px; height: 16px; transition: transform var(--dur); }
@@ -560,11 +562,10 @@ html[data-fs="xl"] .doc-modal { width: min(680px, 100% - 48px); }
   .partner-marquee__row { overflow: visible; }
   .partner-marquee__list { flex: 1; flex-wrap: wrap; justify-content: center; padding-right: 0; animation: none; }
   .partner-marquee__list[aria-hidden="true"] { display: none; }
-  .partner-tile { white-space: normal; text-align: center; }
   /* PC 한 화면(100vh) 안에 다 들어가게: 줄바꿈 그리드일 때만 타일·간격을 작게 */
   html.is-fullpage .partners__cards { margin-top: 32px; }
   html.is-fullpage .partner-marquee { --pm-gap: 8px; margin-top: 32px; }
-  html.is-fullpage .partner-tile { height: 44px; padding: 0 18px; font-size: 0.9375rem; }
+  html.is-fullpage .partner-tile { --pt-logo-h: 28px; width: 150px; height: 44px; font-size: 0.8125rem; }
   html.is-fullpage .partners__foot { margin-top: 24px; }
 }
 @media (max-width: 1024px) {
@@ -578,7 +579,7 @@ html[data-fs="xl"] .doc-modal { width: min(680px, 100% - 48px); }
   .partners__title { font-size: 2rem; }
   .partners__count strong { font-size: 3.5rem; }
   .partner-marquee { --pm-gap: 10px; margin-top: 36px; }
-  .partner-tile { height: 56px; padding: 0 24px; font-size: 1rem; }
+  .partner-tile { --pt-logo-h: 32px; width: 176px; height: 56px; padding: 0 12px; font-size: 1rem; }
   .partners__foot { margin-top: 28px; text-align: left; }
 }
 
