@@ -883,7 +883,7 @@ function renderIntroPage() {
   const counts = [...document.querySelectorAll('[data-count]')];
   const show = (el, v) => { el.textContent = `${v}${el.dataset.suffix || ''}`; };
   counts.forEach((el) => show(el, el.dataset.count));
-  // 0 → 값으로 올라가는 효과 = 공통 함수(common.js UI.countOnView — 메인 협약 기관 숫자와 같음, 1200ms ease-out, 한 번만, 움직임 줄이기면 바로 값)
+  // 0 → 값으로 올라가는 효과 = 공통 함수(common.js UI.countOnView — 메인 협약 기관 숫자와 같음, 2400ms ease-out, 한 번만, 움직임 줄이기면 바로 값)
   window.UI.countOnView(document.querySelector('[data-intro-stats]'), 0.4, (k) => counts.forEach((el) => show(el, Math.round(Number(el.dataset.count) * k))));
   // 7. 병원 둘러보기
   const tabsBox = document.querySelector('[data-intro-tour-tabs]');
