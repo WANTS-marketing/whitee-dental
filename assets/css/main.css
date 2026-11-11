@@ -536,7 +536,10 @@ html[data-fs="xl"] .doc-modal { width: min(680px, 100% - 48px); }
 .partners__desc { margin-top: 12px; font-size: var(--fs-sm); color: rgba(255, 255, 255, 0.7); word-break: keep-all; }
 .partners__count { display: flex; align-items: baseline; gap: 18px; flex: none; }
 .partners__count strong { font-size: 6.75rem; font-weight: 800; line-height: 1; letter-spacing: -0.03em; color: var(--color-accent-light); font-variant-numeric: tabular-nums; }
-.partners__count span { font-size: calc(var(--fs-md) * 1.5); font-weight: 600; color: rgba(255, 255, 255, 0.85); } /* 2026-11-11 숫자·글자 1.5배 (72→108px · 16→24px) */
+.partners__count strong .partners__digit { font-size: inherit; font-weight: inherit; }
+.partners__digit--changwon { color: var(--color-changwon); } /* 69 의 6 = 창원점 핑크 */
+.partners__digit--masan { color: var(--color-masan); }       /* 69 의 9 = 마산점 오렌지 */
+.partners__count > span { font-size: calc(var(--fs-md) * 1.5); font-weight: 600; color: rgba(255, 255, 255, 0.85); } /* 2026-11-11 숫자·글자 1.5배 (72→108px · 16→24px) */
 .partners__cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; margin-top: 48px; }
 .partners-card { display: grid; gap: 8px; padding: 28px; border: 1px solid rgba(255, 255, 255, 0.18); border-radius: var(--radius-lg); background: rgba(255, 255, 255, 0.08); }
 .partners-card__icon { display: grid; place-items: center; width: 44px; height: 44px; margin-bottom: 8px; border-radius: 12px; background: rgba(255, 255, 255, 0.1); color: var(--color-accent-light); }

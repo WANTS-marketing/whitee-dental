@@ -250,7 +250,12 @@
         : P.highlights.map((h) => `<div class="partner-highlight"><strong>${esc(h.title)}</strong><span>${esc(h.desc)}</span></div>`).join('');
     });
     document.querySelectorAll('[data-partner-logos]').forEach((el) => { el.innerHTML = list.map((x) => `<li${x.logo ? ' class="has-logo"' : ''}>${partnerInner(x)}</li>`).join(''); });
-    document.querySelectorAll('[data-partner-count]').forEach((el) => { el.textContent = String(list.length); });
+    // 숫자 자리마다 지점 포인트색(2026-11-11): 첫 자리 = 창원점 · 둘째 자리 = 마산점 (자리가 더 많으면 번갈아). 화면낭독기는 aria-label 로 숫자 한 번에
+    document.querySelectorAll('[data-partner-count]').forEach((el) => {
+      const n = String(list.length);
+      el.setAttribute('aria-label', n);
+      el.innerHTML = [...n].map((d, i) => `<span class="partners__digit partners__digit--${i % 2 ? 'masan' : 'changwon'}" aria-hidden="true">${d}</span>`).join('');
+    });
     // 흐르는 타일 3줄(2026-11-11 2줄 → 3줄 — 1·3줄 왼쪽으로 · 2줄 오른쪽으로): 로고 타일·글자 타일을 각각 차례로 세 줄에 나누고, 줄 안에서는 글자 타일을 로고 사이에 고르게 끼워 넣음(한쪽에 몰리지 않게). 줄마다 같은 묶음을 두 번 이어 붙여 -100% 이동 반복(두 번째는 화면낭독기에서 숨김)
     // 움직임 줄이기 설정이면 main.css 가 멈추고 두 번째 묶음을 숨겨 줄바꿈 그리드로
     document.querySelectorAll('[data-partner-marquee]').forEach((el) => {
